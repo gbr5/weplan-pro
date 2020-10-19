@@ -5,7 +5,7 @@ import Route from './Route';
 
 // import Main from '../pages/Main';
 import SignIn from '../pages/SignIn';
-// import SignUp from '../pages/SignUp';
+import SignUp from '../pages/SignUp';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import Profile from '../pages/Profile';
@@ -19,8 +19,7 @@ const Routes: React.FC = () => {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
-      {/* <Route path="/signin" exact component={SignIn} /> */}
-      {/* <Route path="/signup" exact component={SignUp} /> */}
+      <Route path="/signup" exact component={SignUp} />
       <Route path="/forgot-password" exact component={ForgotPassword} />
       <Route path="/reset-password" exact component={ResetPassword} />
 
@@ -33,14 +32,6 @@ const Routes: React.FC = () => {
       />
       <Route path="/dashboard" exact component={SupplierDashboard} isPrivate />
       <Route path="/friends" exact component={FriendsDashboard} isPrivate />
-      {/* {user && user.isSupplier && (
-        <Route
-          path="/supplier-dashboard"
-          exact
-          component={SupplierDashboard}
-          isPrivate
-        />
-      )} */}
     </Switch>
   );
 };
