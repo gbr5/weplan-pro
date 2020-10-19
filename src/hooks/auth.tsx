@@ -31,8 +31,8 @@ const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IAuthState>(() => {
-    const token = localStorage.getItem('@GoBarber:token');
-    const user = localStorage.getItem('@GoBarber:user');
+    const token = localStorage.getItem('@WePlan:token');
+    const user = localStorage.getItem('@WePlan:user');
 
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -44,8 +44,8 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@GoBarber:token');
-    localStorage.removeItem('@GoBarber:user');
+    localStorage.removeItem('@WePlan:token');
+    localStorage.removeItem('@WePlan:user');
 
     setData({} as IAuthState);
   }, []);
@@ -58,8 +58,26 @@ const AuthProvider: React.FC = ({ children }) => {
 
     const { token, user } = response.data;
 
-    localStorage.setItem('@GoBarber:token', token);
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    if (user.isCompany) {
+      const findSupplier = await api.get(`/wp/contract-orders/${user.id}`);
+      const isSupplier = findSupplier.data;
+
+      if (isSupplier === '') {
+        throw new Error('user not found');
+      }
+    } else {
+      const findSupplier = await api.get(
+        `/supplier-employees/employee/${user.id}`,
+      );
+      const isSupplier = findSupplier.data;
+
+      if (isSupplier === '') {
+        throw new Error('user not found');
+      }
+    }
+
+    localStorage.setItem('@WePlan:token', token);
+    localStorage.setItem('@WePlan:user', JSON.stringify(user));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -68,7 +86,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const updateUser = useCallback(
     (updatedUser: IUser) => {
-      localStorage.setItem('@GoBarber:user', JSON.stringify(updatedUser));
+      localStorage.setItem('@WePlan:user', JSON.stringify(updatedUser));
 
       setData({
         token: data.token,
