@@ -231,7 +231,6 @@ const Profile: React.FC = () => {
   const handleGetPersonInfo = useCallback(() => {
     try {
       api.get('person-info').then(response => {
-        console.log(response.data);
         setPersonInfo(response.data);
       });
     } catch (err) {

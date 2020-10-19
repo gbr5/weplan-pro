@@ -97,7 +97,7 @@ const SignUp: React.FC = () => {
           user_id: userId,
         });
 
-        history.push('/');
+        history.push('/signin');
 
         addToast({
           type: 'success',
@@ -141,7 +141,7 @@ const SignUp: React.FC = () => {
           user_id: userId,
         });
 
-        history.push('/');
+        history.push('/signin');
 
         addToast({
           type: 'success',
@@ -438,7 +438,7 @@ const SignUp: React.FC = () => {
               </Form>
             ))}
 
-          <Link to="/">
+          <Link to="/signin">
             <FiArrowLeft />
             Voltar para login
           </Link>
