@@ -38,6 +38,38 @@ const appearFromDown = keyframes`
   }
 `;
 
+export const ToggleButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  gap: 16px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500px;
+    color: var(--title-color);
+  }
+
+  button {
+    background: transparent;
+    border: none;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 500px;
+      color: var(--letter-color-3);
+      transition: 0.5s;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+`;
+
 export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,28 +79,37 @@ export const AnimationContainer = styled.div`
   place-content: center;
   gap: 16px;
 
-  animation: ${appearFromDown} 0.5s;
+  animation: ${appearFromDown} 0.8s;
 
   div {
     display: flex;
     justify-content: center;
-    gap: 3vh;
+    gap: 24px;
     width: 100%;
 
     h1 {
       color: var(--title-color);
-      font-size: 3vh;
+      font-size: 32px;
       padding: auto 0;
     }
     h2 {
-      color: var(--letter-color-1);
-      font-size: 2.5vh;
+      color: var(--letter-color-2);
+      font-size: 24px;
       padding: auto 0;
+      margin-bottom: 16px;
     }
     h3 {
       padding: 2px 0;
       color: var(--letter-color-4);
-      font-size: 2.6vh;
+      font-size: 28px;
+    }
+  }
+  div:nth-child(3) {
+    h2 {
+      color: var(--letter-color-3);
+      font-size: 24px;
+      padding: auto 0;
+      margin-bottom: 16px;
     }
   }
 
@@ -88,6 +129,9 @@ export const AnimationContainer = styled.div`
     width: 100%;
     text-align: center;
 
+    button {
+      height: 40px;
+    }
     input {
       width: 340px;
     }
@@ -95,45 +139,40 @@ export const AnimationContainer = styled.div`
     h1 {
       margin-bottom: 24px;
     }
+    div {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      width: 100%;
 
-    a {
-      color: var(--letter-color-3);
-      display: block;
-      text-decoration: none;
-      transition: color 0.15s;
+      > a {
+        color: var(--primary-color);
+        display: block;
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 3vh;
+        font-weight: 500;
+        margin-top: 24px;
 
-      &:hover {
-        color: ${shade(0.2, '#f4ede8')};
+        display: flex;
+        align-items: center;
+
+        p {
+          color: var(--letter-color-4);
+          transition: 0.3s;
+          &:hover {
+            color: var(--title-color);
+          }
+        }
+
+        svg {
+          margin-right: 16px;
+        }
+
+        &:hover {
+          color: var(--title-color);
+        }
       }
-    }
-  }
-
-  > a {
-    color: var(--primary-color);
-    display: block;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 3vh;
-    font-weight: 500;
-    margin-top: 24px;
-
-    display: flex;
-    align-items: center;
-
-    p {
-      color: var(--letter-color-4);
-      transition: 0.3s;
-      &:hover {
-        color: var(--title-color);
-      }
-    }
-
-    svg {
-      margin-right: 16px;
-    }
-
-    &:hover {
-      color: var(--title-color);
     }
   }
 
