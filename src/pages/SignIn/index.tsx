@@ -120,7 +120,7 @@ const SignIn: React.FC = () => {
             <Link to="/forgot-password">Esqueci minha senha</Link>
           </Form>
           <div>
-            <Link to="/signup">Cadastrar empresa</Link>
+            <Link to="/">Cadastrar empresa</Link>
             <a href="https://www.weplan.party" target="blank">
               Cadastrar usuário
             </a>
