@@ -77,9 +77,10 @@ const SignIn: React.FC = () => {
       <Content>
         <AnimationContainer>
           <h1>WePlan</h1>
+          <h2>Gestão para empresas de evento</h2>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Faça seu login</h1>
+            <h1>Login</h1>
 
             <Input
               name="email"
