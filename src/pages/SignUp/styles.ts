@@ -29,7 +29,7 @@ export const Content = styled.div`
 const appearFromLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateX(-480px);
+    transform: translateX(-400px);
   }
   to {
     opacity: 1;
