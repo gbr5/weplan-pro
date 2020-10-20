@@ -223,10 +223,13 @@ const SignUp: React.FC = () => {
               <h1>WePlan</h1>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <div>
-                  <h3>Work</h3> <h1>Smart!</h1>
+                  <h3>Work</h3> <h1>SMART!</h1>
                 </div>
                 <div>
-                  <h2>A perfeição está na simplicidade!</h2>
+                  <h2>A genialidade está na simplicidade,</h2>
+                </div>
+                <div>
+                  <h2>A perfeição nos detalhes !</h2>
                 </div>
                 <Input
                   name="name"

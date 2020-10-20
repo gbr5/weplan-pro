@@ -7,7 +7,10 @@ import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
 export const Container = styled.div`
   height: 100%;
   width: 100%;
-  padding: 40px;
+  padding: 40px 40px 0;
+  @media (max-width: 800px) {
+    padding: 40px 0 0 24px;
+  }
 `;
 
 export const Content = styled.div`
@@ -18,6 +21,10 @@ export const Content = styled.div`
   place-content: center;
 
   width: 100%;
+
+  @media (max-width: 800px) {
+    display: flex;
+  }
 `;
 
 const appearFromDown = keyframes`
@@ -50,24 +57,24 @@ export const AnimationContainer = styled.div`
 
     h1 {
       color: var(--title-color);
-      font-size: 4vh;
+      font-size: 3vh;
       padding: auto 0;
     }
     h2 {
       color: var(--letter-color-1);
-      font-size: 4vh;
+      font-size: 2.5vh;
       padding: auto 0;
     }
     h3 {
       padding: 2px 0;
       color: var(--letter-color-4);
-      font-size: 3.5vh;
+      font-size: 2.6vh;
     }
   }
 
   h1 {
     color: var(--primary-color);
-    font-size: 10vh;
+    font-size: 8vh;
   }
 
   form {
@@ -104,6 +111,7 @@ export const AnimationContainer = styled.div`
     transition: 0.3s;
     font-size: 3vh;
     font-weight: 500;
+    margin-top: 24px;
 
     display: flex;
     align-items: center;
@@ -122,6 +130,40 @@ export const AnimationContainer = styled.div`
 
     &:hover {
       color: var(--title-color);
+    }
+  }
+
+  @media (max-width: 800px) {
+    width: 90%;
+    margin-bottom: 24px;
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 80px;
+      font-weight: bold;
+      padding: 8px 16px;
+      background: var(--background-color);
+      border-radius: 8px;
+    }
+
+    div {
+      h1,
+      h3 {
+        display: none;
+        /* padding: 4px 8px;
+        font-size: 32px;
+        font-weight: bold;
+        color: var(--title-color); */
+      }
+      h1 {
+        /* padding: 4px 8px;
+        background: var(--background-color);
+        border-radius: 4px; */
+        /* color: var(--primary-color); */
+      }
+      h2 {
+        display: none;
+      }
     }
   }
 `;
