@@ -8,6 +8,7 @@ export const Header = styled.header`
   z-index: 8;
 
   width: 100%;
+  min-height: 72px;
   padding: 16px 0 0;
 
   background: var(--background-color);
@@ -74,6 +75,7 @@ export const HeaderContent = styled.div`
 
     > h1 {
       margin-right: 20px;
+      color: var(--title-color);
     }
   }
 

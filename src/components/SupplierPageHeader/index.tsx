@@ -98,7 +98,7 @@ const SupplierPageHeader: React.FC<IPropsDTO> = ({
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const { toggleTheme, themeBoolean } = useToggleTheme();
   const history = useHistory();
 
@@ -375,19 +375,24 @@ const SupplierPageHeader: React.FC<IPropsDTO> = ({
 
           <button type="button" onClick={handleNavigateToDashboard}>
             <img src={logo} alt="WePlan" />
-            <h1>Fornecedor</h1>
+            <h1>PRO</h1>
           </button>
 
           <h2>
-            {module}
-
-            <button type="button" onClick={handleModulesMenu}>
-              {modulesMenu ? (
-                <FiChevronDown size={40} />
-              ) : (
-                <FiChevronUp size={40} />
-              )}
-            </button>
+            {!user.isCompany ? (
+              <>
+                {module}
+                <button type="button" onClick={handleModulesMenu}>
+                  {modulesMenu ? (
+                    <FiChevronDown size={40} />
+                  ) : (
+                    <FiChevronUp size={40} />
+                  )}
+                </button>
+              </>
+            ) : (
+              <h2>{user.name}</h2>
+            )}
           </h2>
 
           <Menu>
