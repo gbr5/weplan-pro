@@ -231,6 +231,7 @@ const SignUp: React.FC = () => {
                 <div>
                   <h2>A perfeição nos detalhes !</h2>
                 </div>
+
                 <Input
                   name="name"
                   icon={FiUser}

@@ -139,27 +139,37 @@ export const AnimationContainer = styled.div`
 
     h1 {
       color: var(--primary-color);
-      font-size: 80px;
+      font-size: 40px;
       font-weight: bold;
-      padding: 8px 16px;
+      padding: 16px 16px;
       background: var(--background-color);
       border-radius: 8px;
+      width: 60%;
+      text-align: center;
     }
 
     div {
+      &:first-child {
+        display: none;
+        /* text-align: center;
+        width: 60%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--header-background-color);
+        border-radius: 8px;
+      }
       h1,
       h3 {
-        display: none;
-        /* padding: 4px 8px;
-        font-size: 32px;
+        padding: 0;
+        font-size: 24px;
         font-weight: bold;
-        color: var(--title-color); */
+        color: var(--title-color);
+        background: var(--header-background-color);
       }
       h1 {
-        /* padding: 4px 8px;
-        background: var(--background-color);
-        border-radius: 4px; */
-        /* color: var(--primary-color); */
+        padding-top: 24px; */
       }
       h2 {
         display: none;
