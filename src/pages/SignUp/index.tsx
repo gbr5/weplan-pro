@@ -215,6 +215,12 @@ const SignUp: React.FC = () => {
 
   return (
     <Container>
+      <ToggleButton>
+        <h3>Cadastro</h3>
+        <Link to="/signin">
+          <h2>Login</h2>
+        </Link>
+      </ToggleButton>
       <Background />
       <Content>
         <AnimationContainer>

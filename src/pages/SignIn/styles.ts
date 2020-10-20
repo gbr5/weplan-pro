@@ -25,7 +25,7 @@ export const Content = styled.div`
 const appearFromLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateX(-80px);
+    transform: translateX(-480px);
   }
   to {
     opacity: 1;
@@ -33,12 +33,48 @@ const appearFromLeft = keyframes`
   }
 `;
 
+export const ToggleButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  gap: 16px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500px;
+    color: var(--title-color);
+  }
+
+  a {
+    background: transparent;
+    border: none;
+    text-decoration: none;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 500px;
+      color: var(--letter-color-3);
+      transition: 0.5s;
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+`;
 export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  place-content: center;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
 
   animation: ${appearFromLeft} 0.5s;
 
@@ -51,6 +87,7 @@ export const AnimationContainer = styled.div`
     margin: 40px 0;
     width: 340px;
     text-align: center;
+    animation: ${appearFromLeft} 0.8s;
 
     h1 {
       color: var(--title-color);

@@ -74,14 +74,28 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
+      <ToggleButton>
+        <Link to="/">
+          <h2>Cadastro</h2>
+        </Link>
+        <h3>Login</h3>
+      </ToggleButton>
+      <Background />
       <Content>
         <AnimationContainer>
           <h1>WePlan</h1>
           <h2>Gestão para empresas de evento</h2>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Login</h1>
-
+            <div>
+              <h3>Work</h3> <h1>SMART!</h1>
+            </div>
+            <div>
+              <h2>A genialidade está na simplicidade,</h2>
+            </div>
+            <div>
+              <h2>A perfeição nos detalhes !</h2>
+            </div>
             <Input
               name="email"
               icon={FiMail}

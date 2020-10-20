@@ -27,14 +27,47 @@ export const Content = styled.div`
   }
 `;
 
-const appearFromDown = keyframes`
+const appearFromLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateY(-480px);
+    transform: translateX(-480px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
+  }
+`;
+
+export const ToggleButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  gap: 16px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 500px;
+    color: var(--title-color);
+  }
+
+  a {
+    background: transparent;
+    border: none;
+    text-decoration: none;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 500px;
+      color: var(--letter-color-3);
+      transition: 0.5s;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
   }
 `;
 
@@ -46,8 +79,6 @@ export const AnimationContainer = styled.div`
   width: 100%;
   place-content: center;
   gap: 16px;
-
-  animation: ${appearFromDown} 0.5s;
 
   div {
     display: flex;
@@ -83,6 +114,7 @@ export const AnimationContainer = styled.div`
     gap: 8px;
     width: 100%;
     text-align: center;
+    animation: ${appearFromLeft} 0.8s;
 
     input {
       width: 340px;
