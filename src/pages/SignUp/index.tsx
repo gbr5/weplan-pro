@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -20,6 +20,7 @@ import {
   AnimationContainer,
   Background,
   QuestionTitle,
+  ToggleButton,
 } from './styles';
 import { useAuth } from '../../hooks/auth';
 
@@ -57,6 +58,11 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const { signIn } = useAuth();
+  const history = useHistory();
+
+  const navigateToLogin = useCallback(() => {
+    history.push('/signin');
+  }, [history]);
 
   const handleSubmitContactInfo = useCallback(
     async (data: IContactInfo) => {
@@ -218,9 +224,17 @@ const SignUp: React.FC = () => {
       <Background />
       <Content>
         <AnimationContainer>
+          <ToggleButton>
+            <h3>Cadastro</h3>
+            <button type="button" onClick={navigateToLogin}>
+              <h2>Login</h2>
+            </button>
+          </ToggleButton>
           {!!options && (
             <>
-              <h1>WePlan</h1>
+              <h1>
+                WePlan <strong>PRO</strong>
+              </h1>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>
@@ -262,11 +276,13 @@ const SignUp: React.FC = () => {
                 />
 
                 <Button type="submit">Cadastrar</Button>
+                <div>
+                  <a href="https://www.weplan.party" target="blank">
+                    <p>Ir para seção de usuário</p>
+                  </a>
+                  <Link to="/signin">Fazer Login</Link>
+                </div>
               </Form>
-              <Link to="/signin">Fazer login</Link>
-              <a href="https://www.weplan.party" target="blank">
-                <p>Não sou empresa de eventos</p>
-              </a>
             </>
           )}
 
