@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { shade } from 'polished';
 import '../../styles/global';
 
 import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
@@ -7,7 +6,7 @@ import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
 export const Container = styled.div`
   height: 100%;
   width: 100%;
-  padding: 40px 40px 0;
+  padding: 48px 40px 0;
   @media (max-width: 800px) {
     padding: 40px 0 0 24px;
   }
@@ -83,29 +82,38 @@ export const AnimationContainer = styled.div`
   div {
     display: flex;
     justify-content: center;
-    gap: 3vh;
+    gap: 24px;
     width: 100%;
 
     h1 {
       color: var(--title-color);
-      font-size: 3vh;
+      font-size: 32px;
       padding: auto 0;
     }
     h2 {
-      color: var(--letter-color-1);
-      font-size: 2.5vh;
+      color: var(--letter-color-3);
+      font-size: 20px;
       padding: auto 0;
     }
     h3 {
       padding: 2px 0;
       color: var(--letter-color-4);
-      font-size: 2.6vh;
+      font-size: 28px;
+    }
+  }
+  div:nth-child(3) {
+    h2 {
+      color: var(--letter-color-2);
     }
   }
 
   h1 {
     color: var(--primary-color);
-    font-size: 8vh;
+    font-size: 60px;
+
+    strong {
+      color: var(--title-color);
+    }
   }
 
   form {
@@ -123,48 +131,43 @@ export const AnimationContainer = styled.div`
     h1 {
       margin-bottom: 24px;
     }
-
-    a {
-      color: var(--letter-color-3);
-      display: block;
-      text-decoration: none;
-      transition: color 0.15s;
-
-      &:hover {
-        color: ${shade(0.2, '#f4ede8')};
-      }
-    }
   }
 
-  > a {
-    color: var(--primary-color);
-    display: block;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: 3vh;
-    font-weight: 500;
-    margin-top: 24px;
-
+  div {
     display: flex;
-    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
 
-    p {
-      color: var(--letter-color-4);
+    a {
+      color: var(--primary-color);
+      display: block;
+      text-decoration: none;
       transition: 0.3s;
+      font-size: 24px;
+      font-weight: 500;
+      margin-top: 24px;
+
+      display: flex;
+      align-items: center;
+
+      p {
+        color: var(--letter-color-4);
+        transition: 0.3s;
+        &:hover {
+          color: var(--title-color);
+        }
+      }
+
+      svg {
+        margin-right: 16px;
+      }
+
       &:hover {
         color: var(--title-color);
       }
     }
-
-    svg {
-      margin-right: 16px;
-    }
-
-    &:hover {
-      color: var(--title-color);
-    }
   }
-
   @media (max-width: 800px) {
     width: 90%;
     margin-bottom: 24px;

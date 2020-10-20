@@ -1,25 +1,29 @@
 import styled, { keyframes } from 'styled-components';
-import { shade } from 'polished';
 import '../../styles/global';
 
-import signInBackgroundImg from '../../assets/signInImage1.jpg';
+import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
 
 export const Container = styled.div`
-  height: 100vh;
-
-  display: flex;
-  align-items: stretch;
+  height: 100%;
+  width: 100%;
+  padding: 80px 40px 0;
+  @media (max-width: 800px) {
+    padding: 40px 0 0 24px;
+  }
 `;
 
 export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: transparent;
 
   place-content: center;
 
   width: 100%;
-  max-width: 700px;
+
+  @media (max-width: 800px) {
+    display: flex;
+  }
 `;
 
 const appearFromLeft = keyframes`
@@ -58,80 +62,195 @@ export const ToggleButton = styled.span`
       font-weight: 500px;
       color: var(--letter-color-3);
       transition: 0.5s;
+
       &:hover {
         color: var(--primary-color);
       }
     }
   }
 `;
+
 export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  width: 100%;
+  place-content: center;
+  gap: 16px;
 
   div {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 24px;
     width: 100%;
-
-  animation: ${appearFromLeft} 0.5s;
-
-  h1 {
-    color: var(--primary-color);
-    font-size: 80px;
-  }
-
-  form {
-    margin: 40px 0;
-    width: 340px;
-    text-align: center;
-    animation: ${appearFromLeft} 0.8s;
 
     h1 {
       color: var(--title-color);
-      margin-bottom: 24px;
       font-size: 32px;
+      padding: auto 0;
+    }
+    h2 {
+      color: var(--letter-color-3);
+      font-size: 20px;
+      padding: auto 0;
+    }
+    h3 {
+      padding: 2px 0;
+      color: var(--letter-color-4);
+      font-size: 28px;
+    }
+  }
+  div:nth-child(3) {
+    h2 {
+      color: var(--letter-color-2);
+    }
+  }
+
+  h1 {
+    color: var(--primary-color);
+    font-size: 60px;
+
+    strong {
+      color: var(--title-color);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    text-align: center;
+    animation: ${appearFromLeft} 0.8s;
+
+    input {
+      width: 340px;
+    }
+
+    h1 {
+      margin-bottom: 24px;
     }
 
     a {
-      color: var(--letter-color-5);
+      margin-top: 16px;
+      color: var(--letter-color-3);
       display: block;
-      margin-top: 24px;
       text-decoration: none;
-      transition: color 0.15s;
+      transition: 0.3s;
 
       &:hover {
-        color: ${shade(0.2, '#f4ede8')};
+        color: var(--title-color);
       }
     }
   }
 
-  > a {
-    color: var(--primary-color);
-    font-weight: 500;
-    display: block;
-    margin-top: 24px;
-    text-decoration: none;
-    transition: color 0.15s;
-    font-size: 24px;
-
+  div {
     display: flex;
-    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
 
-    svg {
-      margin-right: 16px;
+    > a {
+      color: var(--primary-color);
+      display: block;
+      text-decoration: none;
+      transition: 0.3s;
+      font-size: 24px;
+      font-weight: 500;
+      margin-top: 24px;
+
+      display: flex;
+      align-items: center;
+
+      p {
+        color: var(--letter-color-4);
+        transition: 0.3s;
+        &:hover {
+          color: var(--title-color);
+        }
+      }
+
+      svg {
+        margin-right: 16px;
+      }
+
+      &:hover {
+        color: var(--title-color);
+      }
+    }
+  }
+  @media (max-width: 800px) {
+    width: 90%;
+    margin-bottom: 24px;
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 40px;
+      font-weight: bold;
+      padding: 16px 16px;
+      background: var(--background-color);
+      border-radius: 8px;
+      width: 60%;
+      text-align: center;
     }
 
-    &:hover {
-      color: ${shade(0.2, '#ff9000')};
+    div {
+      &:first-child {
+        display: none;
+        /* text-align: center;
+        width: 60%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--header-background-color);
+        border-radius: 8px;
+      }
+      h1,
+      h3 {
+        padding: 0;
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--title-color);
+        background: var(--header-background-color);
+      }
+      h1 {
+        padding-top: 24px; */
+      }
+      h2 {
+        display: none;
+      }
     }
   }
 `;
 
 export const Background = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  z-index: -1;
   flex: 1;
-  background: url(${signInBackgroundImg}) no-repeat center;
+  background: url(${signUpBackgroundImg}) no-repeat center;
   background-size: cover;
+`;
+
+export const QuestionTitle = styled.h2`
+  color: var(--title-color);
+  font-size: 32px;
+  margin: 32px auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  > strong {
+    font-size: 40px;
+    color: var(--primary-color);
+  }
 `;
