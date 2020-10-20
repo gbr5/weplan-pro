@@ -20,7 +20,6 @@ import {
   AnimationContainer,
   Background,
   QuestionTitle,
-  ToggleButton,
 } from './styles';
 import { useAuth } from '../../hooks/auth';
 
@@ -227,9 +226,7 @@ const SignUp: React.FC = () => {
         <AnimationContainer>
           {!!options && (
             <>
-              <h1>
-                WePlan <strong>PRO</strong>
-              </h1>
+              <h1>WePlan</h1>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>
@@ -271,13 +268,11 @@ const SignUp: React.FC = () => {
                 />
 
                 <Button type="submit">Cadastrar</Button>
-                <div>
-                  <a href="https://www.weplan.party" target="blank">
-                    <p>Ir para seção de usuário</p>
-                  </a>
-                  <Link to="/signin">Fazer Login</Link>
-                </div>
               </Form>
+              <Link to="/signin">Fazer login</Link>
+              <a href="https://www.weplan.party" target="blank">
+                <p>Não sou empresa de eventos</p>
+              </a>
             </>
           )}
 
