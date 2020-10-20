@@ -220,7 +220,9 @@ const SignUp: React.FC = () => {
         <AnimationContainer>
           {!!options && (
             <>
-              <h1>WePlan</h1>
+              <h1>
+                WePlan <strong>PRO</strong>
+              </h1>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>

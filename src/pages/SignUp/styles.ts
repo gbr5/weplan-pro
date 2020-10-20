@@ -75,6 +75,10 @@ export const AnimationContainer = styled.div`
   h1 {
     color: var(--primary-color);
     font-size: 8vh;
+    > strong {
+      font-weight: 500;
+      color: var(--title-color);
+    }
   }
 
   form {
@@ -140,12 +144,18 @@ export const AnimationContainer = styled.div`
     h1 {
       color: var(--primary-color);
       font-size: 40px;
-      font-weight: bold;
+      font-weight: 500;
       padding: 16px 16px;
       background: var(--background-color);
       border-radius: 8px;
       width: 60%;
       text-align: center;
+      margin-bottom: 16px;
+
+      > strong {
+        font-weight: 500;
+        color: var(--title-color);
+      }
     }
 
     div {
