@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -22,7 +22,6 @@ import {
   QuestionTitle,
   ToggleButton,
 } from './styles';
-import { useAuth } from '../../hooks/auth';
 
 interface SignUpForm {
   name: string;
@@ -51,13 +50,12 @@ interface ICompanyUser {
 
 const SignUp: React.FC = () => {
   const [userId, setUserId] = useState('');
-  const [userInfo, setUserInfo] = useState<SignUpForm>({} as SignUpForm);
   const [options, setOptions] = useState(true);
   const [companyInfo, setCompanyInfo] = useState(false);
   const [contactInfo, setContactInfo] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
-  const { signIn } = useAuth();
+  const history = useHistory();
 
   const handleSubmitContactInfo = useCallback(
     async (data: IContactInfo) => {
@@ -77,16 +75,15 @@ const SignUp: React.FC = () => {
           contact_type: 'phone',
         });
         setUserId('');
-
-        setContactInfo(false);
-        setOptions(true);
-        signIn({ email: userInfo.email, password: userInfo.password });
-
         addToast({
           type: 'success',
-          title: 'Cadastro realizado!',
-          description: 'Você já pode fazer seu login no GoBarber!',
+          title: 'Cadastro completo!',
+          description: 'Bem vindo(a) ao WePlan PRO!',
         });
+
+        history.push('/signin');
+        setContactInfo(false);
+        setOptions(true);
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const error = getValidationErrors(err);
@@ -101,7 +98,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, userId, signIn, userInfo],
+    [addToast, userId],
   );
 
   const handleSubmitCompanyInfo = useCallback(
@@ -128,8 +125,8 @@ const SignUp: React.FC = () => {
 
         addToast({
           type: 'success',
-          title: 'Cadastro realizado!',
-          description: 'Você já pode fazer seu login no GoBarber!',
+          title: 'Informações salvas com sucesso!',
+          description: 'Falta só mais uma etapa!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -178,19 +175,14 @@ const SignUp: React.FC = () => {
 
         const response = await api.post('/users', validatedData);
         setUserId(response.data.id);
-        setUserInfo({
-          name: response.data.name,
-          email: response.data.email,
-          password: response.data.password,
-        });
 
         setOptions(false);
         setCompanyInfo(true);
 
         addToast({
           type: 'success',
-          title: 'Cadastro realizado!',
-          description: 'Você já pode fazer seu login no GoBarber!',
+          title: 'Usuário cadastrado com sucesso!',
+          description: 'Vamos precisar só mais algumas informações.',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -287,7 +279,6 @@ const SignUp: React.FC = () => {
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
-              <h3>Party Hard!</h3>
               <p>Razão Social</p>
               <Input
                 name="name"
@@ -312,9 +303,8 @@ const SignUp: React.FC = () => {
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
-              <h3>Party Hard!</h3>
-              <p>Por último,</p>
-              <p>precisamos de um telefone de contato, pode ser whatsapp</p>
+              <p>Qual o melhor telefone para contato?</p>
+              <p>Pode ser até o seu whatsapp! </p>
               <Input
                 name="contact_info"
                 type="text"
