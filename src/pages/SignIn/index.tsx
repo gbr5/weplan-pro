@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
@@ -13,13 +13,7 @@ import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-import {
-  Container,
-  Content,
-  AnimationContainer,
-  Background,
-  ToggleButton,
-} from './styles';
+import { Container, Content, AnimationContainer, Background } from './styles';
 
 interface SignInFormData {
   email: string;
@@ -78,11 +72,6 @@ const SignIn: React.FC = () => {
     [signIn, addToast, history],
   );
 
-  const containerStyle = {
-    width: '100%',
-    height: '40px',
-  };
-
   return (
     <Container>
       <ToggleButton>
@@ -94,9 +83,8 @@ const SignIn: React.FC = () => {
       <Background />
       <Content>
         <AnimationContainer>
-          <h1>
-            WePlan <strong>PRO</strong>
-          </h1>
+          <h1>WePlan</h1>
+          <h2>Gestão para empresas de evento</h2>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
             <div>
@@ -109,14 +97,12 @@ const SignIn: React.FC = () => {
               <h2>A perfeição nos detalhes !</h2>
             </div>
             <Input
-              containerStyle={containerStyle}
               name="email"
               icon={FiMail}
               type="text"
               placeholder="E-mail"
             />
             <Input
-              containerStyle={containerStyle}
               name="password"
               icon={FiLock}
               type="password"
@@ -126,14 +112,17 @@ const SignIn: React.FC = () => {
             <Button type="submit">Entrar</Button>
             <Link to="/forgot-password">Esqueci minha senha</Link>
           </Form>
-          <div>
-            <Link to="/">Cadastrar Empresa</Link>
-            <a href="https://www.weplan.party" target="blank">
-              Cadastrar Usuário
-            </a>
-          </div>
+          <Link to="/signup">
+            <FiLogIn />
+            Cadastrar como empresa de evento
+          </Link>
+          <a href="https://www.weplan.party" target="blank">
+            <FiLogIn />
+            Cadastrar como usuário final
+          </a>
         </AnimationContainer>
       </Content>
+      <Background />
     </Container>
   );
 };
