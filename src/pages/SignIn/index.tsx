@@ -33,10 +33,6 @@ const SignIn: React.FC = () => {
   const { signIn } = useAuth();
   const { addToast } = useToast();
 
-  const navigateToSignUp = useCallback(() => {
-    history.push('/');
-  }, [history]);
-
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
@@ -89,6 +85,12 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
+      <ToggleButton>
+        <Link to="/">
+          <h2>Cadastro</h2>
+        </Link>
+        <h3>Login</h3>
+      </ToggleButton>
       <Background />
       <Content>
         <AnimationContainer>
@@ -97,12 +99,6 @@ const SignIn: React.FC = () => {
           </h1>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <ToggleButton>
-              <button type="button" onClick={navigateToSignUp}>
-                <h2>Cadastro</h2>
-              </button>
-              <h3>Login</h3>
-            </ToggleButton>
             <div>
               <h3>Work</h3> <h1>SMART!</h1>
             </div>

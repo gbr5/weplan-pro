@@ -27,14 +27,14 @@ export const Content = styled.div`
   }
 `;
 
-const appearFromDown = keyframes`
+const appearFromLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateY(-480px);
+    transform: translateX(-480px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 `;
 
@@ -53,9 +53,10 @@ export const ToggleButton = styled.span`
     color: var(--title-color);
   }
 
-  button {
+  a {
     background: transparent;
     border: none;
+    text-decoration: none;
 
     h2 {
       font-size: 20px;
@@ -76,8 +77,6 @@ export const AnimationContainer = styled.div`
   width: 100%;
   place-content: center;
   gap: 16px;
-
-  animation: ${appearFromDown} 0.8s;
 
   div {
     display: flex;
@@ -118,6 +117,7 @@ export const AnimationContainer = styled.div`
     gap: 16px;
     width: 100%;
     text-align: center;
+    animation: ${appearFromLeft} 0.8s;
 
     button {
       height: 40px;

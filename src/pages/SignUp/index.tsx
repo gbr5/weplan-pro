@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -58,11 +58,6 @@ const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
   const { signIn } = useAuth();
-  const history = useHistory();
-
-  const navigateToLogin = useCallback(() => {
-    history.push('/signin');
-  }, [history]);
 
   const handleSubmitContactInfo = useCallback(
     async (data: IContactInfo) => {
@@ -221,15 +216,15 @@ const SignUp: React.FC = () => {
 
   return (
     <Container>
+      <ToggleButton>
+        <h3>Cadastro</h3>
+        <Link to="/signin">
+          <h2>Login</h2>
+        </Link>
+      </ToggleButton>
       <Background />
       <Content>
         <AnimationContainer>
-          <ToggleButton>
-            <h3>Cadastro</h3>
-            <button type="button" onClick={navigateToLogin}>
-              <h2>Login</h2>
-            </button>
-          </ToggleButton>
           {!!options && (
             <>
               <h1>
