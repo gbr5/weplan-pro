@@ -98,7 +98,7 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, userId],
+    [addToast, userId, history],
   );
 
   const handleSubmitCompanyInfo = useCallback(
