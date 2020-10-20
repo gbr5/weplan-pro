@@ -2,62 +2,22 @@ import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 import '../../styles/global';
 
-import signUpBackgroundImg from '../../assets/sign-up-background.png';
+import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
 
 export const Container = styled.div`
-  height: 100vh;
-
-  display: flex;
-  align-items: stretch;
+  height: 100%;
+  width: 100%;
+  padding: 40px;
 `;
 
 export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: transparent;
-  margin: 32px auto;
 
   place-content: center;
 
   width: 100%;
-  max-width: 700px;
-`;
-
-const appearFromNothing = keyframes`
-  from {
-    opacity: 0;
-  }
-  60% {
-    opacity: 0;
-  }
-  65% {
-    opacity: 0.1;
-  }
-  75% {
-    opacity: 0.15;
-  }
-  80% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0.4;
-  }
-  95% {
-    opacity: 0.5;
-  }
-  97% {
-    opacity: 0.6;
-  }
-  98% {
-    opacity: 0.75;
-  }
-  99% {
-    opacity: 0.95;
-  }
-  to {
-    opacity: 1;
-  }
 `;
 
 const appearFromDown = keyframes`
@@ -75,20 +35,51 @@ export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  height: 100%;
+  width: 100%;
   place-content: center;
+  gap: 16px;
 
   animation: ${appearFromDown} 0.5s;
 
+  div {
+    display: flex;
+    justify-content: center;
+    gap: 3vh;
+    width: 100%;
+
+    h1 {
+      color: var(--title-color);
+      font-size: 4vh;
+      padding: auto 0;
+    }
+    h2 {
+      color: var(--letter-color-1);
+      font-size: 4vh;
+      padding: auto 0;
+    }
+    h3 {
+      padding: 2px 0;
+      color: var(--letter-color-4);
+      font-size: 3.5vh;
+    }
+  }
+
   h1 {
     color: var(--primary-color);
-    font-size: 80px;
+    font-size: 10vh;
   }
 
   form {
-    margin: 40px 0;
-    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
     text-align: center;
+
+    input {
+      width: 340px;
+    }
 
     h1 {
       margin-bottom: 24px;
@@ -97,7 +88,6 @@ export const AnimationContainer = styled.div`
     a {
       color: var(--letter-color-3);
       display: block;
-      margin-top: 24px;
       text-decoration: none;
       transition: color 0.15s;
 
@@ -110,56 +100,43 @@ export const AnimationContainer = styled.div`
   > a {
     color: var(--primary-color);
     display: block;
-    margin-top: 24px;
     text-decoration: none;
-    transition: color 0.15s;
-    font-size: 24px;
+    transition: 0.3s;
+    font-size: 3vh;
     font-weight: 500;
 
     display: flex;
     align-items: center;
+
+    p {
+      color: var(--letter-color-4);
+      transition: 0.3s;
+      &:hover {
+        color: var(--title-color);
+      }
+    }
 
     svg {
       margin-right: 16px;
     }
 
     &:hover {
-      color: ${shade(0.2, '#FF9000')};
+      color: var(--title-color);
     }
   }
 `;
 
 export const Background = styled.div`
-  position: absolute;
-  /* top: 0; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
   margin: auto;
   z-index: -1;
   flex: 1;
   background: url(${signUpBackgroundImg}) no-repeat center;
   background-size: cover;
-`;
-
-export const SubContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  animation: ${appearFromNothing} 1.6s;
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 300px;
-`;
-
-export const ButtonContainerTitle = styled.div`
-  color: var(--primary-color);
-  font-size: 24px;
-  text-align: center;
 `;
 
 export const QuestionTitle = styled.h2`
@@ -177,11 +154,4 @@ export const QuestionTitle = styled.h2`
     font-size: 40px;
     color: var(--primary-color);
   }
-`;
-
-export const QuestionContainer = styled.div`
-  display: grid;
-  grid-template-rows: 2fr 7fr;
-  justify-content: center;
-  align-items: center;
 `;
