@@ -7,7 +7,7 @@ import signUpBackgroundImg from '../../assets/sign-up-background.jpeg';
 export const Container = styled.div`
   height: 100%;
   width: 100%;
-  padding: 80px 40px 0;
+  padding: 56px 40px 0;
   @media (max-width: 800px) {
     padding: 40px 0 0 24px;
   }
@@ -81,25 +81,25 @@ export const AnimationContainer = styled.div`
 
   div {
     display: flex;
+    align-items: center;
     justify-content: center;
     gap: 16px;
     width: 100%;
 
     h1 {
+      padding-top: 12px;
       color: var(--title-color);
-      font-size: 24px;
-      padding: auto 0;
+      font-size: 32px;
     }
     h2 {
       color: var(--letter-color-3);
-      font-size: 18px;
+      font-size: 24px;
       padding: auto 0;
       margin-bottom: 24px;
     }
     h3 {
-      padding: 2px 0;
       color: var(--letter-color-4);
-      font-size: 20px;
+      font-size: 28px;
     }
   }
 
