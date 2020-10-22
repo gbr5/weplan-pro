@@ -35,7 +35,7 @@ export const Container = styled.div`
 
   animation: ${appearFromTop} 0.5s;
 
-  > form {
+  /* > form {
     display: flex;
     width: 100%;
     height: 100%;
@@ -53,7 +53,7 @@ export const Container = styled.div`
       height: 100%;
       gap: 24px;
     }
-  }
+  } */
 
   > button {
     position: absolute;
@@ -66,7 +66,7 @@ export const Container = styled.div`
       color: red;
     }
   }
-
+  /*
   > div {
     display: flex;
     width: 100%;
@@ -82,13 +82,13 @@ export const Container = styled.div`
       height: 40px;
       width: 100%;
       box-shadow: var(--box-shadow);
-    }
+    } */
 
-    /* &:hover {
+  /* &:hover {
       color: var(--primary-color);
       box-shadow: 2px 2px 5px 1px var(--title-color);
       border-radius: 8px;
       opacity: 0.8;
     } */
-  }
+  /* } */
 `;

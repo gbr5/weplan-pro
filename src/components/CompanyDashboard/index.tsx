@@ -44,12 +44,18 @@ interface IWPContractOrder {
   products: IOrderProduct[];
 }
 
+interface IContractWPModulesDTO {
+  id: string;
+  name: string;
+}
+
 const CompanyDashboard: React.FC = () => {
   const { user } = useAuth();
 
   const [companyWPContracts, setCompanyWPContracts] = useState<
     IWPContractOrder[]
   >([]);
+
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
   // const [employee, setEmployee] = useState<IEmployeeDTO>({} as IEmployeeDTO);
   const [companyInfo, setCompanyInfo] = useState<ICompanyInfoDTO>(
@@ -74,6 +80,7 @@ const CompanyDashboard: React.FC = () => {
   const [dashboardTitle, setDashboardTitle] = useState(
     'Informações da Empresa',
   );
+  const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
 
   const closeAllWindow = useCallback(() => {
     setInitialDashboard(false);
@@ -125,6 +132,7 @@ const CompanyDashboard: React.FC = () => {
           if (response.data.length <= 0) {
             setChooseWPproductMessageWindow(true);
           }
+
           setCompanyWPContracts(response.data);
         });
     } catch (err) {
@@ -134,7 +142,7 @@ const CompanyDashboard: React.FC = () => {
   useEffect(() => {
     getCompanyWPContractOrders();
   }, [getCompanyWPContractOrders]);
-  console.log(companyWPContracts);
+
   const getCompanyEmployees = useCallback(() => {
     try {
       api
@@ -150,6 +158,8 @@ const CompanyDashboard: React.FC = () => {
                 id: tEmployee.id,
                 employee: tEmployee.employee,
                 position: tEmployee.position,
+                modules: tEmployee.modules,
+                confirmation: tEmployee.confirmation,
               };
             }),
           );
@@ -162,6 +172,22 @@ const CompanyDashboard: React.FC = () => {
   useEffect(() => {
     getCompanyEmployees();
   }, [getCompanyEmployees]);
+
+  const getWPManagementModules = useCallback(() => {
+    try {
+      api
+        .get<IContractWPModulesDTO[]>('wp-management-modules')
+        .then(response => {
+          setWPModules(response.data);
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    getWPManagementModules();
+  }, [getWPManagementModules]);
 
   const getCompanyInfo = useCallback(() => {
     try {
@@ -179,10 +205,12 @@ const CompanyDashboard: React.FC = () => {
 
   return (
     <>
-      {!!addEmployeeWindow && (
+      {!!addEmployeeWindow && !!wpModules && (
         <AddEmployeeWindow
+          wpModules={wpModules}
+          wpCompanyContract={companyWPContracts[companyWPContracts.length - 1]}
           getEmployees={getCompanyEmployees}
-          handleCloseWindow={() => setAddEmployeeWindow}
+          handleCloseWindow={() => setAddEmployeeWindow(false)}
           onHandleCloseWindow={handleEmployeesWindow}
         />
       )}

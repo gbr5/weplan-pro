@@ -1,8 +1,9 @@
 import React, { MouseEventHandler, useCallback, useState } from 'react';
 import IUserDTO from '../../dtos/IUserDTO';
+import IWPContractOrderDTO from '../../dtos/IWPContractOrderDTO';
 import { useAuth } from '../../hooks/auth';
-import { useToast } from '../../hooks/toast';
 import api from '../../services/api';
+import CompanyEmployeeForm from '../CompanyEmployeeForm';
 import WindowContainer from '../WindowContainer';
 
 import { Container } from './styles';
@@ -11,21 +12,30 @@ interface ISubmitFormDTO {
   position: string;
 }
 
+interface IWPModulesDTO {
+  id: string;
+  name: string;
+}
+
 interface IPropsDTO {
+  wpCompanyContract: IWPContractOrderDTO;
   handleCloseWindow: Function;
   onHandleCloseWindow: MouseEventHandler;
   getEmployees: Function;
+  wpModules: IWPModulesDTO[];
 }
 
 const AddEmployeeWindow: React.FC<IPropsDTO> = ({
+  wpCompanyContract,
   handleCloseWindow,
   onHandleCloseWindow,
   getEmployees,
+  wpModules,
 }: IPropsDTO) => {
-  const { addToast } = useToast();
   const { user } = useAuth();
 
   const [users, setUsers] = useState<IUserDTO[]>([]);
+  const [addEmployeeFormWindow, setAddEmployeeFormWindow] = useState(false);
   const [userEmployee, setUserEmployee] = useState<IUserDTO>({} as IUserDTO);
 
   const handleSelectUser = useCallback(
@@ -56,45 +66,21 @@ const AddEmployeeWindow: React.FC<IPropsDTO> = ({
   );
 
   const handleAddEmployee = useCallback(async () => {
-    try {
-      await api.post(`/supplier-employees/${userEmployee.id}`, {
-        position: 'Diretor',
-        modules: [
-          {
-            management_module_id: '2e1eb6d0-6fa9-4d03-bffa-5581eed30b11',
-            access_level: 1,
-          },
-          {
-            management_module_id: '9ccea020-8ff8-4656-b734-84620d3e563d',
-            access_level: 1,
-          },
-          {
-            management_module_id: '4dd5b84a-8912-4fe4-99b2-3c33a113c90f',
-            access_level: 1,
-          },
-        ],
-      });
-
-      getEmployees();
-      handleCloseWindow();
-
-      addToast({
-        type: 'success',
-        title: 'Amigo adicionado com sucesso',
-        description: 'As informações do evento já foram atualizadas.',
-      });
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao adicionar amigo',
-        description: 'Erro ao adicionar amigo, tente novamente.',
-      });
-      throw new Error(err);
-    }
-  }, [addToast, getEmployees, handleCloseWindow, userEmployee]);
+    setAddEmployeeFormWindow(true);
+  }, []);
 
   return (
     <>
+      {addEmployeeFormWindow && (
+        <CompanyEmployeeForm
+          wpModules={wpModules}
+          getEmployees={getEmployees}
+          onHandleCloseWindow={onHandleCloseWindow}
+          wpCompanyContract={wpCompanyContract}
+          userEmployee={userEmployee}
+          handleCloseWindow={handleCloseWindow}
+        />
+      )}
       <WindowContainer
         onHandleCloseWindow={onHandleCloseWindow}
         containerStyle={{
@@ -102,7 +88,7 @@ const AddEmployeeWindow: React.FC<IPropsDTO> = ({
           left: '25%',
           height: '80%',
           width: '50%',
-          zIndex: '1000',
+          zIndex: 15,
         }}
       >
         <Container>
@@ -134,7 +120,7 @@ const AddEmployeeWindow: React.FC<IPropsDTO> = ({
           </ul>
           {userEmployee.id !== '' && (
             <button type="button" onClick={handleAddEmployee}>
-              Adicionar
+              Selecionar usuário
             </button>
           )}
         </Container>
