@@ -52,7 +52,6 @@ const WPContractOrderForm: React.FC<IPropsDTO> = ({
   const getWPProducts = useCallback(() => {
     try {
       api.get<IWPProductDTO[]>('wp-products').then(response => {
-        console.log(response.data);
         setWPProducts(response.data);
       });
     } catch (err) {
