@@ -23,6 +23,7 @@ import ICompanyInfoDTO from '../../dtos/ICompanyInfoDTO';
 import supplierLogo from '../../assets/elefante.png';
 import WindowContainer from '../WindowContainer';
 import IUserDTO from '../../dtos/IUserDTO';
+import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
 
 interface IWPProduct {
   id: string;
@@ -58,6 +59,9 @@ const CompanyDashboard: React.FC = () => {
   >([]);
 
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState<IEmployeeDTO>(
+    {} as IEmployeeDTO,
+  );
   const [companyInfo, setCompanyInfo] = useState<ICompanyInfoDTO>(
     {} as ICompanyInfoDTO,
   );
@@ -76,6 +80,7 @@ const CompanyDashboard: React.FC = () => {
   );
   const [contractOrderWindow, setContractOrderWindow] = useState(false);
   const [addEmployeeWindow, setAddEmployeeWindow] = useState(false);
+  const [editEmployeeWindow, setEditEmployeeWindow] = useState(false);
   const [helpDashboard, setHelpDashboard] = useState(false);
   const [documentationDashboard, setDocumentationDashboard] = useState(false);
   const [dashboardTitle, setDashboardTitle] = useState(
@@ -84,6 +89,7 @@ const CompanyDashboard: React.FC = () => {
   const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
 
   const closeAllWindow = useCallback(() => {
+    setEditEmployeeWindow(false);
     setContractOrderWindow(false);
     setInitialDashboard(false);
     setEmployeesDashboard(false);
@@ -100,6 +106,14 @@ const CompanyDashboard: React.FC = () => {
     setContractOrderWindow(true);
     setFinanceDashboard(true);
   }, [closeAllWindow]);
+  const handleEditEmployeeWindow = useCallback(
+    (props: IEmployeeDTO) => {
+      closeAllWindow();
+      setEditEmployeeWindow(true);
+      setSelectedEmployee(props);
+    },
+    [closeAllWindow],
+  );
   const handleInitialWindow = useCallback(() => {
     closeAllWindow();
     setDashboardTitle('Informações da Empresa');
@@ -221,10 +235,20 @@ const CompanyDashboard: React.FC = () => {
           onHandleCloseWindow={handleEmployeesWindow}
         />
       )}
+      {!!editEmployeeWindow && !!wpModules && (
+        <EditCompanyEmployeeForm
+          employee={selectedEmployee}
+          wpModules={wpModules}
+          wpCompanyContract={companyWPContracts[companyWPContracts.length - 1]}
+          getEmployees={getCompanyEmployees}
+          handleCloseWindow={() => setEditEmployeeWindow(false)}
+          onHandleCloseWindow={handleEmployeesWindow}
+        />
+      )}
       {!!contractOrderWindow && (
         <WPContractOrderForm
           getCompanyWPContracts={getCompanyWPContractOrders}
-          handleCloseWindow={() => setAddEmployeeWindow(false)}
+          handleCloseWindow={() => setContractOrderWindow(false)}
           onHandleCloseWindow={handleEmployeesWindow}
         />
       )}
@@ -463,7 +487,11 @@ const CompanyDashboard: React.FC = () => {
                             <td>{thiEmployee.employee.name}</td>
                             <td>{thiEmployee.position}</td>
                             <td>
-                              <button type="button">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEditEmployeeWindow(thiEmployee)}
+                              >
                                 <FiChevronsRight size={24} />
                               </button>
                             </td>

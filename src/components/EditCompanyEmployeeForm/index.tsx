@@ -27,6 +27,7 @@ import {
   BooleanButton,
   ButtonContainer,
   AddButton,
+  DeleteButton,
 } from './styles';
 
 interface IEmployeeUserPersonInfoDTO {
@@ -36,10 +37,6 @@ interface IEmployeeUserPersonInfoDTO {
   person_id: string;
 }
 
-interface IUserEmployeeDTO {
-  id: string;
-  name: string;
-}
 interface IContractWPModulesDTO {
   id: string;
   name: string;
@@ -49,11 +46,8 @@ interface IPropsDTO {
   wpCompanyContract: IWPContractOrderDTO;
   wpModules: IContractWPModulesDTO[];
   // eslint-disable-next-line react/require-default-props
-  // employees?: IEmployeeDTO[];
+  employee: IEmployeeDTO;
   // eslint-disable-next-line react/require-default-props
-  employee?: IEmployeeDTO;
-  // eslint-disable-next-line react/require-default-props
-  userEmployee?: IUserEmployeeDTO;
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
   getEmployees: Function;
@@ -64,41 +58,61 @@ interface IEmployeeWPModulesDTO {
   access_level: number;
 }
 
-const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
+const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
   onHandleCloseWindow,
   handleCloseWindow,
   getEmployees,
   wpCompanyContract,
   employee,
-  userEmployee,
   wpModules,
 }: IPropsDTO) => {
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
-  // const [contractModules, setContractModules] = useState<
-  //   IContractWPModulesDTO[]
-  // >([]);
-  const [employeeCRMLevel, setEmployeeCRMLevel] = useState(0);
-  const [employeeProductionLevel, setEmployeeProductionLevel] = useState(0);
-  const [employeeProjectLevel, setEmployeeProjectLevel] = useState(0);
-  const [employeeFinancialLevel, setEmployeeFinancialLevel] = useState(0);
-  const [salaryInput, setSalaryInput] = useState(false);
-  const [employeeUserInfo, setEmployeeUserInfo] = useState<
-    IEmployeeUserPersonInfoDTO
-  >({} as IEmployeeUserPersonInfoDTO);
   const wpCRM = wpModules.find(wpM => wpM.name === 'CRM');
   const wpProduction = wpModules.find(wpM => wpM.name === 'Production');
   const wpProject = wpModules.find(wpM => wpM.name === 'Project');
   const wpFinancial = wpModules.find(wpM => wpM.name === 'Financial');
 
+  const initialCRMaccess = employee.modules.find(
+    wpM => wpM.management_module_id === wpCRM?.id,
+  );
+  const initialProductionaccess = employee.modules.find(
+    wpM => wpM.management_module_id === wpProduction?.id,
+  );
+  const initialProjectaccess = employee.modules.find(
+    wpM => wpM.management_module_id === wpProject?.id,
+  );
+  const initialFinancialaccess = employee.modules.find(
+    wpM => wpM.management_module_id === wpFinancial?.id,
+  );
+
+  const [employeeCRMLevel, setEmployeeCRMLevel] = useState(
+    initialCRMaccess ? initialCRMaccess.access_level : 0,
+  );
+  const [employeeProductionLevel, setEmployeeProductionLevel] = useState(
+    initialProductionaccess ? initialProductionaccess.access_level : 0,
+  );
+  const [employeeProjectLevel, setEmployeeProjectLevel] = useState(
+    initialProjectaccess ? initialProjectaccess.access_level : 0,
+  );
+  const [employeeFinancialLevel, setEmployeeFinancialLevel] = useState(
+    initialFinancialaccess ? initialFinancialaccess.access_level : 0,
+  );
+  const [salaryInput, setSalaryInput] = useState(false);
+  const [employeeUserInfo, setEmployeeUserInfo] = useState<
+    IEmployeeUserPersonInfoDTO
+  >({} as IEmployeeUserPersonInfoDTO);
+
   const inputHeight = { height: '40px' };
+  const employeeUserID = employee.employee.id;
 
   const handleDeleteEmployee = useCallback(async () => {
     try {
       if (employee) {
         await api.delete(`/supplier-employees/${employee.id}`);
         getEmployees();
+        handleCloseWindow();
         addToast({
           type: 'success',
           title: 'Contrato deletado com sucesso',
@@ -108,7 +122,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
     } catch (err) {
       throw new Error(err);
     }
-  }, [employee, addToast, getEmployees]);
+  }, [employee, addToast, getEmployees, handleCloseWindow]);
 
   const handleSubmit = useCallback(
     async (data: IEmployeeDTO) => {
@@ -136,23 +150,19 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
             access_level: employeeProjectLevel,
           });
 
-        const salary = salaryInput ? data.confirmation.salary : 0;
+        await api.delete(`/supplier-employees/${employee.id}`);
 
-        if (userEmployee) {
-          await api.post(`supplier-employees/${userEmployee.id}`, {
-            position: data.position,
-            modules,
-            request_message: data.confirmation.request_message,
-            salary,
-          });
-        } else {
-          throw new Error('usuário não encontrado');
-        }
+        await api.post(`supplier-employees/${employeeUserID}`, {
+          position: data.position,
+          modules,
+          request_message: data.confirmation.request_message,
+          salary: Number(data.confirmation.salary),
+        });
 
         addToast({
           type: 'success',
-          title: 'Membro da festa adicionado com sucesso',
-          description: 'Ele já pode visualizar as informações do evento.',
+          title: 'Colaborador editado com sucesso',
+          description: 'As informações já foram alteradas no seu dashboard.',
         });
         getEmployees();
         handleCloseWindow();
@@ -167,18 +177,18 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
     },
     [
       addToast,
-      salaryInput,
       getEmployees,
       employeeCRMLevel,
       employeeFinancialLevel,
       employeeProductionLevel,
       employeeProjectLevel,
-      userEmployee,
       wpCRM,
       wpFinancial,
       wpProduction,
       wpProject,
       handleCloseWindow,
+      employeeUserID,
+      employee,
     ],
   );
 
@@ -239,7 +249,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
               <div>
                 <span>
                   <strong>Nome de Usuário</strong>
-                  <p>{userEmployee?.name}</p>
+                  <p>{employee.employee.name}</p>
                 </span>
                 <span>
                   <strong>Nome</strong>
@@ -250,8 +260,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                 </span>
                 <span>
                   <strong>CPF</strong>
-                  <p>xxx.xxx.xxx-xx</p>
-                  {/* <p>{employeeUserInfo.person_id}</p> */}
+                  <p>{employeeUserInfo.person_id}</p>
                 </span>
               </div>
             </FirstRow>
@@ -259,7 +268,11 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
               <span>
                 <div>
                   <p>Cargo</p>
-                  <Input name="position" containerStyle={inputHeight} />
+                  <Input
+                    defaultValue={employee.position}
+                    name="position"
+                    containerStyle={inputHeight}
+                  />
                 </div>
                 {!salaryInput ? (
                   <div>
@@ -297,6 +310,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                       name="confirmation.salary"
                       type="number"
                       containerStyle={inputHeight}
+                      defaultValue={employee.confirmation.salary}
                     />
                   </div>
                 )}
@@ -305,6 +319,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                   <Input
                     name="confirmation.request_message"
                     containerStyle={inputHeight}
+                    defaultValue={employee.confirmation.request_message}
                   />
                 </div>
               </span>
@@ -476,15 +491,15 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
             </SecondRow>
           </div>
           {!!employee && (
-            <button type="button" onClick={handleDeleteEmployee}>
+            <DeleteButton type="button" onClick={handleDeleteEmployee}>
               Deletar Contrato
-            </button>
+            </DeleteButton>
           )}
-          <AddButton type="submit">Adicionar Colaborador</AddButton>
+          <AddButton type="submit">Salvar alterações</AddButton>
         </Container>
       </Form>
     </WindowContainer>
   );
 };
 
-export default CompanyEmployeeForm;
+export default EditCompanyEmployeeForm;
