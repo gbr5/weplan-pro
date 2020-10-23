@@ -18,6 +18,7 @@ import {
   SecondRow,
 } from './styles';
 import AddEmployeeWindow from '../AddEmployeeWindow';
+import WPContractOrderForm from '../WPContractOrderForm';
 import ICompanyInfoDTO from '../../dtos/ICompanyInfoDTO';
 import supplierLogo from '../../assets/elefante.png';
 import WindowContainer from '../WindowContainer';
@@ -57,7 +58,6 @@ const CompanyDashboard: React.FC = () => {
   >([]);
 
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
-  // const [employee, setEmployee] = useState<IEmployeeDTO>({} as IEmployeeDTO);
   const [companyInfo, setCompanyInfo] = useState<ICompanyInfoDTO>(
     {} as ICompanyInfoDTO,
   );
@@ -74,6 +74,7 @@ const CompanyDashboard: React.FC = () => {
   const [addEmployeeMessageWindow, setAddEmployeeMessageWindow] = useState(
     false,
   );
+  const [contractOrderWindow, setContractOrderWindow] = useState(false);
   const [addEmployeeWindow, setAddEmployeeWindow] = useState(false);
   const [helpDashboard, setHelpDashboard] = useState(false);
   const [documentationDashboard, setDocumentationDashboard] = useState(false);
@@ -83,6 +84,7 @@ const CompanyDashboard: React.FC = () => {
   const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
 
   const closeAllWindow = useCallback(() => {
+    setContractOrderWindow(false);
     setInitialDashboard(false);
     setEmployeesDashboard(false);
     setFinanceDashboard(false);
@@ -93,6 +95,11 @@ const CompanyDashboard: React.FC = () => {
     setHelpDashboard(false);
     setDocumentationDashboard(false);
   }, []);
+  const handleContractOrderWindow = useCallback(() => {
+    closeAllWindow();
+    setContractOrderWindow(true);
+    setFinanceDashboard(true);
+  }, [closeAllWindow]);
   const handleInitialWindow = useCallback(() => {
     closeAllWindow();
     setDashboardTitle('Informações da Empresa');
@@ -214,6 +221,13 @@ const CompanyDashboard: React.FC = () => {
           onHandleCloseWindow={handleEmployeesWindow}
         />
       )}
+      {!!contractOrderWindow && (
+        <WPContractOrderForm
+          getCompanyWPContracts={getCompanyWPContractOrders}
+          handleCloseWindow={() => setAddEmployeeWindow(false)}
+          onHandleCloseWindow={handleEmployeesWindow}
+        />
+      )}
       {!!chooseWPproductMessageWindow && (
         <WindowContainer
           onHandleCloseWindow={() => setChooseWPproductMessageWindow(false)}
@@ -231,6 +245,11 @@ const CompanyDashboard: React.FC = () => {
             Se precisar de mim, pode enviar uma mensagem no meu whatsapp - 31
             99932 4093
           </h4>
+          <div>
+            <button type="button" onClick={handleContractOrderWindow}>
+              Quero ser um vencedor!
+            </button>
+          </div>
         </WindowContainer>
       )}
       {!!addEmployeeMessageWindow && (
@@ -244,11 +263,16 @@ const CompanyDashboard: React.FC = () => {
           <p>
             Vi também que você ainda não possui nenhum colaborador cadastrado.
           </p>
-          <p>No menu lateral você encontrará a seção se Colaboradores.</p>
+          <p>No menu lateral você gerenciar os seus colaboradores.</p>
           <h4>
             Se precisar de mim, pode enviar uma mensagem no meu whatsapp - 31
             99932 4093
           </h4>
+          <div>
+            <button type="button" onClick={() => setAddEmployeeWindow(true)}>
+              Adicionar colaborador!
+            </button>
+          </div>
         </WindowContainer>
       )}
       <Container>
@@ -454,6 +478,9 @@ const CompanyDashboard: React.FC = () => {
             {!!financeDashboard && (
               <Section>
                 <h1>Financeiro</h1>
+                <button type="button" onClick={handleContractOrderWindow}>
+                  Contratar Módulo de Gestão
+                </button>
               </Section>
             )}
             {!!advancedOptionsDashboard && (
