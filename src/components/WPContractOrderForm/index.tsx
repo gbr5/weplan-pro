@@ -32,12 +32,16 @@ interface IWPProductDTO {
 interface IPropsDTO {
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
+  handleEmployeeSection: Function;
+  handleFinancialSection: Function;
   getCompanyWPContracts: Function;
 }
 
 const WPContractOrderForm: React.FC<IPropsDTO> = ({
   onHandleCloseWindow,
   handleCloseWindow,
+  handleEmployeeSection,
+  handleFinancialSection,
   getCompanyWPContracts,
 }: IPropsDTO) => {
   const { addToast } = useToast();
@@ -108,6 +112,8 @@ const WPContractOrderForm: React.FC<IPropsDTO> = ({
         description: 'Ele já pode visualizar as informações do evento.',
       });
       getCompanyWPContracts();
+      handleEmployeeSection();
+      handleFinancialSection();
       handleCloseWindow();
     } catch (err) {
       addToast({
@@ -130,6 +136,7 @@ const WPContractOrderForm: React.FC<IPropsDTO> = ({
     wpProduction,
     wpProject,
     handleCloseWindow,
+    handleEmployeeSection,
     wpProducts,
   ]);
 
