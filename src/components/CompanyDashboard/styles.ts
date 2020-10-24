@@ -199,6 +199,7 @@ export const FirstRow = styled.div`
   align-items: center;
   gap: 16px;
   width: 100%;
+  height: 100%;
 
   table {
     border-radius: 8px;
@@ -240,13 +241,6 @@ export const FirstRow = styled.div`
       }
     }
   }
-
-  table:nth-child(2) {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 16px;
-    padding: 16px;
-  }
 `;
 
 export const SecondRow = styled.div`
@@ -255,11 +249,25 @@ export const SecondRow = styled.div`
   align-items: center;
   gap: 16px;
   width: 100%;
-  height: 100%;
 
   div {
+    height: 100%;
+
     h2 {
       margin-bottom: 16px;
+    }
+
+    span {
+      position: unset;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: stretch;
+
+      button {
+        position: unset;
+        margin-left: auto;
+      }
     }
   }
 
@@ -310,11 +318,14 @@ export const ImageContainer = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 16px;
+  border-radius: 8px;
   padding: 16px;
+  height: 100%;
   background: var(--background-color);
 `;
-export const AvatarInput = styled.div`
-  padding-top: 4px;
+
+export const AvatarInput = styled.label`
+  cursor: pointer;
   background: transparent;
   border: 1px solid var(--card-color);
   border-radius: 8px;
@@ -326,34 +337,41 @@ export const AvatarInput = styled.div`
   position: relative;
 
   h2 {
+    top: 4px;
+    left: 4px;
+    position: absolute;
+    font-size: 16px;
     color: var(--letter-color-2);
   }
 
   img {
-    height: 80px;
-    width: 80px;
+    height: 56px;
+    width: 56px;
   }
 
   &:hover {
     border: 1px solid var(--title-color);
     box-shadow: var(--window-box-shadow);
     background: var(--letter-color-2);
+
+    h2 {
+      color: var(--letter-color-5);
+    }
   }
 
-  label {
-    position: absolute;
-    width: 48px;
-    height: 48px;
+  div {
+    width: 40px;
+    height: 40px;
     background: var(--primary-color);
     border-radius: 50%;
-    bottom: 0;
-    right: 1%;
     border: none;
     transition: background-color 0.4s;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 
     input {
       display: none;
@@ -362,7 +380,7 @@ export const AvatarInput = styled.div`
     svg {
       width: 24px;
       height: 24px;
-      color: var(--letter-color-4);
+      color: var(--letter-color-5);
     }
 
     &:hover {

@@ -104,7 +104,7 @@ const CompanyDashboard: React.FC = () => {
     chooseWPproductMessageWindow,
     setChooseWPproductMessageWindow,
   ] = useState(false);
-  const [addMasterUserWindow, setAddMasterUserWindow] = useState(true);
+  const [addMasterUserWindow, setAddMasterUserWindow] = useState(false);
   const [addEmployeeMessageWindow, setAddEmployeeMessageWindow] = useState(
     false,
   );
@@ -338,6 +338,25 @@ const CompanyDashboard: React.FC = () => {
   useEffect(() => {
     getCompanyContactInfo();
   }, [getCompanyContactInfo]);
+
+  const handleLogoChange = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const data = new FormData();
+
+        data.append('logo', e.target.files[0]);
+
+        await api.patch('/company-info/logo', data);
+        getCompanyInfo();
+
+        addToast({
+          type: 'success',
+          title: 'Logo atualizado com sucesso.',
+        });
+      }
+    },
+    [addToast, getCompanyInfo],
+  );
 
   useEffect(() => {
     setCompanyInformation({
@@ -634,35 +653,43 @@ const CompanyDashboard: React.FC = () => {
                       </table>
                     </div>
                     <ImageContainer>
-                      <AvatarInput>
+                      <AvatarInput htmlFor="logo">
                         <h2>Editar Logo</h2>
                         <img src={companyLogo} alt="WePlanPRO" />
-                        <label htmlFor="avatar">
+                        <div>
                           <FiUpload size={30} />
                           <input
                             type="file"
-                            id="avatar"
-                            onChange={handleAvatarChange}
+                            id="logo"
+                            onChange={handleLogoChange}
                           />
-                        </label>
+                        </div>
                       </AvatarInput>
-                      <AvatarInput>
+                      <AvatarInput htmlFor="avatar">
                         <h2>Editar Avatar</h2>
                         <img src={companyAvatar} alt="WePlanPRO" />
-                        <label htmlFor="avatar">
+                        <div>
                           <FiUpload size={30} />
                           <input
                             type="file"
                             id="avatar"
                             onChange={handleAvatarChange}
                           />
-                        </label>
+                        </div>
                       </AvatarInput>
                     </ImageContainer>
                   </FirstRow>
                   <SecondRow>
                     <div>
-                      <h2>Usuários Master</h2>
+                      <span>
+                        <h2>Usuários Master</h2>
+                        <button
+                          type="button"
+                          onClick={() => setAddMasterUserWindow(true)}
+                        >
+                          <MdPersonAdd size={30} />
+                        </button>
+                      </span>
                       <table>
                         {masterUsers.map(master => (
                           <tr key={master.id}>
