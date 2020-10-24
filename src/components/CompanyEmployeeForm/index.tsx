@@ -45,6 +45,11 @@ interface IContractWPModulesDTO {
   name: string;
 }
 
+interface IEmployeeWPModulesDTO {
+  management_module_id: string;
+  access_level: number;
+}
+
 interface IPropsDTO {
   wpCompanyContract: IWPContractOrderDTO;
   wpModules: IContractWPModulesDTO[];
@@ -57,11 +62,6 @@ interface IPropsDTO {
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
   getEmployees: Function;
-}
-
-interface IEmployeeWPModulesDTO {
-  management_module_id: string;
-  access_level: number;
 }
 
 const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
@@ -198,20 +198,21 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
 
   const hiredModules = useMemo(() => {
     if (wpCompanyContract) {
-      const availableModules: IContractWPModulesDTO[] = wpCompanyContract.products.map(
-        product => {
-          const productName = wpModules.find(
-            xModule => xModule.name === product.weplanProduct.name,
-          );
-          if (productName?.id) {
-            return {
-              id: productName.id,
-              name: productName.name,
-            };
-          }
-          throw new Error('WPManagementModule not found.');
-        },
-      );
+      const availableModules: IContractWPModulesDTO[] = [];
+      wpCompanyContract.products.map(product => {
+        const productName = wpModules.find(
+          xModule => xModule.name === product.weplanProduct.name,
+        );
+        console.log('product', product, 'productName', productName);
+        if (productName !== undefined) {
+          availableModules.push({
+            id: productName.id,
+            name: productName.name,
+          });
+          return productName;
+        }
+        return productName;
+      });
 
       return availableModules;
     }

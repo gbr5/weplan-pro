@@ -79,6 +79,23 @@ const CompanyDashboard: React.FC = () => {
   const { user, updateUser } = useAuth();
   const { addToast } = useToast();
 
+  // 1
+  const [companyNameInput, setCompanyNameInput] = useState(false);
+  // 2
+  const [companyIDInput, setCompanyIDInput] = useState(false);
+  // 3
+  const [companyUserNameInput, setCompanyUserNameInput] = useState(false);
+  // 4
+  const [companyEmailInput, setCompanyEmailInput] = useState(false);
+  // 5
+  const [companyPhoneInput, setCompanyPhoneInput] = useState(false);
+
+  const [dashboardTitle, setDashboardTitle] = useState(
+    'Informações da Empresa',
+  );
+  const [companyPhone, setCompanyPhone] = useState(0);
+
+  const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
   const [companyWPContracts, setCompanyWPContracts] = useState<
     IWPContractOrder[]
   >([]);
@@ -98,37 +115,38 @@ const CompanyDashboard: React.FC = () => {
   const [companyInfo, setCompanyInfo] = useState<ICompanyInfoDTO>(
     {} as ICompanyInfoDTO,
   );
-  const [initialDashboard, setInitialDashboard] = useState(true);
-  const [employeesDashboard, setEmployeesDashboard] = useState(false);
-  const [financeDashboard, setFinanceDashboard] = useState(false);
-  const [advancedOptionsDashboard, setAdvancedOptionsDashboard] = useState(
-    false,
-  );
+  // 1
+  const [companyInfoSection, setCompanyInfoSection] = useState(true);
+  // 2
+  const [employeesSection, setEmployeesSection] = useState(false);
+  // 3
+  const [financialSection, setFinancialSection] = useState(false);
+  // 4
+  const [advancedOptionsSection, setAdvancedOptionsSection] = useState(false);
+  // 5
+  const [helpSection, setHelpSection] = useState(false);
+  // 6
+  const [documentationSection, setDocumentationSection] = useState(false);
+  // 7
   const [
     chooseWPproductMessageWindow,
     setChooseWPproductMessageWindow,
   ] = useState(false);
-  const [addMasterUserWindow, setAddMasterUserWindow] = useState(false);
+  // 8
   const [addEmployeeMessageWindow, setAddEmployeeMessageWindow] = useState(
     false,
   );
+  // 9
   const [emailSentMessageWindow, setEmailSentMessageWindow] = useState(false);
+  // 10
   const [contractOrderWindow, setContractOrderWindow] = useState(false);
+  // 11
   const [addEmployeeWindow, setAddEmployeeWindow] = useState(false);
+  // 12
   const [editEmployeeWindow, setEditEmployeeWindow] = useState(false);
-  const [helpDashboard, setHelpDashboard] = useState(false);
-  const [documentationDashboard, setDocumentationDashboard] = useState(false);
-  const [dashboardTitle, setDashboardTitle] = useState(
-    'Informações da Empresa',
-  );
-  const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
-  const [companyNameInput, setCompanyNameInput] = useState(false);
-  const [companyIDInput, setCompanyIDInput] = useState(false);
-  const [companyUserNameInput, setCompanyUserNameInput] = useState(false);
-  const [companyEmailInput, setCompanyEmailInput] = useState(false);
-  const [companyPhoneInput, setCompanyPhoneInput] = useState(false);
-  const [companyPhone, setCompanyPhone] = useState(0);
-
+  // 13
+  const [addMasterUserWindow, setAddMasterUserWindow] = useState(false);
+  // 14
   const handleCloseCompanyInfoInput = useCallback(() => {
     setCompanyNameInput(false);
     setCompanyIDInput(false);
@@ -138,29 +156,39 @@ const CompanyDashboard: React.FC = () => {
   }, []);
 
   const closeAllWindow = useCallback(() => {
+    // 1 -1
+    setCompanyInfoSection(false);
+    // 2 -1
+    setEmployeesSection(false);
+    // 3 -1
+    setFinancialSection(false);
+    // 4 -1
+    setAdvancedOptionsSection(false);
+    // 5 -1
+    setHelpSection(false);
+    // 6 -1
+    setDocumentationSection(false);
+    // 7 -2
     setEmailSentMessageWindow(false);
-    setAddMasterUserWindow(false);
-    setCompanyNameInput(false);
-    setCompanyIDInput(false);
-    setCompanyUserNameInput(false);
-    setCompanyEmailInput(false);
-    setCompanyPhoneInput(false);
-    setEditEmployeeWindow(false);
-    setContractOrderWindow(false);
-    setInitialDashboard(false);
-    setEmployeesDashboard(false);
-    setFinanceDashboard(false);
-    setAdvancedOptionsDashboard(false);
-    setAddEmployeeWindow(false);
-    setAddEmployeeMessageWindow(false);
+    // 8 -2
     setChooseWPproductMessageWindow(false);
-    setHelpDashboard(false);
-    setDocumentationDashboard(false);
-  }, []);
+    // 9 -2
+    setAddEmployeeMessageWindow(false);
+    // 10 -3
+    setEditEmployeeWindow(false);
+    // 11 -3
+    setContractOrderWindow(false);
+    // 12 -3
+    setAddEmployeeWindow(false);
+    // 13 -3
+    setAddMasterUserWindow(false);
+    // 14 -4
+    handleCloseCompanyInfoInput();
+  }, [handleCloseCompanyInfoInput]);
   const handleContractOrderWindow = useCallback(() => {
     closeAllWindow();
     setContractOrderWindow(true);
-    setFinanceDashboard(true);
+    setFinancialSection(true);
   }, [closeAllWindow]);
   const handleEditEmployeeWindow = useCallback(
     (props: IEmployeeDTO) => {
@@ -172,33 +200,27 @@ const CompanyDashboard: React.FC = () => {
   );
   const handleInitialWindow = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Informações da Empresa');
-    setInitialDashboard(true);
+    setCompanyInfoSection(true);
   }, [closeAllWindow]);
   const handleEmployeesWindow = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Colaboradores');
-    setEmployeesDashboard(true);
+    setEmployeesSection(true);
   }, [closeAllWindow]);
   const handleFinanceWindow = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Financeiro');
-    setFinanceDashboard(true);
+    setFinancialSection(true);
   }, [closeAllWindow]);
   const handleAdvancedOptionsWindow = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Opções avançadas');
-    setAdvancedOptionsDashboard(true);
+    setAdvancedOptionsSection(true);
   }, [closeAllWindow]);
   const handleHelpDashboard = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Ajuda');
-    setHelpDashboard(true);
+    setHelpSection(true);
   }, [closeAllWindow]);
   const handleDocumentationDashboard = useCallback(() => {
     closeAllWindow();
-    setDashboardTitle('Documentação');
-    setDocumentationDashboard(true);
+    setDocumentationSection(true);
   }, [closeAllWindow]);
 
   const handleAvatarChange = useCallback(
@@ -402,6 +424,34 @@ const CompanyDashboard: React.FC = () => {
       phone: companyPhone,
     });
   }, [user, companyInfo, companyPhone]);
+  useEffect(() => {
+    if (companyInfoSection) {
+      setDashboardTitle('Informações da Empresa');
+    }
+    if (employeesSection) {
+      setDashboardTitle('Colaboradores');
+    }
+    if (financialSection) {
+      setDashboardTitle('Financeiro');
+    }
+    if (advancedOptionsSection) {
+      setDashboardTitle('Opções Avançadas');
+    }
+    if (helpSection) {
+      setDashboardTitle('Colaboradores');
+    }
+    if (documentationSection) {
+      setDashboardTitle('Colaboradores');
+    }
+  }, [
+    user,
+    companyInfoSection,
+    financialSection,
+    employeesSection,
+    advancedOptionsSection,
+    helpSection,
+    documentationSection,
+  ]);
   let companyAvatar = logo;
   if (user.avatar_url !== undefined) {
     companyAvatar = user.avatar_url;
@@ -444,6 +494,8 @@ const CompanyDashboard: React.FC = () => {
         <WPContractOrderForm
           getCompanyWPContracts={getCompanyWPContractOrders}
           handleCloseWindow={() => setContractOrderWindow(false)}
+          handleEmployeeSection={() => setEmployeesSection(true)}
+          handleFinancialSection={() => setFinancialSection(false)}
           onHandleCloseWindow={handleEmployeesWindow}
         />
       )}
@@ -550,7 +602,7 @@ const CompanyDashboard: React.FC = () => {
         </SideMenu>
         <WorkStation>
           <div>
-            {!!initialDashboard && (
+            {!!companyInfoSection && (
               <Section>
                 <h2>{dashboardTitle}</h2>
                 <CompanyInfoList>
@@ -760,7 +812,7 @@ const CompanyDashboard: React.FC = () => {
                 </CompanyInfoList>
               </Section>
             )}
-            {!!employeesDashboard && (
+            {!!employeesSection && (
               <Section>
                 <h2>{dashboardTitle}</h2>
                 <span>
@@ -811,7 +863,7 @@ const CompanyDashboard: React.FC = () => {
                 </EmployeesList>
               </Section>
             )}
-            {!!financeDashboard && (
+            {!!financialSection && (
               <Section>
                 <h1>Financeiro</h1>
                 <button type="button" onClick={handleContractOrderWindow}>
@@ -819,17 +871,17 @@ const CompanyDashboard: React.FC = () => {
                 </button>
               </Section>
             )}
-            {!!advancedOptionsDashboard && (
+            {!!advancedOptionsSection && (
               <Section>
                 <h1>OpçõesAvançadas</h1>
               </Section>
             )}
-            {!!helpDashboard && (
+            {!!helpSection && (
               <Section>
                 <h1>Ajuda</h1>
               </Section>
             )}
-            {!!documentationDashboard && (
+            {!!documentationSection && (
               <Section>
                 <h1>Documentação</h1>
               </Section>
