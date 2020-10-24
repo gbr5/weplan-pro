@@ -130,6 +130,7 @@ const CompanyDashboard: React.FC = () => {
   }, []);
 
   const closeAllWindow = useCallback(() => {
+    setEmailSentMessageWindow(false);
     setAddMasterUserWindow(false);
     setCompanyNameInput(false);
     setCompanyIDInput(false);
@@ -365,7 +366,7 @@ const CompanyDashboard: React.FC = () => {
       )}
       {!!emailSentMessageWindow && (
         <WindowContainer
-          onHandleCloseWindow={() => setChooseWPproductMessageWindow(false)}
+          onHandleCloseWindow={() => setEmailSentMessageWindow(false)}
           containerStyle={{
             zIndex: 150,
             top: '30%',
@@ -474,7 +475,8 @@ const CompanyDashboard: React.FC = () => {
                               defaultValue={companyInfo.name}
                               getCompanyInfo={getCompanyInfo}
                               handleCloseWindow={() =>
-                                setCompanyNameInput(false)}
+                                setCompanyNameInput(false)
+                              }
                               onHandleCloseWindow={handleCloseCompanyInfoInput}
                               inputName="companyName"
                               type="string"
@@ -484,8 +486,7 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyNameInput(!companyNameInput)
-                              }
+                                setCompanyNameInput(!companyNameInput)}
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -526,7 +527,8 @@ const CompanyDashboard: React.FC = () => {
                               getCompanyInfo={getCompanyInfo}
                               onHandleCloseWindow={handleCloseCompanyInfoInput}
                               handleCloseWindow={() =>
-                                setCompanyUserNameInput(false)}
+                                setCompanyUserNameInput(false)
+                              }
                               inputName="userName"
                               type="string"
                             />
@@ -535,7 +537,8 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyUserNameInput(!companyUserNameInput)}
+                                setCompanyUserNameInput(!companyUserNameInput)
+                              }
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -552,7 +555,8 @@ const CompanyDashboard: React.FC = () => {
                               onHandleCloseWindow={handleCloseCompanyInfoInput}
                               getCompanyInfo={getCompanyInfo}
                               handleCloseWindow={() =>
-                                setCompanyEmailInput(false)}
+                                setCompanyEmailInput(false)
+                              }
                               inputName="email"
                               type="string"
                             />
@@ -561,7 +565,8 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyEmailInput(!companyEmailInput)}
+                                setCompanyEmailInput(!companyEmailInput)
+                              }
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -578,7 +583,8 @@ const CompanyDashboard: React.FC = () => {
                               onHandleCloseWindow={handleCloseCompanyInfoInput}
                               getCompanyInfo={getCompanyContactInfo}
                               handleCloseWindow={() =>
-                                setCompanyPhoneInput(false)}
+                                setCompanyPhoneInput(false)
+                              }
                               inputName="phone"
                               type="number"
                             />
@@ -587,7 +593,8 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyPhoneInput(!companyPhoneInput)}
+                                setCompanyPhoneInput(!companyPhoneInput)
+                              }
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -693,7 +700,8 @@ const CompanyDashboard: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  handleEditEmployeeWindow(thiEmployee)}
+                                  handleEditEmployeeWindow(thiEmployee)
+                                }
                               >
                                 <FiChevronsRight size={24} />
                               </button>
