@@ -138,6 +138,7 @@ const WPContractOrderForm: React.FC<IPropsDTO> = ({
     handleCloseWindow,
     handleEmployeeSection,
     wpProducts,
+    handleFinancialSection,
   ]);
 
   return (
