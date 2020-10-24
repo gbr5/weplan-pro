@@ -18,12 +18,17 @@ import {
 import { Header, HeaderContent, Menu, ToggleButton } from './styles';
 import { useToggleTheme } from '../../hooks/theme';
 
+import supplierlogo from '../../assets/elefante.png';
 import logo from '../../assets/weplan.svg';
 import { useAuth } from '../../hooks/auth';
 
 import WindowContainer from '../WindowContainer';
-import supplierLogo from '../../assets/elefante.png';
 
+interface ICompanyInfoDTO {
+  id: string;
+  name: string;
+  logo: string;
+}
 interface IPropsDTO {
   module: string;
   modulesMenu: boolean;
@@ -41,6 +46,7 @@ const SupplierPageHeader: React.FC<IPropsDTO> = ({
 
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
+  // const [supplierLogo, setSupplierLogo] = useState('');
 
   const { signOut } = useAuth();
   const { toggleTheme, themeBoolean } = useToggleTheme();
@@ -64,11 +70,30 @@ const SupplierPageHeader: React.FC<IPropsDTO> = ({
     history.push('/dashboard');
   }, [history]);
 
+  // const handleGetCompanyLogo = useCallback(() => {
+  //   if (user.isCompany) {
+  //     api.get<ICompanyInfoDTO>('company-info').then(response => {
+  //       setSupplierLogo(response.data.logo);
+  //     });
+  //   }
+  //   api.get<IEmployeeDTO>(`supplier-employees/${user.id}`).then(response => {
+  //     setSupplierLogo(
+  //       response.data.company.avatar_url === undefined
+  //         ? ''
+  //         : response.data.company.avatar_url,
+  //     );
+  //   });
+  // }, [user]);
+
+  // useEffect(() => {
+  //   handleGetCompanyLogo();
+  // }, [handleGetCompanyLogo]);
+
   return (
     <>
       <Header>
         <HeaderContent>
-          <img src={supplierLogo} alt="WePlanPRO" />
+          <img src={supplierlogo} alt="WePlanPRO" />
 
           <button type="button" onClick={handleNavigateToDashboard}>
             <img src={logo} alt="WePlan" />

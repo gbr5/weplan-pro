@@ -2,6 +2,11 @@ interface IUserEmployee {
   id: string;
   name: string;
 }
+interface ICompany {
+  id: string;
+  name: string;
+  avatar_url: string;
+}
 
 interface IModulesDTO {
   management_module_id: string;
@@ -18,6 +23,7 @@ export default interface IEmployeeDTO {
   id: string;
   position: string;
   employee: IUserEmployee;
+  company: ICompany;
   modules: IModulesDTO[];
   confirmation: IEmployeeConfirmationDTO;
 }

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { MdPersonAdd } from 'react-icons/md';
-import { FiChevronsRight, FiEdit3, FiEye } from 'react-icons/fi';
+import { FiUpload, FiChevronsRight, FiEdit3, FiEye } from 'react-icons/fi';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 
@@ -16,16 +16,19 @@ import {
   CompanyInfoList,
   FirstRow,
   SecondRow,
+  AvatarInput,
+  ImageContainer,
 } from './styles';
 import AddEmployeeWindow from '../AddEmployeeWindow';
 import WPContractOrderForm from '../WPContractOrderForm';
 import ICompanyInfoDTO from '../../dtos/ICompanyInfoDTO';
-import supplierLogo from '../../assets/elefante.png';
+import logo from '../../assets/elefante.png';
 import WindowContainer from '../WindowContainer';
 import IUserDTO from '../../dtos/IUserDTO';
 import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
 import EditCompanyInfoInput from '../EditCompanyInfoInput';
 import AddMasterUserWindow from '../AddMasterUserWindow';
+import { useToast } from '../../hooks/toast';
 
 interface IWPProduct {
   id: string;
@@ -73,7 +76,8 @@ interface ICompanyInformationDTO {
 }
 
 const CompanyDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { addToast } = useToast();
 
   const [companyWPContracts, setCompanyWPContracts] = useState<
     IWPContractOrder[]
@@ -82,6 +86,10 @@ const CompanyDashboard: React.FC = () => {
   const [companyInformation, setCompanyInformation] = useState<
     ICompanyInformationDTO
   >({} as ICompanyInformationDTO);
+  const [companyHiredModules, setCompanyHiredModules] = useState<
+    IContractWPModulesDTO[]
+  >([]);
+  const [marketPlace, setMarketPlace] = useState(false);
   const [masterUsers, setMasterUsers] = useState<IMasterUserDTO[]>([]);
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<IEmployeeDTO>(
@@ -193,6 +201,25 @@ const CompanyDashboard: React.FC = () => {
     setDocumentationDashboard(true);
   }, [closeAllWindow]);
 
+  const handleAvatarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const data = new FormData();
+
+        data.append('avatar', e.target.files[0]);
+
+        api.patch('/users/avatar', data).then(response => {
+          updateUser(response.data);
+        });
+        addToast({
+          type: 'success',
+          title: 'Avatar atualizado com sucesso.',
+        });
+      }
+    },
+    [addToast, updateUser],
+  );
+
   const getCompanyWPContractOrders = useCallback(() => {
     try {
       api
@@ -201,8 +228,34 @@ const CompanyDashboard: React.FC = () => {
           if (response.data.length <= 0) {
             setChooseWPproductMessageWindow(true);
           }
-
+          const sortModules: IContractWPModulesDTO[] = [];
+          response.data.map(hModule => {
+            hModule.products.map(mProduct => {
+              const pName = mProduct.weplanProduct.name;
+              if (
+                pName === 'CRM' ||
+                pName === 'Production' ||
+                pName === 'Financial' ||
+                pName === 'Project'
+              ) {
+                const findModules = sortModules.find(
+                  sModule => sModule.name === pName,
+                );
+                if (findModules === undefined) {
+                  sortModules.push({
+                    id: mProduct.weplanProduct.id,
+                    name: mProduct.weplanProduct.name,
+                  });
+                }
+              } else {
+                setMarketPlace(true);
+              }
+              return mProduct;
+            });
+            return sortModules;
+          });
           setCompanyWPContracts(response.data);
+          setCompanyHiredModules(sortModules);
         });
     } catch (err) {
       throw new Error(err);
@@ -222,15 +275,18 @@ const CompanyDashboard: React.FC = () => {
           }
 
           setEmployees(
-            response.data.map(tEmployee => {
-              return {
-                id: tEmployee.id,
-                employee: tEmployee.employee,
-                position: tEmployee.position,
-                modules: tEmployee.modules,
-                confirmation: tEmployee.confirmation,
-              };
-            }),
+            response.data
+              .map(tEmployee => {
+                return {
+                  id: tEmployee.id,
+                  employee: tEmployee.employee,
+                  company: tEmployee.company,
+                  position: tEmployee.position,
+                  modules: tEmployee.modules,
+                  confirmation: tEmployee.confirmation,
+                };
+              })
+              .filter(tEmployee => tEmployee.confirmation.isConfirmed === true),
           );
         });
     } catch (err) {
@@ -316,6 +372,25 @@ const CompanyDashboard: React.FC = () => {
     getCompanyContactInfo();
   }, [getCompanyContactInfo]);
 
+  const handleLogoChange = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const data = new FormData();
+
+        data.append('logo', e.target.files[0]);
+
+        await api.patch('/company-info/logo', data);
+        getCompanyInfo();
+
+        addToast({
+          type: 'success',
+          title: 'Logo atualizado com sucesso.',
+        });
+      }
+    },
+    [addToast, getCompanyInfo],
+  );
+
   useEffect(() => {
     setCompanyInformation({
       user_id: user.id,
@@ -327,6 +402,14 @@ const CompanyDashboard: React.FC = () => {
       phone: companyPhone,
     });
   }, [user, companyInfo, companyPhone]);
+  let companyAvatar = logo;
+  if (user.avatar_url !== undefined) {
+    companyAvatar = user.avatar_url;
+  }
+  let companyLogo = logo;
+  if (companyInfo.logo_url !== undefined) {
+    companyLogo = companyInfo.logo_url;
+  }
 
   return (
     <>
@@ -449,6 +532,15 @@ const CompanyDashboard: React.FC = () => {
           <button type="button" onClick={handleAdvancedOptionsWindow}>
             Opções avançadas
           </button>
+          {marketPlace && (
+            <button
+              style={{ color: '#FF9900' }}
+              type="button"
+              onClick={handleAdvancedOptionsWindow}
+            >
+              WePlan Market
+            </button>
+          )}
           <button type="button" onClick={handleHelpDashboard}>
             Ajuda
           </button>
@@ -602,20 +694,44 @@ const CompanyDashboard: React.FC = () => {
                         </tr>
                       </table>
                     </div>
-                    <table>
-                      <button type="button">
+                    <ImageContainer>
+                      <AvatarInput htmlFor="logo">
                         <h2>Editar Logo</h2>
-                        <img src={supplierLogo} alt="WePlanPRO" />
-                      </button>
-                      <button type="button">
+                        <img src={companyLogo} alt="WePlanPRO" />
+                        <div>
+                          <FiUpload size={30} />
+                          <input
+                            type="file"
+                            id="logo"
+                            onChange={handleLogoChange}
+                          />
+                        </div>
+                      </AvatarInput>
+                      <AvatarInput htmlFor="avatar">
                         <h2>Editar Avatar</h2>
-                        <img src={supplierLogo} alt="WePlanPRO" />
-                      </button>
-                    </table>
+                        <img src={companyAvatar} alt="WePlanPRO" />
+                        <div>
+                          <FiUpload size={30} />
+                          <input
+                            type="file"
+                            id="avatar"
+                            onChange={handleAvatarChange}
+                          />
+                        </div>
+                      </AvatarInput>
+                    </ImageContainer>
                   </FirstRow>
                   <SecondRow>
                     <div>
-                      <h2>Usuários Master</h2>
+                      <span>
+                        <h2>Usuários Master</h2>
+                        <button
+                          type="button"
+                          onClick={() => setAddMasterUserWindow(true)}
+                        >
+                          <MdPersonAdd size={30} />
+                        </button>
+                      </span>
                       <table>
                         {masterUsers.map(master => (
                           <tr key={master.id}>
@@ -633,30 +749,11 @@ const CompanyDashboard: React.FC = () => {
                     <div>
                       <h2>Módulos Contratados</h2>
                       <table>
-                        <tr>
-                          <td>CRM</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Projetos</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Financeiro</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
+                        {companyHiredModules.map(hModule => (
+                          <tr key={hModule.id}>
+                            <td>{hModule.name}</td>
+                          </tr>
+                        ))}
                       </table>
                     </div>
                   </SecondRow>
