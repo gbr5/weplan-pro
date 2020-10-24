@@ -69,11 +69,13 @@ const AuthProvider: React.FC = ({ children }) => {
       const findSupplier = await api.get(
         `/supplier-employees/employee/${user.id}`,
       );
+
       const isSupplier = findSupplier.data;
 
       if (isSupplier === '') {
         throw new Error('user not found');
       }
+      localStorage.setItem('@WePlan:employee', JSON.stringify(findSupplier));
     }
 
     localStorage.setItem('@WePlan:token', token);

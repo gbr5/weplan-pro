@@ -280,6 +280,7 @@ const CompanyDashboard: React.FC = () => {
                 return {
                   id: tEmployee.id,
                   employee: tEmployee.employee,
+                  company: tEmployee.company,
                   position: tEmployee.position,
                   modules: tEmployee.modules,
                   confirmation: tEmployee.confirmation,
@@ -531,6 +532,15 @@ const CompanyDashboard: React.FC = () => {
           <button type="button" onClick={handleAdvancedOptionsWindow}>
             Opções avançadas
           </button>
+          {marketPlace && (
+            <button
+              style={{ color: '#FF9900' }}
+              type="button"
+              onClick={handleAdvancedOptionsWindow}
+            >
+              WePlan Market
+            </button>
+          )}
           <button type="button" onClick={handleHelpDashboard}>
             Ajuda
           </button>
