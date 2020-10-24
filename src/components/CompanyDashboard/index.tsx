@@ -24,6 +24,7 @@ import supplierLogo from '../../assets/elefante.png';
 import WindowContainer from '../WindowContainer';
 import IUserDTO from '../../dtos/IUserDTO';
 import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
+import EditCompanyInfoInput from '../EditCompanyInfoInput';
 
 interface IWPProduct {
   id: string;
@@ -87,8 +88,19 @@ const CompanyDashboard: React.FC = () => {
     'Informações da Empresa',
   );
   const [wpModules, setWPModules] = useState<IContractWPModulesDTO[]>();
+  const [companyNameInput, setCompanyNameInput] = useState(false);
+  const [companyIDInput, setCompanyIDInput] = useState(false);
+  const [companyUserNameInput, setCompanyUserNameInput] = useState(false);
+  const [companyEmailInput, setCompanyEmailInput] = useState(false);
+  const [companyPhoneInput, setCompanyPhoneInput] = useState(false);
+  const [companyPhone, setCompanyPhone] = useState(0);
 
   const closeAllWindow = useCallback(() => {
+    setCompanyNameInput(false);
+    setCompanyIDInput(false);
+    setCompanyUserNameInput(false);
+    setCompanyEmailInput(false);
+    setCompanyPhoneInput(false);
     setEditEmployeeWindow(false);
     setContractOrderWindow(false);
     setInitialDashboard(false);
@@ -224,6 +236,30 @@ const CompanyDashboard: React.FC = () => {
     getCompanyInfo();
   }, [getCompanyInfo]);
 
+  const getCompanyContactInfo = useCallback(() => {
+    try {
+      api.get(`/profile/contact-info/${user.id}/phone`).then(response => {
+        setCompanyPhone(response.data.contact_info);
+      });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    getCompanyContactInfo();
+  }, [getCompanyContactInfo]);
+
+  const companyInformation = {
+    user_id: user.id,
+    userName: user.name,
+    email: user.email,
+    companyName: companyInfo.name,
+    company_info_id: companyInfo.id,
+    companyID: companyInfo.company_id,
+    phone: companyPhone,
+  };
+
   return (
     <>
       {!!addEmployeeWindow && !!wpModules && (
@@ -331,45 +367,130 @@ const CompanyDashboard: React.FC = () => {
                       <table>
                         <tr>
                           <td>Razão Social</td>
-                          <td>{companyInfo.name}</td>
+                          {!companyNameInput ? (
+                            <td>{companyInfo.name}</td>
+                          ) : (
+                            <EditCompanyInfoInput
+                              companyInformation={companyInformation}
+                              defaultValue={companyInfo.name}
+                              getCompanyInfo={getCompanyInfo}
+                              handleCloseWindow={() =>
+                                setCompanyNameInput(false)
+                              }
+                              inputName="companyName"
+                              type="string"
+                            />
+                          )}
                           <td>
-                            <button type="button">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCompanyNameInput(!companyNameInput)}
+                            >
                               <FiEdit3 size={18} />
                             </button>
                           </td>
                         </tr>
                         <tr>
                           <td>CNPJ</td>
-                          <td>{companyInfo.company_id}</td>
+                          {!companyIDInput ? (
+                            <td>{companyInfo.company_id}</td>
+                          ) : (
+                            <EditCompanyInfoInput
+                              companyInformation={companyInformation}
+                              defaultValue={companyInfo.company_id}
+                              getCompanyInfo={getCompanyInfo}
+                              handleCloseWindow={() => setCompanyIDInput(false)}
+                              inputName="companyID"
+                              type="string"
+                            />
+                          )}
                           <td>
-                            <button type="button">
+                            <button
+                              type="button"
+                              onClick={() => setCompanyIDInput(!companyIDInput)}
+                            >
                               <FiEdit3 size={18} />
                             </button>
                           </td>
                         </tr>
                         <tr>
                           <td>Nome de Usuário</td>
-                          <td>{user.name}</td>
+                          {!companyUserNameInput ? (
+                            <td>{user.name}</td>
+                          ) : (
+                            <EditCompanyInfoInput
+                              companyInformation={companyInformation}
+                              defaultValue={user.name}
+                              getCompanyInfo={getCompanyInfo}
+                              handleCloseWindow={() =>
+                                setCompanyUserNameInput(false)
+                              }
+                              inputName="userName"
+                              type="string"
+                            />
+                          )}
                           <td>
-                            <button type="button">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCompanyUserNameInput(!companyUserNameInput)
+                              }
+                            >
                               <FiEdit3 size={18} />
                             </button>
                           </td>
                         </tr>
                         <tr>
                           <td>e-mail</td>
-                          <td>{user.email}</td>
+                          {!companyEmailInput ? (
+                            <td>{user.email}</td>
+                          ) : (
+                            <EditCompanyInfoInput
+                              companyInformation={companyInformation}
+                              defaultValue={user.email}
+                              getCompanyInfo={getCompanyInfo}
+                              handleCloseWindow={() =>
+                                setCompanyEmailInput(false)
+                              }
+                              inputName="email"
+                              type="string"
+                            />
+                          )}
                           <td>
-                            <button type="button">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCompanyEmailInput(!companyEmailInput)
+                              }
+                            >
                               <FiEdit3 size={18} />
                             </button>
                           </td>
                         </tr>
                         <tr>
                           <td>Telefone</td>
-                          <td>354558</td>
+                          {!companyPhoneInput ? (
+                            <td>{companyPhone}</td>
+                          ) : (
+                            <EditCompanyInfoInput
+                              companyInformation={companyInformation}
+                              defaultValue={String(companyPhone)}
+                              getCompanyInfo={getCompanyContactInfo}
+                              handleCloseWindow={() =>
+                                setCompanyPhoneInput(false)
+                              }
+                              inputName="phone"
+                              type="number"
+                            />
+                          )}
                           <td>
-                            <button type="button">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCompanyPhoneInput(!companyPhoneInput)
+                              }
+                            >
                               <FiEdit3 size={18} />
                             </button>
                           </td>
@@ -490,7 +611,8 @@ const CompanyDashboard: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  handleEditEmployeeWindow(thiEmployee)}
+                                  handleEditEmployeeWindow(thiEmployee)
+                                }
                               >
                                 <FiChevronsRight size={24} />
                               </button>
