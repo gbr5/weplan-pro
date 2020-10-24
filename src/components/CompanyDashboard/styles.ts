@@ -1,3 +1,4 @@
+import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -245,24 +246,6 @@ export const FirstRow = styled.div`
     grid-template-rows: 1fr 1fr;
     gap: 16px;
     padding: 16px;
-
-    button {
-      padding-top: 4px;
-      background: transparent;
-      border: 1px solid var(--card-color);
-      border-radius: 8px;
-      transition: 0.3s;
-
-      img {
-        height: 80px;
-      }
-
-      &:hover {
-        border: 1px solid var(--title-color);
-        box-shadow: var(--window-box-shadow);
-        background: var(--letter-color-2);
-      }
-    }
   }
 `;
 
@@ -319,6 +302,71 @@ export const SecondRow = styled.div`
           border: none;
         }
       }
+    }
+  }
+`;
+
+export const ImageContainer = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  background: var(--background-color);
+`;
+export const AvatarInput = styled.div`
+  padding-top: 4px;
+  background: transparent;
+  border: 1px solid var(--card-color);
+  border-radius: 8px;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  h2 {
+    color: var(--letter-color-2);
+  }
+
+  img {
+    height: 80px;
+    width: 80px;
+  }
+
+  &:hover {
+    border: 1px solid var(--title-color);
+    box-shadow: var(--window-box-shadow);
+    background: var(--letter-color-2);
+  }
+
+  label {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    bottom: 0;
+    right: 1%;
+    border: none;
+    transition: background-color 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    input {
+      display: none;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: var(--letter-color-4);
+    }
+
+    &:hover {
+      background-color: ${shade(0.3, '#ff9000')};
     }
   }
 `;

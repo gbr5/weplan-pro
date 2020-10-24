@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { MdPersonAdd } from 'react-icons/md';
-import { FiChevronsRight, FiEdit3, FiEye } from 'react-icons/fi';
+import { FiUpload, FiChevronsRight, FiEdit3, FiEye } from 'react-icons/fi';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 
@@ -16,16 +16,19 @@ import {
   CompanyInfoList,
   FirstRow,
   SecondRow,
+  AvatarInput,
+  ImageContainer,
 } from './styles';
 import AddEmployeeWindow from '../AddEmployeeWindow';
 import WPContractOrderForm from '../WPContractOrderForm';
 import ICompanyInfoDTO from '../../dtos/ICompanyInfoDTO';
-import supplierLogo from '../../assets/elefante.png';
+import logo from '../../assets/elefante.png';
 import WindowContainer from '../WindowContainer';
 import IUserDTO from '../../dtos/IUserDTO';
 import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
 import EditCompanyInfoInput from '../EditCompanyInfoInput';
 import AddMasterUserWindow from '../AddMasterUserWindow';
+import { useToast } from '../../hooks/toast';
 
 interface IWPProduct {
   id: string;
@@ -73,7 +76,8 @@ interface ICompanyInformationDTO {
 }
 
 const CompanyDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { addToast } = useToast();
 
   const [companyWPContracts, setCompanyWPContracts] = useState<
     IWPContractOrder[]
@@ -100,7 +104,7 @@ const CompanyDashboard: React.FC = () => {
     chooseWPproductMessageWindow,
     setChooseWPproductMessageWindow,
   ] = useState(false);
-  const [addMasterUserWindow, setAddMasterUserWindow] = useState(false);
+  const [addMasterUserWindow, setAddMasterUserWindow] = useState(true);
   const [addEmployeeMessageWindow, setAddEmployeeMessageWindow] = useState(
     false,
   );
@@ -192,6 +196,25 @@ const CompanyDashboard: React.FC = () => {
     setDashboardTitle('Documentação');
     setDocumentationDashboard(true);
   }, [closeAllWindow]);
+
+  const handleAvatarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const data = new FormData();
+
+        data.append('avatar', e.target.files[0]);
+
+        api.patch('/users/avatar', data).then(response => {
+          updateUser(response.data);
+        });
+        addToast({
+          type: 'success',
+          title: 'Avatar atualizado com sucesso.',
+        });
+      }
+    },
+    [addToast, updateUser],
+  );
 
   const getCompanyWPContractOrders = useCallback(() => {
     try {
@@ -327,6 +350,14 @@ const CompanyDashboard: React.FC = () => {
       phone: companyPhone,
     });
   }, [user, companyInfo, companyPhone]);
+  let companyAvatar = logo;
+  if (user.avatar_url !== undefined) {
+    companyAvatar = user.avatar_url;
+  }
+  let companyLogo = logo;
+  if (companyInfo.logo_url !== undefined) {
+    companyLogo = companyInfo.logo_url;
+  }
 
   return (
     <>
@@ -602,16 +633,32 @@ const CompanyDashboard: React.FC = () => {
                         </tr>
                       </table>
                     </div>
-                    <table>
-                      <button type="button">
+                    <ImageContainer>
+                      <AvatarInput>
                         <h2>Editar Logo</h2>
-                        <img src={supplierLogo} alt="WePlanPRO" />
-                      </button>
-                      <button type="button">
+                        <img src={companyLogo} alt="WePlanPRO" />
+                        <label htmlFor="avatar">
+                          <FiUpload size={30} />
+                          <input
+                            type="file"
+                            id="avatar"
+                            onChange={handleAvatarChange}
+                          />
+                        </label>
+                      </AvatarInput>
+                      <AvatarInput>
                         <h2>Editar Avatar</h2>
-                        <img src={supplierLogo} alt="WePlanPRO" />
-                      </button>
-                    </table>
+                        <img src={companyAvatar} alt="WePlanPRO" />
+                        <label htmlFor="avatar">
+                          <FiUpload size={30} />
+                          <input
+                            type="file"
+                            id="avatar"
+                            onChange={handleAvatarChange}
+                          />
+                        </label>
+                      </AvatarInput>
+                    </ImageContainer>
                   </FirstRow>
                   <SecondRow>
                     <div>

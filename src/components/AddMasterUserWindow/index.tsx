@@ -1,10 +1,16 @@
 import React, { MouseEventHandler, useCallback, useState } from 'react';
+import { MdSearch } from 'react-icons/md';
 import IUserDTO from '../../dtos/IUserDTO';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import WindowContainer from '../WindowContainer';
 
-import { Container } from './styles';
+import {
+  Container,
+  ToggleRow,
+  InputContainer,
+  ButtonContainer,
+} from './styles';
 import logo from '../../assets/weplan.svg';
 
 interface IPropsDTO {
@@ -78,10 +84,17 @@ const AddMasterUserWindow: React.FC<IPropsDTO> = ({
       <Container>
         <img src={logo} alt="WePlanPRO" />
         <h1>Adicionar Usuário Master</h1>
-        <input onChange={e => handleGetUsers(e.target.value)} />
+        <InputContainer>
+          <h2>Buscar</h2>
+          <input onChange={e => handleGetUsers(e.target.value)} />
+          <MdSearch size={30} />
+        </InputContainer>
         <ul>
           {users.map(thisUser => (
-            <li key={thisUser.id}>
+            <ToggleRow
+              isActive={masterUser.id === thisUser.id}
+              key={thisUser.id}
+            >
               <h2>{thisUser.name}</h2>
               {masterUser.id !== thisUser.id ? (
                 <button
@@ -100,15 +113,15 @@ const AddMasterUserWindow: React.FC<IPropsDTO> = ({
                   </button>
                 </span>
               )}
-            </li>
+            </ToggleRow>
           ))}
         </ul>
-        <div>
+        <ButtonContainer>
           <button type="button" onClick={handleAddMasterUser}>
             Selecionar usuário
           </button>
           <a href="https://weplan.party">Ainda não criei o usuário master</a>
-        </div>
+        </ButtonContainer>
       </Container>
     </WindowContainer>
   );

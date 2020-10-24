@@ -1,4 +1,5 @@
 import React, { MouseEventHandler, useCallback, useState } from 'react';
+import { MdSearch } from 'react-icons/md';
 import IUserDTO from '../../dtos/IUserDTO';
 import IWPContractOrderDTO from '../../dtos/IWPContractOrderDTO';
 import { useAuth } from '../../hooks/auth';
@@ -6,7 +7,7 @@ import api from '../../services/api';
 import CompanyEmployeeForm from '../CompanyEmployeeForm';
 import WindowContainer from '../WindowContainer';
 
-import { Container } from './styles';
+import { Container, InputContainer, ToggleRow } from './styles';
 
 interface ISubmitFormDTO {
   position: string;
@@ -84,19 +85,26 @@ const AddEmployeeWindow: React.FC<IPropsDTO> = ({
       <WindowContainer
         onHandleCloseWindow={onHandleCloseWindow}
         containerStyle={{
-          top: '10%',
-          left: '25%',
-          height: '80%',
-          width: '50%',
+          top: '5%',
+          left: '20%',
+          height: '90%',
+          width: '60%',
           zIndex: 15,
         }}
       >
         <Container>
-          <h1>Adicionar contato</h1>
-          <input onChange={e => handleGetUsers(e.target.value)} />
+          <h1>Adicionar Colaborador</h1>
+          <InputContainer>
+            <h2>Buscar</h2>
+            <input onChange={e => handleGetUsers(e.target.value)} />
+            <MdSearch size={30} />
+          </InputContainer>
           <ul>
             {users.map(thisUser => (
-              <li key={thisUser.id}>
+              <ToggleRow
+                isActive={thisUser.id === userEmployee.id}
+                key={thisUser.id}
+              >
                 <h2>{thisUser.name}</h2>
                 {userEmployee.id !== thisUser.id ? (
                   <button
@@ -115,7 +123,7 @@ const AddEmployeeWindow: React.FC<IPropsDTO> = ({
                     </button>
                   </span>
                 )}
-              </li>
+              </ToggleRow>
             ))}
           </ul>
           {userEmployee.id !== '' && (
