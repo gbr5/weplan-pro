@@ -79,10 +79,104 @@ export const Section = styled.div`
   }
 `;
 
-export const EmployeesList = styled.div`
+export const EmployeeSection = styled.div`
+  display: grid;
+  grid-template-rows: 5fr 3fr;
+  height: 90%;
+  width: 100%;
+  color: var(--letter-color-5);
+  padding-bottom: 32px;
+  gap: 40px;
+`;
+
+export const ConfirmedEmployeeSection = styled.div`
   height: 100%;
   width: 100%;
-  position: relative;
+  color: var(--letter-color-5);
+  padding: 16px 16px 8px;
+
+  span {
+    position: absolute;
+    top: 64px;
+    right: 56px;
+    z-index: 10;
+
+    button {
+      background: var(--background-color);
+      border: none;
+      border-radius: 50%;
+      padding: 3px 5px 0;
+      box-shadow: var(--window-box-shadow);
+      transition: 0.4s;
+
+      svg {
+        color: var(--primary-color);
+        transition: 0.4s;
+        &:hover {
+          color: var(--background-color);
+        }
+      }
+      &:hover {
+        background: var(--title-color);
+
+        svg {
+          color: var(--background-color);
+        }
+      }
+    }
+  }
+`;
+
+export const UnConfirmedEmployeeSection = styled.div`
+  height: 100%;
+  width: 100%;
+  color: var(--letter-color-5);
+  padding: 8px 16px 20px;
+
+  span {
+    position: absolute;
+    top: 64px;
+    right: 56px;
+    z-index: 10;
+
+    button {
+      background: var(--background-color);
+      border: none;
+      border-radius: 16px;
+      padding: 2px 6px 0;
+      box-shadow: var(--window-box-shadow);
+      border: 2px solid transparent;
+      transition: 0.4s;
+
+      svg {
+        color: var(--primary-color);
+        transition: 0.4s;
+        &:hover {
+          color: var(--title-color);
+        }
+      }
+      &:hover {
+        border: 2px solid var(--title-color);
+      }
+    }
+  }
+`;
+
+export const CompanyInfoList = styled.div`
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EmployeeScrollList = styled.div`
+  overflow-y: scroll;
+  background: var(--background-color);
+  border-radius: 4px;
 
   span {
     position: absolute;
@@ -110,86 +204,72 @@ export const EmployeesList = styled.div`
   }
 
   table {
-    border-radius: 8px;
-    background: var(--background-color);
     width: 100%;
-    height: 100%;
     padding: 8px 16px 8px;
 
     tr {
-      color: var(--letter-color-2);
+      border-bottom: 1px solid var(--title-color);
+    }
+    tr {
+      color: var(--primary-color);
       padding: 0;
+      height: 40px;
+      border-bottom: 1px solid var(--letter-color-3);
 
       th {
         height: 40px;
         border-bottom: 1px solid var(--letter-color-3);
       }
+      span {
+        width: 8px;
+        position: static;
+        button {
+          background: transparent;
+          border: none;
+          color: var(--primary-color);
+        }
+      }
+
+      td:first-child {
+        text-align: center;
+        color: var(--title-color);
+        width: 48px;
+        border-bottom: 1px solid var(--letter-color-2);
+      }
+
+      td:nth-child(2),
+      td:nth-child(3) {
+        font-weight: 500;
+        color: var(--letter-color-1);
+      }
+      td:nth-child(3) {
+        width: 160px;
+      }
+
+      td:last-child {
+        width: 80px;
+        padding-left: 0;
+        button {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          background: transparent;
+          border: none;
+          color: var(--primary-color);
+        }
+      }
+
+      /* &:last-child {
+        td {
+          border: none;
+        }
+      } */
+
+      td + td {
+        border-bottom: 1px solid var(--letter-color-2);
+        padding-left: 16px;
+      }
     }
-  }
-`;
-
-export const CompanyInfoList = styled.div`
-  height: 100%;
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const EmployeeScrollList = styled.tr`
-  overflow-y: scroll;
-
-  span {
-    width: 8px;
-    position: static;
-    button {
-      background: transparent;
-      border: none;
-      color: var(--primary-color);
-    }
-  }
-
-  td:first-child {
-    text-align: center;
-    color: var(--title-color);
-    width: 48px;
-    border-bottom: 1px solid var(--letter-color-2);
-  }
-
-  td:nth-child(2),
-  td:nth-child(3) {
-    font-weight: 500;
-    color: var(--letter-color-1);
-  }
-  td:nth-child(3) {
-    width: 160px;
-  }
-
-  td:last-child {
-    width: 80px;
-    padding-left: 0;
-    button {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background: transparent;
-      border: none;
-      color: var(--primary-color);
-    }
-  }
-
-  &:last-child {
-    td {
-      border: none;
-    }
-  }
-
-  td + td {
-    border-bottom: 1px solid var(--letter-color-2);
-    padding-left: 16px;
   }
 `;
 

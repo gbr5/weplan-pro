@@ -11,13 +11,15 @@ import {
   SideMenu,
   WorkStation,
   Section,
-  EmployeesList,
   EmployeeScrollList,
   CompanyInfoList,
   FirstRow,
   SecondRow,
   AvatarInput,
   ImageContainer,
+  EmployeeSection,
+  ConfirmedEmployeeSection,
+  UnConfirmedEmployeeSection,
 } from './styles';
 import AddEmployeeWindow from '../AddEmployeeWindow';
 import WPContractOrderForm from '../WPContractOrderForm';
@@ -109,6 +111,9 @@ const CompanyDashboard: React.FC = () => {
   const [marketPlace, setMarketPlace] = useState(false);
   const [masterUsers, setMasterUsers] = useState<IMasterUserDTO[]>([]);
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
+  const [unConfirmedEmployees, setUnConfirmedEmployees] = useState<
+    IEmployeeDTO[]
+  >([]);
   const [selectedEmployee, setSelectedEmployee] = useState<IEmployeeDTO>(
     {} as IEmployeeDTO,
   );
@@ -295,7 +300,22 @@ const CompanyDashboard: React.FC = () => {
           if (response.data.length <= 0) {
             setAddEmployeeMessageWindow(true);
           }
-
+          setUnConfirmedEmployees(
+            response.data
+              .map(tEmployee => {
+                return {
+                  id: tEmployee.id,
+                  employee: tEmployee.employee,
+                  company: tEmployee.company,
+                  position: tEmployee.position,
+                  modules: tEmployee.modules,
+                  confirmation: tEmployee.confirmation,
+                };
+              })
+              .filter(
+                tEmployee => tEmployee.confirmation.isConfirmed === false,
+              ),
+          );
           setEmployees(
             response.data
               .map(tEmployee => {
@@ -630,7 +650,8 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyNameInput(!companyNameInput)}
+                                setCompanyNameInput(!companyNameInput)
+                              }
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -813,35 +834,34 @@ const CompanyDashboard: React.FC = () => {
               </Section>
             )}
             {!!employeesSection && (
-              <Section>
-                <h2>{dashboardTitle}</h2>
-                <span>
-                  <button
-                    type="button"
-                    onClick={() => setAddEmployeeWindow(true)}
-                  >
-                    <MdPersonAdd size={30} />
-                  </button>
-                </span>
-                <EmployeesList>
-                  <table>
-                    <tr>
-                      <th>N°</th>
-                      <th>Nome</th>
-                      <th>Cargo</th>
-                      <th>
-                        <FiEye size={30} />
-                      </th>
-                    </tr>
-
-                    {employees.map(thiEmployee => {
-                      const employeeIndex =
-                        employees.findIndex(
-                          index => index.id === thiEmployee.id,
-                        ) + 1;
-                      return (
-                        <>
-                          <EmployeeScrollList key={employeeIndex}>
+              <EmployeeSection>
+                <ConfirmedEmployeeSection>
+                  <h2>{dashboardTitle}</h2>
+                  <span>
+                    <button
+                      type="button"
+                      onClick={() => setAddEmployeeWindow(true)}
+                    >
+                      <MdPersonAdd size={30} />
+                    </button>
+                  </span>
+                  <EmployeeScrollList>
+                    <table>
+                      <tr>
+                        <th>N°</th>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>
+                          <FiEye size={30} />
+                        </th>
+                      </tr>
+                      {employees.map(thiEmployee => {
+                        const employeeIndex =
+                          employees.findIndex(
+                            index => index.id === thiEmployee.id,
+                          ) + 1;
+                        return (
+                          <tr key={employeeIndex}>
                             <td>{employeeIndex}</td>
                             <td>{thiEmployee.employee.name}</td>
                             <td>{thiEmployee.position}</td>
@@ -855,13 +875,51 @@ const CompanyDashboard: React.FC = () => {
                                 <FiChevronsRight size={24} />
                               </button>
                             </td>
-                          </EmployeeScrollList>
-                        </>
-                      );
-                    })}
-                  </table>
-                </EmployeesList>
-              </Section>
+                          </tr>
+                        );
+                      })}
+                    </table>
+                  </EmployeeScrollList>
+                </ConfirmedEmployeeSection>
+                <UnConfirmedEmployeeSection>
+                  <h2>A confirmar</h2>
+                  <EmployeeScrollList>
+                    <table>
+                      <tr>
+                        <th>N°</th>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>
+                          <FiEye size={30} />
+                        </th>
+                      </tr>
+                      {unConfirmedEmployees.map(thiEmployee => {
+                        const employeeIndex =
+                          unConfirmedEmployees.findIndex(
+                            index => index.id === thiEmployee.id,
+                          ) + 1;
+                        return (
+                          <tr key={employeeIndex}>
+                            <td>{employeeIndex}</td>
+                            <td>{thiEmployee.employee.name}</td>
+                            <td>{thiEmployee.position}</td>
+                            <td>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEditEmployeeWindow(thiEmployee)
+                                }
+                              >
+                                <FiChevronsRight size={24} />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </table>
+                  </EmployeeScrollList>
+                </UnConfirmedEmployeeSection>
+              </EmployeeSection>
             )}
             {!!financialSection && (
               <Section>

@@ -242,7 +242,7 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
     >
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Container>
-          <h2>Adicionar Colaborador</h2>
+          <h2>Editar Colaborador</h2>
           <div>
             <FirstRow>
               <img src={avatarPlaceholder} alt="WePlanPRO Company Employee" />
