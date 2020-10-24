@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { MouseEventHandler, useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import { useToast } from '../../hooks/toast';
@@ -26,6 +26,7 @@ interface IPropsDTO {
   defaultValue: string;
   type: string;
   handleCloseWindow: Function;
+  onHandleCloseWindow: MouseEventHandler;
   getCompanyInfo: Function;
 }
 
@@ -36,27 +37,56 @@ const EditCompanyInfoInput: React.FC<IPropsDTO> = ({
   type,
   handleCloseWindow,
   getCompanyInfo,
+  onHandleCloseWindow,
 }: IPropsDTO) => {
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
   const { updateUser } = useAuth();
 
-  const inputHeight = { height: '40px' };
+  const inputHeight = { height: '32px' };
 
   const handleSubmit = useCallback(
     async (data: ICompanyInformationDTO) => {
       try {
         if (inputName === 'companyName') {
-          await api.put('company-info', {
-            name: data.companyName,
-            company_id: companyInformation.companyID,
-          });
+          if (
+            companyInformation.companyName === undefined ||
+            companyInformation.companyName === ''
+          ) {
+            await api.post('company-info', {
+              name: data.companyName,
+              company_id:
+                companyInformation.companyID === undefined
+                  ? companyInformation.user_id
+                  : companyInformation.companyID,
+              user_id: companyInformation.user_id,
+            });
+          } else {
+            await api.put('company-info', {
+              name: data.companyName,
+              company_id: companyInformation.companyID,
+            });
+          }
         }
         if (inputName === 'companyID') {
-          await api.put('company-info', {
-            name: companyInformation.companyName,
-            company_id: data.companyID,
-          });
+          if (
+            companyInformation.companyID === undefined ||
+            companyInformation.companyID === ''
+          ) {
+            await api.post('company-info', {
+              name:
+                companyInformation.companyName === undefined
+                  ? companyInformation.user_id
+                  : companyInformation.companyName,
+              company_id: data.companyID,
+              user_id: companyInformation.user_id,
+            });
+          } else {
+            await api.put('company-info', {
+              name: companyInformation.companyName,
+              company_id: data.companyID,
+            });
+          }
         }
         if (inputName === 'userName') {
           const response = await api.put('profile', {
@@ -75,12 +105,22 @@ const EditCompanyInfoInput: React.FC<IPropsDTO> = ({
           updateUser(response.data);
         }
         if (inputName === 'phone') {
-          await api.put(
-            `profile/contact-info/${companyInformation.user_id}/phone`,
-            {
-              contact_info: data.phone,
-            },
-          );
+          if (companyInformation.phone === 0) {
+            await api.post(
+              `profile/contact-info/add/${companyInformation.user_id}`,
+              {
+                contact_info: data.phone,
+                contact_type: 'phone',
+              },
+            );
+          } else {
+            await api.put(
+              `profile/contact-info/${companyInformation.user_id}/phone`,
+              {
+                contact_info: data.phone,
+              },
+            );
+          }
         }
 
         addToast({
@@ -121,7 +161,9 @@ const EditCompanyInfoInput: React.FC<IPropsDTO> = ({
           containerStyle={inputHeight}
         />
         <button type="submit">Salvar</button>
-        <button type="submit">Cancelar</button>
+        <button type="button" onClick={onHandleCloseWindow}>
+          Cancelar
+        </button>
       </Form>
     </Container>
   );

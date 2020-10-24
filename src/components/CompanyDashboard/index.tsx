@@ -25,6 +25,7 @@ import WindowContainer from '../WindowContainer';
 import IUserDTO from '../../dtos/IUserDTO';
 import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
 import EditCompanyInfoInput from '../EditCompanyInfoInput';
+import AddMasterUserWindow from '../AddMasterUserWindow';
 
 interface IWPProduct {
   id: string;
@@ -52,6 +53,25 @@ interface IContractWPModulesDTO {
   name: string;
 }
 
+interface IMasterUserDTO {
+  id: string;
+  masterUser: {
+    id: string;
+    name: string;
+  };
+  isConfirmed: boolean;
+}
+
+interface ICompanyInformationDTO {
+  user_id: string;
+  userName: string;
+  email: string;
+  companyName: string;
+  company_info_id: string;
+  companyID: string;
+  phone: number;
+}
+
 const CompanyDashboard: React.FC = () => {
   const { user } = useAuth();
 
@@ -59,6 +79,10 @@ const CompanyDashboard: React.FC = () => {
     IWPContractOrder[]
   >([]);
 
+  const [companyInformation, setCompanyInformation] = useState<
+    ICompanyInformationDTO
+  >({} as ICompanyInformationDTO);
+  const [masterUsers, setMasterUsers] = useState<IMasterUserDTO[]>([]);
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<IEmployeeDTO>(
     {} as IEmployeeDTO,
@@ -76,9 +100,11 @@ const CompanyDashboard: React.FC = () => {
     chooseWPproductMessageWindow,
     setChooseWPproductMessageWindow,
   ] = useState(false);
+  const [addMasterUserWindow, setAddMasterUserWindow] = useState(false);
   const [addEmployeeMessageWindow, setAddEmployeeMessageWindow] = useState(
     false,
   );
+  const [emailSentMessageWindow, setEmailSentMessageWindow] = useState(false);
   const [contractOrderWindow, setContractOrderWindow] = useState(false);
   const [addEmployeeWindow, setAddEmployeeWindow] = useState(false);
   const [editEmployeeWindow, setEditEmployeeWindow] = useState(false);
@@ -95,7 +121,16 @@ const CompanyDashboard: React.FC = () => {
   const [companyPhoneInput, setCompanyPhoneInput] = useState(false);
   const [companyPhone, setCompanyPhone] = useState(0);
 
+  const handleCloseCompanyInfoInput = useCallback(() => {
+    setCompanyNameInput(false);
+    setCompanyIDInput(false);
+    setCompanyUserNameInput(false);
+    setCompanyEmailInput(false);
+    setCompanyPhoneInput(false);
+  }, []);
+
   const closeAllWindow = useCallback(() => {
+    setAddMasterUserWindow(false);
     setCompanyNameInput(false);
     setCompanyIDInput(false);
     setCompanyUserNameInput(false);
@@ -206,6 +241,36 @@ const CompanyDashboard: React.FC = () => {
     getCompanyEmployees();
   }, [getCompanyEmployees]);
 
+  const getCompanyMasterUsers = useCallback(() => {
+    try {
+      api
+        .get<IMasterUserDTO[]>(`suppliers/master/users/${user.id}`)
+        .then(response => {
+          if (response.data.length <= 0) {
+            setAddMasterUserWindow(true);
+          }
+
+          setMasterUsers(
+            response.data
+              .map(tMasterUser => {
+                return {
+                  id: tMasterUser.id,
+                  masterUser: tMasterUser.masterUser,
+                  isConfirmed: tMasterUser.isConfirmed,
+                };
+              })
+              .filter(master => master.isConfirmed === true),
+          );
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    getCompanyMasterUsers();
+  }, [getCompanyMasterUsers]);
+
   const getWPManagementModules = useCallback(() => {
     try {
       api
@@ -250,15 +315,17 @@ const CompanyDashboard: React.FC = () => {
     getCompanyContactInfo();
   }, [getCompanyContactInfo]);
 
-  const companyInformation = {
-    user_id: user.id,
-    userName: user.name,
-    email: user.email,
-    companyName: companyInfo.name,
-    company_info_id: companyInfo.id,
-    companyID: companyInfo.company_id,
-    phone: companyPhone,
-  };
+  useEffect(() => {
+    setCompanyInformation({
+      user_id: user.id,
+      userName: user.name,
+      email: user.email,
+      companyName: companyInfo.name,
+      company_info_id: companyInfo.id,
+      companyID: companyInfo.company_id,
+      phone: companyPhone,
+    });
+  }, [user, companyInfo, companyPhone]);
 
   return (
     <>
@@ -269,6 +336,14 @@ const CompanyDashboard: React.FC = () => {
           getEmployees={getCompanyEmployees}
           handleCloseWindow={() => setAddEmployeeWindow(false)}
           onHandleCloseWindow={handleEmployeesWindow}
+        />
+      )}
+      {!!addMasterUserWindow && (
+        <AddMasterUserWindow
+          handleMessageWindow={() => setEmailSentMessageWindow(true)}
+          getMasterUsers={getCompanyMasterUsers}
+          handleCloseWindow={() => setAddMasterUserWindow(false)}
+          onHandleCloseWindow={handleInitialWindow}
         />
       )}
       {!!editEmployeeWindow && !!wpModules && (
@@ -287,6 +362,30 @@ const CompanyDashboard: React.FC = () => {
           handleCloseWindow={() => setContractOrderWindow(false)}
           onHandleCloseWindow={handleEmployeesWindow}
         />
+      )}
+      {!!emailSentMessageWindow && (
+        <WindowContainer
+          onHandleCloseWindow={() => setChooseWPproductMessageWindow(false)}
+          containerStyle={{
+            zIndex: 150,
+            top: '30%',
+            left: '25%',
+          }}
+        >
+          <h2>Sucesso</h2>
+          <p>
+            Foi enviado um e-mail para que o usuário confirme a sua solicitação.
+          </p>
+          <h4>
+            Qualquer dúvida, pode enviar uma mensagem no meu whatsapp - 31 99932
+            4093
+          </h4>
+          <div>
+            <button type="button" onClick={handleContractOrderWindow}>
+              Quero ser um vencedor!
+            </button>
+          </div>
+        </WindowContainer>
       )}
       {!!chooseWPproductMessageWindow && (
         <WindowContainer
@@ -375,8 +474,8 @@ const CompanyDashboard: React.FC = () => {
                               defaultValue={companyInfo.name}
                               getCompanyInfo={getCompanyInfo}
                               handleCloseWindow={() =>
-                                setCompanyNameInput(false)
-                              }
+                                setCompanyNameInput(false)}
+                              onHandleCloseWindow={handleCloseCompanyInfoInput}
                               inputName="companyName"
                               type="string"
                             />
@@ -385,7 +484,8 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyNameInput(!companyNameInput)}
+                                setCompanyNameInput(!companyNameInput)
+                              }
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -400,6 +500,7 @@ const CompanyDashboard: React.FC = () => {
                               companyInformation={companyInformation}
                               defaultValue={companyInfo.company_id}
                               getCompanyInfo={getCompanyInfo}
+                              onHandleCloseWindow={handleCloseCompanyInfoInput}
                               handleCloseWindow={() => setCompanyIDInput(false)}
                               inputName="companyID"
                               type="string"
@@ -423,9 +524,9 @@ const CompanyDashboard: React.FC = () => {
                               companyInformation={companyInformation}
                               defaultValue={user.name}
                               getCompanyInfo={getCompanyInfo}
+                              onHandleCloseWindow={handleCloseCompanyInfoInput}
                               handleCloseWindow={() =>
-                                setCompanyUserNameInput(false)
-                              }
+                                setCompanyUserNameInput(false)}
                               inputName="userName"
                               type="string"
                             />
@@ -434,8 +535,7 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyUserNameInput(!companyUserNameInput)
-                              }
+                                setCompanyUserNameInput(!companyUserNameInput)}
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -449,10 +549,10 @@ const CompanyDashboard: React.FC = () => {
                             <EditCompanyInfoInput
                               companyInformation={companyInformation}
                               defaultValue={user.email}
+                              onHandleCloseWindow={handleCloseCompanyInfoInput}
                               getCompanyInfo={getCompanyInfo}
                               handleCloseWindow={() =>
-                                setCompanyEmailInput(false)
-                              }
+                                setCompanyEmailInput(false)}
                               inputName="email"
                               type="string"
                             />
@@ -461,8 +561,7 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyEmailInput(!companyEmailInput)
-                              }
+                                setCompanyEmailInput(!companyEmailInput)}
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -476,10 +575,10 @@ const CompanyDashboard: React.FC = () => {
                             <EditCompanyInfoInput
                               companyInformation={companyInformation}
                               defaultValue={String(companyPhone)}
+                              onHandleCloseWindow={handleCloseCompanyInfoInput}
                               getCompanyInfo={getCompanyContactInfo}
                               handleCloseWindow={() =>
-                                setCompanyPhoneInput(false)
-                              }
+                                setCompanyPhoneInput(false)}
                               inputName="phone"
                               type="number"
                             />
@@ -488,8 +587,7 @@ const CompanyDashboard: React.FC = () => {
                             <button
                               type="button"
                               onClick={() =>
-                                setCompanyPhoneInput(!companyPhoneInput)
-                              }
+                                setCompanyPhoneInput(!companyPhoneInput)}
                             >
                               <FiEdit3 size={18} />
                             </button>
@@ -512,33 +610,17 @@ const CompanyDashboard: React.FC = () => {
                     <div>
                       <h2>Usuários Master</h2>
                       <table>
-                        <tr>
-                          <td>Nome de Usuário</td>
-                          <td>Fulano</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Nome de Usuário</td>
-                          <td>Beltrano</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Nome de Usuário</td>
-                          <td>Ciclano</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
+                        {masterUsers.map(master => (
+                          <tr key={master.id}>
+                            <td>Nome de Usuário</td>
+                            <td>{master.masterUser.name}</td>
+                            <td>
+                              <button type="button">
+                                <FiEdit3 size={18} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
                       </table>
                     </div>
                     <div>
@@ -611,8 +693,7 @@ const CompanyDashboard: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  handleEditEmployeeWindow(thiEmployee)
-                                }
+                                  handleEditEmployeeWindow(thiEmployee)}
                               >
                                 <FiChevronsRight size={24} />
                               </button>

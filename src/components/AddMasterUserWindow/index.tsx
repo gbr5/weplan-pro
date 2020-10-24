@@ -1,0 +1,117 @@
+import React, { MouseEventHandler, useCallback, useState } from 'react';
+import IUserDTO from '../../dtos/IUserDTO';
+import { useAuth } from '../../hooks/auth';
+import api from '../../services/api';
+import WindowContainer from '../WindowContainer';
+
+import { Container } from './styles';
+import logo from '../../assets/weplan.svg';
+
+interface IPropsDTO {
+  handleCloseWindow: Function;
+  handleMessageWindow: Function;
+  onHandleCloseWindow: MouseEventHandler;
+  getMasterUsers: Function;
+}
+
+const AddMasterUserWindow: React.FC<IPropsDTO> = ({
+  handleCloseWindow,
+  onHandleCloseWindow,
+  getMasterUsers,
+  handleMessageWindow,
+}: IPropsDTO) => {
+  const { user } = useAuth();
+
+  const [users, setUsers] = useState<IUserDTO[]>([]);
+  const [masterUser, setMasterUser] = useState<IUserDTO>({} as IUserDTO);
+
+  const handleSelectUser = useCallback(
+    (props: IUserDTO) => {
+      if (masterUser.id === undefined) {
+        setMasterUser(props);
+      } else {
+        setMasterUser({} as IUserDTO);
+      }
+    },
+    [masterUser],
+  );
+
+  const handleGetUsers = useCallback(
+    (props: string) => {
+      try {
+        api.get<IUserDTO[]>(`/users?name=${props}`).then(response => {
+          const allUsers = response.data.filter(
+            thisUser => thisUser.id !== user.id,
+          );
+          setUsers(allUsers);
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [user],
+  );
+
+  const handleAddMasterUser = useCallback(async () => {
+    try {
+      await api.post(`suppliers/master/user/${masterUser.id}`);
+
+      getMasterUsers();
+      handleMessageWindow();
+      handleCloseWindow();
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [masterUser, getMasterUsers, handleCloseWindow, handleMessageWindow]);
+
+  return (
+    <WindowContainer
+      onHandleCloseWindow={onHandleCloseWindow}
+      containerStyle={{
+        top: '0%',
+        left: '0%',
+        height: '100%',
+        width: '100%',
+        zIndex: 100000,
+      }}
+    >
+      <Container>
+        <img src={logo} alt="WePlanPRO" />
+        <h1>Adicionar Usuário Master</h1>
+        <input onChange={e => handleGetUsers(e.target.value)} />
+        <ul>
+          {users.map(thisUser => (
+            <li key={thisUser.id}>
+              <h2>{thisUser.name}</h2>
+              {masterUser.id !== thisUser.id ? (
+                <button
+                  type="button"
+                  onClick={() => handleSelectUser(thisUser)}
+                >
+                  Selecionar
+                </button>
+              ) : (
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectUser(thisUser)}
+                  >
+                    Selecionado
+                  </button>
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <div>
+          <button type="button" onClick={handleAddMasterUser}>
+            Selecionar usuário
+          </button>
+          <a href="https://weplan.party">Ainda não criei o usuário master</a>
+        </div>
+      </Container>
+    </WindowContainer>
+  );
+};
+
+export default AddMasterUserWindow;
