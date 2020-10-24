@@ -198,20 +198,21 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
 
   const hiredModules = useMemo(() => {
     if (wpCompanyContract) {
-      const availableModules: IContractWPModulesDTO[] = wpCompanyContract.products.map(
-        product => {
-          const productName = wpModules.find(
-            xModule => xModule.name === product.weplanProduct.name,
-          );
-          if (productName?.id) {
-            return {
-              id: productName.id,
-              name: productName.name,
-            };
-          }
-          throw new Error('WPManagementModule not found.');
-        },
-      );
+      const availableModules: IContractWPModulesDTO[] = [];
+      wpCompanyContract.products.map(product => {
+        const productName = wpModules.find(
+          xModule => xModule.name === product.weplanProduct.name,
+        );
+        console.log('product', product, 'productName', productName);
+        if (productName !== undefined) {
+          availableModules.push({
+            id: productName.id,
+            name: productName.name,
+          });
+          return productName;
+        }
+        return productName;
+      });
 
       return availableModules;
     }
@@ -323,8 +324,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeCRMLevel(
                                   employeeCRMLevel === 1 ? 0 : 1,
-                                )
-                              }
+                                )}
                             >
                               Acesso Total
                             </BooleanButton>
@@ -334,8 +334,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeCRMLevel(
                                   employeeCRMLevel === 2 ? 0 : 2,
-                                )
-                              }
+                                )}
                             >
                               Acesso por Equipe
                             </BooleanButton>
@@ -345,8 +344,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeCRMLevel(
                                   employeeCRMLevel === 3 ? 0 : 3,
-                                )
-                              }
+                                )}
                             >
                               Acesso Individual
                             </BooleanButton>
@@ -360,8 +358,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeFinancialLevel(
                                   employeeFinancialLevel === 1 ? 0 : 1,
-                                )
-                              }
+                                )}
                             >
                               Acesso Total
                             </BooleanButton>
@@ -371,8 +368,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeFinancialLevel(
                                   employeeFinancialLevel === 2 ? 0 : 2,
-                                )
-                              }
+                                )}
                             >
                               Acesso por Equipe
                             </BooleanButton>
@@ -382,8 +378,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeFinancialLevel(
                                   employeeFinancialLevel === 3 ? 0 : 3,
-                                )
-                              }
+                                )}
                             >
                               Acesso Individual
                             </BooleanButton>
@@ -397,8 +392,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProductionLevel(
                                   employeeProductionLevel === 1 ? 0 : 1,
-                                )
-                              }
+                                )}
                             >
                               Acesso Total
                             </BooleanButton>
@@ -408,8 +402,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProductionLevel(
                                   employeeProductionLevel === 2 ? 0 : 2,
-                                )
-                              }
+                                )}
                             >
                               Acesso por Equipe
                             </BooleanButton>
@@ -419,8 +412,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProductionLevel(
                                   employeeProductionLevel === 3 ? 0 : 3,
-                                )
-                              }
+                                )}
                             >
                               Acesso Individual
                             </BooleanButton>
@@ -434,8 +426,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProjectLevel(
                                   employeeProjectLevel === 1 ? 0 : 1,
-                                )
-                              }
+                                )}
                             >
                               Acesso Total
                             </BooleanButton>
@@ -445,8 +436,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProjectLevel(
                                   employeeProjectLevel === 2 ? 0 : 2,
-                                )
-                              }
+                                )}
                             >
                               Acesso por Equipe
                             </BooleanButton>
@@ -456,8 +446,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                               onClick={() =>
                                 setEmployeeProjectLevel(
                                   employeeProjectLevel === 3 ? 0 : 3,
-                                )
-                              }
+                                )}
                             >
                               Acesso Individual
                             </BooleanButton>
