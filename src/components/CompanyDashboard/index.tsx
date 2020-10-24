@@ -86,6 +86,10 @@ const CompanyDashboard: React.FC = () => {
   const [companyInformation, setCompanyInformation] = useState<
     ICompanyInformationDTO
   >({} as ICompanyInformationDTO);
+  const [companyHiredModules, setCompanyHiredModules] = useState<
+    IContractWPModulesDTO[]
+  >([]);
+  const [marketPlace, setMarketPlace] = useState(false);
   const [masterUsers, setMasterUsers] = useState<IMasterUserDTO[]>([]);
   const [employees, setEmployees] = useState<IEmployeeDTO[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<IEmployeeDTO>(
@@ -224,8 +228,34 @@ const CompanyDashboard: React.FC = () => {
           if (response.data.length <= 0) {
             setChooseWPproductMessageWindow(true);
           }
-
+          const sortModules: IContractWPModulesDTO[] = [];
+          response.data.map(hModule => {
+            hModule.products.map(mProduct => {
+              const pName = mProduct.weplanProduct.name;
+              if (
+                pName === 'CRM' ||
+                pName === 'Production' ||
+                pName === 'Financial' ||
+                pName === 'Project'
+              ) {
+                const findModules = sortModules.find(
+                  sModule => sModule.name === pName,
+                );
+                if (findModules === undefined) {
+                  sortModules.push({
+                    id: mProduct.weplanProduct.id,
+                    name: mProduct.weplanProduct.name,
+                  });
+                }
+              } else {
+                setMarketPlace(true);
+              }
+              return mProduct;
+            });
+            return sortModules;
+          });
           setCompanyWPContracts(response.data);
+          setCompanyHiredModules(sortModules);
         });
     } catch (err) {
       throw new Error(err);
@@ -245,15 +275,17 @@ const CompanyDashboard: React.FC = () => {
           }
 
           setEmployees(
-            response.data.map(tEmployee => {
-              return {
-                id: tEmployee.id,
-                employee: tEmployee.employee,
-                position: tEmployee.position,
-                modules: tEmployee.modules,
-                confirmation: tEmployee.confirmation,
-              };
-            }),
+            response.data
+              .map(tEmployee => {
+                return {
+                  id: tEmployee.id,
+                  employee: tEmployee.employee,
+                  position: tEmployee.position,
+                  modules: tEmployee.modules,
+                  confirmation: tEmployee.confirmation,
+                };
+              })
+              .filter(tEmployee => tEmployee.confirmation.isConfirmed === true),
           );
         });
     } catch (err) {
@@ -707,30 +739,11 @@ const CompanyDashboard: React.FC = () => {
                     <div>
                       <h2>Módulos Contratados</h2>
                       <table>
-                        <tr>
-                          <td>CRM</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Projetos</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Financeiro</td>
-                          <td>
-                            <button type="button">
-                              <FiEdit3 size={18} />
-                            </button>
-                          </td>
-                        </tr>
+                        {companyHiredModules.map(hModule => (
+                          <tr key={hModule.id}>
+                            <td>{hModule.name}</td>
+                          </tr>
+                        ))}
                       </table>
                     </div>
                   </SecondRow>
