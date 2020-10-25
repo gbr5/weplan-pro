@@ -51,6 +51,7 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
+    console.log(email, password);
     const response = await api.post('sessions', {
       email,
       password,
@@ -66,10 +67,7 @@ const AuthProvider: React.FC = ({ children }) => {
         throw new Error('user not found');
       }
     } else {
-      const findSupplier = await api.get(
-        `/supplier-employees/employee/${user.id}`,
-      );
-
+      const findSupplier = await api.get(`/supplier-employees/user/${user.id}`);
       const isSupplier = findSupplier.data;
 
       if (isSupplier === '') {

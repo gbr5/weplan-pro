@@ -31,6 +31,7 @@ import EditCompanyEmployeeForm from '../EditCompanyEmployeeForm';
 import EditCompanyInfoInput from '../EditCompanyInfoInput';
 import AddMasterUserWindow from '../AddMasterUserWindow';
 import { useToast } from '../../hooks/toast';
+import SupplierPageHeader from '../SupplierPageHeader';
 
 interface IWPProduct {
   id: string;
@@ -260,10 +261,10 @@ const CompanyDashboard: React.FC = () => {
             hModule.products.map(mProduct => {
               const pName = mProduct.weplanProduct.name;
               if (
-                pName === 'CRM' ||
-                pName === 'Production' ||
+                pName === 'Comercial' ||
+                pName === 'Operations' ||
                 pName === 'Financial' ||
-                pName === 'Project'
+                pName === 'Projects'
               ) {
                 const findModules = sortModules.find(
                   sModule => sModule.name === pName,
@@ -388,13 +389,13 @@ const CompanyDashboard: React.FC = () => {
 
   const getCompanyInfo = useCallback(() => {
     try {
-      api.get<ICompanyInfoDTO>('company-info').then(response => {
+      api.get<ICompanyInfoDTO>(`company-info/${user.id}`).then(response => {
         setCompanyInfo(response.data);
       });
     } catch (err) {
       throw new Error(err);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     getCompanyInfo();
@@ -591,6 +592,7 @@ const CompanyDashboard: React.FC = () => {
         </WindowContainer>
       )}
       <Container>
+        <SupplierPageHeader />
         <SideMenu>
           <button type="button" onClick={handleInitialWindow}>
             Informações da empresa

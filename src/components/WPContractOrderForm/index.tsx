@@ -67,9 +67,9 @@ const WPContractOrderForm: React.FC<IPropsDTO> = ({
     getWPProducts();
   }, [getWPProducts]);
 
-  const wpCRM = wpProducts.find(wpM => wpM.name === 'CRM');
-  const wpProduction = wpProducts.find(wpM => wpM.name === 'Production');
-  const wpProject = wpProducts.find(wpM => wpM.name === 'Project');
+  const wpCRM = wpProducts.find(wpM => wpM.name === 'Comercial');
+  const wpProduction = wpProducts.find(wpM => wpM.name === 'Operations');
+  const wpProject = wpProducts.find(wpM => wpM.name === 'Projects');
   const wpFinancial = wpProducts.find(wpM => wpM.name === 'Financial');
 
   const inputHeight = { height: '40px' };
