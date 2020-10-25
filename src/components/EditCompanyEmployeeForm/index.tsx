@@ -69,9 +69,9 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
 
-  const wpCRM = wpModules.find(wpM => wpM.name === 'CRM');
-  const wpProduction = wpModules.find(wpM => wpM.name === 'Production');
-  const wpProject = wpModules.find(wpM => wpM.name === 'Project');
+  const wpCRM = wpModules.find(wpM => wpM.name === 'Comercial');
+  const wpProduction = wpModules.find(wpM => wpM.name === 'Operations');
+  const wpProject = wpModules.find(wpM => wpM.name === 'Projects');
   const wpFinancial = wpModules.find(wpM => wpM.name === 'Financial');
 
   const initialCRMaccess = employee.modules.find(
@@ -242,7 +242,7 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
     >
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Container>
-          <h2>Adicionar Colaborador</h2>
+          <h2>Editar Colaborador</h2>
           <div>
             <FirstRow>
               <img src={avatarPlaceholder} alt="WePlanPRO Company Employee" />
@@ -330,7 +330,7 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
                     {hiredModules.map(xModule => (
                       <WPModule key={xModule.id}>
                         <strong>{xModule.name}</strong>
-                        {xModule.name === 'CRM' && (
+                        {xModule.name === 'Comercial' && (
                           <div>
                             <BooleanButton
                               type="button"
@@ -404,7 +404,7 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
                             </BooleanButton>
                           </div>
                         )}
-                        {xModule.name === 'Production' && (
+                        {xModule.name === 'Operations' && (
                           <div>
                             <BooleanButton
                               type="button"
@@ -441,7 +441,7 @@ const EditCompanyEmployeeForm: React.FC<IPropsDTO> = ({
                             </BooleanButton>
                           </div>
                         )}
-                        {xModule.name === 'Project' && (
+                        {xModule.name === 'Projects' && (
                           <div>
                             <BooleanButton
                               type="button"

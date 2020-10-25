@@ -87,9 +87,9 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
   const [employeeUserInfo, setEmployeeUserInfo] = useState<
     IEmployeeUserPersonInfoDTO
   >({} as IEmployeeUserPersonInfoDTO);
-  const wpCRM = wpModules.find(wpM => wpM.name === 'CRM');
-  const wpProduction = wpModules.find(wpM => wpM.name === 'Production');
-  const wpProject = wpModules.find(wpM => wpM.name === 'Project');
+  const wpCRM = wpModules.find(wpM => wpM.name === 'Comercial');
+  const wpProduction = wpModules.find(wpM => wpM.name === 'Operations');
+  const wpProject = wpModules.find(wpM => wpM.name === 'Projects');
   const wpFinancial = wpModules.find(wpM => wpM.name === 'Financial');
 
   const inputHeight = { height: '40px' };
@@ -203,7 +203,6 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
         const productName = wpModules.find(
           xModule => xModule.name === product.weplanProduct.name,
         );
-        console.log('product', product, 'productName', productName);
         if (productName !== undefined) {
           availableModules.push({
             id: productName.id,
@@ -316,7 +315,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                     {hiredModules.map(xModule => (
                       <WPModule key={xModule.id}>
                         <strong>{xModule.name}</strong>
-                        {xModule.name === 'CRM' && (
+                        {xModule.name === 'Comercial' && (
                           <div>
                             <BooleanButton
                               type="button"
@@ -390,7 +389,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                             </BooleanButton>
                           </div>
                         )}
-                        {xModule.name === 'Production' && (
+                        {xModule.name === 'Operations' && (
                           <div>
                             <BooleanButton
                               type="button"
@@ -427,7 +426,7 @@ const CompanyEmployeeForm: React.FC<IPropsDTO> = ({
                             </BooleanButton>
                           </div>
                         )}
-                        {xModule.name === 'Project' && (
+                        {xModule.name === 'Projects' && (
                           <div>
                             <BooleanButton
                               type="button"

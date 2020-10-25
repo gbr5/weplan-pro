@@ -14,6 +14,7 @@ interface IModulesDTO {
 }
 
 interface IEmployeeConfirmationDTO {
+  id: string;
   request_message: string;
   isConfirmed: boolean;
   salary: number;

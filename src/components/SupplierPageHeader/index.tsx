@@ -30,9 +30,9 @@ interface ICompanyInfoDTO {
   logo: string;
 }
 interface IPropsDTO {
-  module: string;
-  modulesMenu: boolean;
-  handleModulesMenu: MouseEventHandler;
+  module?: string;
+  modulesMenu?: boolean;
+  handleModulesMenu?: MouseEventHandler;
 }
 
 const SupplierPageHeader: React.FC<IPropsDTO> = ({
