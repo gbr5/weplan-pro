@@ -89,7 +89,6 @@ const UserCompanyMasterManagementWindow: React.FC<IPropsDTO> = ({
       {deleteMasterWindow && (
         <DeleteCompanyMasterWindow
           companyMasterUserID={selectedMasterID}
-          handleCloseWindow={handleCloseDeleteMasterWindow}
           onHandleCloseWindow={() => setDeleteMasterWindow(false)}
         />
       )}

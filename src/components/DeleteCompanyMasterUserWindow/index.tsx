@@ -1,22 +1,22 @@
 import React, { MouseEventHandler, useCallback } from 'react';
+import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import WindowContainer from '../WindowContainer';
 
 interface IProps {
   companyMasterUserID: string;
   onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
 }
 
 const DeleteCompanyMasterWindow: React.FC<IProps> = ({
   companyMasterUserID,
-  handleCloseWindow,
   onHandleCloseWindow,
 }) => {
+  const { signOut } = useAuth();
   const handleDeleteMasterUser = useCallback(async () => {
     await api.delete(`suppliers/master/user/${companyMasterUserID}`);
-    handleCloseWindow();
-  }, [companyMasterUserID, handleCloseWindow]);
+    signOut();
+  }, [companyMasterUserID, signOut]);
 
   return (
     <WindowContainer

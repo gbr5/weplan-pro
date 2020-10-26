@@ -79,40 +79,6 @@ export const AnimationContainer = styled.div`
   place-content: center;
   gap: 16px;
 
-  a {
-    color: var(--letter-color-3);
-    font-size: 20px;
-    padding: auto 0;
-    text-decoration: none;
-    transition: 0.3s;
-    text-align: center;
-
-    p {
-      color: var(--title-color);
-      line-height: 40px;
-      transition: 0.3s;
-      &:hover {
-        color: green;
-      }
-    }
-
-    &:hover {
-      color: var(--title-color);
-
-      p {
-        color: green;
-      }
-    }
-  }
-  a + a {
-    color: var(--red-color);
-    transition: 0.3s;
-
-    &:hover {
-      color: var(--title-color);
-    }
-  }
-
   div {
     display: flex;
     justify-content: center;

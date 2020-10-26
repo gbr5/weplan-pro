@@ -33,25 +33,16 @@ interface IContactInfo {
   contact_info: string;
 }
 
-interface IContractOrder {
-  company_id: string;
-  name: string;
-}
-
-interface ICompanyEmployee {
-  employee_id: string;
-  company_id: string;
-}
-
-interface ICompanyUser {
-  company_id: string;
-  name: string;
+interface IPersonUser {
+  person_id: string;
+  first_name: string;
+  last_name: string;
 }
 
 const SignUp: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [options, setOptions] = useState(true);
-  const [companyInfo, setCompanyInfo] = useState(false);
+  const [personInfo, setPersonInfo] = useState(false);
   const [contactInfo, setContactInfo] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
@@ -78,7 +69,8 @@ const SignUp: React.FC = () => {
         addToast({
           type: 'success',
           title: 'Cadastro completo!',
-          description: 'Bem vindo(a) ao WePlan PRO!',
+          description:
+            'Bem vindo(a) ao WePlan! Você será encaminhado para o cadastro de empresas.',
         });
 
         history.push('/signin');
@@ -101,26 +93,28 @@ const SignUp: React.FC = () => {
     [addToast, userId, history],
   );
 
-  const handleSubmitCompanyInfo = useCallback(
-    async (data: ICompanyUser) => {
+  const handleSubmitPersonInfo = useCallback(
+    async (data: IPersonUser) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          company_id: Yup.string().required('CNPJ é obrigatório'),
-          name: Yup.string().required('Nome é obrigatório'),
+          person_id: Yup.string().required('CNPJ é obrigatório'),
+          first_name: Yup.string().required('Nome é obrigatório'),
+          last_name: Yup.string().required('Sobrenome é obrigatório'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/company-info', {
-          company_id: data.company_id,
-          name: data.name,
+        await api.post('/person-info', {
+          person_id: data.person_id,
+          first_name: data.first_name,
+          last_name: data.last_name,
           user_id: userId,
         });
-        setCompanyInfo(false);
+        setPersonInfo(false);
         setContactInfo(true);
 
         addToast({
@@ -170,14 +164,14 @@ const SignUp: React.FC = () => {
           name: data.name,
           email: data.email,
           password: data.password,
-          isCompany: true,
+          isCompany: false,
         };
 
         const response = await api.post('/users', validatedData);
         setUserId(response.data.id);
 
         setOptions(false);
-        setCompanyInfo(true);
+        setPersonInfo(true);
 
         addToast({
           type: 'success',
@@ -226,7 +220,7 @@ const SignUp: React.FC = () => {
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>
                 </div>
-                {/* <div><h2>A genialidade está na simplicidade,</h2></div><div><h2>A perfeição nos detalhes !</h2></div> */}
+
                 <Input
                   name="name"
                   icon={FiUser}
@@ -258,35 +252,41 @@ const SignUp: React.FC = () => {
 
                 <Button type="submit">Cadastrar</Button>
               </Form>
-              <Link to="/person-signup">
-                Antes de cadastrar sua empresa, faça o seu cadastro{' '}
-                <p>AQUI !</p>
-              </Link>
-              <a href="https://www.weplan.party" target="blank">
-                Não sou fornecedor
-              </a>
+              <div>
+                <Link to="/">
+                  <p>Cadastrar empresa</p>
+                </Link>
+                <Link to="/signin">Fazer login</Link>
+              </div>
             </>
           )}
 
-          {!options && !!companyInfo && (
-            <Form ref={formRef} onSubmit={handleSubmitCompanyInfo}>
-              <QuestionTitle>Informações da empresa</QuestionTitle>
+          {!options && !!personInfo && (
+            <Form ref={formRef} onSubmit={handleSubmitPersonInfo}>
+              <QuestionTitle>Dados Cadastrais</QuestionTitle>
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
-              <p>Razão Social</p>
+              <p>Nome</p>
               <Input
-                name="name"
+                name="first_name"
                 icon={FiUser}
                 type="text"
-                placeholder="Razão social"
+                placeholder="Primeiro nome"
               />
-              <p>CNPJ</p>
+              <p>Sobrenome</p>
               <Input
-                name="company_id"
+                name="last_name"
                 icon={FiUser}
                 type="text"
-                placeholder="CNPJ"
+                placeholder="Sobrenome"
+              />
+              <p>CPF</p>
+              <Input
+                name="person_id"
+                icon={FiUser}
+                type="number"
+                placeholder="CPF"
               />
 
               <Button type="submit">Próximo</Button>
@@ -294,7 +294,7 @@ const SignUp: React.FC = () => {
           )}
           {!options && !!contactInfo && (
             <Form ref={formRef} onSubmit={handleSubmitContactInfo}>
-              <QuestionTitle>Informações da empresa</QuestionTitle>
+              <QuestionTitle>Dados Cadastrais</QuestionTitle>
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
