@@ -4,7 +4,6 @@ import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import Funnel from '../Funnel';
 import UserEmployeeModuleMenu from '../UserEmployeeModuleMenu';
-// import KPIMenu from '../KPIMenu';
 
 import IEmployeeDTO from '../../dtos/IEmployeeDTO';
 
@@ -13,7 +12,6 @@ import WindowContainer from '../WindowContainer';
 import UserEmployeeManagementWindow from '../UserEmployeeManagementWindow';
 import UserEmployeeSideMenu from '../UserEmployeeSideMenu';
 import SupplierPageHeader from '../SupplierPageHeader';
-import UserCompanyMasterManagementWindow from '../UserCompanyMasterManagementWindow';
 
 interface IModuleAccessDTO {
   id: string;
@@ -38,52 +36,28 @@ const CompanyDashboard: React.FC = () => {
     {} as IEmployeeDTO,
   );
   const [userAsEmployee, setUserAsEmployee] = useState<IEmployeeDTO[]>([]);
-  const [selectedUserMaster, setSelectedUserMaster] = useState<IMasterUserDTO>(
-    {} as IMasterUserDTO,
-  );
-  const [userAsMaster, setUserAsMaster] = useState<IMasterUserDTO[]>([]);
-  const [unConfirmedMasters, setUnConfirmedMasters] = useState<
-    IMasterUserDTO[]
-  >([]);
   const [unConfirmedEmployees, setUnConfirmedEmployees] = useState<
     IEmployeeDTO[]
   >([]);
-  // const [companyInfo, setCompanyInfo] = useState<ICompanyInfoDTO>(
-  //   {} as ICompanyInfoDTO,
-  // );
   const [title, setTitle] = useState('Dashboard');
-  // 1
   const [dashboard, setDashboard] = useState(true);
-  // 2
   const [comercialDashboard, setComercialDashboard] = useState(false);
   const [comercialModuleAccess, setComercialModuleAccess] = useState(false);
   const [comercialModuleID, setComercialModuleID] = useState('');
-  // 3
   const [operationsDashboard, setOperationsDashboard] = useState(false);
   const [operationsModuleAccess, setOperationsModuleAccess] = useState(false);
   const [operationsModuleID, setOperationsModuleID] = useState('');
-  // 4
   const [projectsDashboard, setProjectsDashboard] = useState(false);
   const [projectsModuleAccess, setProjectsModuleAccess] = useState(false);
   const [projectsModuleID, setProjectsModuleID] = useState('');
-  // 5
   const [financialDashboard, setFinancialDashboard] = useState(false);
   const [financialModuleAccess, setFinancialModuleAccess] = useState(false);
   const [financialModuleID, setFinancialModuleID] = useState('');
-  // 6
   const [modulesMenu, setModulesMenu] = useState(false);
-  // 7
   const [confirmEmployeeWindow, setConfirmEmployeeWindow] = useState(false);
-  // 10
-  const [confirmMasterUserWindow, setConfirmMasterUserWindow] = useState(false);
-  // 11
   const [employeeManagementWindow, setEmployeeManagementWindow] = useState(
     false,
   );
-  const [
-    companyMasterManagementWindow,
-    setCompanyMasterManagementWindow,
-  ] = useState(false);
 
   const closeAllWindow = useCallback(() => {
     setDashboard(false);
@@ -92,9 +66,6 @@ const CompanyDashboard: React.FC = () => {
     setProjectsDashboard(false);
 
     setConfirmEmployeeWindow(false);
-    // 9 - 2
-    setConfirmMasterUserWindow(false);
-    // 10 -2
     setEmployeeManagementWindow(false);
   }, []);
 
@@ -129,10 +100,6 @@ const CompanyDashboard: React.FC = () => {
     closeAllWindow();
     setSideMenu(!sideMenu);
   }, [closeAllWindow, sideMenu]);
-  const handleCloseCompanyMasterManagementWindow = useCallback(() => {
-    closeAllWindow();
-    setCompanyMasterManagementWindow(false);
-  }, [closeAllWindow]);
   const handleCloseConfirmEmployeeWindow = useCallback(() => {
     closeAllWindow();
     setConfirmEmployeeWindow(false);
@@ -166,7 +133,6 @@ const CompanyDashboard: React.FC = () => {
             setSelectedEmployee(notConfirmedEmployee);
             handleConfirmEmployeeWindow(notConfirmedEmployee);
           }
-          setSelectedEmployee(response.data[0]);
           setUserAsEmployee(
             response.data
               .map(tEmployee => {
@@ -207,55 +173,55 @@ const CompanyDashboard: React.FC = () => {
     getUserAsEmployee();
   }, [getUserAsEmployee]);
 
-  const getUserAsCompanyMaster = useCallback(() => {
-    try {
-      api
-        .get<IMasterUserDTO[]>(`suppliers/masters/user/${user.id}`)
-        .then(response => {
-          console.log(response.data);
-          if (response.data === undefined) {
-            signOut();
-          }
-          const notConfirmedMaster = response.data.find(
-            tMaster => !tMaster.isConfirmed,
-          );
-          if (notConfirmedMaster !== undefined) {
-            setConfirmMasterUserWindow(true);
-            setSelectedUserMaster(notConfirmedMaster);
-          }
-          setSelectedUserMaster(response.data[0]);
+  // const getUserAsCompanyMaster = useCallback(() => {
+  //   try {
+  //     api
+  //       .get<IMasterUserDTO[]>(`suppliers/masters/user/${user.id}`)
+  //       .then(response => {
+  //         console.log(response.data);
+  //         if (response.data === undefined) {
+  //           signOut();
+  //         }
+  //         const notConfirmedMaster = response.data.find(
+  //           tMaster => !tMaster.isConfirmed,
+  //         );
+  //         if (notConfirmedMaster !== undefined) {
+  //           setConfirmMasterUserWindow(true);
+  //           setSelectedUserMaster(notConfirmedMaster);
+  //         }
+  //         setSelectedUserMaster(response.data[0]);
 
-          setUnConfirmedMasters(
-            response.data
-              .map(tMasterUser => {
-                return {
-                  id: tMasterUser.id,
-                  company: tMasterUser.company,
-                  isConfirmed: tMasterUser.isConfirmed,
-                };
-              })
-              .filter(master => !master.isConfirmed),
-          );
-          setUserAsMaster(
-            response.data
-              .map(tMasterUser => {
-                return {
-                  id: tMasterUser.id,
-                  company: tMasterUser.company,
-                  isConfirmed: tMasterUser.isConfirmed,
-                };
-              })
-              .filter(master => master.isConfirmed),
-          );
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [user, signOut]);
+  //         setUnConfirmedMasters(
+  //           response.data
+  //             .map(tMasterUser => {
+  //               return {
+  //                 id: tMasterUser.id,
+  //                 company: tMasterUser.company,
+  //                 isConfirmed: tMasterUser.isConfirmed,
+  //               };
+  //             })
+  //             .filter(master => !master.isConfirmed),
+  //         );
+  //         setUserAsMaster(
+  //           response.data
+  //             .map(tMasterUser => {
+  //               return {
+  //                 id: tMasterUser.id,
+  //                 company: tMasterUser.company,
+  //                 isConfirmed: tMasterUser.isConfirmed,
+  //               };
+  //             })
+  //             .filter(master => master.isConfirmed),
+  //         );
+  //       });
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // }, [user, signOut]);
 
-  useEffect(() => {
-    getUserAsCompanyMaster();
-  }, [getUserAsCompanyMaster]);
+  // useEffect(() => {
+  //   getUserAsCompanyMaster();
+  // }, [getUserAsCompanyMaster]);
 
   const getWPManagementModules = useCallback(() => {
     try {
@@ -377,36 +343,36 @@ const CompanyDashboard: React.FC = () => {
     [getUserAsEmployee],
   );
 
-  const handleDeleteMasterUser = useCallback(
-    async (companyUserMasterID: string) => {
-      try {
-        await api.delete(`suppliers/master/user/${companyUserMasterID}`);
-        getUserAsCompanyMaster();
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [getUserAsCompanyMaster],
-  );
+  // const handleDeleteMasterUser = useCallback(
+  //   async (companyUserMasterID: string) => {
+  //     try {
+  //       await api.delete(`suppliers/master/user/${companyUserMasterID}`);
+  //       getUserAsCompanyMaster();
+  //     } catch (err) {
+  //       throw new Error(err);
+  //     }
+  //   },
+  //   [getUserAsCompanyMaster],
+  // );
 
-  const handleConfirmMasterUser = useCallback(
-    async (companyUserMasterID: string) => {
-      try {
-        await api.put(`/suppliers/master/user/${companyUserMasterID}`, {
-          isConfirmed: true,
-        });
-        getUserAsCompanyMaster();
-        setConfirmMasterUserWindow(false);
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [getUserAsCompanyMaster],
-  );
+  // const handleConfirmMasterUser = useCallback(
+  //   async (companyUserMasterID: string) => {
+  //     try {
+  //       await api.put(`/suppliers/master/user/${companyUserMasterID}`, {
+  //         isConfirmed: true,
+  //       });
+  //       getUserAsCompanyMaster();
+  //       setConfirmMasterUserWindow(false);
+  //     } catch (err) {
+  //       throw new Error(err);
+  //     }
+  //   },
+  //   [getUserAsCompanyMaster],
+  // );
 
   return (
     <>
-      {!!confirmMasterUserWindow && !!selectedUserMaster.company && (
+      {/* {!!confirmMasterUserWindow && !!selectedUserMaster.company && (
         <WindowContainer
           onHandleCloseWindow={() => setConfirmMasterUserWindow(false)}
           containerStyle={{
@@ -435,7 +401,7 @@ const CompanyDashboard: React.FC = () => {
             </button>
           </div>
         </WindowContainer>
-      )}
+      )} */}
       {!!confirmEmployeeWindow && (
         <WindowContainer
           onHandleCloseWindow={handleCloseConfirmEmployeeWindow}
@@ -477,14 +443,14 @@ const CompanyDashboard: React.FC = () => {
           userAsEmployee={userAsEmployee}
         />
       )}
-      {!!companyMasterManagementWindow && (
+      {/* {!!companyMasterManagementWindow && (
         <UserCompanyMasterManagementWindow
           handleCloseWindow={() => setCompanyMasterManagementWindow(false)}
           onHandleCloseWindow={handleCloseCompanyMasterManagementWindow}
           unConfirmedCompanyMasters={unConfirmedMasters}
           userAsCompanyMasters={userAsMaster}
         />
-      )}
+      )} */}
 
       {userAsEmployee.length >= 1 && (
         <Container>
