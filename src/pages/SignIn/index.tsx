@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
@@ -119,14 +119,12 @@ const SignIn: React.FC = () => {
             <Button type="submit">Entrar</Button>
             <Link to="/forgot-password">Esqueci minha senha</Link>
           </Form>
-          <Link to="/signup">
-            <FiLogIn />
-            Cadastrar como empresa de evento
-          </Link>
-          <a href="https://www.weplan.party" target="blank">
-            <FiLogIn />
-            Cadastrar como usuário final
-          </a>
+          <div>
+            <Link to="/">Cadastro de Fornecedor</Link>
+            <a href="https://www.weplan.party" target="blank">
+              Não sou fornecedor
+            </a>
+          </div>
         </AnimationContainer>
       </Content>
       <Background />

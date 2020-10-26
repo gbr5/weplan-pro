@@ -46,6 +46,7 @@ const AuthProvider: React.FC = ({ children }) => {
   const signOut = useCallback(() => {
     localStorage.removeItem('@WePlan:token');
     localStorage.removeItem('@WePlan:user');
+    localStorage.removeItem('@WePlan:employees');
 
     setData({} as IAuthState);
   }, []);
@@ -59,22 +60,18 @@ const AuthProvider: React.FC = ({ children }) => {
     const { token, user } = response.data;
 
     if (user.isCompany) {
-      const findSupplier = await api.get(`/wp/contract-orders/${user.id}`);
-      const isSupplier = findSupplier.data;
-
-      if (isSupplier === '') {
-        throw new Error('user not found');
-      }
-    } else {
-      const findSupplier = await api.get(
-        `/supplier-employees/employee/${user.id}`,
-      );
-      const isSupplier = findSupplier.data;
-
-      if (isSupplier === '') {
-        throw new Error('user not found');
-      }
+      throw new Error('user not found');
     }
+    const findSupplier = await api.get(`/supplier-employees/user/${user.id}`);
+    const isSupplier = findSupplier.data[0];
+
+    if (!isSupplier) {
+      throw new Error('user not found');
+    }
+    localStorage.setItem(
+      '@WePlan:employees',
+      JSON.stringify(findSupplier.data),
+    );
 
     localStorage.setItem('@WePlan:token', token);
     localStorage.setItem('@WePlan:user', JSON.stringify(user));
@@ -109,7 +106,7 @@ function useAuth(): IAuthContextData {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuth must bu used within an AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
 
   return context;
