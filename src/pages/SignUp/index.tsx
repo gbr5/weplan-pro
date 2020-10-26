@@ -20,6 +20,7 @@ import {
   AnimationContainer,
   Background,
   QuestionTitle,
+  ToggleButton,
 } from './styles';
 import { useAuth } from '../../hooks/auth';
 
@@ -226,7 +227,9 @@ const SignUp: React.FC = () => {
         <AnimationContainer>
           {!!options && (
             <>
-              <h1>WePlan</h1>
+              <h1>
+                WePlan <strong>PRO</strong>
+              </h1>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>
@@ -235,7 +238,7 @@ const SignUp: React.FC = () => {
                   <h2>A genialidade está na simplicidade,</h2>
                 </div>
                 <div>
-                  <h2>A perfeição nos detalhes !</h2>
+                  <h2>A excelência nos detalhes !</h2>
                 </div>
 
                 <Input

@@ -13,7 +13,13 @@ import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-import { Container, Content, AnimationContainer, Background } from './styles';
+import {
+  Container,
+  ToggleButton,
+  Content,
+  AnimationContainer,
+  Background,
+} from './styles';
 
 interface SignInFormData {
   email: string;
@@ -83,8 +89,9 @@ const SignIn: React.FC = () => {
       <Background />
       <Content>
         <AnimationContainer>
-          <h1>WePlan</h1>
-          <h2>Gestão para empresas de evento</h2>
+          <h1>
+            WePlan <strong>PRO</strong>
+          </h1>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
             <div>
@@ -94,7 +101,7 @@ const SignIn: React.FC = () => {
               <h2>A genialidade está na simplicidade,</h2>
             </div>
             <div>
-              <h2>A perfeição nos detalhes !</h2>
+              <h2>A excelência nos detalhes !</h2>
             </div>
             <Input
               name="email"
