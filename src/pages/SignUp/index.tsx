@@ -220,7 +220,12 @@ const SignUp: React.FC = () => {
                 <div>
                   <h3>Work</h3> <h1>SMART!</h1>
                 </div>
-
+                <div>
+                  <h2>A genialidade está na simplicidade,</h2>
+                </div>
+                <div>
+                  <h2>A excelência nos detalhes !</h2>
+                </div>
                 <Input
                   name="name"
                   icon={FiUser}

@@ -15,10 +15,10 @@ import Button from '../../components/Button';
 
 import {
   Container,
+  ToggleButton,
   Content,
   AnimationContainer,
   Background,
-  ToggleButton,
 } from './styles';
 
 interface SignInFormData {
@@ -101,7 +101,7 @@ const SignIn: React.FC = () => {
               <h2>A genialidade está na simplicidade,</h2>
             </div>
             <div>
-              <h2>A perfeição nos detalhes !</h2>
+              <h2>A excelência nos detalhes !</h2>
             </div>
             <Input
               name="email"
