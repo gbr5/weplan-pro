@@ -1,35 +1,50 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
   Container,
   Content,
   Modules,
   ModuleTitle,
-  UpperPage,
   MiddlePage,
   BottomPage,
 } from './styles';
 
 import SupplierPageHeader from '../../components/SupplierPageHeader';
 import Funnel from '../../components/Funnel';
+import { useAuth } from '../../hooks/auth';
 
 const SupplierDashboard: React.FC = () => {
+  const { modules } = useAuth();
+
   const [dashboard, setDashboard] = useState(true);
   const [modulesMenu, setModulesMenu] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
-  const [productionSection, setProductionSection] = useState(false);
+  const [operationsSection, setOperationsSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
-  const [humanResourcesSection, setHumanResourcesSection] = useState(false);
-  const [financeSection, setFinanceSection] = useState(false);
+  const [financialSection, setFinancialSection] = useState(false);
+  const [comercialModule, setComercialModule] = useState(false);
+  const [operationsModule, setOperationsModule] = useState(false);
+  const [projectsModule, setProjectsModule] = useState(false);
+  const [financialModule, setFinancialModule] = useState(false);
   const [title, setTitle] = useState('Dashboard');
+
+  useEffect(() => {
+    modules.map(thisModule => {
+      thisModule.management_module === 'Comercial' && setComercialModule(true);
+      thisModule.management_module === 'Operations' &&
+        setOperationsModule(true);
+      thisModule.management_module === 'Projects' && setProjectsModule(true);
+      thisModule.management_module === 'Financial' && setFinancialModule(true);
+      return thisModule;
+    });
+  }, [modules]);
 
   const closeAllWindows = useCallback(() => {
     setDashboard(false);
     setComercialSection(false);
-    setProductionSection(false);
+    setOperationsSection(false);
     setProjectSection(false);
-    setHumanResourcesSection(false);
-    setFinanceSection(false);
+    setFinancialSection(false);
   }, []);
   const handleChangeModule = useCallback(
     (props: string) => {
@@ -41,17 +56,14 @@ const SupplierDashboard: React.FC = () => {
       if (props === 'Comercial') {
         setComercialSection(true);
       }
-      if (props === 'Produção') {
-        setProductionSection(true);
+      if (props === 'Operações') {
+        setOperationsSection(true);
       }
       if (props === 'Projetos') {
         setProjectSection(true);
       }
-      if (props === 'Colaboradores') {
-        setHumanResourcesSection(true);
-      }
       if (props === 'Financeiro') {
-        setFinanceSection(true);
+        setFinancialSection(true);
       }
     },
     [closeAllWindows],
@@ -75,34 +87,50 @@ const SupplierDashboard: React.FC = () => {
                 <strong>Dashboard</strong>
               </ModuleTitle>
             </button>
-            <button
-              type="button"
-              onClick={() => handleChangeModule('Comercial')}
-            >
-              <ModuleTitle isActive={title === 'Comercial'}>
-                <strong>Comercial</strong>
-              </ModuleTitle>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleChangeModule('Produção')}
-            >
-              <ModuleTitle isActive={title === 'Produção'}>
-                <strong>Produção</strong>
-              </ModuleTitle>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleChangeModule('Projetos')}
-            >
-              <ModuleTitle isActive={title === 'Projetos'}>
-                <strong>Projetos</strong>
-              </ModuleTitle>
-            </button>
+            {!!comercialModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Comercial')}
+              >
+                <ModuleTitle isActive={title === 'Comercial'}>
+                  <strong>Comercial</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!operationsModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Operações')}
+              >
+                <ModuleTitle isActive={title === 'Operações'}>
+                  <strong>Operações</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!projectsModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Projetos')}
+              >
+                <ModuleTitle isActive={title === 'Projetos'}>
+                  <strong>Projetos</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!financialModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Financeiro')}
+              >
+                <ModuleTitle isActive={title === 'Financeiro'}>
+                  <strong>Financeiro</strong>
+                </ModuleTitle>
+              </button>
+            )}
           </Modules>
         )}
 
-        <UpperPage>
+        {/* <UpperPage>
           <div>
             <h3>KPI_1</h3>
             <span>x</span>
@@ -123,7 +151,7 @@ const SupplierDashboard: React.FC = () => {
             <h3>KPI_5</h3>
             <span>x</span>
           </div>
-        </UpperPage>
+        </UpperPage> */}
         <MiddlePage>
           {!!dashboard && (
             <Funnel>
@@ -132,25 +160,20 @@ const SupplierDashboard: React.FC = () => {
           )}
           {!!comercialSection && (
             <Funnel>
-              <h1>CRM Funnel</h1>
+              <h1>Comercial Funnel</h1>
             </Funnel>
           )}
-          {!!productionSection && (
+          {!!operationsSection && (
             <Funnel>
-              <h1>Production Funnel</h1>
+              <h1>Operations Funnel</h1>
             </Funnel>
           )}
           {!!projectSection && (
             <Funnel>
-              <h1>Project Funnel</h1>
+              <h1>Projects Funnel</h1>
             </Funnel>
           )}
-          {!!humanResourcesSection && (
-            <Funnel>
-              <h1>HR Section</h1>
-            </Funnel>
-          )}
-          {!!financeSection && (
+          {!!financialSection && (
             <Funnel>
               <h1>Finance Funnel</h1>
             </Funnel>
@@ -170,15 +193,7 @@ const SupplierDashboard: React.FC = () => {
           </button>
           <button type="button" onClick={() => handleChangeModule('Pessoal')}>
             <ModuleTitle isActive={title === 'Pessoal'}>
-              <strong>Pessoal</strong>
-            </ModuleTitle>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleChangeModule('Financeiro')}
-          >
-            <ModuleTitle isActive={title === 'Financeiro'}>
-              <strong>Financeiro</strong>
+              <strong>Mensagens</strong>
             </ModuleTitle>
           </button>
         </BottomPage>

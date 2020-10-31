@@ -33,7 +33,7 @@ export const Modules = styled.section`
   transition: 0.5s;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 
   margin: 0 auto;
 
@@ -121,7 +121,7 @@ export const BottomPage = styled.div`
   transition: 0.5s;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 
   margin: 24px auto 0;
 
