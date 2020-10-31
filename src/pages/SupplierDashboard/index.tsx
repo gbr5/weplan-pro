@@ -1,44 +1,204 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { Container } from './styles';
+import {
+  Container,
+  Content,
+  Modules,
+  ModuleTitle,
+  MiddlePage,
+  BottomPage,
+} from './styles';
 
-import MainUserDashboard from '../../components/MainUserDashboard';
-// import { useAuth } from '../../hooks/auth';
-// import api from '../../services/api';
-// import IEmployeeDTO from '../../dtos/IEmployeeDTO';
-// import SelectCompanyWindow from '../../components/SelectCompanyWindow';
+import SupplierPageHeader from '../../components/SupplierPageHeader';
+import Funnel from '../../components/Funnel';
+import { useAuth } from '../../hooks/auth';
 
 const SupplierDashboard: React.FC = () => {
-  // const { user, signOut } = useAuth();
-  // const [chooseCompanyWindow, setChooseCompanyWindow] = useState(false);
-  // const [company, setCompany] = useState(false);
-  // const [selectedCompany, setSelectedCompany] = useState<IEmployeeDTO>(
-  //   {} as IEmployeeDTO,
-  // );
-  // const [userAsEmployees, setUserAsEmployees] = useState<IEmployeeDTO[]>([]);
-  // const [unconfirmedUserAsEmployees, setUnconfirmedUserAsEmployees] = useState<
-  //   IEmployeeDTO[]
-  // >([]);
-  // console.log(selectedCompany, unconfirmedUserAsEmployees);
+  const { modules } = useAuth();
 
-  // const handleSelectCompany = useCallback((props: IEmployeeDTO) => {
-  //   setSelectedCompany(props);
-  //   setChooseCompanyWindow(false);
-  // }, []);
+  const [dashboard, setDashboard] = useState(true);
+  const [modulesMenu, setModulesMenu] = useState(true);
+  const [comercialSection, setComercialSection] = useState(false);
+  const [operationsSection, setOperationsSection] = useState(false);
+  const [projectSection, setProjectSection] = useState(false);
+  const [financialSection, setFinancialSection] = useState(false);
+  const [comercialModule, setComercialModule] = useState(false);
+  const [operationsModule, setOperationsModule] = useState(false);
+  const [projectsModule, setProjectsModule] = useState(false);
+  const [financialModule, setFinancialModule] = useState(false);
+  const [title, setTitle] = useState('Dashboard');
+
+  useEffect(() => {
+    modules.map(thisModule => {
+      thisModule.management_module === 'Comercial' && setComercialModule(true);
+      thisModule.management_module === 'Operations' &&
+        setOperationsModule(true);
+      thisModule.management_module === 'Projects' && setProjectsModule(true);
+      thisModule.management_module === 'Financial' && setFinancialModule(true);
+      return thisModule;
+    });
+  }, [modules]);
+
+  const closeAllWindows = useCallback(() => {
+    setDashboard(false);
+    setComercialSection(false);
+    setOperationsSection(false);
+    setProjectSection(false);
+    setFinancialSection(false);
+  }, []);
+  const handleChangeModule = useCallback(
+    (props: string) => {
+      closeAllWindows();
+      setTitle(props);
+      if (props === 'Dashboard') {
+        setDashboard(true);
+      }
+      if (props === 'Comercial') {
+        setComercialSection(true);
+      }
+      if (props === 'Operações') {
+        setOperationsSection(true);
+      }
+      if (props === 'Projetos') {
+        setProjectSection(true);
+      }
+      if (props === 'Financeiro') {
+        setFinancialSection(true);
+      }
+    },
+    [closeAllWindows],
+  );
 
   return (
-    <>
-      {/* {chooseCompanyWindow && (
-        <SelectCompanyWindow
-          employees={userAsEmployees}
-          selectCompany={handleSelectCompany}
-        />
-      )} */}
+    <Container>
+      <SupplierPageHeader
+        handleModulesMenu={() => setModulesMenu(!modulesMenu)}
+        module={title}
+        modulesMenu={modulesMenu}
+      />
+      <Content>
+        {!!modulesMenu && (
+          <Modules>
+            <button
+              type="button"
+              onClick={() => handleChangeModule('Dashboard')}
+            >
+              <ModuleTitle isActive={title === 'Dashboard'}>
+                <strong>Dashboard</strong>
+              </ModuleTitle>
+            </button>
+            {!!comercialModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Comercial')}
+              >
+                <ModuleTitle isActive={title === 'Comercial'}>
+                  <strong>Comercial</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!operationsModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Operações')}
+              >
+                <ModuleTitle isActive={title === 'Operações'}>
+                  <strong>Operações</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!projectsModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Projetos')}
+              >
+                <ModuleTitle isActive={title === 'Projetos'}>
+                  <strong>Projetos</strong>
+                </ModuleTitle>
+              </button>
+            )}
+            {!!financialModule && (
+              <button
+                type="button"
+                onClick={() => handleChangeModule('Financeiro')}
+              >
+                <ModuleTitle isActive={title === 'Financeiro'}>
+                  <strong>Financeiro</strong>
+                </ModuleTitle>
+              </button>
+            )}
+          </Modules>
+        )}
 
-      <Container>
-        <MainUserDashboard />
-      </Container>
-    </>
+        {/* <UpperPage>
+          <div>
+            <h3>KPI_1</h3>
+            <span>x</span>
+          </div>
+          <div>
+            <h3>KPI_2</h3>
+            <span>x</span>
+          </div>
+          <div>
+            <h3>KPI_3</h3>
+            <span>x</span>
+          </div>
+          <div>
+            <h3>KPI_4</h3>
+            <span>x</span>
+          </div>
+          <div>
+            <h3>KPI_5</h3>
+            <span>x</span>
+          </div>
+        </UpperPage> */}
+        <MiddlePage>
+          {!!dashboard && (
+            <Funnel>
+              <h1>Dashboard</h1>
+            </Funnel>
+          )}
+          {!!comercialSection && (
+            <Funnel>
+              <h1>Comercial Funnel</h1>
+            </Funnel>
+          )}
+          {!!operationsSection && (
+            <Funnel>
+              <h1>Operations Funnel</h1>
+            </Funnel>
+          )}
+          {!!projectSection && (
+            <Funnel>
+              <h1>Projects Funnel</h1>
+            </Funnel>
+          )}
+          {!!financialSection && (
+            <Funnel>
+              <h1>Finance Funnel</h1>
+            </Funnel>
+          )}
+        </MiddlePage>
+
+        <BottomPage>
+          <button type="button">
+            <ModuleTitle isActive={title === 'Tarefas'}>
+              <strong>Tarefas</strong>
+            </ModuleTitle>
+          </button>
+          <button type="button">
+            <ModuleTitle isActive={title === 'Performance'}>
+              <strong>Performance</strong>
+            </ModuleTitle>
+          </button>
+          <button type="button" onClick={() => handleChangeModule('Pessoal')}>
+            <ModuleTitle isActive={title === 'Pessoal'}>
+              <strong>Mensagens</strong>
+            </ModuleTitle>
+          </button>
+        </BottomPage>
+      </Content>
+    </Container>
   );
 };
 

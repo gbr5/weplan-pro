@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -22,6 +22,7 @@ import {
   QuestionTitle,
   ToggleButton,
 } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 interface SignUpForm {
   name: string;
@@ -33,20 +34,30 @@ interface IContactInfo {
   contact_info: string;
 }
 
-interface IPersonUser {
-  person_id: string;
-  first_name: string;
-  last_name: string;
+interface IContractOrder {
+  company_id: string;
+  name: string;
+}
+
+interface ICompanyEmployee {
+  employee_id: string;
+  company_id: string;
+}
+
+interface ICompanyUser {
+  company_id: string;
+  name: string;
 }
 
 const SignUp: React.FC = () => {
   const [userId, setUserId] = useState('');
+  const [userInfo, setUserInfo] = useState<SignUpForm>({} as SignUpForm);
   const [options, setOptions] = useState(true);
-  const [personInfo, setPersonInfo] = useState(false);
+  const [companyInfo, setCompanyInfo] = useState(false);
   const [contactInfo, setContactInfo] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
-  const history = useHistory();
+  const { signIn } = useAuth();
 
   const handleSubmitContactInfo = useCallback(
     async (data: IContactInfo) => {
@@ -66,16 +77,16 @@ const SignUp: React.FC = () => {
           contact_type: 'phone',
         });
         setUserId('');
-        addToast({
-          type: 'success',
-          title: 'Cadastro completo!',
-          description:
-            'Bem vindo(a) ao WePlan! Você será encaminhado para o cadastro de empresas.',
-        });
 
-        history.push('/signin');
         setContactInfo(false);
         setOptions(true);
+        signIn({ email: userInfo.email, password: userInfo.password });
+
+        addToast({
+          type: 'success',
+          title: 'Cadastro realizado!',
+          description: 'Você já pode fazer seu login no GoBarber!',
+        });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const error = getValidationErrors(err);
@@ -90,37 +101,35 @@ const SignUp: React.FC = () => {
         });
       }
     },
-    [addToast, userId, history],
+    [addToast, userId, signIn, userInfo],
   );
 
-  const handleSubmitPersonInfo = useCallback(
-    async (data: IPersonUser) => {
+  const handleSubmitCompanyInfo = useCallback(
+    async (data: ICompanyUser) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          person_id: Yup.string().required('CNPJ é obrigatório'),
-          first_name: Yup.string().required('Nome é obrigatório'),
-          last_name: Yup.string().required('Sobrenome é obrigatório'),
+          company_id: Yup.string().required('CNPJ é obrigatório'),
+          name: Yup.string().required('Nome é obrigatório'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/person-info', {
-          person_id: data.person_id,
-          first_name: data.first_name,
-          last_name: data.last_name,
+        await api.post('/company-info', {
+          company_id: data.company_id,
+          name: data.name,
           user_id: userId,
         });
-        setPersonInfo(false);
+        setCompanyInfo(false);
         setContactInfo(true);
 
         addToast({
           type: 'success',
-          title: 'Informações salvas com sucesso!',
-          description: 'Falta só mais uma etapa!',
+          title: 'Cadastro realizado!',
+          description: 'Você já pode fazer seu login no GoBarber!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -164,19 +173,24 @@ const SignUp: React.FC = () => {
           name: data.name,
           email: data.email,
           password: data.password,
-          isCompany: false,
+          isCompany: true,
         };
 
         const response = await api.post('/users', validatedData);
         setUserId(response.data.id);
+        setUserInfo({
+          name: response.data.name,
+          email: response.data.email,
+          password: response.data.password,
+        });
 
         setOptions(false);
-        setPersonInfo(true);
+        setCompanyInfo(true);
 
         addToast({
           type: 'success',
-          title: 'Usuário cadastrado com sucesso!',
-          description: 'Vamos precisar só mais algumas informações.',
+          title: 'Cadastro realizado!',
+          description: 'Você já pode fazer seu login no GoBarber!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -226,6 +240,7 @@ const SignUp: React.FC = () => {
                 <div>
                   <h2>A excelência nos detalhes !</h2>
                 </div>
+
                 <Input
                   name="name"
                   icon={FiUser}
@@ -257,41 +272,33 @@ const SignUp: React.FC = () => {
 
                 <Button type="submit">Cadastrar</Button>
               </Form>
-              <div>
-                <Link to="/">
-                  <p>Cadastrar empresa</p>
-                </Link>
-                <Link to="/signin">Fazer login</Link>
-              </div>
+              <Link to="/signin">Fazer login</Link>
+              <a href="https://www.weplan.party" target="blank">
+                <p>Não sou empresa de eventos</p>
+              </a>
             </>
           )}
 
-          {!options && !!personInfo && (
-            <Form ref={formRef} onSubmit={handleSubmitPersonInfo}>
-              <QuestionTitle>Dados Cadastrais</QuestionTitle>
+          {!options && !!companyInfo && (
+            <Form ref={formRef} onSubmit={handleSubmitCompanyInfo}>
+              <QuestionTitle>Informações da empresa</QuestionTitle>
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
-              <p>Nome</p>
+              <h3>Party Hard!</h3>
+              <p>Razão Social</p>
               <Input
-                name="first_name"
+                name="name"
                 icon={FiUser}
                 type="text"
-                placeholder="Primeiro nome"
+                placeholder="Razão social"
               />
-              <p>Sobrenome</p>
+              <p>CNPJ</p>
               <Input
-                name="last_name"
+                name="company_id"
                 icon={FiUser}
                 type="text"
-                placeholder="Sobrenome"
-              />
-              <p>CPF</p>
-              <Input
-                name="person_id"
-                icon={FiUser}
-                type="number"
-                placeholder="CPF"
+                placeholder="CNPJ"
               />
 
               <Button type="submit">Próximo</Button>
@@ -299,12 +306,13 @@ const SignUp: React.FC = () => {
           )}
           {!options && !!contactInfo && (
             <Form ref={formRef} onSubmit={handleSubmitContactInfo}>
-              <QuestionTitle>Dados Cadastrais</QuestionTitle>
+              <QuestionTitle>Informações da empresa</QuestionTitle>
               <div>
                 <h3>Work</h3> <h1>Smart!</h1>
               </div>
-              <p>Qual o melhor telefone para contato?</p>
-              <p>Pode ser até o seu whatsapp! </p>
+              <h3>Party Hard!</h3>
+              <p>Por último,</p>
+              <p>precisamos de um telefone de contato, pode ser whatsapp</p>
               <Input
                 name="contact_info"
                 type="text"

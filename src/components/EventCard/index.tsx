@@ -1,41 +1,15 @@
 import React, { memo } from 'react';
 
-import IListEventDTO from '../../dtos/IListEventDTO';
-
 import { Container, EventDate } from './styles';
-// import api from '../../services/api';
-// import { useToast } from '../../hooks/toast';
 
-interface IPropsDTO {
-  event: IListEventDTO;
-  // refreshEvents: Function;
-}
-
-const EventCard: React.FC<IPropsDTO> = ({
-  event,
-}: // refreshEvents,
-IPropsDTO) => {
-  // const { addToast } = useToast();
-
-  let eventMessage = '';
-  if (event.daysTillDate) {
-    if (event.daysTillDate === 0) {
-      eventMessage = `${event.name} é HOJE!!`;
-    } else {
-      eventMessage =
-        event.daysTillDate > 0
-          ? `Faltam ${event.daysTillDate} dias para o seu evento!`
-          : 'Este evento já aconteceu!';
-    }
-  }
-
+const EventCard: React.FC = () => {
   return (
-    <Container key={event.id}>
+    <Container>
       <div>
-        <h1>{event.name}</h1>
+        <h1>nome do evento</h1>
       </div>
-      <EventDate title={eventMessage}>
-        <h3>{event.date}</h3>
+      <EventDate title="Nome do evento - TOOLTIP">
+        <h3>data do evento</h3>
       </EventDate>
     </Container>
   );
