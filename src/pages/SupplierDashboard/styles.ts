@@ -16,6 +16,7 @@ const appearFromTop = keyframes`
 export const Container = styled.div`
   position: relative;
   height: 100%;
+  background: var(--background-color);
 `;
 
 export const Content = styled.main`
@@ -25,9 +26,11 @@ export const Content = styled.main`
   flex-direction: column;
   padding-top: 80px;
   height: 100%;
+  background: var(--background-color);
 `;
 
 export const Modules = styled.section`
+  background: var(--background-color);
   background: transparent;
   width: 98%;
   transition: 0.5s;

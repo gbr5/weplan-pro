@@ -1,6 +1,25 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Tooltip from '../Tooltip';
 
+const appearFromTop = keyframes`
+  0% {
+    opacity: 0;
+    z-index: -10;
+    background: transparent;
+  }
+  80% {
+    opacity: 0.4;
+    z-index: 11;
+  }
+  90% {
+    opacity: 0.8;
+    z-index: 0;
+  }
+  100% {
+    opacity: 1;
+    z-index: 2;
+  }
+`;
 export const Container = styled.div`
   width: 100%;
   height: 26px;
@@ -9,6 +28,8 @@ export const Container = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+
+  animation: ${appearFromTop} 1s;
 
   > div {
     display: flex;
