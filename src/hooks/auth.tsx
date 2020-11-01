@@ -71,14 +71,14 @@ const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IAuthState>(() => {
-    const token = localStorage.getItem('@WePlan:token');
-    const userEmployee = localStorage.getItem('@WePlan:userEmployee');
-    const company = localStorage.getItem('@WePlan:company');
-    const companyInfo = localStorage.getItem('@WePlan:companyInfo');
-    const person = localStorage.getItem('@WePlan:person');
-    const personInfo = localStorage.getItem('@WePlan:personInfo');
-    const modules = localStorage.getItem('@WePlan:modules');
-    const confirmation = localStorage.getItem('@WePlan:confirmation');
+    const token = localStorage.getItem('@WP-PRO:token');
+    const userEmployee = localStorage.getItem('@WP-PRO:userEmployee');
+    const company = localStorage.getItem('@WP-PRO:company');
+    const companyInfo = localStorage.getItem('@WP-PRO:companyInfo');
+    const person = localStorage.getItem('@WP-PRO:person');
+    const personInfo = localStorage.getItem('@WP-PRO:personInfo');
+    const modules = localStorage.getItem('@WP-PRO:modules');
+    const confirmation = localStorage.getItem('@WP-PRO:confirmation');
 
     if (
       token &&
@@ -108,14 +108,14 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@WePlan:token');
-    localStorage.removeItem('@WePlan:userEmployee');
-    localStorage.removeItem('@WePlan:company');
-    localStorage.removeItem('@WePlan:companyInfo');
-    localStorage.removeItem('@WePlan:person');
-    localStorage.removeItem('@WePlan:personInfo');
-    localStorage.removeItem('@WePlan:modules');
-    localStorage.removeItem('@WePlan:confirmation');
+    localStorage.removeItem('@WP-PRO:token');
+    localStorage.removeItem('@WP-PRO:userEmployee');
+    localStorage.removeItem('@WP-PRO:company');
+    localStorage.removeItem('@WP-PRO:companyInfo');
+    localStorage.removeItem('@WP-PRO:person');
+    localStorage.removeItem('@WP-PRO:personInfo');
+    localStorage.removeItem('@WP-PRO:modules');
+    localStorage.removeItem('@WP-PRO:confirmation');
 
     setData({} as IAuthState);
   }, []);
@@ -148,14 +148,14 @@ const AuthProvider: React.FC = ({ children }) => {
       throw new Error('user not found');
     }
 
-    localStorage.setItem('@WePlan:token', token);
-    localStorage.setItem('@WePlan:userEmployee', JSON.stringify(userEmployee));
-    localStorage.setItem('@WePlan:company', JSON.stringify(company));
-    localStorage.setItem('@WePlan:companyInfo', JSON.stringify(companyInfo));
-    localStorage.setItem('@WePlan:person', JSON.stringify(person));
-    localStorage.setItem('@WePlan:personInfo', JSON.stringify(personInfo));
-    localStorage.setItem('@WePlan:modules', JSON.stringify(modules));
-    localStorage.setItem('@WePlan:confirmation', JSON.stringify(confirmation));
+    localStorage.setItem('@WP-PRO:token', token);
+    localStorage.setItem('@WP-PRO:userEmployee', JSON.stringify(userEmployee));
+    localStorage.setItem('@WP-PRO:company', JSON.stringify(company));
+    localStorage.setItem('@WP-PRO:companyInfo', JSON.stringify(companyInfo));
+    localStorage.setItem('@WP-PRO:person', JSON.stringify(person));
+    localStorage.setItem('@WP-PRO:personInfo', JSON.stringify(personInfo));
+    localStorage.setItem('@WP-PRO:modules', JSON.stringify(modules));
+    localStorage.setItem('@WP-PRO:confirmation', JSON.stringify(confirmation));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -173,7 +173,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
   const updateUserEmployee = useCallback(
     (updatedUser: IUserEmployee) => {
-      localStorage.setItem('@WePlan:userEmployee', JSON.stringify(updatedUser));
+      localStorage.setItem('@WP-PRO:userEmployee', JSON.stringify(updatedUser));
 
       setData({
         token: data.token,
