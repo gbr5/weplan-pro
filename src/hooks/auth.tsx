@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
+import IFunnelDTO from '../dtos/IFunnelDTO';
 
 import api from '../services/api';
 
@@ -47,6 +48,7 @@ interface IAuthState {
   personInfo: IPersonInfo;
   modules: IModules[];
   confirmation: IConfirmation;
+  funnels: IFunnelDTO[];
 }
 
 interface ISignInCredentials {
@@ -62,6 +64,7 @@ interface IAuthContextData {
   personInfo: IPersonInfo;
   modules: IModules[];
   confirmation: IConfirmation;
+  funnels: IFunnelDTO[];
   signIn(credentials: ISignInCredentials): Promise<void>;
   signOut(): void;
   updateUserEmployee(userEmployee: IUserEmployee): void;
@@ -79,6 +82,7 @@ const AuthProvider: React.FC = ({ children }) => {
     const personInfo = localStorage.getItem('@WP-PRO:personInfo');
     const modules = localStorage.getItem('@WP-PRO:modules');
     const confirmation = localStorage.getItem('@WP-PRO:confirmation');
+    const funnels = localStorage.getItem('@WP-PRO:funnels');
 
     if (
       token &&
@@ -88,7 +92,8 @@ const AuthProvider: React.FC = ({ children }) => {
       person &&
       personInfo &&
       modules &&
-      confirmation
+      confirmation &&
+      funnels
     ) {
       api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -101,6 +106,7 @@ const AuthProvider: React.FC = ({ children }) => {
         personInfo: JSON.parse(personInfo),
         modules: JSON.parse(modules),
         confirmation: JSON.parse(confirmation),
+        funnels: JSON.parse(funnels),
       };
     }
 
@@ -116,6 +122,7 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('@WP-PRO:personInfo');
     localStorage.removeItem('@WP-PRO:modules');
     localStorage.removeItem('@WP-PRO:confirmation');
+    localStorage.removeItem('@WP-PRO:funnels');
 
     setData({} as IAuthState);
   }, []);
@@ -125,7 +132,6 @@ const AuthProvider: React.FC = ({ children }) => {
       email,
       password,
     });
-    console.log(response.data);
 
     const {
       token,
@@ -136,13 +142,13 @@ const AuthProvider: React.FC = ({ children }) => {
       personInfo,
       modules,
       confirmation,
+      funnels,
     } = response.data;
-
+    console.log(funnels);
     const findSupplier = await api.get(
       `/supplier-employees/employee/${person.id}/${company.id}`,
     );
     const isSupplier = findSupplier.data;
-    console.log(isSupplier);
 
     if (!isSupplier.id || isSupplier === undefined || isSupplier === '') {
       throw new Error('user not found');
@@ -156,6 +162,7 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.setItem('@WP-PRO:personInfo', JSON.stringify(personInfo));
     localStorage.setItem('@WP-PRO:modules', JSON.stringify(modules));
     localStorage.setItem('@WP-PRO:confirmation', JSON.stringify(confirmation));
+    localStorage.setItem('@WP-PRO:funnels', JSON.stringify(funnels));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -168,6 +175,7 @@ const AuthProvider: React.FC = ({ children }) => {
       personInfo,
       modules,
       confirmation,
+      funnels,
     });
   }, []);
 
@@ -184,6 +192,7 @@ const AuthProvider: React.FC = ({ children }) => {
         personInfo: data.personInfo,
         modules: data.modules,
         confirmation: data.confirmation,
+        funnels: data.funnels,
       });
     },
     [data],
@@ -199,6 +208,7 @@ const AuthProvider: React.FC = ({ children }) => {
         personInfo: data.personInfo,
         modules: data.modules,
         confirmation: data.confirmation,
+        funnels: data.funnels,
         signIn,
         signOut,
         updateUserEmployee,
