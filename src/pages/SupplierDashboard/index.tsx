@@ -1,13 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import {
-  Container,
-  Content,
-  Modules,
-  ModuleTitle,
-  MiddlePage,
-  BottomPage,
-} from './styles';
+import { Container, Content, Modules, ModuleTitle } from './styles';
 
 import SupplierPageHeader from '../../components/SupplierPageHeader';
 import { useAuth } from '../../hooks/auth';
@@ -16,9 +9,9 @@ import KanbanDashboard from '../../components/KabanDashboard';
 const SupplierDashboard: React.FC = () => {
   const { modules } = useAuth();
 
-  const [dashboard, setDashboard] = useState(true);
+  const [dashboard, setDashboard] = useState(false);
   const [modulesMenu, setModulesMenu] = useState(true);
-  const [comercialSection, setComercialSection] = useState(false);
+  const [comercialSection, setComercialSection] = useState(true);
   const [operationsSection, setOperationsSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
   const [financialSection, setFinancialSection] = useState(false);
@@ -129,74 +122,31 @@ const SupplierDashboard: React.FC = () => {
             )}
           </Modules>
         )}
-
-        {/* <UpperPage>
+        {!!dashboard && (
           <div>
-            <h3>KPI_1</h3>
-            <span>x</span>
+            <h1>Dashboard</h1>
           </div>
-          <div>
-            <h3>KPI_2</h3>
-            <span>x</span>
-          </div>
-          <div>
-            <h3>KPI_3</h3>
-            <span>x</span>
-          </div>
-          <div>
-            <h3>KPI_4</h3>
-            <span>x</span>
-          </div>
-          <div>
-            <h3>KPI_5</h3>
-            <span>x</span>
-          </div>
-        </UpperPage> */}
-        <MiddlePage>
-          {!!dashboard && (
-            <div>
-              <h1>Dashboard</h1>
-            </div>
-          )}
-          {!!comercialSection && (
-            <KanbanDashboard funnel="Comercial">
-              <h1>Comercial KanbanDashboard</h1>
-            </KanbanDashboard>
-          )}
-          {!!operationsSection && (
-            <KanbanDashboard funnel="Operations">
-              <h1>Operations KanbanDashboard</h1>
-            </KanbanDashboard>
-          )}
-          {!!projectSection && (
-            <KanbanDashboard funnel="Projects">
-              <h1>Projects KanbanDashboard</h1>
-            </KanbanDashboard>
-          )}
-          {!!financialSection && (
-            <KanbanDashboard funnel="Financial">
-              <h1>Finance KanbanDashboard</h1>
-            </KanbanDashboard>
-          )}
-        </MiddlePage>
-
-        <BottomPage>
-          <button type="button">
-            <ModuleTitle isActive={title === 'Tarefas'}>
-              <strong>Tarefas</strong>
-            </ModuleTitle>
-          </button>
-          <button type="button">
-            <ModuleTitle isActive={title === 'Performance'}>
-              <strong>Performance</strong>
-            </ModuleTitle>
-          </button>
-          <button type="button" onClick={() => handleChangeModule('Pessoal')}>
-            <ModuleTitle isActive={title === 'Pessoal'}>
-              <strong>Mensagens</strong>
-            </ModuleTitle>
-          </button>
-        </BottomPage>
+        )}
+        {!!comercialSection && (
+          <KanbanDashboard funnel="Comercial">
+            <h1>Comercial KanbanDashboard</h1>
+          </KanbanDashboard>
+        )}
+        {!!operationsSection && (
+          <KanbanDashboard funnel="Operations">
+            <h1>Operations KanbanDashboard</h1>
+          </KanbanDashboard>
+        )}
+        {!!projectSection && (
+          <KanbanDashboard funnel="Projects">
+            <h1>Projects KanbanDashboard</h1>
+          </KanbanDashboard>
+        )}
+        {!!financialSection && (
+          <KanbanDashboard funnel="Financial">
+            <h1>Finance KanbanDashboard</h1>
+          </KanbanDashboard>
+        )}
       </Content>
     </Container>
   );

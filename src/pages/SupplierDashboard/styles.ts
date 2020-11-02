@@ -24,7 +24,7 @@ export const Content = styled.main`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding-top: 80px;
+  padding-top: 72px;
   height: 100%;
   background: var(--background-color);
 `;
@@ -32,7 +32,7 @@ export const Content = styled.main`
 export const Modules = styled.section`
   background: var(--background-color);
   background: transparent;
-  width: 98%;
+  width: 99.9%;
   transition: 0.5s;
 
   display: grid;
@@ -58,11 +58,11 @@ interface IActivePropsDTO {
 
 export const ModuleTitle = styled.div<IActivePropsDTO>`
   transition: 0.3s;
-  height: 32px;
+  height: 28px;
   animation: ${appearFromTop} 0.5s;
 
   &:hover {
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1.2px solid var(--primary-color);
 
     > strong {
       color: var(--letter-color-2);
@@ -81,7 +81,7 @@ export const ModuleTitle = styled.div<IActivePropsDTO>`
     props.isActive &&
     css`
       border: none;
-      border-bottom: 1px solid var(--title-color);
+      border-bottom: 2px solid var(--header-primary);
       transition: 0.25s;
 
       > strong {
@@ -92,56 +92,8 @@ export const ModuleTitle = styled.div<IActivePropsDTO>`
         opacity: 0.8;
 
         > strong {
-          color: var(--title-color);
+          color: var(--header-primary);
         }
       }
     `}
-`;
-
-export const UpperPage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 80px;
-  gap: 16px;
-
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    gap: 16px;
-    width: 100%;
-  }
-`;
-
-export const BottomPage = styled.div`
-  position: fixed;
-  bottom: 0;
-  background: transparent;
-  width: 100%;
-  transition: 0.5s;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  margin: 24px auto 0;
-
-  border-bottom: 1px solid var(--primary-color);
-
-  > button {
-    background: transparent;
-    border: none;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-`;
-
-export const MiddlePage = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 400px;
 `;
