@@ -25,6 +25,18 @@ const appearFromTop = keyframes`
   }
 `;
 
+export const Card = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px;
+  background: var(--card-color);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  animation: ${appearFromTop} 0.3s;
+`;
 export const Container = styled.div`
   display: flex;
   align-items: center;

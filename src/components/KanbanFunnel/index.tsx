@@ -8,7 +8,7 @@ interface IProps {
   funnel: string;
 }
 
-const Funnel: React.FC<IProps> = ({ funnel }) => {
+const KanbanFunnel: React.FC<IProps> = ({ funnel }) => {
   const { funnels } = useAuth();
   const thisFunnel = funnels.find(xFunnel => xFunnel.name === funnel);
 
@@ -29,15 +29,15 @@ const Funnel: React.FC<IProps> = ({ funnel }) => {
   return (
     <>
       <Container>
-        <FunnelStage>{first.name}</FunnelStage>
-        <FunnelStage>{second.name}</FunnelStage>
-        <FunnelStage>{third.name}</FunnelStage>
-        <FunnelStage>{fourth.name}</FunnelStage>
-        <FunnelStage>{fifth.name}</FunnelStage>
+        <FunnelStage stage={first} />
+        <FunnelStage stage={second} />
+        <FunnelStage stage={third} />
+        <FunnelStage stage={fourth} />
+        <FunnelStage stage={fifth} />
       </Container>
       <BottomLine />
     </>
   );
 };
 
-export default Funnel;
+export default KanbanFunnel;
