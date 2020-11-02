@@ -10,8 +10,8 @@ import {
 } from './styles';
 
 import SupplierPageHeader from '../../components/SupplierPageHeader';
-import Funnel from '../../components/Funnel';
 import { useAuth } from '../../hooks/auth';
+import KanbanDashboard from '../../components/KabanDashboard';
 
 const SupplierDashboard: React.FC = () => {
   const { modules } = useAuth();
@@ -154,29 +154,29 @@ const SupplierDashboard: React.FC = () => {
         </UpperPage> */}
         <MiddlePage>
           {!!dashboard && (
-            <Funnel>
+            <div>
               <h1>Dashboard</h1>
-            </Funnel>
+            </div>
           )}
           {!!comercialSection && (
-            <Funnel>
-              <h1>Comercial Funnel</h1>
-            </Funnel>
+            <KanbanDashboard funnel="Comercial">
+              <h1>Comercial KanbanDashboard</h1>
+            </KanbanDashboard>
           )}
           {!!operationsSection && (
-            <Funnel>
-              <h1>Operations Funnel</h1>
-            </Funnel>
+            <KanbanDashboard funnel="Operations">
+              <h1>Operations KanbanDashboard</h1>
+            </KanbanDashboard>
           )}
           {!!projectSection && (
-            <Funnel>
-              <h1>Projects Funnel</h1>
-            </Funnel>
+            <KanbanDashboard funnel="Projects">
+              <h1>Projects KanbanDashboard</h1>
+            </KanbanDashboard>
           )}
           {!!financialSection && (
-            <Funnel>
-              <h1>Finance Funnel</h1>
-            </Funnel>
+            <KanbanDashboard funnel="Financial">
+              <h1>Finance KanbanDashboard</h1>
+            </KanbanDashboard>
           )}
         </MiddlePage>
 
