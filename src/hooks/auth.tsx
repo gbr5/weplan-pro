@@ -144,7 +144,7 @@ const AuthProvider: React.FC = ({ children }) => {
       confirmation,
       funnels,
     } = response.data;
-    console.log(funnels);
+
     const findSupplier = await api.get(
       `/supplier-employees/employee/${person.id}/${company.id}`,
     );
