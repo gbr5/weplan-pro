@@ -1,7 +1,7 @@
 import React from 'react';
 import KanbanFunnel from '../KanbanFunnel';
 
-import { Container } from './styles';
+import { Container, BottomLine, UpperLine } from './styles';
 
 interface IProps {
   funnel: string;
@@ -9,9 +9,13 @@ interface IProps {
 
 const KanbanDashboard: React.FC<IProps> = ({ funnel }) => {
   return (
-    <Container>
-      <KanbanFunnel funnel={funnel} />
-    </Container>
+    <>
+      <UpperLine />
+      <Container>
+        <KanbanFunnel funnel={funnel} />
+      </Container>
+      <BottomLine />
+    </>
   );
 };
 

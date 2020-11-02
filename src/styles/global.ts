@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export default createGlobalStyle`
   :root {
     --primary-color: ${props => props.theme.colors.primary};
+    --header-primary: ${props => props.theme.colors.headerPrimary};
     --secondary-color: ${props => props.theme.colors.secondary};
     --title-color: ${props => props.theme.colors.title};
     --background-color: ${props => props.theme.colors.background};

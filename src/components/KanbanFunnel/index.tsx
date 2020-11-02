@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, BottomLine } from './styles';
+import { Container } from './styles';
 import FunnelStage from '../FunnelStage';
 import { useAuth } from '../../hooks/auth';
 
@@ -27,16 +27,13 @@ const KanbanFunnel: React.FC<IProps> = ({ funnel }) => {
   }
 
   return (
-    <>
-      <Container>
-        <FunnelStage stage={first} />
-        <FunnelStage stage={second} />
-        <FunnelStage stage={third} />
-        <FunnelStage stage={fourth} />
-        <FunnelStage stage={fifth} />
-      </Container>
-      <BottomLine />
-    </>
+    <Container>
+      <FunnelStage stage={first} />
+      <FunnelStage stage={second} />
+      <FunnelStage stage={third} />
+      <FunnelStage stage={fourth} />
+      <FunnelStage stage={fifth} />
+    </Container>
   );
 };
 

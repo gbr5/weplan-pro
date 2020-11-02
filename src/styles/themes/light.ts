@@ -2,11 +2,11 @@ export default {
   title: 'light',
 
   colors: {
-    primary: 'rgba(255, 153, 0, 1)',
-    secondary: '#0B3954',
-
+    primary: '#011627',
+    secondary: 'rgba(255, 153, 0, 1)',
+    headerPrimary: 'rgba(255, 153, 0, 1)',
     background: '#c9c9c9',
-    header: 'rgb(88, 92, 91)',
+    header: '#011627',
     headerHover: 'rgb(158, 155, 141)',
     card: 'rgb(138, 129, 119)',
 
@@ -15,7 +15,7 @@ export default {
     letter1: '#FFF',
     letter2: 'rgb(149, 152, 158)',
     letter3: 'rgb(179, 182, 178)',
-    letter4: '#f9f9f9',
+    letter4: 'rgb(68, 65, 61)',
     letter5: 'rgb(20, 22, 25)',
 
     toastInfoColor: '#3172b7',

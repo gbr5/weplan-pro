@@ -3,10 +3,11 @@ export default {
 
   colors: {
     primary: 'rgba(255, 153, 0, 1)',
-    secondary: '#DDDBF1',
+    secondary: '#011627',
+    headerPrimary: 'rgba(255, 153, 0, 1)',
 
     background: '#011627',
-    header: 'rgb(58, 62, 61)',
+    header: '#011627',
     headerHover: 'rgb(98, 92, 81)',
     card: 'rgb(138, 129, 119)',
 
