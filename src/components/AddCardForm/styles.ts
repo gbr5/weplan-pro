@@ -2,32 +2,48 @@ import styled from 'styled-components';
 import '../../styles/global';
 import { shade } from 'polished';
 
-export const Button = styled.button`
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
+export const Container = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  width: 100%;
+  height: 100%;
+  /* border-radius: 4px;
+  padding: 4px;
+  gap: 8px; */
 
-  background: var(--primary-color);
+  background: var(--card-color);
   box-shadow: var(--box-shadow);
+`;
+
+export const Item = styled.button`
+  margin: 0 auto;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  padding: 2px;
+  padding-left: 5px;
+  border-radius: 4px;
+  background: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  color: var(--primary-color);
+  box-shadow: var(--box-shadow);
+
   transition: 0.25s;
 
   &:hover {
     opacity: 0.8;
-    box-shadow: 1px 1px 10px 1px var(--title-color);
+    border: 1px solid var(--primary-color);
   }
-`;
 
-export const ButtonContent = styled.div`
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  svg {
+    margin-left: auto;
+  }
 `;
 
 export const EventTypeDrawer = styled.div`

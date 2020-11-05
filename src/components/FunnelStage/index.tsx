@@ -14,7 +14,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
     <Container>
       <h1>
         <strong>
-          <FiAlertTriangle size={16} />
+          <FiAlertTriangle size={14} />
         </strong>
         {stage.name}
         <strong>
@@ -22,63 +22,19 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
         </strong>
       </h1>
       <CardContainer>
-        {/* {stage.cards.map(card => (
+        {stage.cards.map(card => (
           <Card>
             <div>
-              <h3>Nome do Card</h3>
+              <h3>{card.name}</h3>
               <p>
-                Responsável: <strong>card.card_owner</strong>
+                Responsável: <strong>{card.card_owner}</strong>
               </p>
             </div>
             <button type="button">
               <FiChevronRight size={24} />
             </button>
-        </Card>
-        ))} */}
-        <Card>
-          <div>
-            <h3>Nome do Card</h3>
-            <p>
-              Responsável: <strong>card.card_owner</strong>
-            </p>
-          </div>
-          <button type="button">
-            <FiChevronRight size={24} />
-          </button>
-        </Card>
-        <Card>
-          <div>
-            <h3>Nome do Card</h3>
-            <p>
-              Responsável: <strong>card.card_owner</strong>
-            </p>
-          </div>
-          <button type="button">
-            <FiChevronRight size={24} />
-          </button>
-        </Card>
-        <Card>
-          <div>
-            <h3>Nome do Card</h3>
-            <p>
-              Responsável: <strong>card.card_owner</strong>
-            </p>
-          </div>
-          <button type="button">
-            <FiChevronRight size={24} />
-          </button>
-        </Card>
-        <Card>
-          <div>
-            <h3>Nome do Card</h3>
-            <p>
-              Responsável: <strong>card.card_owner</strong>
-            </p>
-          </div>
-          <button type="button">
-            <FiChevronRight size={24} />
-          </button>
-        </Card>
+          </Card>
+        ))}
       </CardContainer>
     </Container>
   );

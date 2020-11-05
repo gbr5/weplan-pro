@@ -5,6 +5,7 @@ import { Container, Content, Modules, ModuleTitle } from './styles';
 import SupplierPageHeader from '../../components/SupplierPageHeader';
 import { useAuth } from '../../hooks/auth';
 import KanbanDashboard from '../../components/KabanDashboard';
+import MenuButton from '../../components/MenuButton';
 
 const SupplierDashboard: React.FC = () => {
   const { modules } = useAuth();
@@ -64,6 +65,7 @@ const SupplierDashboard: React.FC = () => {
 
   return (
     <Container>
+      <MenuButton />
       <SupplierPageHeader
         handleModulesMenu={() => setModulesMenu(!modulesMenu)}
         module={title}
