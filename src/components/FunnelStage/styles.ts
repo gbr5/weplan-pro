@@ -6,7 +6,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 8px 2px 5px;
+  padding: 5px 2px 5px;
   background: var(--background-color);
   width: 19.485%;
   height: 100%;
@@ -47,7 +47,7 @@ export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  height: 320px;
+  height: 240px;
   width: 100%;
 `;
 

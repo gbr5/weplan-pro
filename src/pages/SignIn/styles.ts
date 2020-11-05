@@ -75,8 +75,8 @@ export const AnimationContainer = styled.div`
     justify-content: center;
     gap: 16px;
     width: 100%;
-
-  animation: ${appearFromLeft} 0.5s;
+    animation: ${appearFromLeft} 0.5s;
+  }
 
   h1 {
     color: var(--primary-color);

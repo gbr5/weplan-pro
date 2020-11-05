@@ -24,7 +24,7 @@ export const Content = styled.main`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding-top: 72px;
+  padding-top: 60px;
   height: 100%;
   background: var(--background-color);
 `;

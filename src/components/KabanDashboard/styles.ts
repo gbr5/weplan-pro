@@ -16,7 +16,7 @@ const appearFromTop = keyframes`
 
 const lineAppearFromTop = keyframes`
   0% {
-    transform: translateY(-380px);
+    transform: translateY(-300px);
   }
   70% {
     transform: translateY(-4px);
@@ -65,7 +65,7 @@ export const Container = styled.div`
 
 export const BottomLine = styled.div`
   border-bottom: 2px solid var(--header-primary);
-  animation: ${lineAppearFromTop} 0.8s;
+  animation: ${lineAppearFromTop} 1s;
   z-index: 2;
 `;
 export const UpperLine = styled.div`

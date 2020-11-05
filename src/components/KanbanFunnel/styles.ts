@@ -9,7 +9,6 @@ export const Container = styled.div`
   gap: 8px;
   padding: 5px;
   /* background: var(--card-color); */
-  height: 400px;
   box-sizing: border-box;
   border-radius: 5px;
 `;
