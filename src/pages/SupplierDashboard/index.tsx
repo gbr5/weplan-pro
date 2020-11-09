@@ -6,13 +6,15 @@ import SupplierPageHeader from '../../components/SupplierPageHeader';
 import { useAuth } from '../../hooks/auth';
 import KanbanDashboard from '../../components/KabanDashboard';
 import MenuButton from '../../components/MenuButton';
+import MainDashboard from '../../components/MainDashboard';
+import ComercialBottomSection from '../../components/ComercialBottomSection';
 
 const SupplierDashboard: React.FC = () => {
-  const { modules } = useAuth();
+  const { modules, company, companyInfo } = useAuth();
 
-  const [dashboard, setDashboard] = useState(false);
+  const [dashboard, setDashboard] = useState(true);
   const [modulesMenu, setModulesMenu] = useState(true);
-  const [comercialSection, setComercialSection] = useState(true);
+  const [comercialSection, setComercialSection] = useState(false);
   const [operationsSection, setOperationsSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
   const [financialSection, setFinancialSection] = useState(false);
@@ -43,21 +45,25 @@ const SupplierDashboard: React.FC = () => {
   const handleChangeModule = useCallback(
     (props: string) => {
       closeAllWindows();
-      setTitle(props);
       if (props === 'Dashboard') {
         setDashboard(true);
+        setTitle(props);
       }
       if (props === 'Comercial') {
         setComercialSection(true);
+        setTitle(props);
       }
       if (props === 'Operações') {
         setOperationsSection(true);
+        setTitle('Operations');
       }
       if (props === 'Projetos') {
         setProjectSection(true);
+        setTitle('Projects');
       }
       if (props === 'Financeiro') {
         setFinancialSection(true);
+        setTitle('Financial');
       }
     },
     [closeAllWindows],
@@ -74,6 +80,7 @@ const SupplierDashboard: React.FC = () => {
       <Content>
         {!!modulesMenu && (
           <Modules>
+            <img src={companyInfo.logo_url} alt={company.name} />
             <button
               type="button"
               onClick={() => handleChangeModule('Dashboard')}
@@ -124,15 +131,14 @@ const SupplierDashboard: React.FC = () => {
             )}
           </Modules>
         )}
-        {!!dashboard && (
-          <div>
-            <h1>Dashboard</h1>
-          </div>
-        )}
+        {!!dashboard && <MainDashboard />}
         {!!comercialSection && (
-          <KanbanDashboard funnel="Comercial">
-            <h1>Comercial KanbanDashboard</h1>
-          </KanbanDashboard>
+          <>
+            <KanbanDashboard funnel="Comercial">
+              <h1>Comercial KanbanDashboard</h1>
+            </KanbanDashboard>
+            <ComercialBottomSection />
+          </>
         )}
         {!!operationsSection && (
           <KanbanDashboard funnel="Operations">
