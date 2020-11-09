@@ -10,6 +10,7 @@ interface IProps {
 
 const KanbanFunnel: React.FC<IProps> = ({ funnel }) => {
   const { funnels } = useAuth();
+  console.log(funnels, funnel);
   const thisFunnel = funnels.find(xFunnel => xFunnel.name === funnel);
 
   if (!thisFunnel) {

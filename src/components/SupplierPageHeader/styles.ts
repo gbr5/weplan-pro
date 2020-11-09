@@ -5,7 +5,7 @@ export const Header = styled.header`
   position: fixed;
   top: 0;
   z-index: 8;
-  padding: 8px;
+  /* padding: 8px; */
   width: 100%;
   background: var(--header-background-color);
   display: flex;

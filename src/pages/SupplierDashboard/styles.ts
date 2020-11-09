@@ -50,6 +50,15 @@ export const Modules = styled.section`
     align-items: center;
     justify-content: center;
   }
+
+  > img {
+    position: fixed;
+    top: 44px;
+    left: 0px;
+    max-width: 50px;
+    max-height: 44px;
+    margin: auto 0;
+  }
 `;
 
 interface IActivePropsDTO {
