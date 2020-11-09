@@ -7,16 +7,11 @@ import { Calendar } from './styles';
 
 const DashboardCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => {
     if ((modifiers.available, !modifiers.disabled)) {
       setSelectedDate(day);
     }
-  }, []);
-
-  const handleMonthChange = useCallback((month: Date) => {
-    setCurrentMonth(month);
   }, []);
 
   return (
@@ -27,7 +22,6 @@ const DashboardCalendar: React.FC = () => {
         modifiers={{
           available: { daysOfWeek: [0, 1, 2, 3, 4, 5, 6] },
         }}
-        onMonthChange={handleMonthChange}
         selectedDays={selectedDate}
         onDayClick={handleDateChange}
         months={[

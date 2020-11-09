@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiCheck, FiChevronRight } from 'react-icons/fi';
+import { FiCheck } from 'react-icons/fi';
 import { MdArrowForward } from 'react-icons/md';
 
 import { Container, Task, Main } from './styles';
