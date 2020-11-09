@@ -28,7 +28,6 @@ const TaskDashboard: React.FC = () => {
       api
         .get<ITasks[]>(`check-lists/tasks/${company.id}/${person.id}`)
         .then(response => {
-          console.log(response.data);
           setEmployeeTasks(response.data);
         });
     } catch (err) {

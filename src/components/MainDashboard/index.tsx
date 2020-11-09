@@ -11,8 +11,8 @@ import TaskDashboard from './TaskDashboard';
 
 const MainDashboard: React.FC = () => {
   const [sideMenu, setSideMenu] = useState(true);
-  const [mainDashboard, setMainDashboard] = useState(false);
-  const [taskDashboard, setTaskDashboard] = useState(true);
+  const [mainDashboard, setMainDashboard] = useState(true);
+  const [taskDashboard, setTaskDashboard] = useState(false);
 
   const handleCloseAllDashboardAndWindows = useCallback(() => {
     setMainDashboard(false);
