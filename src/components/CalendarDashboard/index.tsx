@@ -5,14 +5,22 @@ import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { Calendar } from './styles';
 
-const DashboardCalendar: React.FC = () => {
+interface IProps {
+  handleSetDate: Function;
+}
+
+const DashboardCalendar: React.FC<IProps> = ({ handleSetDate }: IProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => {
-    if ((modifiers.available, !modifiers.disabled)) {
-      setSelectedDate(day);
-    }
-  }, []);
+  const handleDateChange = useCallback(
+    (day: Date, modifiers: DayModifiers) => {
+      if ((modifiers.available, !modifiers.disabled)) {
+        setSelectedDate(day);
+        handleSetDate(day);
+      }
+    },
+    [handleSetDate],
+  );
 
   return (
     <Calendar>
