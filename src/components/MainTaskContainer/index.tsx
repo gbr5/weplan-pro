@@ -1,26 +1,33 @@
 import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';
+import ITasks from '../../dtos/ITaskDTO';
 
 import { Container, Task, Main } from './styles';
 
-const MainTaskContainer: React.FC = () => {
+interface IProps {
+  tasks: ITasks[];
+}
+
+const MainTaskContainer: React.FC<IProps> = ({ tasks }: IProps) => {
   return (
     <Main>
       <h2>Tarefas do Dia</h2>
       <Container>
-        <Task>
-          <div>
-            <h2>Selecionar fornecedores</h2>
+        {tasks.map(task => (
+          <Task key={task.id}>
+            <div>
+              <h2>{task.task}</h2>
 
-            <span>
-              <p>Data de entrega: 15/04/2021</p>
-              <p>Módulo Comercial</p>
-            </span>
-          </div>
-          <button type="button">
-            <FiChevronRight size={30} />
-          </button>
-        </Task>
+              <span>
+                <p>Data de entrega: {task.due_date}</p>
+                <p>Status: {task.status}</p>
+              </span>
+            </div>
+            <button type="button">
+              <FiChevronRight size={30} />
+            </button>
+          </Task>
+        ))}
       </Container>
     </Main>
   );
