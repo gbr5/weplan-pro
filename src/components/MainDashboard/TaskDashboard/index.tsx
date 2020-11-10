@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiCheckSquare, FiSquare } from 'react-icons/fi';
 import { useAuth } from '../../../hooks/auth';
+import { useToast } from '../../../hooks/toast';
 import api from '../../../services/api';
 
 import { Container, Task, Main } from './styles';
@@ -20,6 +21,7 @@ interface ITasks {
 
 const TaskDashboard: React.FC = () => {
   const { company, person } = useAuth();
+  const { addToast } = useToast();
 
   const [employeeTasks, setEmployeeTasks] = useState<ITasks[]>([]);
 
@@ -35,6 +37,31 @@ const TaskDashboard: React.FC = () => {
     }
   }, [company, person]);
 
+  const updateEmployeeTaskIsActive = useCallback(
+    async (task: ITasks) => {
+      try {
+        await api.put(`check-lists/tasks/edit/${task.id}`, {
+          task: task.task,
+          color: task.color,
+          isActive: !task.isActive,
+          priority: task.priority,
+          status: task.status,
+          due_date: task.due_date,
+        });
+        getEmployeeTasks();
+        addToast({
+          type: 'success',
+          title: 'Tarefa atualizada com sucesso',
+          description:
+            'Você já pode visualizar as alterações no seu dashboard.',
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getEmployeeTasks, addToast],
+  );
+
   useEffect(() => {
     getEmployeeTasks();
   }, [getEmployeeTasks]);
@@ -44,7 +71,7 @@ const TaskDashboard: React.FC = () => {
       <h2>Suas Tarefas</h2>
       <Container>
         {employeeTasks.map(task => (
-          <Task key={task.id}>
+          <Task style={{ background: `${task.color}` }} key={task.id}>
             <div>
               <h2>{task.task}</h2>
 
@@ -53,8 +80,15 @@ const TaskDashboard: React.FC = () => {
                 <p>Módulo Comercial</p>
               </span>
             </div>
-            <button type="button">
-              <FiChevronRight size={30} />
+            <button
+              type="button"
+              onClick={() => updateEmployeeTaskIsActive(task)}
+            >
+              {task.isActive ? (
+                <FiCheckSquare size={30} />
+              ) : (
+                <FiSquare size={30} />
+              )}
             </button>
           </Task>
         ))}
