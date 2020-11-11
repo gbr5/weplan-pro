@@ -39,7 +39,7 @@ const MainDashboard: React.FC = () => {
     setTaskDashboard(true);
   }, [handleCloseAllDashboardAndWindows]);
 
-  useEffect(() => {
+  const getEmployeeTasks = useCallback(() => {
     api
       .get<ITasks[]>(`/check-lists/tasks/${company.id}/${person.id}`, {
         params: {
@@ -52,6 +52,10 @@ const MainDashboard: React.FC = () => {
         setDayTasks(response.data);
       });
   }, [selectedDate, company, person]);
+
+  useEffect(() => {
+    getEmployeeTasks();
+  }, [getEmployeeTasks]);
 
   return (
     <>
@@ -71,7 +75,10 @@ const MainDashboard: React.FC = () => {
         {!!mainDashboard && (
           <>
             <FirstRow>
-              <MainTaskContainer tasks={dayTasks} />
+              <MainTaskContainer
+                getEmployeeTasks={getEmployeeTasks}
+                tasks={dayTasks}
+              />
               <CalendarDashboard
                 handleSetDate={(e: Date) => setSelectedDate(e)}
               />
