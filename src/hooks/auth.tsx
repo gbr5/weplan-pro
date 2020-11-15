@@ -68,6 +68,7 @@ interface IAuthContextData {
   signIn(credentials: ISignInCredentials): Promise<void>;
   signOut(): void;
   updateUserEmployee(userEmployee: IUserEmployee): void;
+  updateFunnels(funnels: IFunnelDTO[]): void;
 }
 
 const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
@@ -198,6 +199,25 @@ const AuthProvider: React.FC = ({ children }) => {
     [data],
   );
 
+  const updateFunnels = useCallback(
+    (funnels: IFunnelDTO[]) => {
+      localStorage.setItem('@WP-PRO:funnels', JSON.stringify(funnels));
+
+      setData({
+        token: data.token,
+        userEmployee: data.userEmployee,
+        company: data.company,
+        companyInfo: data.companyInfo,
+        person: data.person,
+        personInfo: data.personInfo,
+        modules: data.modules,
+        confirmation: data.confirmation,
+        funnels,
+      });
+    },
+    [data],
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -212,6 +232,7 @@ const AuthProvider: React.FC = ({ children }) => {
         signIn,
         signOut,
         updateUserEmployee,
+        updateFunnels,
       }}
     >
       {children}

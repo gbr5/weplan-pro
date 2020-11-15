@@ -15,11 +15,15 @@ import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
+  handleCloseWindow: Function;
+  handleSetCurrentFunnel: Function;
   chosenFunnel: string;
 }
 
 const AddCardForm: React.FC<IProps> = ({
   onHandleCloseWindow,
+  handleCloseWindow,
+  handleSetCurrentFunnel,
   chosenFunnel,
 }: IProps) => {
   const { addToast } = useToast();
@@ -36,6 +40,8 @@ const AddCardForm: React.FC<IProps> = ({
         name: cardName,
         card_owner: person.id,
       });
+      handleCloseWindow();
+      handleSetCurrentFunnel();
       addToast({
         type: 'success',
         title: 'Card criado com sucesso',
@@ -50,16 +56,23 @@ const AddCardForm: React.FC<IProps> = ({
 
       throw new Error(err);
     }
-  }, [addToast, cardName, selectedStage, person]);
+  }, [
+    addToast,
+    cardName,
+    selectedStage,
+    person,
+    handleCloseWindow,
+    handleSetCurrentFunnel,
+  ]);
 
   useEffect(() => {
     const thisFunnel = funnels.find(funnel => funnel.name === chosenFunnel);
     if (thisFunnel && thisFunnel.stages.length > 0) {
       setStages(thisFunnel.stages);
     } else {
-      throw new Error('Funnel not found');
+      handleCloseWindow();
     }
-  }, [funnels, chosenFunnel]);
+  }, [funnels, chosenFunnel, handleCloseWindow]);
   return (
     <>
       <WindowContainer

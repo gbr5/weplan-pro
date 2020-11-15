@@ -3,12 +3,14 @@ import React from 'react';
 import { Container } from './styles';
 import FunnelStage from '../FunnelStage';
 import { useAuth } from '../../hooks/auth';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
 
 interface IProps {
   funnel: string;
+  handleCardPage: Function;
 }
 
-const KanbanFunnel: React.FC<IProps> = ({ funnel }) => {
+const KanbanFunnel: React.FC<IProps> = ({ funnel, handleCardPage }) => {
   const { funnels } = useAuth();
   const thisFunnel = funnels.find(xFunnel => xFunnel.name === funnel);
 
@@ -28,11 +30,26 @@ const KanbanFunnel: React.FC<IProps> = ({ funnel }) => {
 
   return (
     <Container>
-      <FunnelStage stage={first} />
-      <FunnelStage stage={second} />
-      <FunnelStage stage={third} />
-      <FunnelStage stage={fourth} />
-      <FunnelStage stage={fifth} />
+      <FunnelStage
+        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+        stage={first}
+      />
+      <FunnelStage
+        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+        stage={second}
+      />
+      <FunnelStage
+        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+        stage={third}
+      />
+      <FunnelStage
+        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+        stage={fourth}
+      />
+      <FunnelStage
+        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+        stage={fifth}
+      />
     </Container>
   );
 };

@@ -4,7 +4,11 @@ import MenuList from './MenuList';
 
 import { Button } from './styles';
 
-const MenuButton: React.FC = () => {
+interface IProps {
+  handleSetCurrentFunnel: Function;
+}
+
+const MenuButton: React.FC<IProps> = ({ handleSetCurrentFunnel }: IProps) => {
   const [menuList, setMenuList] = useState(false);
 
   const handleMenuList = useCallback(() => {
@@ -15,7 +19,9 @@ const MenuButton: React.FC = () => {
       <Button type="button" onClick={handleMenuList}>
         <MdMenu size={24} />
       </Button>
-      {!!menuList && <MenuList />}
+      {!!menuList && (
+        <MenuList handleSetCurrentFunnel={handleSetCurrentFunnel} />
+      )}
     </>
   );
 };

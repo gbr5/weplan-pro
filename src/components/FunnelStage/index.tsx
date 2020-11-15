@@ -1,15 +1,34 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
+import api from '../../services/api';
 
 import { Container, Card, CardContainer } from './styles';
 
 interface IProps {
   stage: IFunnelStageDTO;
+  handleCardPage: Function;
 }
 
-const FunnelStage: React.FC<IProps> = ({ stage }) => {
+const FunnelStage: React.FC<IProps> = ({ stage, handleCardPage }) => {
+  const [cards, setCards] = useState<IStageCardDTO[]>([]);
+
+  const getStageCards = useCallback(() => {
+    try {
+      api.get(`/funnels/${stage.id}/cards`).then(response => {
+        setCards(response.data);
+      });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [stage]);
+
+  useEffect(() => {
+    getStageCards();
+  }, [getStageCards]);
+
   return (
     <Container>
       <h1>
@@ -22,7 +41,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
         </strong>
       </h1>
       <CardContainer>
-        {stage.cards.map(card => (
+        {cards.map(card => (
           <Card>
             <div>
               <h3>{card.name}</h3>
@@ -30,7 +49,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
                 Responsável: <strong>{card.card_owner}</strong>
               </p>
             </div>
-            <button type="button">
+            <button type="button" onClick={() => handleCardPage(card)}>
               <FiChevronRight size={24} />
             </button>
           </Card>

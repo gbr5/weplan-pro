@@ -1,14 +1,9 @@
 import React, { MouseEventHandler } from 'react';
 import { FiCalendar, FiChevronsLeft } from 'react-icons/fi';
-import {
-  MdFlare,
-  MdSchedule,
-  MdTimelapse,
-  MdTimeline,
-  MdToday,
-} from 'react-icons/md';
+import { MdFlare, MdSchedule, MdTimeline, MdToday } from 'react-icons/md';
 import { useAuth } from '../../hooks/auth';
 import checkListIcon from '../../assets/task_icon.svg';
+import meetingIcon from '../../assets/meeting.svg';
 
 import { ArrowButton, Container, Button } from './styles';
 
@@ -43,10 +38,10 @@ const SideMenu: React.FC<IProps> = ({
             <img src={checkListIcon} alt="WePlan_Check_List" />
           </Button>
           <Button type="button">
-            <MdTimeline />
+            <img src={meetingIcon} alt="WePlan_Meeting" />
           </Button>
           <Button type="button">
-            <MdTimelapse />
+            <MdTimeline />
           </Button>
           <Button type="button">
             <MdSchedule />
