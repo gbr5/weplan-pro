@@ -22,7 +22,7 @@ import logo from '../../assets/weplan.svg';
 import { useAuth } from '../../hooks/auth';
 
 import WindowContainer from '../WindowContainer';
-import MenuButton from '../MenuButton';
+// import MenuButton from '../MenuButton';
 
 interface IPropsDTO {
   module: string;
@@ -70,9 +70,9 @@ const SupplierPageHeader: React.FC<IPropsDTO> = ({
   return (
     <>
       <Header>
-        <h1>
+        {/* <h1>
           <MenuButton />
-        </h1>
+        </h1> */}
 
         <button type="button" onClick={handleNavigateToDashboard}>
           <img src={logo} alt="WePlan" />

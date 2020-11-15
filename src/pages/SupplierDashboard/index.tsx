@@ -8,12 +8,14 @@ import KanbanDashboard from '../../components/KabanDashboard';
 import MenuButton from '../../components/MenuButton';
 import MainDashboard from '../../components/MainDashboard';
 import ComercialBottomSection from '../../components/ComercialBottomSection';
+import CardPage from '../../components/CardPage';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
 
 const SupplierDashboard: React.FC = () => {
   const { modules, company, companyInfo } = useAuth();
 
-  const [dashboard, setDashboard] = useState(true);
   const [modulesMenu, setModulesMenu] = useState(true);
+  const [dashboard, setDashboard] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
   const [operationsSection, setOperationsSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
@@ -23,6 +25,11 @@ const SupplierDashboard: React.FC = () => {
   const [projectsModule, setProjectsModule] = useState(false);
   const [financialModule, setFinancialModule] = useState(false);
   const [title, setTitle] = useState('Dashboard');
+  const [selectedFunnel, setSelectedFunnel] = useState('');
+  const [cardPage, setCardPage] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(
+    {} as IStageCardDTO,
+  );
 
   useEffect(() => {
     modules.map(thisModule => {
@@ -41,6 +48,7 @@ const SupplierDashboard: React.FC = () => {
     setOperationsSection(false);
     setProjectSection(false);
     setFinancialSection(false);
+    setCardPage(false);
   }, []);
   const handleChangeModule = useCallback(
     (props: string) => {
@@ -69,9 +77,28 @@ const SupplierDashboard: React.FC = () => {
     [closeAllWindows],
   );
 
+  const handleCardPage = useCallback(
+    (card: IStageCardDTO) => {
+      setSelectedCard(card);
+      title === 'Comercial' && setSelectedFunnel('Comercial');
+      title === 'Operações' && setSelectedFunnel('Operations');
+      title === 'Projetos' && setSelectedFunnel('Projects');
+      title === 'Financeiro' && setSelectedFunnel('Financial');
+      closeAllWindows();
+      setCardPage(true);
+      return card;
+    },
+    [closeAllWindows, title],
+  );
+
+  const handleSetCurrentFunnel = useCallback(() => {
+    closeAllWindows();
+    setDashboard(true);
+  }, [closeAllWindows]);
+
   return (
     <Container>
-      <MenuButton />
+      <MenuButton handleSetCurrentFunnel={handleSetCurrentFunnel} />
       <SupplierPageHeader
         handleModulesMenu={() => setModulesMenu(!modulesMenu)}
         module={title}
@@ -134,26 +161,37 @@ const SupplierDashboard: React.FC = () => {
         {!!dashboard && <MainDashboard />}
         {!!comercialSection && (
           <>
-            <KanbanDashboard funnel="Comercial">
-              <h1>Comercial KanbanDashboard</h1>
-            </KanbanDashboard>
+            <KanbanDashboard
+              handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+              funnel="Comercial"
+            />
             <ComercialBottomSection />
           </>
         )}
         {!!operationsSection && (
-          <KanbanDashboard funnel="Operations">
-            <h1>Operations KanbanDashboard</h1>
-          </KanbanDashboard>
+          <KanbanDashboard
+            handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            funnel="Operations"
+          />
         )}
         {!!projectSection && (
-          <KanbanDashboard funnel="Projects">
-            <h1>Projects KanbanDashboard</h1>
-          </KanbanDashboard>
+          <KanbanDashboard
+            handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            funnel="Projects"
+          />
         )}
         {!!financialSection && (
-          <KanbanDashboard funnel="Financial">
-            <h1>Finance KanbanDashboard</h1>
-          </KanbanDashboard>
+          <KanbanDashboard
+            handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            funnel="Financial"
+          />
+        )}
+        {!!cardPage && (
+          <CardPage
+            handleUpdateFunnel={(e: string) => handleChangeModule(e)}
+            selectedFunnel={selectedFunnel}
+            card={selectedCard}
+          />
         )}
       </Content>
     </Container>

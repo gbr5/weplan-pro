@@ -4,7 +4,11 @@ import AddCardForm from '../../AddCardForm';
 
 import { List, Item } from './styles';
 
-const MenuList: React.FC = () => {
+interface IProps {
+  handleSetCurrentFunnel: Function;
+}
+
+const MenuList: React.FC<IProps> = ({ handleSetCurrentFunnel }: IProps) => {
   const [moduleName, setModuleName] = useState('');
   const [createCardWindow, setCreateCardWindow] = useState(false);
   const handleCreateCard = useCallback(props => {
@@ -37,8 +41,10 @@ const MenuList: React.FC = () => {
       </List>
       {!!createCardWindow && (
         <AddCardForm
+          handleSetCurrentFunnel={handleSetCurrentFunnel}
           chosenFunnel={moduleName}
           onHandleCloseWindow={() => setCreateCardWindow(false)}
+          handleCloseWindow={() => setCreateCardWindow(false)}
         />
       )}
     </>
