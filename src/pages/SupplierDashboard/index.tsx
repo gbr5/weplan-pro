@@ -12,7 +12,7 @@ import CardPage from '../../components/CardPage';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 
 const SupplierDashboard: React.FC = () => {
-  const { modules, company, companyInfo } = useAuth();
+  const { modules, company, companyInfo, funnels } = useAuth();
 
   const [modulesMenu, setModulesMenu] = useState(true);
   const [dashboard, setDashboard] = useState(true);
@@ -33,14 +33,21 @@ const SupplierDashboard: React.FC = () => {
 
   useEffect(() => {
     modules.map(thisModule => {
-      thisModule.management_module === 'Comercial' && setComercialModule(true);
-      thisModule.management_module === 'Operations' &&
-        setOperationsModule(true);
-      thisModule.management_module === 'Projects' && setProjectsModule(true);
-      thisModule.management_module === 'Financial' && setFinancialModule(true);
+      const thisCompanyFunnel = funnels.find(
+        xFunnel => xFunnel.name === thisModule.management_module,
+      );
+      if (thisCompanyFunnel) {
+        thisModule.management_module === 'Comercial' &&
+          setComercialModule(true);
+        thisModule.management_module === 'Operations' &&
+          setOperationsModule(true);
+        thisModule.management_module === 'Projects' && setProjectsModule(true);
+        thisModule.management_module === 'Financial' &&
+          setFinancialModule(true);
+      }
       return thisModule;
     });
-  }, [modules]);
+  }, [modules, funnels]);
 
   const closeAllWindows = useCallback(() => {
     setDashboard(false);
