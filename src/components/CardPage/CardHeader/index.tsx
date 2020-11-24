@@ -55,7 +55,7 @@ const CardHeader: React.FC<IProps> = ({
         );
 
         xStage.name === 'Comercial' && handleUpdateFunnel('Comercial');
-        xStage.name === 'Operations' && handleUpdateFunnel('Operações');
+        xStage.name === 'Production' && handleUpdateFunnel('Produção');
         xStage.name === 'Projects' && handleUpdateFunnel('Projetos');
         xStage.name === 'Financial' && handleUpdateFunnel('Financeiro');
 

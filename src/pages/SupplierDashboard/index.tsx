@@ -12,16 +12,16 @@ import CardPage from '../../components/CardPage';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 
 const SupplierDashboard: React.FC = () => {
-  const { modules, company, companyInfo } = useAuth();
+  const { modules, company, companyInfo, funnels } = useAuth();
 
   const [modulesMenu, setModulesMenu] = useState(true);
   const [dashboard, setDashboard] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
-  const [operationsSection, setOperationsSection] = useState(false);
+  const [productionSection, setProductionSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
   const [financialSection, setFinancialSection] = useState(false);
   const [comercialModule, setComercialModule] = useState(false);
-  const [operationsModule, setOperationsModule] = useState(false);
+  const [productionModule, setProductionModule] = useState(false);
   const [projectsModule, setProjectsModule] = useState(false);
   const [financialModule, setFinancialModule] = useState(false);
   const [title, setTitle] = useState('Dashboard');
@@ -33,19 +33,26 @@ const SupplierDashboard: React.FC = () => {
 
   useEffect(() => {
     modules.map(thisModule => {
-      thisModule.management_module === 'Comercial' && setComercialModule(true);
-      thisModule.management_module === 'Operations' &&
-        setOperationsModule(true);
-      thisModule.management_module === 'Projects' && setProjectsModule(true);
-      thisModule.management_module === 'Financial' && setFinancialModule(true);
+      const thisCompanyFunnel = funnels.find(
+        xFunnel => xFunnel.name === thisModule.management_module,
+      );
+      if (thisCompanyFunnel) {
+        thisModule.management_module === 'Comercial' &&
+          setComercialModule(true);
+        thisModule.management_module === 'Production' &&
+          setProductionModule(true);
+        thisModule.management_module === 'Projects' && setProjectsModule(true);
+        thisModule.management_module === 'Financial' &&
+          setFinancialModule(true);
+      }
       return thisModule;
     });
-  }, [modules]);
+  }, [modules, funnels]);
 
   const closeAllWindows = useCallback(() => {
     setDashboard(false);
     setComercialSection(false);
-    setOperationsSection(false);
+    setProductionSection(false);
     setProjectSection(false);
     setFinancialSection(false);
     setCardPage(false);
@@ -61,9 +68,9 @@ const SupplierDashboard: React.FC = () => {
         setComercialSection(true);
         setTitle(props);
       }
-      if (props === 'Operações') {
-        setOperationsSection(true);
-        setTitle('Operations');
+      if (props === 'Produção') {
+        setProductionSection(true);
+        setTitle('Production');
       }
       if (props === 'Projetos') {
         setProjectSection(true);
@@ -81,7 +88,7 @@ const SupplierDashboard: React.FC = () => {
     (card: IStageCardDTO) => {
       setSelectedCard(card);
       title === 'Comercial' && setSelectedFunnel('Comercial');
-      title === 'Operações' && setSelectedFunnel('Operations');
+      title === 'Produção' && setSelectedFunnel('Production');
       title === 'Projetos' && setSelectedFunnel('Projects');
       title === 'Financeiro' && setSelectedFunnel('Financial');
       closeAllWindows();
@@ -126,13 +133,13 @@ const SupplierDashboard: React.FC = () => {
                 </ModuleTitle>
               </button>
             )}
-            {!!operationsModule && (
+            {!!productionModule && (
               <button
                 type="button"
-                onClick={() => handleChangeModule('Operações')}
+                onClick={() => handleChangeModule('Produção')}
               >
-                <ModuleTitle isActive={title === 'Operações'}>
-                  <strong>Operações</strong>
+                <ModuleTitle isActive={title === 'Produção'}>
+                  <strong>Produção</strong>
                 </ModuleTitle>
               </button>
             )}
@@ -168,10 +175,10 @@ const SupplierDashboard: React.FC = () => {
             <ComercialBottomSection />
           </>
         )}
-        {!!operationsSection && (
+        {!!productionSection && (
           <KanbanDashboard
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-            funnel="Operations"
+            funnel="Production"
           />
         )}
         {!!projectSection && (
