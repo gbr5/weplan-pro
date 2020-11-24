@@ -22,8 +22,8 @@ const MenuList: React.FC<IProps> = ({ handleSetCurrentFunnel }: IProps) => {
           Card Comercial
           <MdAdd size={30} />
         </Item>
-        <Item type="button" onClick={() => handleCreateCard('Operations')}>
-          Card Operações
+        <Item type="button" onClick={() => handleCreateCard('Production')}>
+          Card Produção
           <MdAdd size={30} />
         </Item>
         <Item type="button" onClick={() => handleCreateCard('Projects')}>
