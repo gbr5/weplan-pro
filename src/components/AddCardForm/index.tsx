@@ -30,19 +30,31 @@ const AddCardForm: React.FC<IProps> = ({
   const { funnels, person } = useAuth();
 
   const [cardName, setCardName] = useState('');
+  const [selectStageWindow, setSelectStageWindow] = useState(true);
   const [selectedStage, setSelectedStage] = useState<IFunnelStageDTO>();
   const [stages, setStages] = useState<IFunnelStageDTO[]>([]);
 
   const handleSubmit = useCallback(async () => {
     try {
-      await api.post(`funnels/${selectedStage?.id}/cards`, {
+      if (selectedStage === undefined) {
+        setSelectedStage(undefined);
+        return setSelectStageWindow(true);
+      }
+      if (cardName === '') {
+        return addToast({
+          type: 'error',
+          title: 'Erro ao adicionar CARD',
+          description: 'O nome do CARD deve ser preenchido, tente novamente.',
+        });
+      }
+      await api.post(`funnels/${selectedStage.id}/cards`, {
         weplanEvent: false,
         name: cardName,
         card_owner: person.id,
       });
       handleCloseWindow();
       handleSetCurrentFunnel();
-      addToast({
+      return addToast({
         type: 'success',
         title: 'Card criado com sucesso',
         description: 'Você já pode visualizá-lo no seu dashboard.',
@@ -65,6 +77,10 @@ const AddCardForm: React.FC<IProps> = ({
     handleSetCurrentFunnel,
   ]);
 
+  const handleCloseSelectStageWindow = useCallback(() => {
+    setSelectStageWindow(false);
+  }, []);
+
   useEffect(() => {
     const thisFunnel = funnels.find(funnel => funnel.name === chosenFunnel);
     if (thisFunnel && thisFunnel.stages.length > 0) {
@@ -73,15 +89,16 @@ const AddCardForm: React.FC<IProps> = ({
       handleCloseWindow();
     }
   }, [funnels, chosenFunnel, handleCloseWindow]);
+
   return (
     <>
       <WindowContainer
         onHandleCloseWindow={onHandleCloseWindow}
         containerStyle={{
           zIndex: 10,
-          top: '10%',
+          top: '38%',
           left: '20%',
-          height: '80%',
+          height: '24%',
           width: '60%',
         }}
       >
@@ -97,9 +114,11 @@ const AddCardForm: React.FC<IProps> = ({
         </Container>
         {/* </Form> */}
       </WindowContainer>
-      {selectedStage === undefined && (
+      {selectStageWindow && (
         <SelectStageWindow
+          onHandleCloseWindow={() => setSelectStageWindow(false)}
           stages={stages}
+          handleCloseWindow={handleCloseSelectStageWindow}
           handleSetSelectedStage={(e: IFunnelStageDTO) => setSelectedStage(e)}
         />
       )}
