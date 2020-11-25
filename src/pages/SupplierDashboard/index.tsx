@@ -1,53 +1,29 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { Container, Content, Modules, ModuleTitle } from './styles';
+import { Container, Content } from './styles';
 
 import SupplierPageHeader from '../../components/SupplierPageHeader';
-import { useAuth } from '../../hooks/auth';
 import KanbanDashboard from '../../components/KabanDashboard';
 import MenuButton from '../../components/MenuButton';
 import MainDashboard from '../../components/MainDashboard';
 import ComercialBottomSection from '../../components/ComercialBottomSection';
 import CardPage from '../../components/CardPage';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
+import ModuleMenu from '../../components/ModuleMenu';
 
 const SupplierDashboard: React.FC = () => {
-  const { modules, company, companyInfo, funnels } = useAuth();
-
   const [modulesMenu, setModulesMenu] = useState(true);
   const [dashboard, setDashboard] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
   const [productionSection, setProductionSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
   const [financialSection, setFinancialSection] = useState(false);
-  const [comercialModule, setComercialModule] = useState(false);
-  const [productionModule, setProductionModule] = useState(false);
-  const [projectsModule, setProjectsModule] = useState(false);
-  const [financialModule, setFinancialModule] = useState(false);
   const [title, setTitle] = useState('Dashboard');
   const [selectedFunnel, setSelectedFunnel] = useState('');
   const [cardPage, setCardPage] = useState(false);
   const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(
     {} as IStageCardDTO,
   );
-
-  useEffect(() => {
-    modules.map(thisModule => {
-      const thisCompanyFunnel = funnels.find(
-        xFunnel => xFunnel.name === thisModule.management_module,
-      );
-      if (thisCompanyFunnel) {
-        thisModule.management_module === 'Comercial' &&
-          setComercialModule(true);
-        thisModule.management_module === 'Production' &&
-          setProductionModule(true);
-        thisModule.management_module === 'Projects' && setProjectsModule(true);
-        thisModule.management_module === 'Financial' &&
-          setFinancialModule(true);
-      }
-      return thisModule;
-    });
-  }, [modules, funnels]);
 
   const closeAllWindows = useCallback(() => {
     setDashboard(false);
@@ -59,6 +35,7 @@ const SupplierDashboard: React.FC = () => {
   }, []);
   const handleChangeModule = useCallback(
     (props: string) => {
+      console.log(props);
       closeAllWindows();
       if (props === 'Dashboard') {
         setDashboard(true);
@@ -70,15 +47,15 @@ const SupplierDashboard: React.FC = () => {
       }
       if (props === 'Produção') {
         setProductionSection(true);
-        setTitle('Production');
+        setTitle(props);
       }
       if (props === 'Projetos') {
         setProjectSection(true);
-        setTitle('Projects');
+        setTitle(props);
       }
       if (props === 'Financeiro') {
         setFinancialSection(true);
-        setTitle('Financial');
+        setTitle(props);
       }
     },
     [closeAllWindows],
@@ -100,6 +77,7 @@ const SupplierDashboard: React.FC = () => {
 
   const handleSetCurrentFunnel = useCallback(() => {
     closeAllWindows();
+    setTitle('Dashboard');
     setDashboard(true);
   }, [closeAllWindows]);
 
@@ -113,57 +91,7 @@ const SupplierDashboard: React.FC = () => {
       />
       <Content>
         {!!modulesMenu && (
-          <Modules>
-            <img src={companyInfo.logo_url} alt={company.name} />
-            <button
-              type="button"
-              onClick={() => handleChangeModule('Dashboard')}
-            >
-              <ModuleTitle isActive={title === 'Dashboard'}>
-                <strong>Dashboard</strong>
-              </ModuleTitle>
-            </button>
-            {!!comercialModule && (
-              <button
-                type="button"
-                onClick={() => handleChangeModule('Comercial')}
-              >
-                <ModuleTitle isActive={title === 'Comercial'}>
-                  <strong>Comercial</strong>
-                </ModuleTitle>
-              </button>
-            )}
-            {!!productionModule && (
-              <button
-                type="button"
-                onClick={() => handleChangeModule('Produção')}
-              >
-                <ModuleTitle isActive={title === 'Produção'}>
-                  <strong>Produção</strong>
-                </ModuleTitle>
-              </button>
-            )}
-            {!!projectsModule && (
-              <button
-                type="button"
-                onClick={() => handleChangeModule('Projetos')}
-              >
-                <ModuleTitle isActive={title === 'Projetos'}>
-                  <strong>Projetos</strong>
-                </ModuleTitle>
-              </button>
-            )}
-            {!!financialModule && (
-              <button
-                type="button"
-                onClick={() => handleChangeModule('Financeiro')}
-              >
-                <ModuleTitle isActive={title === 'Financeiro'}>
-                  <strong>Financeiro</strong>
-                </ModuleTitle>
-              </button>
-            )}
-          </Modules>
+          <ModuleMenu handleChangeModule={handleChangeModule} title={title} />
         )}
         {!!dashboard && <MainDashboard />}
         {!!comercialSection && (
