@@ -1,4 +1,4 @@
-export default interface ITasks {
+export default interface ITaskDTO {
   id: string;
   check_list_id: string;
   task: string;

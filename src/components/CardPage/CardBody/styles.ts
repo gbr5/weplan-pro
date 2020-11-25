@@ -5,7 +5,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 2fr 4fr;
+  grid-template-columns: 1fr 4fr;
   align-items: center;
   justify-content: center;
   background: var(--background-color);

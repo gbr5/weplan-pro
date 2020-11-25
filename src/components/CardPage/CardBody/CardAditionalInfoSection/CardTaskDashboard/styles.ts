@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import '../../../../../styles/global';
 
 export const Main = styled.div`
@@ -16,218 +16,58 @@ export const Main = styled.div`
   }
 `;
 
-export const CheckListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-sizing: border-box;
+export const ContainerMenu = styled.div`
   width: 100%;
-  padding: 0 48px;
-  text-align: center;
-
-  h2 {
-    width: 100%;
-    margin: 0 auto;
-  }
-`;
-
-export const StatusMenuButtonContainer = styled.strong`
-  width: 100%;
-  height: 100%;
-  text-align: left;
-
-  box-sizing: border-box;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+  padding: 24px;
+  background: var(--letter-color-3);
 
-interface IStatusButtonProps {
-  isActive: boolean;
-}
-
-export const StatusMenuButton = styled.button<IStatusButtonProps>`
-  margin: 24px auto;
-  background: var(--title-color);
-  border-radius: 5px;
-  border: none;
-  opacity: 0.6;
-  transition: 0.3s;
-  padding: 5px;
-  font-size: 24px;
-  color: var(--letter-color-4);
-
-  &:hover {
-    opacity: 1;
-    border: 1px solid var(--header-primary);
-  }
-
-  ${props =>
-    props.isActive &&
-    css`
-      color: var(--letter-color-5);
-      background-color: var(--header-primary);
-      opacity: 1;
-      transition: 0.25s;
-      border: 1px solid var(--header-background-color);
-
-      &:hover {
-        opacity: 0.5;
-        border: 1px solid var(--title-color);
-      }
-    `}
-`;
-
-export const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  text-align: left;
-
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: stretch;
-  background: var(--header-background-color);
-  border-radius: 8px;
-  padding: 8px;
-  /* margin-left: 80px; */
-  gap: 5px;
-  overflow-y: scroll;
-`;
-
-export const Task = styled.div`
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  /* height: 40px; */
-  /* width: 100%; */
-  align-items: stretch;
-  justify-content: stretch;
-  border: 1px solid var(--title-color);
-  padding: 5px;
-  border-radius: 5px;
-  transition: 0.3s;
-
-  &:hover {
-    opacity: 0.8;
-    div {
-      background: transparent;
-      border: none;
-      span {
-        p {
-          color: var(--letter-color-5);
-          &:nth-child(2) {
-            color: var(--letter-color-5);
-          }
-        }
-      }
-    }
-    button {
-      background: transparent;
-      border: none;
-      svg {
-        color: var(--letter-color-5);
-      }
-    }
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    color: var(--header-primary);
-    box-sizing: border-box;
-
-    width: 100%;
-
-    span {
-      display: flex;
-      width: 100%;
-      padding-right: 16px;
-
-      p {
-        margin: 0 auto;
-        color: var(--letter-color-2);
-      }
-    }
+  p {
+    font-size: 20px;
+    border-bottom: 2px solid var(--header-primary);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 5px;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
   }
 
   button {
     background: transparent;
     border: none;
-    width: 60px;
-    border-radius: 50%;
+    margin-right: auto;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.3s;
-
-    svg {
-      color: var(--header-primary);
-    }
-
-    &:hover {
-      svg {
-        color: var(--title-color);
-      }
-    }
-  }
-`;
-
-export const ButtonContainer = styled.strong`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-
-  button:first-child {
-    padding: 0;
-    svg {
-      padding: 0;
-      background-color: var(--card-color);
-      border-radius: 2px;
-    }
-  }
-  button {
-    display: flex;
     gap: 8px;
-    align-items: center;
-    justify-content: center;
-    width: 350px;
 
-    h3 {
-      border-bottom: 1px solid var(--title-color);
-    }
-    p {
-      font-weight: 500;
-      font-size: 20px;
-      color: var(--letter-color-3);
-    }
-  }
-`;
+    strong {
+      height: 32px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
 
-export const Status = styled.button`
-  margin: 0 auto;
-  padding: 0;
-  background: transparent;
+      background: var(--header-primary);
+      color: var(--header-background-color);
+      border-radius: 8px;
+      border: 1px solid var(--header-background-color);
+      box-shadow: var(--box-shadow);
 
-  img {
-    height: 50px;
-    &:hover {
-      border: 1px solid var(--title-color);
-    }
-  }
-`;
+      transition: 0.5s;
 
-export const Priority = styled.button`
-  margin: 0 auto;
-  padding: 0;
-
-  svg {
-    height: 50px;
-    &:hover {
-      border: 1px solid var(--title-color);
+      &:hover {
+        background: var(--header-background-color);
+        color: var(--header-primary);
+        border-radius: 16px;
+        border: 1px solid var(--header-primary);
+        box-shadow: var(--window-box-shadow);
+      }
     }
   }
 `;
