@@ -24,10 +24,47 @@ export const CheckListContainer = styled.div`
   width: 100%;
   padding: 0 48px;
   text-align: center;
+`;
+
+export const CheckListHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  position: relative;
 
   h2 {
     width: 100%;
     margin: 0 auto;
+    border-bottom: 2px solid var(--header-primary);
+  }
+
+  button {
+    position: absolute;
+    top: 0;
+    right: 8px;
+
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--header-primary);
+    color: var(--header-background-color);
+    border-radius: 50%;
+    border: 1px solid var(--header-background-color);
+    box-shadow: var(--box-shadow);
+
+    transition: 0.5s;
+
+    &:hover {
+      background: var(--header-background-color);
+      color: var(--header-primary);
+      border-radius: 8px;
+      border: 1px solid var(--header-primary);
+      box-shadow: var(--window-box-shadow);
+    }
   }
 `;
 

@@ -1,75 +1,105 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { MdAdd } from 'react-icons/md';
+import { FiChevronDown } from 'react-icons/fi';
 import api from '../../../../../services/api';
 
-import { Main } from './styles';
+import { Main, ContainerMenu } from './styles';
 import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
 import CardCheckListContainer from './CardCheckListContainer';
-
-interface ITasks {
-  id: string;
-  check_list_id: string;
-  task: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  status: string;
-  due_date: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
-interface ICheckList {
-  id: string;
-  name: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  due_date: string;
-  tasks: ITasks[];
-}
-
-interface ICardCheckList {
-  id: string;
-  card_id: string;
-  check_list_id: string;
-  card_unique_name: string;
-  created_at: Date;
-  updated_at: Date;
-  check_list: ICheckList;
-}
+import SelectCardCheckListWindow from './SelectCardCheckListWindow';
+import CreateCheckListForm from './CreateCheckListForm';
+import ICardCheckListDTO from '../../../../../dtos/ICardCheckListDTO';
 
 interface IProps {
   card: IStageCardDTO;
 }
 
 const CardTaskDashboard: React.FC<IProps> = ({ card }: IProps) => {
-  const [cardCheckLists, setCardCheckLists] = useState<ICardCheckList[]>([]);
+  const [selectCheckListWindow, setSelectCheckListWindow] = useState(false);
+  const [createCheckListForm, setCreateCheckListForm] = useState(false);
+  const [selectedCheckList, setSelectedCheckList] = useState<ICardCheckListDTO>(
+    {} as ICardCheckListDTO,
+  );
+  const [cardCheckLists, setCardCheckLists] = useState<ICardCheckListDTO[]>([]);
 
   const getCardCheckLists = useCallback(() => {
     try {
       api
-        .get<ICardCheckList[]>(`card/check-lists/${card.id}`)
+        .get<ICardCheckListDTO[]>(`card/check-lists/${card.id}`)
         .then(response => {
           setCardCheckLists(response.data);
+          const mainCheckList = response.data.find(
+            mainCL => mainCL.card_id === card.id,
+          );
+          mainCheckList && setSelectedCheckList(mainCheckList);
         });
     } catch (err) {
       throw new Error(err);
     }
   }, [card]);
 
+  const handleSetSelectedCheckList = useCallback((props: ICardCheckListDTO) => {
+    setSelectCheckListWindow(false);
+    setSelectedCheckList(props);
+  }, []);
+
+  const handleCloseCheckListForm = useCallback(() => {
+    setCreateCheckListForm(false);
+  }, []);
+
   useEffect(() => {
     getCardCheckLists();
   }, [getCardCheckLists]);
 
   return (
-    <Main>
-      {cardCheckLists.map(cardCheckList => (
-        <CardCheckListContainer
-          checkList={cardCheckList.check_list}
-          getCardCheckLists={getCardCheckLists}
+    <>
+      {selectCheckListWindow && (
+        <SelectCardCheckListWindow
+          onHandleCloseWindow={() => setSelectCheckListWindow(false)}
+          cardCheckLists={cardCheckLists}
+          handleSetSelectedCheckList={handleSetSelectedCheckList}
         />
-      ))}
-    </Main>
+      )}
+      {createCheckListForm && (
+        <CreateCheckListForm
+          onHandleCloseWindow={() => setCreateCheckListForm(false)}
+          handleCloseWindow={handleCloseCheckListForm}
+          getCardCheckList={getCardCheckLists}
+          card={card}
+        />
+      )}
+      <Main>
+        {selectedCheckList.check_list && (
+          <>
+            <ContainerMenu>
+              <button
+                type="button"
+                onClick={() => setSelectCheckListWindow(true)}
+              >
+                <p>Selecionar Check List</p>
+                <strong>
+                  {selectedCheckList.check_list.name}
+                  <FiChevronDown size={24} />
+                </strong>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCreateCheckListForm(true)}
+              >
+                <p>Adicionar Check List</p>
+                <strong>
+                  <MdAdd size={30} />
+                </strong>
+              </button>
+            </ContainerMenu>
+            <CardCheckListContainer
+              checkList={selectedCheckList}
+              getCardCheckLists={getCardCheckLists}
+            />
+          </>
+        )}
+      </Main>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { MdFlag } from 'react-icons/md';
+import { MdAdd, MdFlag } from 'react-icons/md';
 
 import sleepyTask from '../../../../../../assets/sleepyTask1.svg';
 import runningTask from '../../../../../../assets/runningTask1.svg';
@@ -15,45 +15,16 @@ import {
   Status,
   Priority,
   CheckListContainer,
+  CheckListHeader,
 } from './styles';
 import TaskStatusContainer from '../TaskStatusContainer';
 import TaskPriorityContainer from '../TaskPriorityContainer';
-
-interface ITasks {
-  id: string;
-  check_list_id: string;
-  task: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  status: string;
-  due_date: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
-interface ICheckList {
-  id: string;
-  name: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  due_date: string;
-  tasks: ITasks[];
-}
-
-interface ICardCheckList {
-  id: string;
-  card_id: string;
-  check_list_id: string;
-  card_unique_name: string;
-  created_at: Date;
-  updated_at: Date;
-  check_list: ICheckList;
-}
+import AddCardTaskForm from '../AddCardTaskForm';
+import ITaskDTO from '../../../../../../dtos/ITaskDTO';
+import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
 
 interface IProps {
-  checkList: ICheckList;
+  checkList: ICardCheckListDTO;
   getCardCheckLists: Function;
 }
 
@@ -61,7 +32,8 @@ const CardCheckListContainer: React.FC<IProps> = ({
   checkList,
   getCardCheckLists,
 }: IProps) => {
-  const [selectedTask, setSelectedTask] = useState<ITasks>({} as ITasks);
+  const [createCheckListTaskForm, setCreateCheckListTaskForm] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<ITaskDTO>({} as ITaskDTO);
   const [statusWindow, setStatusWindow] = useState(false);
   const [statusSection, setStatusSection] = useState('2');
   const [priorityWindow, setPriorityWindow] = useState(false);
@@ -72,7 +44,7 @@ const CardCheckListContainer: React.FC<IProps> = ({
   }, []);
 
   const handleStatusWindow = useCallback(
-    (props: ITasks) => {
+    (props: ITaskDTO) => {
       handleCloseAllWindows();
       setSelectedTask(props);
       setStatusWindow(true);
@@ -81,7 +53,7 @@ const CardCheckListContainer: React.FC<IProps> = ({
   );
 
   const handlePriorityWindow = useCallback(
-    (props: ITasks) => {
+    (props: ITaskDTO) => {
       handleCloseAllWindows();
       setSelectedTask(props);
       setPriorityWindow(true);
@@ -102,54 +74,75 @@ const CardCheckListContainer: React.FC<IProps> = ({
     setStatusSection('3');
   }, [handleCloseAllWindows]);
 
+  const handleCloseCreateCheckListTaskForm = useCallback(() => {
+    setCreateCheckListTaskForm(false);
+  }, []);
+
   return (
-    <Main>
-      <CheckListContainer>
-        <h2>{checkList.name}</h2>
-        <StatusMenuButtonContainer>
-          <StatusMenuButton
-            isActive={statusSection === '1'}
-            type="button"
-            onClick={handleNotStartedTasksSection}
-          >
-            Não iniciadas
-          </StatusMenuButton>
-          <StatusMenuButton
-            isActive={statusSection === '2'}
-            type="button"
-            onClick={handleInProgressTasksSection}
-          >
-            Em execução
-          </StatusMenuButton>
-          <StatusMenuButton
-            isActive={statusSection === '3'}
-            type="button"
-            onClick={handleFinishedTasksSection}
-          >
-            Finalizadas
-          </StatusMenuButton>
-        </StatusMenuButtonContainer>
-        <Container>
-          {statusWindow && (
-            <TaskStatusContainer
-              handleCloseWindow={() => setStatusWindow(false)}
-              task={selectedTask}
-              getEmployeeTasks={getCardCheckLists}
-              onHandleCloseWindow={() => setStatusWindow(false)}
-            />
-          )}
-          {priorityWindow && (
-            <TaskPriorityContainer
-              handleCloseWindow={() => setPriorityWindow(false)}
-              task={selectedTask}
-              getEmployeeTasks={getCardCheckLists}
-              onHandleCloseWindow={() => setPriorityWindow(false)}
-            />
-          )}
-          {statusSection === '1' &&
-            checkList.tasks.map(task => {
-              if (task.status === '1') {
-                return (
+    <>
+      {createCheckListTaskForm && (
+        <AddCardTaskForm
+          handleCloseWindow={handleCloseCreateCheckListTaskForm}
+          onHandleCloseWindow={() => setCreateCheckListTaskForm(false)}
+          getCardCheckLists={getCardCheckLists}
+          cardCheckList={checkList}
+        />
+      )}
+      <Main>
+        <CheckListContainer>
+          <CheckListHeader>
+            <h2>{checkList.check_list.name}</h2>
+            <button
+              type="button"
+              onClick={() => setCreateCheckListTaskForm(true)}
+            >
+              <MdAdd size={24} />
+            </button>
+          </CheckListHeader>
+          <StatusMenuButtonContainer>
+            <StatusMenuButton
+              isActive={statusSection === '1'}
+              type="button"
+              onClick={handleNotStartedTasksSection}
+            >
+              Não iniciadas
+            </StatusMenuButton>
+            <StatusMenuButton
+              isActive={statusSection === '2'}
+              type="button"
+              onClick={handleInProgressTasksSection}
+            >
+              Em execução
+            </StatusMenuButton>
+            <StatusMenuButton
+              isActive={statusSection === '3'}
+              type="button"
+              onClick={handleFinishedTasksSection}
+            >
+              Finalizadas
+            </StatusMenuButton>
+          </StatusMenuButtonContainer>
+          <Container>
+            {statusWindow && (
+              <TaskStatusContainer
+                handleCloseWindow={() => setStatusWindow(false)}
+                task={selectedTask}
+                getEmployeeTasks={getCardCheckLists}
+                onHandleCloseWindow={() => setStatusWindow(false)}
+              />
+            )}
+            {priorityWindow && (
+              <TaskPriorityContainer
+                handleCloseWindow={() => setPriorityWindow(false)}
+                task={selectedTask}
+                getEmployeeTasks={getCardCheckLists}
+                onHandleCloseWindow={() => setPriorityWindow(false)}
+              />
+            )}
+            {statusSection === '1' &&
+              checkList.check_list.tasks
+                .filter(xTask => xTask.status === '1')
+                .map(task => (
                   <Task style={{ background: `${task.color}` }} key={task.id}>
                     <div>
                       <h2>{task.task}</h2>
@@ -201,14 +194,11 @@ const CardCheckListContainer: React.FC<IProps> = ({
                       </span>
                     </div>
                   </Task>
-                );
-              }
-              return <h2>Tarefa não encontrada</h2>;
-            })}
-          {statusSection === '2' &&
-            checkList.tasks.map(task => {
-              if (task.status === '2') {
-                return (
+                ))}
+            {statusSection === '2' &&
+              checkList.check_list.tasks
+                .filter(xTask => xTask.status === '2')
+                .map(task => (
                   <Task style={{ background: `${task.color}` }} key={task.id}>
                     <div>
                       <h2>{task.task}</h2>
@@ -253,14 +243,11 @@ const CardCheckListContainer: React.FC<IProps> = ({
                       </span>
                     </div>
                   </Task>
-                );
-              }
-              return <h2>Tarefa não encontrada</h2>;
-            })}
-          {statusSection === '3' &&
-            checkList.tasks.map(task => {
-              if (task.status === '3') {
-                return (
+                ))}
+            {statusSection === '3' &&
+              checkList.check_list.tasks
+                .filter(xTask => xTask.status === '3')
+                .map(task => (
                   <Task style={{ background: `${task.color}` }} key={task.id}>
                     <div>
                       <h2>{task.task}</h2>
@@ -305,13 +292,11 @@ const CardCheckListContainer: React.FC<IProps> = ({
                       </span>
                     </div>
                   </Task>
-                );
-              }
-              return <h2>Tarefa não encontrada</h2>;
-            })}
-        </Container>
-      </CheckListContainer>
-    </Main>
+                ))}
+          </Container>
+        </CheckListContainer>
+      </Main>
+    </>
   );
 };
 
