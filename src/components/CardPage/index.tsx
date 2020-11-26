@@ -3,7 +3,6 @@ import React from 'react';
 import { Container } from './styles';
 
 import CardHeader from './CardHeader';
-// import CardSideMenu from './CardSideMenu';
 import CardBody from './CardBody';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 
@@ -26,7 +25,6 @@ const CardPage: React.FC<IProps> = ({
           card={card}
           selectedFunnel={selectedFunnel}
         />
-        {/* <CardSideMenu card={card} /> */}
         <CardBody card={card} selectedFunnel={selectedFunnel} />
       </Container>
     </>
