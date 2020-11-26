@@ -62,7 +62,7 @@ const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
           <MenuLine />
           <MenuBooleanButton
             type="button"
-            isActive={!!historySection}
+            isActive={!!notesSection}
             onClick={handleNotesSection}
           >
             Anotações
