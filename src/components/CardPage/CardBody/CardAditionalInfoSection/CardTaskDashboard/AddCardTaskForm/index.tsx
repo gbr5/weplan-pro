@@ -32,7 +32,6 @@ const AddCardTaskForm: React.FC<IProps> = ({
 
   const handleSubmit = useCallback(async () => {
     try {
-      console.log(taskName, cardCheckList, person);
       if (taskName === '') {
         return addToast({
           type: 'error',

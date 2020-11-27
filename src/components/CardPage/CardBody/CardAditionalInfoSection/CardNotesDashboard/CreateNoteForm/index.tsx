@@ -11,56 +11,36 @@ interface IProps {
   card: IStageCardDTO;
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
-  getCardCheckList: Function;
+  getCardNotes: Function;
 }
 
-const CreateCheckListForm: React.FC<IProps> = ({
+const CreateNoteForm: React.FC<IProps> = ({
   card,
-  getCardCheckList,
+  getCardNotes,
   onHandleCloseWindow,
   handleCloseWindow,
 }: IProps) => {
   const { addToast } = useToast();
-  const { company } = useAuth();
+  const { person } = useAuth();
 
-  const now = new Date();
-  const day = now.getDate() + 3;
-  const month = now.getMonth() + 1;
-  const year = now.getFullYear();
-
-  const [checkListName, setCheckListName] = useState('');
-  // const [checkListColor, setCheckListColor] = useState('rgb(179, 182, 178)');
-  // const [checkListIsActive, setCheckListIsActive] = useState(true);
-  // const [checkListPriority, setCheckListPriority] = useState('neutral');
-  // const [checkListDueDate, setCheckListDueDate] = useState(
-  //   `${day}/${month}/${year}`,
-  // );
+  const [note, setNote] = useState('');
 
   const handleSubmit = useCallback(async () => {
     try {
-      if (checkListName === '') {
+      if (note === '') {
         return addToast({
           type: 'error',
-          title: 'Erro ao adicionar CARD',
-          description: 'O nome do CARD deve ser preenchido, tente novamente.',
+          title: 'Erro ao salvar anotação',
+          description: 'Tente novamente.',
         });
       }
-      const response = await api.post(`check-lists`, {
-        user_id: company.id,
-        name: checkListName,
-        color: 'rgb(179, 182, 178)',
-        isActive: true,
-        priority: 'neutral',
-        due_date: `${day}/${month}/${year}`,
-      });
-
-      await api.post(`card/check-lists`, {
-        card_id: card.id,
-        check_list_id: response.data.id,
+      await api.post(`cards/notes`, {
+        user_id: person.id,
         card_unique_name: card.unique_name,
+        note,
       });
 
-      getCardCheckList();
+      getCardNotes(card.unique_name);
       handleCloseWindow();
       return addToast({
         type: 'success',
@@ -76,17 +56,7 @@ const CreateCheckListForm: React.FC<IProps> = ({
 
       throw new Error(err);
     }
-  }, [
-    addToast,
-    checkListName,
-    handleCloseWindow,
-    company,
-    card,
-    day,
-    month,
-    year,
-    getCardCheckList,
-  ]);
+  }, [addToast, handleCloseWindow, person, card, getCardNotes, note]);
 
   return (
     <WindowContainer
@@ -101,15 +71,15 @@ const CreateCheckListForm: React.FC<IProps> = ({
     >
       <Container>
         <input
-          placeholder="Nome do card"
-          onChange={e => setCheckListName(e.target.value)}
+          placeholder="Sua anotação ..."
+          onChange={e => setNote(e.target.value)}
         />
         <button type="button" onClick={handleSubmit}>
-          Criar card
+          salvar
         </button>
       </Container>
     </WindowContainer>
   );
 };
 
-export default CreateCheckListForm;
+export default CreateNoteForm;

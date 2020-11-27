@@ -35,7 +35,6 @@ const SupplierDashboard: React.FC = () => {
   }, []);
   const handleChangeModule = useCallback(
     (props: string) => {
-      console.log(props);
       closeAllWindows();
       if (props === 'Dashboard') {
         setDashboard(true);

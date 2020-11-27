@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import IStageCardDTO from '../../../../dtos/IStageCardDTO';
+import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
 
 import { Container, MenuHeader, MenuLine, MenuBooleanButton } from './styles';
@@ -10,6 +11,7 @@ interface IProps {
 
 const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
   const [taskSection, setTaskSection] = useState(true);
+  const [notesSection, setNotesSection] = useState(false);
   const [historySection, setHistorySection] = useState(false);
   const [participantsSection, setParticipantsSection] = useState(false);
   const [appointmentsSection, setAppointmentsSection] = useState(false);
@@ -21,15 +23,17 @@ const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
     setParticipantsSection(false);
     setAppointmentsSection(false);
     setFilesSection(false);
+    setNotesSection(false);
   }, []);
 
   const handleTaskSection = useCallback(() => {
     closeAllSections();
     setTaskSection(true);
   }, [closeAllSections]);
-  const handleParticipantsSection = useCallback(() => {
+
+  const handleNotesSection = useCallback(() => {
     closeAllSections();
-    setParticipantsSection(true);
+    setNotesSection(true);
   }, [closeAllSections]);
   const handleHistorySection = useCallback(() => {
     closeAllSections();
@@ -58,18 +62,18 @@ const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
           <MenuLine />
           <MenuBooleanButton
             type="button"
-            isActive={!!historySection}
-            onClick={handleHistorySection}
+            isActive={!!notesSection}
+            onClick={handleNotesSection}
           >
-            Histórico
+            Anotações
           </MenuBooleanButton>
           <MenuLine />
           <MenuBooleanButton
             type="button"
-            isActive={!!participantsSection}
-            onClick={handleParticipantsSection}
+            isActive={!!historySection}
+            onClick={handleHistorySection}
           >
-            Participantes
+            Histórico
           </MenuBooleanButton>
           <MenuLine />
           <MenuBooleanButton
@@ -89,6 +93,7 @@ const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
           </MenuBooleanButton>
         </MenuHeader>
         {!!taskSection && <CardTaskDashboard card={card} />}
+        {!!notesSection && <CardNotesDashboard card={card} />}
         {!!participantsSection && (
           <>
             <h1>ParticipantsSection</h1>
