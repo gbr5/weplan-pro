@@ -47,11 +47,17 @@ const AddCardForm: React.FC<IProps> = ({
           description: 'O nome do CARD deve ser preenchido, tente novamente.',
         });
       }
-      await api.post(`funnels/${selectedStage.id}/cards`, {
+      const response = await api.post(`funnels/${selectedStage.id}/cards`, {
         weplanEvent: false,
         name: cardName,
         card_owner: person.id,
       });
+
+      await api.post(`card/participants`, {
+        user_id: person.id,
+        card_unique_name: response.data.card_unique_name,
+      });
+
       handleCloseWindow();
       handleSetCurrentFunnel();
       return addToast({
@@ -102,7 +108,6 @@ const AddCardForm: React.FC<IProps> = ({
           width: '60%',
         }}
       >
-        {/* <Form> */}
         <Container>
           <input
             placeholder="Nome do card"
@@ -112,7 +117,6 @@ const AddCardForm: React.FC<IProps> = ({
             Criar card
           </button>
         </Container>
-        {/* </Form> */}
       </WindowContainer>
       {selectStageWindow && (
         <SelectStageWindow

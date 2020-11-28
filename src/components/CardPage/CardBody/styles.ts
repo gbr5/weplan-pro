@@ -5,7 +5,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 15fr;
   align-items: center;
   justify-content: center;
   background: var(--background-color);
@@ -31,17 +31,4 @@ export const LeftSide = styled.div`
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-`;
-
-export const RightSide = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  align-items: stretch;
-  justify-content: stretch;
-
-  span {
-    width: 100%;
-    display: flex;
-    gap: 5px;
-  }
 `;

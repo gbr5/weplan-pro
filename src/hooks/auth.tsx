@@ -115,15 +115,15 @@ const AuthProvider: React.FC = ({ children }) => {
   });
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@WP-PRO:token');
+    localStorage.removeItem('@WP-PRO:funnels');
+    localStorage.removeItem('@WP-PRO:personInfo');
+    localStorage.removeItem('@WP-PRO:companyInfo');
+    localStorage.removeItem('@WP-PRO:modules');
     localStorage.removeItem('@WP-PRO:userEmployee');
     localStorage.removeItem('@WP-PRO:company');
-    localStorage.removeItem('@WP-PRO:companyInfo');
     localStorage.removeItem('@WP-PRO:person');
-    localStorage.removeItem('@WP-PRO:personInfo');
-    localStorage.removeItem('@WP-PRO:modules');
     localStorage.removeItem('@WP-PRO:confirmation');
-    localStorage.removeItem('@WP-PRO:funnels');
+    localStorage.removeItem('@WP-PRO:token');
 
     setData({} as IAuthState);
   }, []);
