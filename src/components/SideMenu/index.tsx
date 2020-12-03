@@ -5,12 +5,18 @@ import { useAuth } from '../../hooks/auth';
 import checkListIcon from '../../assets/task_icon.svg';
 import meetingIcon from '../../assets/meeting.svg';
 
-import { ArrowButton, Container, Button } from './styles';
+import {
+  ArrowButton,
+  Container,
+  Button,
+  MainDashboardImageButton,
+} from './styles';
 
 interface IProps {
   handleSideMenu: MouseEventHandler;
   handleMainDashboard: MouseEventHandler;
   handleTaskDashboard: MouseEventHandler;
+  handleCustomerServiceOrderDashboard: MouseEventHandler;
   isActive: boolean;
 }
 
@@ -19,19 +25,22 @@ const SideMenu: React.FC<IProps> = ({
   isActive,
   handleMainDashboard,
   handleTaskDashboard,
+  handleCustomerServiceOrderDashboard,
 }: IProps) => {
   const { companyInfo, company } = useAuth();
   return (
     <>
       <Container>
-        <img src={companyInfo.logo_url} alt={company.name} />
+        <MainDashboardImageButton type="button" onClick={handleMainDashboard}>
+          <img src={companyInfo.logo_url} alt={company.name} />
+        </MainDashboardImageButton>
         {isActive && (
           <ArrowButton type="button" onClick={handleSideMenu}>
             <FiChevronsLeft size={32} />
           </ArrowButton>
         )}
         <div>
-          <Button type="button" onClick={handleMainDashboard}>
+          <Button type="button" onClick={handleCustomerServiceOrderDashboard}>
             <MdFlare />
           </Button>
           <Button type="button" onClick={handleTaskDashboard}>
