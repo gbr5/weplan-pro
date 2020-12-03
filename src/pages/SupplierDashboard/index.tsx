@@ -96,27 +96,35 @@ const SupplierDashboard: React.FC = () => {
         {!!comercialSection && (
           <>
             <KanbanDashboard
+              selectedCard={selectedCard}
               handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+              handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
               funnel="Comercial"
             />
-            <ComercialBottomSection />
+            <ComercialBottomSection selectedCard={selectedCard} />
           </>
         )}
         {!!productionSection && (
           <KanbanDashboard
+            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Production"
           />
         )}
         {!!projectSection && (
           <KanbanDashboard
+            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Projects"
           />
         )}
         {!!financialSection && (
           <KanbanDashboard
+            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
+            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Financial"
           />
         )}

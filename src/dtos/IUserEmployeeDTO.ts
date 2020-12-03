@@ -1,6 +1,6 @@
 import IUserDTO from './IUserDTO';
 
-export default interface ICardParticipantDTO {
+export default interface IUserEmployeeDTO {
   id: string;
   employee: IUserDTO;
   isActive: boolean;

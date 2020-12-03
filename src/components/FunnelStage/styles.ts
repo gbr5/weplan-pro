@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
@@ -14,6 +14,7 @@ export const Container = styled.div`
   border-radius: 5px;
   box-sizing: border-box;
   border: 0.5px solid var(--card-color);
+  overflow-y: scroll;
 
   h1 {
     display: flex;
@@ -51,7 +52,11 @@ export const CardContainer = styled.div`
   width: 100%;
 `;
 
-export const Card = styled.div`
+interface ICardProps {
+  isActive: boolean;
+}
+
+export const Card = styled.div<ICardProps>`
   display: flex;
   align-items: stretch;
   justify-content: stretch;
@@ -85,4 +90,12 @@ export const Card = styled.div`
     background: transparent;
     border: none;
   }
+
+  ${props =>
+    props.isActive &&
+    css`
+      background: var(--header-primary);
+      color: var(--header-background-color);
+      border: 1px solid var(--letter-color-5);
+    `}
 `;
