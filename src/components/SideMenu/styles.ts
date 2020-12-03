@@ -28,12 +28,6 @@ export const Container = styled.aside`
 
   animation: ${appearFromLeft} 1s;
 
-  > img {
-    max-width: 50px;
-    max-height: 44px;
-    margin: auto 0;
-  }
-
   > div {
     display: flex;
     flex-direction: column;
@@ -61,6 +55,16 @@ export const Container = styled.aside`
   }
 `;
 
+export const MainDashboardImageButton = styled.button`
+  background: transparent;
+  border: none;
+
+  > img {
+    max-width: 50px;
+    max-height: 44px;
+    margin: auto 0;
+  }
+`;
 export const Button = styled.button`
   background: transparent;
   border: none;
