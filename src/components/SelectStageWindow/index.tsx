@@ -76,7 +76,7 @@ const SelectStageWindow: React.FC<IProps> = ({
     <WindowContainer
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
-        zIndex: 12,
+        zIndex: 14,
         top: '25%',
         left: '10%',
         height: '50%',
