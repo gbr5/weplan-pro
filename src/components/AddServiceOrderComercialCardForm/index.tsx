@@ -67,7 +67,6 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       api
         .get<IUserEmployeeDTO[]>(`/supplier-employees/${company.id}`)
         .then(response => {
-          console.log(response.data);
           setCompanyEmployees(
             response.data.filter(employee => employee.isActive),
           );
@@ -83,12 +82,10 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
 
   const handleSubmit = useCallback(async () => {
     try {
-      console.log('t1');
       if (selectedStage === undefined) {
         setSelectedStage(undefined);
         return setSelectStageWindow(true);
       }
-      console.log('t2');
       if (cardName === '') {
         return addToast({
           type: 'error',
@@ -96,10 +93,8 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
           description: 'O nome do CARD deve ser preenchido, tente novamente.',
         });
       }
-      console.log('t3');
 
       if (addPersonAsCardOwner) {
-        console.log('t4');
         const response = await api.post(`funnels/${selectedStage.id}/cards`, {
           weplanEvent: false,
           name: cardName,
@@ -116,7 +111,6 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
           }),
         ]);
       } else {
-        console.log('t5');
         const response = await api.post<IStageCardDTO>(
           `funnels/${selectedStage.id}/cards`,
           {
@@ -137,14 +131,12 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
           }),
         ]);
       }
-      console.log('t6');
 
       if (addPersonAsCardParticipant) {
         await api.post(`card/participants`, {
           user_id: selectedCompanyEmployee.id,
           card_unique_name: cardUniqueName,
         });
-        console.log('t7');
 
         handleCloseWindow();
         return addToast({
@@ -156,7 +148,6 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       await api.put(`/service-order/customer/${serviceOrder.id}`, {
         isResponded: true,
       });
-      console.log('t8');
       getCustomerServiceOrder();
       handleCloseAllWindow();
 

@@ -12,6 +12,8 @@ import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import SelectStageWindow from '../SelectStageWindow';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
+import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
+import CreateCompanyCustomerForm from '../CreateCompanyCustomerForm';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -27,12 +29,28 @@ const AddCardForm: React.FC<IProps> = ({
   chosenFunnel,
 }: IProps) => {
   const { addToast } = useToast();
-  const { funnels, person } = useAuth();
+  const { funnels, person, company } = useAuth();
 
   const [cardName, setCardName] = useState('');
   const [selectStageWindow, setSelectStageWindow] = useState(true);
+  const [selectCustomerWindow, setSelectCustomerWindow] = useState(false);
+  const [
+    createCompanyCustomerFormWindow,
+    setCreateCompanyCustomerFormWindow,
+  ] = useState(false);
   const [selectedStage, setSelectedStage] = useState<IFunnelStageDTO>();
   const [stages, setStages] = useState<IFunnelStageDTO[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<ICompanyContactDTO>(
+    {} as ICompanyContactDTO,
+  );
+  const [customers, setCustomers] = useState<ICompanyContactDTO[]>([]);
+
+  const handleCreateCompanyCustomerFormWindow = useCallback(() => {
+    setCreateCompanyCustomerFormWindow(true);
+  }, []);
+  const handleCloseCompanyCustomerFormWindow = useCallback(() => {
+    setCreateCompanyCustomerFormWindow(false);
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     try {
@@ -52,10 +70,17 @@ const AddCardForm: React.FC<IProps> = ({
         name: cardName,
         card_owner: person.id,
       });
+      const card_unique_name = response.data.unique_name;
 
       await api.post(`card/participants`, {
         user_id: person.id,
-        card_unique_name: response.data.card_unique_name,
+        card_unique_name,
+      });
+
+      await api.post(`card/customers`, {
+        customer_id: selectedCustomer.id,
+        card_unique_name,
+        description: card_unique_name,
       });
 
       handleCloseWindow();
@@ -79,13 +104,43 @@ const AddCardForm: React.FC<IProps> = ({
     cardName,
     selectedStage,
     person,
+    selectedCustomer,
     handleCloseWindow,
     handleSetCurrentFunnel,
   ]);
 
+  const getCompanyContacts = useCallback(() => {
+    try {
+      api
+        .get<ICompanyContactDTO[]>(`/company/contacts/${company.id}`)
+        .then(response => {
+          const companyCustomers = response.data.filter(
+            xCustomer => xCustomer.company_contact_type === 'Customer',
+          );
+          if (companyCustomers.length <= 0) {
+            setCreateCompanyCustomerFormWindow(true);
+          } else {
+            setCustomers(companyCustomers);
+            setSelectCustomerWindow(true);
+          }
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [company]);
+
+  const handleSelectCustomer = useCallback((props: ICompanyContactDTO) => {
+    setSelectedCustomer(props);
+    setSelectCustomerWindow(false);
+  }, []);
+
   const handleCloseSelectStageWindow = useCallback(() => {
     setSelectStageWindow(false);
   }, []);
+
+  useEffect(() => {
+    getCompanyContacts();
+  }, [getCompanyContacts]);
 
   useEffect(() => {
     const thisFunnel = funnels.find(funnel => funnel.name === chosenFunnel);
@@ -98,6 +153,16 @@ const AddCardForm: React.FC<IProps> = ({
 
   return (
     <>
+      {createCompanyCustomerFormWindow && (
+        <CreateCompanyCustomerForm
+          setSelectedCustomer={(e: ICompanyContactDTO) =>
+            setSelectedCustomer(e)
+          }
+          handleCloseWindow={handleCloseCompanyCustomerFormWindow}
+          onHandleCloseWindow={() => setCreateCompanyCustomerFormWindow(false)}
+          updateCompanyContacts={getCompanyContacts}
+        />
+      )}
       <WindowContainer
         onHandleCloseWindow={onHandleCloseWindow}
         containerStyle={{
@@ -109,6 +174,9 @@ const AddCardForm: React.FC<IProps> = ({
         }}
       >
         <Container>
+          <button type="button" onClick={handleCreateCompanyCustomerFormWindow}>
+            Adicionar Cliente
+          </button>
           <input
             placeholder="Nome do card"
             onChange={e => setCardName(e.target.value)}
@@ -125,6 +193,30 @@ const AddCardForm: React.FC<IProps> = ({
           handleCloseWindow={handleCloseSelectStageWindow}
           handleSetSelectedStage={(e: IFunnelStageDTO) => setSelectedStage(e)}
         />
+      )}
+      {selectCustomerWindow && (
+        <WindowContainer
+          onHandleCloseWindow={onHandleCloseWindow}
+          containerStyle={{
+            zIndex: 15,
+            top: '38%',
+            left: '20%',
+            height: '24%',
+            width: '60%',
+          }}
+        >
+          <Container>
+            {customers.map(xCustomer => (
+              <button
+                key={xCustomer.id}
+                type="button"
+                onClick={() => handleSelectCustomer(xCustomer)}
+              >
+                {xCustomer.name}
+              </button>
+            ))}
+          </Container>
+        </WindowContainer>
       )}
     </>
   );

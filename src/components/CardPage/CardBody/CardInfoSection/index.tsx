@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { MdEdit, MdGroup } from 'react-icons/md';
+import { FiChevronLeft, FiChevronRight, FiTarget } from 'react-icons/fi';
+import { MdEdit, MdGroup, MdNaturePeople } from 'react-icons/md';
+import ICardCustomerDTO from '../../../../dtos/ICardCustomerDTO';
+import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
 import IFunnelCardInfoDTO from '../../../../dtos/IFunnelCardInfoDTO';
 import IFunnelCardInfoFieldDTO from '../../../../dtos/IFunnelCardInfoFieldDTO';
 import IFunnelDTO from '../../../../dtos/IFunnelDTO';
@@ -8,6 +10,8 @@ import IStageCardDTO from '../../../../dtos/IStageCardDTO';
 import IUserDTO from '../../../../dtos/IUserDTO';
 import { useAuth } from '../../../../hooks/auth';
 import api from '../../../../services/api';
+import CardBudgetsWindow from './CardBudgetsWindow';
+import CardCustomersWindow from './CardCustomersWindow';
 import CardParticipantsWindow from './CardParticipantsWindow';
 
 import {
@@ -27,7 +31,10 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
 
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
+  const [cardCustomersWindow, setCardCustomersWindow] = useState(false);
+  const [cardBudgetsWindow, setCardBudgetsWindow] = useState(false);
   const [cardOwner, setCardOwner] = useState<IUserDTO>({} as IUserDTO);
+  const [customers, setCustomers] = useState<ICompanyContactDTO[]>([]);
   const [funnel, setFunnel] = useState<IFunnelDTO>({} as IFunnelDTO);
   const [
     selectedFunnelCardInfoField,
@@ -43,8 +50,9 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
     thisFunnel !== undefined && setFunnel(thisFunnel);
   }, [funnels, selectedFunnel]);
 
-  const handleCloseCardParticipantWindow = useCallback(() => {
+  const handleCloseAllWindows = useCallback(() => {
     setCardParticipantsWindow(false);
+    setCardBudgetsWindow(false);
   }, []);
   const getFunnelCardInfoField = useCallback(() => {
     try {
@@ -78,6 +86,23 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
       throw new Error(err);
     }
   }, [card]);
+  const getCardCustomers = useCallback(() => {
+    try {
+      api
+        .get<ICardCustomerDTO[]>(`/card/customers/${card.unique_name}`)
+        .then(response => {
+          setCustomers(
+            response.data.map(xCardCustomer => xCardCustomer.customer),
+          );
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [card]);
+
+  useEffect(() => {
+    getCardCustomers();
+  }, [getCardCustomers]);
 
   useEffect(() => {
     getFunnelCardInfoField();
@@ -95,9 +120,23 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
     <>
       {cardParticipantsWindow && (
         <CardParticipantsWindow
-          handleCloseWindow={handleCloseCardParticipantWindow}
+          handleCloseWindow={handleCloseAllWindows}
           card={card}
           onHandleCloseWindow={() => setCardParticipantsWindow(false)}
+        />
+      )}
+      {cardCustomersWindow && (
+        <CardCustomersWindow
+          handleCloseWindow={handleCloseAllWindows}
+          card={card}
+          onHandleCloseWindow={() => setCardCustomersWindow(false)}
+        />
+      )}
+      {cardBudgetsWindow && (
+        <CardBudgetsWindow
+          card={card}
+          customers={customers}
+          onHandleCloseWindow={() => setCardBudgetsWindow(false)}
         />
       )}
       {cardInfo ? (
@@ -110,10 +149,24 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
           <div>
             <CardParticipantsButton
               type="button"
+              onClick={() => setCardBudgetsWindow(true)}
+            >
+              <strong>Orçamentos</strong>
+              <FiTarget size={32} />
+            </CardParticipantsButton>
+            <CardParticipantsButton
+              type="button"
               onClick={() => setCardParticipantsWindow(true)}
             >
-              <strong>Participantes</strong>
+              <strong>Participantes da empresa</strong>
               <MdGroup size={32} />
+            </CardParticipantsButton>
+            <CardParticipantsButton
+              type="button"
+              onClick={() => setCardCustomersWindow(true)}
+            >
+              <strong>Clientes</strong>
+              <MdNaturePeople size={32} />
             </CardParticipantsButton>
             <div>
               <span>

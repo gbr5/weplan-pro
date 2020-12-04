@@ -14,7 +14,6 @@ export const Container = styled.div`
   border-radius: 5px;
   box-sizing: border-box;
   border: 0.5px solid var(--card-color);
-  overflow-y: scroll;
 
   h1 {
     display: flex;
@@ -50,6 +49,7 @@ export const CardContainer = styled.div`
   gap: 4px;
   height: 240px;
   width: 100%;
+  overflow-y: scroll;
 `;
 
 interface ICardProps {
@@ -60,26 +60,32 @@ export const Card = styled.div<ICardProps>`
   display: flex;
   align-items: stretch;
   justify-content: stretch;
-  padding: 5px;
+  padding: auto;
   padding-right: 0;
   background: var(--card-color);
   border-radius: 2px;
+  gap: 5px;
 
   width: 100%;
-  height: 40px;
-  div {
+  height: 48px;
+
+  button {
+    display: flex;
+    gap: 5px;
+
     h3 {
       color: var(--letter-color-5);
-      font-size: 15px;
+      font-size: 12px;
+      margin-right: auto;
     }
 
     p {
-      font-size: 13px;
+      font-size: 11px;
       color: var(--letter-color-5);
     }
     strong {
       font-weight: 500;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--letter-color-5);
     }
   }

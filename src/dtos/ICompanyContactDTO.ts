@@ -1,8 +1,7 @@
-import IUserDTO from './IUserDTO';
-
-interface ICompanyContactWeplanUser {
+interface ICompanyContactInfo {
   id: string;
-  companyContactWeplanUser: IUserDTO;
+  info_type: string;
+  info: string;
 }
 
 export default interface ICompanyContactDTO {
@@ -12,5 +11,5 @@ export default interface ICompanyContactDTO {
   company_contact_type: string;
   weplanUser: boolean;
   isCompany: boolean;
-  companyContactWeplanUser?: ICompanyContactWeplanUser;
+  contact_infos: ICompanyContactInfo[];
 }

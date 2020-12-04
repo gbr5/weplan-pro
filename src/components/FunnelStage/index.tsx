@@ -52,9 +52,7 @@ const FunnelStage: React.FC<IProps> = ({
           <Card isActive={selectedCard.id === card.id}>
             <button type="button" onClick={() => handleSelectCard(card)}>
               <h3>{card.name}</h3>
-              <p>
-                Responsável: <strong>{card.card_owner}</strong>
-              </p>
+              <strong>{card.weplanEvent ? 'WePlan' : ''}</strong>
             </button>
             <button type="button" onClick={() => handleCardPage(card)}>
               <FiChevronRight size={24} />
