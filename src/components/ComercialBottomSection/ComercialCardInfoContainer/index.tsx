@@ -25,7 +25,6 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
   const getCardOwner = useCallback(() => {
     try {
       api.get<IUserDTO>(`users/${selectedCard.card_owner}`).then(response => {
-        console.log(response.data);
         setCardOwner(response.data);
       });
     } catch (err) {
@@ -42,7 +41,6 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
       api
         .get<ICardCustomer[]>(`card/customer/${selectedCard.unique_name}`)
         .then(response => {
-          console.log(response.data);
           setCardCustomers(response.data);
         });
     } catch (err) {
