@@ -58,6 +58,7 @@ export const Container = styled.div`
 
 export const ContactTypeContainer = styled.div`
   width: 100%;
+  height: 100%;
   padding: 32px;
 
   display: grid;
@@ -73,6 +74,8 @@ export const ContactTypeButton = styled.button<IContactTypeButtonProps>`
   color: var(--header-primary);
   box-shadow: var(--box-shadow);
   transition: 0.3s;
+  width: 100%;
+  height: 40px;
 
   &:hover {
     background: var(--header-primary);

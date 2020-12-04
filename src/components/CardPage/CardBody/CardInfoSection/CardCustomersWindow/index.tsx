@@ -120,7 +120,7 @@ const CardCustomersWindow: React.FC<IProps> = ({
             </AddCustomerButton>
           </div>
           {customers.map(customer => (
-            <Customer>
+            <Customer key={customer.id}>
               <BooleanButton
                 onClick={() => handleSetSelectedCustomer(customer)}
                 type="button"

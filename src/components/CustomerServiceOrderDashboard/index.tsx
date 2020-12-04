@@ -55,7 +55,6 @@ const CustomerServiceOrderDashboard: React.FC = () => {
           `/service-order/customer/${company.id}`,
         )
         .then(response => {
-          console.log(response.data);
           setRespondedCustomerServiceOrders(
             response.data.filter(serviceOrder => serviceOrder.isResponded),
           );

@@ -2,7 +2,7 @@ import React, { MouseEventHandler, useCallback, useState } from 'react';
 import WindowContainer from '../../../../WindowContainer';
 import { useToast } from '../../../../../hooks/toast';
 
-import { Container, Contact } from './styles';
+import { Container, Contact, CompanyContactList } from './styles';
 import { useAuth } from '../../../../../hooks/auth';
 import api from '../../../../../services/api';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
@@ -61,8 +61,8 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
 
   const handleSubmit = useCallback(async () => {
     try {
-      await api.post(`card/customers`, {
-        user_id: selectedContact.id,
+      await api.post(`/card/customers`, {
+        customer_id: selectedContact.id,
         card_unique_name: card.unique_name,
         description: customerDescription,
       });
@@ -96,9 +96,9 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
         zIndex: 30,
-        top: '38%',
+        top: '5%',
         left: '20%',
-        height: '24%',
+        height: '90%',
         width: '60%',
       }}
     >
@@ -111,23 +111,31 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
               placeholder="Nome do cliente"
               onChange={e => getCompanyContacts(e.target.value)}
             />
-            {employees.map(xContact => (
-              <Contact
-                isActive={xContact.id === selectedContact.id}
-                type="button"
-                onClick={() => handleSelectContact(xContact)}
-                key={xContact.id}
-              >
-                <strong>{xContact.name}</strong>
-              </Contact>
-            ))}
+            <CompanyContactList>
+              {employees.map(xContact => (
+                <Contact
+                  isActive={xContact.id === selectedContact.id}
+                  type="button"
+                  onClick={() => handleSelectContact(xContact)}
+                  key={xContact.id}
+                >
+                  <strong>{xContact.name}</strong>
+                </Contact>
+              ))}
+            </CompanyContactList>
           </>
         ) : (
           <>
+            <button
+              type="button"
+              onClick={() => setSelectedContact({} as ICompanyContactDTO)}
+            >
+              {selectedContact.name}
+            </button>
             <p>Descrição</p>
             <input
               placeholder="Descrição"
-              onChange={e => setCustomerDescription(e.currentTarget.value)}
+              onChange={e => setCustomerDescription(e.target.value)}
             />
             <button type="button" onClick={handleSubmit}>
               Adicionar cliente

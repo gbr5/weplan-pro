@@ -111,7 +111,7 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
               />
             </div>
             <div>
-              <h3>Nome do cliente</h3>
+              <h3>Descrição</h3>
               <Input
                 name="description"
                 containerStyle={inputStyle}
