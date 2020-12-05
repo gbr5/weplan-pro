@@ -5,11 +5,13 @@ import React, {
   useState,
 } from 'react';
 import { FiCheckSquare, FiSquare, FiTrash } from 'react-icons/fi';
+import { MdPrint } from 'react-icons/md';
 import ICardBudgetDTO from '../../../../../dtos/ICardBudgetDTO';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
 import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
 import { useToast } from '../../../../../hooks/toast';
 import api from '../../../../../services/api';
+import BudgetToPrintPDF from '../../../../BudgetToPrintPDF';
 import WindowContainer from '../../../../WindowContainer';
 import AddCardBudgetForm from '../AddCardBudgetForm';
 
@@ -36,6 +38,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
   const { addToast } = useToast();
 
   const [createCardBudgetForm, setCreateCardBudgetForm] = useState(false);
+  const [budgetToPrintWindow, setBudgetToPrintWindow] = useState(false);
   const [validSection, setValidSection] = useState(true);
   const [selectedCardBudget, setSelectedCardBudget] = useState<ICardBudgetDTO>(
     {} as ICardBudgetDTO,
@@ -56,7 +59,8 @@ const CardBudgetsWindow: React.FC<IProps> = ({
       if (props.id === selectedCardBudget.id) {
         return setSelectedCardBudget({} as ICardBudgetDTO);
       }
-      return setSelectedCardBudget(props);
+      setSelectedCardBudget(props);
+      return setBudgetToPrintWindow(true);
     },
     [selectedCardBudget],
   );
@@ -123,6 +127,12 @@ const CardBudgetsWindow: React.FC<IProps> = ({
           getCardBudgets={getCardBudgets}
         />
       )}
+      {budgetToPrintWindow && (
+        <BudgetToPrintPDF
+          budget={selectedCardBudget}
+          onHandleCloseWindow={() => setBudgetToPrintWindow(false)}
+        />
+      )}
       <WindowContainer
         onHandleCloseWindow={onHandleCloseWindow}
         containerStyle={{
@@ -142,6 +152,11 @@ const CardBudgetsWindow: React.FC<IProps> = ({
               <strong>Adicionar Orçamento</strong>
             </AddBudgetButton>
           </div>
+          {budgetToPrintWindow && (
+            <button type="button" onClick={() => setBudgetToPrintWindow(false)}>
+              Voltar
+            </button>
+          )}
           <BooleanButtonMenu>
             <BooleanButton
               type="button"
@@ -203,6 +218,15 @@ const CardBudgetsWindow: React.FC<IProps> = ({
                 >
                   <h1>{budget.value}</h1>
                 </BooleanButton>
+                {selectedCardBudget.id === budget.id && (
+                  <button
+                    type="button"
+                    onClick={() => setBudgetToPrintWindow(true)}
+                  >
+                    <MdPrint size={24} />
+                  </button>
+                )}
+
                 <span>
                   <button
                     type="button"
