@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from 'react';
 import { FiCalendar, FiChevronsLeft } from 'react-icons/fi';
-import { MdFlare, MdSchedule, MdTimeline, MdToday } from 'react-icons/md';
+import { MdFlare, MdSchedule, MdToday, MdContacts } from 'react-icons/md';
 import { useAuth } from '../../hooks/auth';
 import checkListIcon from '../../assets/task_icon.svg';
 import meetingIcon from '../../assets/meeting.svg';
@@ -16,6 +16,7 @@ interface IProps {
   handleSideMenu: MouseEventHandler;
   handleMainDashboard: MouseEventHandler;
   handleTaskDashboard: MouseEventHandler;
+  handleCompanyDashboard: MouseEventHandler;
   handleCustomerServiceOrderDashboard: MouseEventHandler;
   isActive: boolean;
 }
@@ -25,6 +26,7 @@ const SideMenu: React.FC<IProps> = ({
   isActive,
   handleMainDashboard,
   handleTaskDashboard,
+  handleCompanyDashboard,
   handleCustomerServiceOrderDashboard,
 }: IProps) => {
   const { companyInfo, company } = useAuth();
@@ -49,8 +51,8 @@ const SideMenu: React.FC<IProps> = ({
           <Button type="button">
             <img src={meetingIcon} alt="WePlan_Meeting" />
           </Button>
-          <Button type="button">
-            <MdTimeline />
+          <Button type="button" onClick={handleCompanyDashboard}>
+            <MdContacts />
           </Button>
           <Button type="button">
             <MdSchedule />

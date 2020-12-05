@@ -14,6 +14,7 @@ import SelectStageWindow from '../SelectStageWindow';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import CreateCompanyCustomerForm from '../CreateCompanyCustomerForm';
+import SelectCustomerWindow from '../SelectCustomerWindow';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -121,7 +122,6 @@ const AddCardForm: React.FC<IProps> = ({
             setCreateCompanyCustomerFormWindow(true);
           } else {
             setCustomers(companyCustomers);
-            setSelectCustomerWindow(true);
           }
         });
     } catch (err) {
@@ -174,16 +174,32 @@ const AddCardForm: React.FC<IProps> = ({
         }}
       >
         <Container>
-          <button type="button" onClick={handleCreateCompanyCustomerFormWindow}>
-            Adicionar Cliente
-          </button>
-          <input
-            placeholder="Nome do card"
-            onChange={e => setCardName(e.target.value)}
-          />
-          <button type="button" onClick={handleSubmit}>
-            Criar card
-          </button>
+          {selectedCustomer.id !== undefined ? (
+            <>
+              <input
+                placeholder="Nome do card"
+                onChange={e => setCardName(e.target.value)}
+              />
+              <button type="button" onClick={handleSubmit}>
+                Criar card
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => setSelectCustomerWindow(true)}
+              >
+                Selecionar cliente
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateCompanyCustomerFormWindow}
+              >
+                Adicionar novo cliente
+              </button>
+            </>
+          )}
         </Container>
       </WindowContainer>
       {selectStageWindow && (
@@ -195,28 +211,11 @@ const AddCardForm: React.FC<IProps> = ({
         />
       )}
       {selectCustomerWindow && (
-        <WindowContainer
-          onHandleCloseWindow={onHandleCloseWindow}
-          containerStyle={{
-            zIndex: 15,
-            top: '38%',
-            left: '20%',
-            height: '24%',
-            width: '60%',
-          }}
-        >
-          <Container>
-            {customers.map(xCustomer => (
-              <button
-                key={xCustomer.id}
-                type="button"
-                onClick={() => handleSelectCustomer(xCustomer)}
-              >
-                {xCustomer.name}
-              </button>
-            ))}
-          </Container>
-        </WindowContainer>
+        <SelectCustomerWindow
+          customers={customers}
+          onHandleCloseWindow={() => setSelectCustomerWindow(false)}
+          handleSelectCustomer={handleSelectCustomer}
+        />
       )}
     </>
   );
