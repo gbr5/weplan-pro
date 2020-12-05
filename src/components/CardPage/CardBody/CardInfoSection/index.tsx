@@ -47,7 +47,11 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
   useEffect(() => {
     const thisFunnel = funnels.find(xFunnel => xFunnel.name === selectedFunnel);
 
-    thisFunnel !== undefined && setFunnel(thisFunnel);
+    if (thisFunnel) {
+      setFunnel(thisFunnel);
+    } else {
+      setFunnel(funnels[0]);
+    }
   }, [funnels, selectedFunnel]);
 
   const handleCloseAllWindows = useCallback(() => {
@@ -105,8 +109,10 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
   }, [getCardCustomers]);
 
   useEffect(() => {
-    getFunnelCardInfoField();
-  }, [getFunnelCardInfoField]);
+    if (funnel.id) {
+      getFunnelCardInfoField();
+    }
+  }, [getFunnelCardInfoField, funnel]);
 
   useEffect(() => {
     getFunnelCardInfo();
@@ -211,15 +217,18 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
                   info => info.funnel_card_field_id === field.id,
                 );
 
-                return (
-                  <span>
-                    <strong>{field.name}:</strong>
-                    <p key={field.id}>{funnelCardInfo?.response}</p>
-                    <button type="button">
-                      <MdEdit />
-                    </button>
-                  </span>
-                );
+                if (funnelCardInfo) {
+                  return (
+                    <span key={field.id}>
+                      <strong>{field.name}:</strong>
+                      <p>{funnelCardInfo.response}</p>
+                      <button type="button">
+                        <MdEdit />
+                      </button>
+                    </span>
+                  );
+                }
+                return '';
               })}
             </div>
           </div>

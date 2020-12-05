@@ -48,7 +48,9 @@ const AddCardBudgetForm: React.FC<IProps> = ({
         const schema = Yup.object().shape({
           description: Yup.string().required('Descrição é obrigatória'),
           value: Yup.number().required('Valor é obrigatório'),
-          validity_date: Yup.date().required('Data de validade é obrigatória'),
+          validity_date: Yup.string().required(
+            'Data de validade é obrigatória',
+          ),
           number_of_installments: Yup.number().required(
             'Número de parcelas é obrigatório',
           ),
@@ -57,8 +59,9 @@ const AddCardBudgetForm: React.FC<IProps> = ({
         await schema.validate(data, {
           abortEarly: false,
         });
+
         await api.post(`card/budgets`, {
-          customers_id: customers[0].id,
+          customer_id: customers[0].id,
           company_id: company.id,
           sales_person_id: person.id,
           card_unique_name: card.unique_name,
@@ -105,9 +108,9 @@ const AddCardBudgetForm: React.FC<IProps> = ({
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
         zIndex: 30,
-        top: '38%',
+        top: '5%',
         left: '20%',
-        height: '24%',
+        height: '90%',
         width: '60%',
       }}
     >

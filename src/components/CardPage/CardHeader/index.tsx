@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import IFunnelStageDTO from '../../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../../dtos/IStageCardDTO';
 import { useAuth } from '../../../hooks/auth';
@@ -36,9 +36,16 @@ const CardHeader: React.FC<IProps> = ({
     [],
   );
 
-  const funnelStages = funnels
-    .find(funnel => funnel.name === selectedFunnel)
-    ?.stages.sort(handleCompareStageOrder);
+  const funnelStages = useMemo(() => {
+    const currentStages = funnels
+      .find(funnel => funnel.name === selectedFunnel)
+      ?.stages.sort(handleCompareStageOrder);
+
+    if (currentStages !== undefined) {
+      return currentStages;
+    }
+    return funnels[0].stages;
+  }, [funnels, selectedFunnel, handleCompareStageOrder]);
 
   const handleMoveCardThroughStages = useCallback(
     async (xStage: IFunnelStageDTO) => {
@@ -85,8 +92,11 @@ const CardHeader: React.FC<IProps> = ({
       <Container>
         <h2>{selectedCard.name}</h2>
         <span>
-          {funnelStages?.map(stage => (
-            <StageButton isActive={stage.id === selectedCard.stage_id}>
+          {funnelStages.map(stage => (
+            <StageButton
+              isActive={stage.id === selectedCard.stage_id}
+              key={stage.id}
+            >
               <button
                 onClick={() => handleMoveCardThroughStages(stage)}
                 type="button"

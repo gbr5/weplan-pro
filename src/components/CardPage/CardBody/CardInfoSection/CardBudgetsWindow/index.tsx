@@ -92,7 +92,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
     async (props: ICardBudgetDTO) => {
       try {
         if (props.id === selectedCardBudget.id) {
-          await api.delete(`card/validBudgets/${selectedCardBudget.id}`);
+          await api.delete(`card/budgets/${selectedCardBudget.id}`);
           getCardBudgets();
           return addToast({
             type: 'success',
@@ -161,7 +161,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
 
           {validSection &&
             validBudgets.map(budget => (
-              <Budget>
+              <Budget key={budget.id}>
                 <BooleanButton
                   onClick={() => handleSetSelectedBudget(budget)}
                   type="button"
@@ -194,7 +194,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
 
           {!validSection &&
             invalidBudgets.map(budget => (
-              <Budget>
+              <Budget key={budget.id}>
                 <BooleanButton
                   onClick={() => handleSetSelectedBudget(budget)}
                   type="button"

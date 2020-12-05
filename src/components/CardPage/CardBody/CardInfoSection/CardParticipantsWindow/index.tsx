@@ -139,7 +139,7 @@ const CardParticipantsWindow: React.FC<IProps> = ({
             </AddParticipantButton>
           </div>
           {participants.map(participant => (
-            <Participant>
+            <Participant key={participant.id}>
               <BooleanButton
                 onClick={() => handleSetSelectedParticipant(participant)}
                 type="button"
