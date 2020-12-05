@@ -93,9 +93,9 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
         zIndex: 20,
-        top: '38%',
+        top: '5%',
         left: '20%',
-        height: '24%',
+        height: '90%',
         width: '60%',
       }}
     >

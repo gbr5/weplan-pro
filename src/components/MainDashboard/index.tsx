@@ -12,6 +12,7 @@ import ITasks from '../../dtos/ITaskDTO';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
 import CustomerServiceOrderDashboard from '../CustomerServiceOrderDashboard';
+import CompanyContactDashboard from '../CompanyContactDashboard';
 
 const MainDashboard: React.FC = () => {
   const { company, person } = useAuth();
@@ -19,6 +20,7 @@ const MainDashboard: React.FC = () => {
   const [sideMenu, setSideMenu] = useState(true);
   const [mainDashboard, setMainDashboard] = useState(true);
   const [taskDashboard, setTaskDashboard] = useState(false);
+  const [companyContactDashboard, setCompanyDashboard] = useState(false);
   const [
     customerServiceOrderDashboard,
     setCustomerServiceOrderDashboard,
@@ -29,6 +31,7 @@ const MainDashboard: React.FC = () => {
   const handleCloseAllDashboardAndWindows = useCallback(() => {
     setMainDashboard(false);
     setTaskDashboard(false);
+    setCompanyDashboard(false);
     setCustomerServiceOrderDashboard(false);
     setSideMenu(true);
   }, []);
@@ -44,6 +47,10 @@ const MainDashboard: React.FC = () => {
   const handleTaskDashboard = useCallback(() => {
     handleCloseAllDashboardAndWindows();
     setTaskDashboard(true);
+  }, [handleCloseAllDashboardAndWindows]);
+  const handleCompanyDashboard = useCallback(() => {
+    handleCloseAllDashboardAndWindows();
+    setCompanyDashboard(true);
   }, [handleCloseAllDashboardAndWindows]);
   const handleCustomerServiceOrderDashboard = useCallback(() => {
     handleCloseAllDashboardAndWindows();
@@ -75,6 +82,7 @@ const MainDashboard: React.FC = () => {
           <SideMenu
             handleMainDashboard={handleMainDashboard}
             handleTaskDashboard={handleTaskDashboard}
+            handleCompanyDashboard={handleCompanyDashboard}
             handleCustomerServiceOrderDashboard={
               handleCustomerServiceOrderDashboard
             }
@@ -104,6 +112,7 @@ const MainDashboard: React.FC = () => {
           </>
         )}
         {!!taskDashboard && <TaskDashboard />}
+        {!!companyContactDashboard && <CompanyContactDashboard />}
         {!!customerServiceOrderDashboard && <CustomerServiceOrderDashboard />}
       </Container>
     </>
