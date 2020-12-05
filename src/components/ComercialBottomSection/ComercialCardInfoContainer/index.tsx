@@ -33,13 +33,15 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
   }, [selectedCard]);
 
   useEffect(() => {
-    getCardOwner();
-  }, [getCardOwner]);
+    if (selectedCard.id !== undefined) {
+      getCardOwner();
+    }
+  }, [getCardOwner, selectedCard]);
 
   const getCardCustomer = useCallback(() => {
     try {
       api
-        .get<ICardCustomer[]>(`card/customer/${selectedCard.unique_name}`)
+        .get<ICardCustomer[]>(`card/customers/${selectedCard.unique_name}`)
         .then(response => {
           setCardCustomers(response.data);
         });
@@ -71,7 +73,7 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
         <div>
           <p>Cliente</p>
           {cardCustomers.map(customer => {
-            return <p>{customer.customer.name}</p>;
+            return <p key={customer.id}>{customer.customer.name}</p>;
           })}
         </div>
         <div>

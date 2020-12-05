@@ -49,7 +49,7 @@ const FunnelStage: React.FC<IProps> = ({
       </h1>
       <CardContainer>
         {cards.map(card => (
-          <Card isActive={selectedCard.id === card.id}>
+          <Card isActive={selectedCard.id === card.id} key={card.id}>
             <button type="button" onClick={() => handleSelectCard(card)}>
               <h3>{card.name}</h3>
               <strong>{card.weplanEvent ? 'WePlan' : ''}</strong>
