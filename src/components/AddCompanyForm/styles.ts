@@ -5,6 +5,11 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
 
+  background: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+
   section {
     display: flex;
     flex-direction: column;

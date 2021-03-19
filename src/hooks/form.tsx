@@ -35,17 +35,11 @@ const FormProvider: React.FC = ({ children }) => {
     try {
       api.get<IFormDTO[]>('/user-form').then(response => {
         setUserForms(response.data);
-        if (currentForm && currentForm.id) {
-          const thisForm = response.data.find(
-            form => form.id === currentForm.id,
-          );
-          thisForm && setCurrentForm(thisForm);
-        }
       });
     } catch (err) {
       throw new Error(err);
     }
-  }, [currentForm]);
+  }, []);
 
   useEffect(() => {
     getForms();
@@ -54,19 +48,18 @@ const FormProvider: React.FC = ({ children }) => {
   const createForm = useCallback(
     async (data: ICreateFormDTO) => {
       try {
-        const thisForm = await api.post('user-form', {
+        const thisForm = await api.post<IFormDTO>('user-form', {
           slug: textToSlug(data.title),
           name: data.name,
           title: data.title,
           message: data.message,
           isActive: data.isActive,
         });
-        setCurrentForm(thisForm.data);
         addToast({
           type: 'success',
           title: 'Formulário criado com sucesso!',
         });
-        getForms();
+        return thisForm.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -76,16 +69,25 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getForms],
+    [addToast],
   );
 
-  const handleSetCurrentForm = useCallback((data: IFormDTO) => {
-    setCurrentForm(data);
+  const removeCurrentForm = useCallback(() => {
+    setCurrentForm({} as IFormDTO);
   }, []);
+
+  const handleSetCurrentForm = useCallback(
+    (data: IFormDTO) => {
+      removeCurrentForm();
+      setCurrentForm(data);
+    },
+    [removeCurrentForm],
+  );
+
   const createFormField = useCallback(
     async (data: ICreateFormFieldDTO) => {
       try {
-        await api.post('form-field', {
+        const thisFormField = await api.post('form-field', {
           name: data.name,
           form_id: data.form_id,
           position: data.position,
@@ -99,6 +101,7 @@ const FormProvider: React.FC = ({ children }) => {
           title: 'Campo criado com sucesso!',
         });
         getForms();
+        return thisFormField.data;
       } catch (err) {
         addToast({
           type: 'error',
