@@ -6,19 +6,15 @@ import api from '../../services/api';
 import { Container, ListContainer, PageSection } from './styles';
 
 const ContactPageDashboard: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const [contactPages, setContactPages] = useState<IContactPageDTO[]>([]);
 
   const handleGetContactPages = useCallback(() => {
     try {
-      setLoading(true);
       api.get<IContactPageDTO[]>('/user-contact-page').then(response => {
         setContactPages(response.data);
       });
     } catch (err) {
       throw new Error(err);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
