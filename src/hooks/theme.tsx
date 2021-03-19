@@ -36,7 +36,7 @@ function useToggleTheme(): IThemeContextData {
   const context = useContext(ThemeContext);
 
   if (!context) {
-    throw new Error('useToggleTheme must bu used within an AuthProvider');
+    throw new Error('useToggleTheme must be used within a theme provider');
   }
 
   return context;

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import '../../styles/global';
 
-export const Header = styled.header`
+export const Container = styled.header`
   position: fixed;
   top: 0;
   z-index: 8;
-  /* padding: 8px; */
+  padding: 0 1rem;
   width: 100%;
   background: var(--header-background-color);
   display: flex;
@@ -24,7 +24,7 @@ export const Header = styled.header`
   > h2 {
     margin: auto;
     font-size: 20px;
-    color: var(--header-primary);
+    color: var(--title-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,7 +129,6 @@ export const Menu = styled.div`
     align-items: center;
     justify-content: center;
     transition: 0.3s;
-    /* border: 1px solid var(--primary-color); */
     box-shadow: var(--box-shadow);
     border-radius: 50%;
 
@@ -149,44 +148,5 @@ export const Menu = styled.div`
         color: var(--title-color);
       }
     }
-    /* &:nth-child(3) {
-      svg {
-        color: var(--letter-color-1);
-        transition: 0.3s;
-      }
-      &:hover {
-        border: 1px solid var(--letter-color-1);
-        border-radius: 4px;
-        box-shadow: var(--window-box-shadow);
-
-        svg {
-          color: var(--title-color);
-        }
-      }
-    } */
-
-    &:nth-child(4) {
-      svg {
-        color: var(--red-color);
-        transition: 0.3s;
-      }
-
-      &:hover {
-        border: 1px solid var(--red-color);
-        border-radius: 4px;
-        box-shadow: var(--window-box-shadow);
-
-        svg {
-          color: var(--title-color);
-        }
-      }
-    }
   }
-`;
-
-export const ToggleButton = styled.div`
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: center;
 `;

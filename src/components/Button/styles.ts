@@ -4,7 +4,7 @@ import '../../styles/global';
 import { shade } from 'polished';
 
 export const Container = styled.button`
-  background: var(--primary-color);
+  background: var(--secondary-color);
   height: 56px;
   border-radius: 10px;
   border: 0;

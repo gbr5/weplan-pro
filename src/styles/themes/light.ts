@@ -6,7 +6,7 @@ export default {
     secondary: 'rgba(255, 153, 0, 1)',
     headerPrimary: 'rgba(255, 153, 0, 1)',
     background: '#c9c9c9',
-    header: '#011627',
+    header: '#555',
     headerHover: 'rgb(158, 155, 141)',
     card: 'rgb(138, 129, 119)',
 

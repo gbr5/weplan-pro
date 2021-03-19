@@ -48,12 +48,8 @@ export const Container = styled.div`
 
   animation: ${appearFromTop} 1s;
 
-  > button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: transparent;
-    border: none;
+  @media (max-width: 1000px) {
+    overflow-x: scroll;
   }
 `;
 
@@ -63,6 +59,13 @@ export const FirstRow = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 0 0 50px;
+
+  @media (max-width: 1000px) {
+    overflow-x: scroll;
+    flex-direction: column;
+
+    align-items: center;
+  }
 `;
 export const SecondRow = styled.div`
   display: flex;
@@ -70,6 +73,17 @@ export const SecondRow = styled.div`
   width: 100%;
   height: 100%;
   padding: 0 0 0 50px;
+
+  @media (max-width: 1000px) {
+    overflow-x: scroll;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 1rem;
+
+    padding-bottom: 1rem;
+  }
 `;
 
 export const BottomLine = styled.div`
@@ -85,7 +99,7 @@ export const UpperLine = styled.div`
 
 export const ArrowButton = styled.button`
   position: fixed;
-  top: 60px;
+  top: 6rem;
   left: 16px;
   z-index: 15;
   background: transparent;

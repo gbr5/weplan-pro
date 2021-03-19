@@ -14,7 +14,7 @@ export const Button = styled.button`
 
   z-index: 1999;
 
-  background: var(--primary-color);
+  background: var(--secondary-color);
   box-shadow: var(--box-shadow);
   transition: 0.25s;
 

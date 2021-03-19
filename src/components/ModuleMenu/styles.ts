@@ -16,7 +16,7 @@ const appearFromTop = keyframes`
 export const Modules = styled.section`
   background: var(--background-color);
   background: transparent;
-  width: 99.9%;
+  width: 100%;
   transition: 0.5s;
 
   display: grid;
@@ -42,6 +42,12 @@ export const Modules = styled.section`
     max-width: 50px;
     max-height: 44px;
     margin: auto 0;
+  }
+
+  @media (max-width: 1000px) {
+    overflow-x: scroll;
+    gap: 1rem;
+    padding-left: 3rem;
   }
 `;
 
