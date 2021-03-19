@@ -35,17 +35,11 @@ const FormProvider: React.FC = ({ children }) => {
     try {
       api.get<IFormDTO[]>('/user-form').then(response => {
         setUserForms(response.data);
-        if (currentForm && currentForm.id) {
-          const thisForm = response.data.find(
-            form => form.id === currentForm.id,
-          );
-          thisForm && setCurrentForm(thisForm);
-        }
       });
     } catch (err) {
       throw new Error(err);
     }
-  }, [currentForm]);
+  }, []);
 
   useEffect(() => {
     getForms();
@@ -79,9 +73,18 @@ const FormProvider: React.FC = ({ children }) => {
     [addToast, getForms],
   );
 
-  const handleSetCurrentForm = useCallback((data: IFormDTO) => {
-    setCurrentForm(data);
+  const removeCurrentForm = useCallback(() => {
+    setCurrentForm({} as IFormDTO);
   }, []);
+
+  const handleSetCurrentForm = useCallback(
+    (data: IFormDTO) => {
+      removeCurrentForm();
+      setCurrentForm(data);
+    },
+    [removeCurrentForm],
+  );
+
   const createFormField = useCallback(
     async (data: ICreateFormFieldDTO) => {
       try {

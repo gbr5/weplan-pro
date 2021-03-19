@@ -1,33 +1,48 @@
 import React, { useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
+import IFormDTO from '../../../dtos/IFormDTO';
 import { useForm } from '../../../hooks/form';
-import AddContactForm from '../../AddContactForm';
+import AddCompanyForm from '../../AddCompanyForm';
+import FormWindow from '../FormWindow';
 
-import { Container, ListContainer, PageSection } from './styles';
+import { Container, ListContainer, FormSection, ButtonForm } from './styles';
 
 const FormDashboard: React.FC = () => {
-  const [addContactForm, setAddContactForm] = useState(false);
-  const { userForms } = useForm();
+  const [addCompanyForm, setAddCompanyForm] = useState(false);
+  const [formPage, setFormPage] = useState(false);
+  const { userForms, handleSetCurrentForm } = useForm();
 
-  const handleContactForm = useCallback((e: boolean) => {
-    setAddContactForm(e);
+  const handleAddForm = useCallback((e: boolean) => {
+    setAddCompanyForm(e);
   }, []);
 
   const handleFormPage = useCallback((e: boolean) => {
-    setAddContactForm(e);
+    setFormPage(e);
   }, []);
+
+  const navigateToFormPage = useCallback(
+    (data: IFormDTO) => {
+      handleSetCurrentForm(data);
+      handleFormPage(true);
+    },
+    [handleFormPage, handleSetCurrentForm],
+  );
+
   return (
     <>
-      {addContactForm && (
-        <AddContactForm
-          handleFormPage={handleFormPage}
-          handleCloseWindow={() => handleContactForm(false)}
+      {formPage && (
+        <FormWindow handleCloseWindow={() => handleFormPage(false)} />
+      )}
+      {addCompanyForm && (
+        <AddCompanyForm
+          handleFormPage={() => handleFormPage(true)}
+          handleCloseWindow={() => handleAddForm(false)}
         />
       )}
       <Container>
         <span>
-          <h1>Formulários de contato</h1>
-          <button type="button" onClick={() => handleContactForm(true)}>
+          <h2>Formulários de contato</h2>
+          <button type="button" onClick={() => handleAddForm(true)}>
             <MdAdd size={28} />
           </button>
         </span>
@@ -35,11 +50,16 @@ const FormDashboard: React.FC = () => {
         <ListContainer>
           {userForms.map(form => {
             return (
-              <PageSection key={form.id}>
-                <button type="button">
-                  <h2>{form.title}</h2>
-                </button>
-              </PageSection>
+              <FormSection key={form.id}>
+                <ButtonForm
+                  backgroundColor="#555"
+                  textColor="#000"
+                  type="button"
+                  onClick={() => navigateToFormPage(form)}
+                >
+                  {form.title}
+                </ButtonForm>
+              </FormSection>
             );
           })}
         </ListContainer>

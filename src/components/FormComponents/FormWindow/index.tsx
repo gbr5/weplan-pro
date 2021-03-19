@@ -1,6 +1,6 @@
 import React from 'react';
-import IFormDTO from '../../../dtos/IFormDTO';
 import { useAuth } from '../../../hooks/auth';
+import { useForm } from '../../../hooks/form';
 import { textToSlug } from '../../../utils/textToSlug';
 import Input from '../../Input';
 import WindowContainer from '../../WindowContainer';
@@ -9,10 +9,10 @@ import { Container } from './styles';
 
 interface IProps {
   handleCloseWindow: Function;
-  form: IFormDTO;
 }
 
-const FormWindow: React.FC<IProps> = ({ handleCloseWindow, form }) => {
+const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
+  const { currentForm } = useForm();
   const { company } = useAuth();
   // const url = process.env.REACT_APP_API_URL;
   const url = 'https://weplanweb.vercel.app/';
@@ -31,15 +31,15 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow, form }) => {
     >
       <Container>
         <header>
-          <a href={`${url}/form/${companyName}/${form.slug}`}>
-            Visualizar página {`${url}/form/${companyName}/${form.slug}`}
+          <a href={`${url}/form/${companyName}/${currentForm.slug}`}>
+            Visualizar página {`${url}/form/${companyName}/${currentForm.slug}`}
           </a>
           <button type="button">Editar formulário</button>
         </header>
-        <h1>{form.title}</h1>
-        <h3>{form.message}</h3>
+        <h1>{currentForm.title}</h1>
+        <h3>{currentForm.message}</h3>
         <section>
-          {form.fields.map(field => {
+          {currentForm.fields.map(field => {
             return (
               <span key={field.id}>
                 <strong>{field.title}</strong>

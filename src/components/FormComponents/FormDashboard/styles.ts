@@ -1,3 +1,4 @@
+import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -5,6 +6,10 @@ export const Container = styled.div`
   flex-direction: column;
 
   align-items: center;
+
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
 
   span {
     display: flex;
@@ -34,9 +39,35 @@ export const Container = styled.div`
 export const ListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3 1fr);
+  gap: 1rem;
+  width: 100%;
+
+  max-width: 25rem;
 `;
 
-export const PageSection = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3 1fr);
+export const FormSection = styled.div`
+  display: flex;
+`;
+
+interface IFormProps {
+  backgroundColor: string;
+  textColor: string;
+}
+
+export const ButtonForm = styled.button<IFormProps>`
+  background: ${props => props.backgroundColor};
+  color: ${props => props.textColor};
+  border: none;
+  width: 100%;
+  height: 3rem;
+  border-radius: 4px;
+  font-size: 1.4rem;
+  transition: 0.3s;
+
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: ${props => shade(0.3, props.backgroundColor)};
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
 `;

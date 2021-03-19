@@ -15,7 +15,7 @@ interface IProps {
   handleFormPage: Function;
 }
 
-const AddContactForm: React.FC<IProps> = ({
+const AddCompanyForm: React.FC<IProps> = ({
   handleCloseWindow,
   handleFormPage,
 }) => {
@@ -85,4 +85,4 @@ const AddContactForm: React.FC<IProps> = ({
   );
 };
 
-export default AddContactForm;
+export default AddCompanyForm;
