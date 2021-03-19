@@ -29,7 +29,6 @@ const AddCustomFormField: React.FC<IProps> = ({
 
   const handleSubmit = useCallback(
     async (e: ICreateFormFieldDTO) => {
-      console.log(e);
       try {
         setLoading(true);
         await api.post('form-field', {
@@ -96,6 +95,13 @@ const AddCustomFormField: React.FC<IProps> = ({
               <button type="button">Múltipla escolha</button>
             </ButtonContainer>
           </section>
+
+          <button
+            type="button"
+            onClick={() => handleIsFieldRequired(!isFieldRequired)}
+          >
+            Ativo
+          </button>
 
           <Button loading={loading} type="submit">
             Criar formulário

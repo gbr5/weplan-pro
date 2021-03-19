@@ -34,7 +34,6 @@ const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
 
   const handleSubmit = useCallback(
     (e: ICreateFormFieldDTO) => {
-      console.log(e);
       try {
         createFormField({
           form_id: currentForm.id,
