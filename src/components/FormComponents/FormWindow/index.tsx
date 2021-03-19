@@ -87,20 +87,23 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
               />
             ) : (
               <FakeFieldSection>
-                {sortFormFields(currentForm.fields).map(field => {
-                  return (
-                    <FakeField key={field.id}>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenEditField(field)}
-                      >
-                        <MdEdit size={24} />
-                      </button>
-                      <strong>{field.title}</strong>
-                      <FakeInput />
-                    </FakeField>
-                  );
-                })}
+                {currentForm &&
+                  currentForm.fields &&
+                  currentForm.fields.length > 0 &&
+                  sortFormFields(currentForm.fields).map(field => {
+                    return (
+                      <FakeField key={field.id}>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditField(field)}
+                        >
+                          <MdEdit size={24} />
+                        </button>
+                        <strong>{field.title}</strong>
+                        <FakeInput />
+                      </FakeField>
+                    );
+                  })}
               </FakeFieldSection>
             )}
 
