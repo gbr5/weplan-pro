@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
+import IFormFieldDTO from '../../../dtos/IFormFieldDTO';
 import { useAuth } from '../../../hooks/auth';
 import { useForm } from '../../../hooks/form';
+import { sortFormFields } from '../../../utils/sortFormFields';
 import { textToSlug } from '../../../utils/textToSlug';
 import AddFormField from '../AddFormField';
+import EditFormField from '../EditFormField';
 import WindowFormContainer from '../WindowFormContainer';
 
 import {
@@ -12,6 +15,9 @@ import {
   AddField,
   FakeInput,
   FakeField,
+  FakeFieldSection,
+  FirstButtonRow,
+  UrlContainer,
 } from './styles';
 
 interface IProps {
@@ -23,6 +29,8 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
   const { company } = useAuth();
 
   const [addFormField, setAddFormField] = useState(false);
+  const [editFormField, setEditFormField] = useState(false);
+  const [selectedField, setSelectedField] = useState({} as IFormFieldDTO);
 
   const url = 'https://weplanweb.vercel.app';
   const companyName = textToSlug(company.name);
@@ -31,11 +39,21 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
     setAddFormField(e);
   }, []);
 
+  const handleOpenEditField = useCallback((data: IFormFieldDTO) => {
+    setSelectedField(data);
+    setEditFormField(true);
+  }, []);
+
+  const handleCloseEditField = useCallback(() => {
+    setEditFormField(false);
+    setSelectedField({} as IFormFieldDTO);
+  }, []);
+
   return (
     <WindowFormContainer onHandleCloseWindow={handleCloseWindow}>
       {currentForm && currentForm.id && (
         <Container>
-          <span>
+          <FirstButtonRow>
             <a
               href={`${url}/form/${companyName}/${currentForm.slug}`}
               target="blank"
@@ -49,8 +67,8 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
               {`${url}/form/${companyName}/${currentForm.slug}`}
             </a> */}
             <button type="button">Editar</button>
-          </span>
-          <aside>
+          </FirstButtonRow>
+          <UrlContainer>
             <strong>url:</strong>
             <a
               href={`${url}/form/${companyName}/${currentForm.slug}`}
@@ -58,24 +76,33 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
             >
               {`${url}/form/${companyName}/${currentForm.slug}`}
             </a>
-          </aside>
+          </UrlContainer>
           <FormContainer>
             <h1>{currentForm.title}</h1>
             <p>{currentForm.message}</p>
-            <section>
-              {currentForm.fields.map(field => {
-                console.log(field);
-                return (
-                  <FakeField key={field.id}>
-                    <button type="button">
-                      <MdEdit size={24} />
-                    </button>
-                    <strong>{field.title}</strong>
-                    <FakeInput />
-                  </FakeField>
-                );
-              })}
-            </section>
+            {editFormField ? (
+              <EditFormField
+                closeWindow={() => handleCloseEditField()}
+                field={selectedField}
+              />
+            ) : (
+              <FakeFieldSection>
+                {sortFormFields(currentForm.fields).map(field => {
+                  return (
+                    <FakeField key={field.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditField(field)}
+                      >
+                        <MdEdit size={24} />
+                      </button>
+                      <strong>{field.title}</strong>
+                      <FakeInput />
+                    </FakeField>
+                  );
+                })}
+              </FakeFieldSection>
+            )}
 
             {addFormField && (
               <AddFormField closeComponent={() => handleAddFormField(false)} />

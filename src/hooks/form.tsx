@@ -101,6 +101,7 @@ const FormProvider: React.FC = ({ children }) => {
           title: 'Campo criado com sucesso!',
         });
         getForms();
+        getForm(data.form_id);
         return thisFormField.data;
       } catch (err) {
         addToast({
@@ -111,7 +112,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getForms],
+    [getForms, addToast, getForm],
   );
   const updateForm = useCallback(
     async (data: IFormDTO) => {
@@ -128,6 +129,7 @@ const FormProvider: React.FC = ({ children }) => {
           title: 'Formulário atualizado com sucesso!',
         });
         getForms();
+        getForm(data.id);
       } catch (err) {
         addToast({
           type: 'error',
@@ -137,7 +139,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getForms],
+    [addToast, getForms, getForm],
   );
   const updateFormField = useCallback(
     async (data: IFormFieldDTO) => {
@@ -155,6 +157,7 @@ const FormProvider: React.FC = ({ children }) => {
           title: 'Campo atualizado com sucesso!',
         });
         getForms();
+        getForm(data.form_id);
       } catch (err) {
         addToast({
           type: 'error',
@@ -164,7 +167,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getForms],
+    [addToast, getForms, getForm],
   );
   const deleteForm = useCallback(
     async (id: string) => {
@@ -189,12 +192,13 @@ const FormProvider: React.FC = ({ children }) => {
   const deleteFormField = useCallback(
     async (id: string) => {
       try {
-        await api.post(`form-field/${id}`);
+        await api.delete(`form-field/${id}`);
         addToast({
           type: 'success',
           title: 'Campo deletado com sucesso!',
         });
         getForms();
+        getForm(currentForm.id);
       } catch (err) {
         addToast({
           type: 'error',
@@ -204,7 +208,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getForms],
+    [addToast, getForms, getForm, currentForm],
   );
 
   return (
