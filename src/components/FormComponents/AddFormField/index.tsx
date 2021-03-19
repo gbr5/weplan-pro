@@ -30,6 +30,7 @@ const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
     { id: 'text', label: 'Texto', value: 'text' },
     { id: 'date', label: 'Data', value: 'date' },
     { id: 'number', label: 'Número', value: 'number' },
+    { id: 'number', label: 'Número', value: 'number' },
   ];
 
   const handleSubmit = useCallback(
