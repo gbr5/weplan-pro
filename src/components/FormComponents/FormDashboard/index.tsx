@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import IFormDTO from '../../../dtos/IFormDTO';
 import { useForm } from '../../../hooks/form';
@@ -10,34 +10,39 @@ import { Container, ListContainer, FormSection, ButtonForm } from './styles';
 const FormDashboard: React.FC = () => {
   const [addCompanyForm, setAddCompanyForm] = useState(false);
   const [formPage, setFormPage] = useState(false);
-  const { userForms, handleSetCurrentForm } = useForm();
+  const { userForms, handleSetCurrentForm, currentForm } = useForm();
 
   const handleAddForm = useCallback((e: boolean) => {
     setAddCompanyForm(e);
   }, []);
 
-  const handleFormPage = useCallback((e: boolean) => {
-    setFormPage(e);
+  const closeFormPage = useCallback(() => {
+    setFormPage(false);
   }, []);
 
   const navigateToFormPage = useCallback(
     (data: IFormDTO) => {
-      handleSetCurrentForm(data);
-      handleFormPage(true);
+      if (data && data.id) {
+        handleSetCurrentForm(data);
+        setFormPage(true);
+      }
     },
-    [handleFormPage, handleSetCurrentForm],
+    [handleSetCurrentForm],
   );
+
+  useEffect(() => {
+    if (currentForm && currentForm.id) {
+      navigateToFormPage(currentForm);
+    }
+  }, [currentForm, navigateToFormPage]);
 
   return (
     <>
-      {formPage && (
-        <FormWindow handleCloseWindow={() => handleFormPage(false)} />
+      {formPage && currentForm && (
+        <FormWindow handleCloseWindow={closeFormPage} />
       )}
       {addCompanyForm && (
-        <AddCompanyForm
-          handleFormPage={() => handleFormPage(true)}
-          handleCloseWindow={() => handleAddForm(false)}
-        />
+        <AddCompanyForm handleCloseWindow={() => handleAddForm(false)} />
       )}
       <Container>
         <span>

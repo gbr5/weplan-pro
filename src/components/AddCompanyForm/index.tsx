@@ -5,37 +5,38 @@ import { FormHandles } from '@unform/core';
 import { Container } from './styles';
 import Input from '../Input';
 import ICreateFormDTO from '../../dtos/ICreateFormDTO';
-import WindowContainer from '../WindowContainer';
 import Button from '../Button';
 import { textToSlug } from '../../utils/textToSlug';
 import { useForm } from '../../hooks/form';
+import WindowFormContainer from '../FormComponents/WindowFormContainer';
 
 interface IProps {
   handleCloseWindow: Function;
-  handleFormPage: Function;
 }
 
-const AddCompanyForm: React.FC<IProps> = ({
-  handleCloseWindow,
-  handleFormPage,
-}) => {
-  const { createForm } = useForm();
+const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
+  const { createForm, handleSetCurrentForm } = useForm();
   const formRef = useRef<FormHandles>(null);
   const [isFormActive, setIsFormActive] = useState(false);
 
   const handleSubmitForm = useCallback(
     (e: ICreateFormDTO) => {
-      createForm({
-        slug: textToSlug(e.title),
-        name: e.name,
-        title: e.title,
-        message: e.message,
-        isActive: isFormActive,
-      });
-      handleCloseWindow();
-      handleFormPage();
+      try {
+        createForm({
+          slug: textToSlug(e.title),
+          name: e.name,
+          title: e.title,
+          message: e.message,
+          isActive: isFormActive,
+        }).then(response => {
+          handleSetCurrentForm(response);
+          handleCloseWindow();
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
     },
-    [isFormActive, createForm, handleFormPage, handleCloseWindow],
+    [isFormActive, createForm, handleCloseWindow, handleSetCurrentForm],
   );
 
   const handleIsFormActive = useCallback((e: boolean) => {
@@ -43,18 +44,10 @@ const AddCompanyForm: React.FC<IProps> = ({
   }, []);
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={handleCloseWindow}
-      containerStyle={{
-        aIndex: 15,
-        top: '5%',
-        left: '5%',
-        height: '90%',
-        width: '90%',
-      }}
-    >
+    <WindowFormContainer onHandleCloseWindow={handleCloseWindow}>
       <Form ref={formRef} onSubmit={handleSubmitForm}>
         <Container>
+          <h2>Novo Formulário</h2>
           <section>
             <strong>Dê um nome ao formulário</strong>
             <Input name="name" />
@@ -81,7 +74,7 @@ const AddCompanyForm: React.FC<IProps> = ({
           <Button type="submit">Criar formulário</Button>
         </Container>
       </Form>
-    </WindowContainer>
+    </WindowFormContainer>
   );
 };
 

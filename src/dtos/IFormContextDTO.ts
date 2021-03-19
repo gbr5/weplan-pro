@@ -8,8 +8,8 @@ export default interface IFormContextDTO {
   userForms: IFormDTO[];
   getForm: (id: string) => void;
   getForms: () => void;
-  createForm: (data: ICreateFormDTO) => void;
-  createFormField: (data: ICreateFormFieldDTO) => void;
+  createForm: (data: ICreateFormDTO) => Promise<IFormDTO>;
+  createFormField: (data: ICreateFormFieldDTO) => Promise<IFormFieldDTO>;
   updateForm: (data: IFormDTO) => void;
   updateFormField: (data: IFormFieldDTO) => void;
   deleteForm: (id: string) => void;

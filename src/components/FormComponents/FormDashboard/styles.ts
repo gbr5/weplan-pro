@@ -63,6 +63,7 @@ export const ButtonForm = styled.button<IFormProps>`
   border-radius: 4px;
   font-size: 1.4rem;
   transition: 0.3s;
+  text-transform: capitalize;
 
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
 

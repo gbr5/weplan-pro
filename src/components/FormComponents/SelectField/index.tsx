@@ -11,7 +11,7 @@ interface IProps extends SelectProps<OptionTypeBase> {
 
 const SelectField: React.FC<IProps> = ({ name, ...rest }) => {
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue, registerField } = useField(name);
 
   useEffect(() => {
     registerField({
