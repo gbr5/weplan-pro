@@ -28,8 +28,8 @@ const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
 
   const fieldTypes: ChackBoxOption[] = [
     { id: 'text', label: 'Texto', value: 'text' },
+    { id: 'email', label: 'Email', value: 'email' },
     { id: 'date', label: 'Data', value: 'date' },
-    { id: 'number', label: 'Número', value: 'number' },
     { id: 'number', label: 'Número', value: 'number' },
   ];
 
@@ -41,7 +41,7 @@ const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
           isRequired,
           name: textToSlug(e.title),
           placeholder: ' ',
-          position: currentForm.fields.length + 1,
+          position: currentForm.fields.length + 1 || 1,
           title: e.title,
           type: e.type,
         }).then(response => {
