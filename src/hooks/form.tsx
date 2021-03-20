@@ -49,7 +49,7 @@ const FormProvider: React.FC = ({ children }) => {
     async (data: ICreateFormDTO) => {
       try {
         const thisForm = await api.post<IFormDTO>('user-form', {
-          slug: textToSlug(data.title),
+          slug: data.slug,
           name: data.name,
           title: data.title,
           message: data.message,
@@ -59,6 +59,7 @@ const FormProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Formulário criado com sucesso!',
         });
+        getForms();
         return thisForm.data;
       } catch (err) {
         addToast({
@@ -69,7 +70,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast],
+    [addToast, getForms],
   );
 
   const removeCurrentForm = useCallback(() => {

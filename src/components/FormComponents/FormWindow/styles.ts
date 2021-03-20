@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
+import IOnlyFormStylesDTO from '../../../dtos/IOnlyFormStylesDTO';
+
+interface IFormProps {
+  formStyles: IOnlyFormStylesDTO;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -48,31 +53,6 @@ export const FirstButtonRow = styled.div`
   }
 `;
 
-export const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: stretch;
-  padding-top: 1rem;
-
-  gap: 1rem;
-
-  background: var(--background-color);
-  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100%;
-  min-height: 600px;
-  max-width: 600px;
-
-  border-radius: 4px;
-
-  overflow-y: scroll;
-
-  h1 {
-    text-transform: capitalize;
-  }
-`;
-
 export const UrlContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -99,10 +79,48 @@ export const UrlContainer = styled.div`
   }
 `;
 
+export const FormContainer = styled.div<IFormProps>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 1rem;
+
+  gap: 1rem;
+  padding-bottom: 2rem;
+
+  background: ${props => props.formStyles.background_color};
+  color: ${props => props.formStyles.text_color};
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  max-width: 600px;
+
+  border-radius: 4px;
+
+  overflow-y: scroll;
+
+  h1 {
+    text-transform: capitalize;
+    color: ${props => props.formStyles.text_color};
+  }
+  p {
+    color: ${props => props.formStyles.text_color};
+  }
+`;
+
 export const FakeFieldSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
+
+  padding: 0 2rem;
+
+  @media (max-width: 800px) {
+    padding: 0 1rem;
+  }
 `;
 
 export const AddField = styled.button`
@@ -128,11 +146,12 @@ export const AddField = styled.button`
   }
 `;
 
-export const FakeField = styled.div`
+export const FakeField = styled.div<IFormProps>`
   border-radius: 10px;
   padding: 16px;
   width: 100%;
   height: 100%;
+  background: ${props => props.formStyles.background_color};
 
   border: 2px solid var(--input-container-color);
   color: var(--letter-color-5);
@@ -145,6 +164,10 @@ export const FakeField = styled.div`
   justify-content: center;
 
   position: relative;
+
+  strong {
+    color: ${props => props.formStyles.text_color};
+  }
 
   > button {
     position: absolute;
@@ -161,7 +184,7 @@ export const FakeInput = styled.div`
   background: var(--input-container-color);
   border-radius: 10px;
   padding: 16px;
-  width: 15rem;
+  width: 100%;
 
   border: 2px solid var(--input-container-color);
   color: var(--letter-color-5);
@@ -169,4 +192,19 @@ export const FakeInput = styled.div`
 
   display: flex;
   align-items: center;
+`;
+
+export const FakeButton = styled.button<IFormProps>`
+  background: ${props => props.formStyles.button_color};
+  border-radius: 10px;
+  padding: 16px;
+  width: 100%;
+
+  border: 2px solid var(--input-container-color);
+  color: ${props => props.formStyles.button_text_color};
+  box-shadow: var(--box-shadow);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
