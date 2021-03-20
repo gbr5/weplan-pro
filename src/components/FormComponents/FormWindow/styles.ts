@@ -84,10 +84,9 @@ export const FormContainer = styled.div<IFormProps>`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 1rem;
 
   gap: 1rem;
-  padding-bottom: 2rem;
+  padding: 2rem 0;
 
   background: ${props => props.formStyles.background_color};
   color: ${props => props.formStyles.text_color};
