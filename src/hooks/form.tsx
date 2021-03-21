@@ -10,8 +10,8 @@ import ICreateFormFieldDTO from '../dtos/ICreateFormFieldDTO';
 import IFormContextDTO from '../dtos/IFormContextDTO';
 import IFormDTO from '../dtos/IFormDTO';
 import IFormFieldDTO from '../dtos/IFormFieldDTO';
+import IFormStylesDTO from '../dtos/IFormStylesDTO';
 import api from '../services/api';
-import { textToSlug } from '../utils/textToSlug';
 import { useToast } from './toast';
 
 const FormContext = createContext<IFormContextDTO>({} as IFormContextDTO);
@@ -49,7 +49,7 @@ const FormProvider: React.FC = ({ children }) => {
     async (data: ICreateFormDTO) => {
       try {
         const thisForm = await api.post<IFormDTO>('user-form', {
-          slug: textToSlug(data.title),
+          slug: data.slug,
           name: data.name,
           title: data.title,
           message: data.message,
@@ -59,6 +59,7 @@ const FormProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Formulário criado com sucesso!',
         });
+        getForms();
         return thisForm.data;
       } catch (err) {
         addToast({
@@ -69,7 +70,7 @@ const FormProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast],
+    [addToast, getForms],
   );
 
   const removeCurrentForm = useCallback(() => {
@@ -169,6 +170,32 @@ const FormProvider: React.FC = ({ children }) => {
     },
     [addToast, getForms, getForm],
   );
+  const updateFormStyles = useCallback(
+    async (data: IFormStylesDTO) => {
+      try {
+        await api.put(`form-styles/${data.id}`, {
+          background_color: data.background_color,
+          text_color: data.text_color,
+          button_color: data.button_color,
+          button_text_color: data.button_text_color,
+        });
+        addToast({
+          type: 'success',
+          title: 'Layout atualizado com sucesso!',
+        });
+        getForms();
+        getForm(data.form_id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o layout!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getForms, getForm],
+  );
   const deleteForm = useCallback(
     async (id: string) => {
       try {
@@ -211,10 +238,19 @@ const FormProvider: React.FC = ({ children }) => {
     [addToast, getForms, getForm, currentForm],
   );
 
+  const defaultFormStyles = {
+    background_color: '#c9c9c9',
+    text_color: '#050115',
+    button_color: '#ff9900',
+    button_text_color: '#050115',
+  };
+
   return (
     <FormContext.Provider
       value={{
         currentForm,
+        defaultFormStyles,
+        updateFormStyles,
         userForms,
         getForm,
         getForms,

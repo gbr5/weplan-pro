@@ -15,21 +15,32 @@ const appearFromTop = keyframes`
 export const Container = styled.div`
   position: fixed;
   z-index: 15;
-  top: 0%;
-  left: 0%;
-  height: 100%;
-  width: 100%;
+
+  top: 5%;
+  left: 10%;
+
+  height: 90%;
+  width: 80%;
+
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  padding: 1rem;
-  background: var(--header-background-color);
-  border-radius: 8px;
+
   gap: 16px;
-  box-shadow: var(--window-box-shadow);
-  animation: ${appearFromTop} 0.5s;
   margin: 0 auto;
+  padding: 1rem;
+
+  border-radius: 8px;
+
+  background: var(--header-background-color);
+
+  box-shadow: var(--window-box-shadow);
+
+  animation: ${appearFromTop} 0.5s;
+
+  overflow-y: scroll;
+
   @media (max-width: 1000px) {
     overflow-y: scroll;
     display: block;
@@ -40,7 +51,7 @@ export const Container = styled.div`
     width: 100%;
   }
   header {
-    position: fixed;
+    position: absolute;
     top: 8px;
     right: 8px;
     button {

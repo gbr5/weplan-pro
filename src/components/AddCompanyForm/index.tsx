@@ -23,7 +23,7 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
     (e: ICreateFormDTO) => {
       try {
         createForm({
-          slug: textToSlug(e.title),
+          slug: textToSlug(e.name),
           name: e.name,
           title: e.title,
           message: e.message,

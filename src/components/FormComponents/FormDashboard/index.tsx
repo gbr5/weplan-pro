@@ -62,7 +62,7 @@ const FormDashboard: React.FC = () => {
                   type="button"
                   onClick={() => navigateToFormPage(form)}
                 >
-                  {form.title}
+                  {form.name}
                 </ButtonForm>
               </FormSection>
             );

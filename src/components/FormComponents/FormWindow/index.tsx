@@ -1,12 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FiTrash2 } from 'react-icons/fi';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import IFormFieldDTO from '../../../dtos/IFormFieldDTO';
 import { useAuth } from '../../../hooks/auth';
 import { useForm } from '../../../hooks/form';
 import { sortFormFields } from '../../../utils/sortFormFields';
 import { textToSlug } from '../../../utils/textToSlug';
+import Button from '../../Button';
+import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import AddFormField from '../AddFormField';
 import EditFormField from '../EditFormField';
+import EditFormStyles from '../EditFormStyles';
 import WindowFormContainer from '../WindowFormContainer';
 
 import {
@@ -18,6 +22,7 @@ import {
   FakeFieldSection,
   FirstButtonRow,
   UrlContainer,
+  FakeButton,
 } from './styles';
 
 interface IProps {
@@ -25,12 +30,15 @@ interface IProps {
 }
 
 const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
-  const { currentForm } = useForm();
+  const { currentForm, deleteForm, defaultFormStyles } = useForm();
   const { company } = useAuth();
 
   const [addFormField, setAddFormField] = useState(false);
   const [editFormField, setEditFormField] = useState(false);
+  const [editFormStyles, setEditFormStyles] = useState(false);
   const [selectedField, setSelectedField] = useState({} as IFormFieldDTO);
+  const [formStyles, setFormStyles] = useState(defaultFormStyles);
+  const [deleteFormConfirmation, setDeleteFormConfirmation] = useState(false);
 
   const url = 'https://weplanweb.vercel.app';
   const companyName = textToSlug(company.name);
@@ -49,74 +57,130 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
     setSelectedField({} as IFormFieldDTO);
   }, []);
 
-  return (
-    <WindowFormContainer onHandleCloseWindow={handleCloseWindow}>
-      {currentForm && currentForm.id && (
-        <Container>
-          <FirstButtonRow>
-            <a
-              href={`${url}/form/${companyName}/${currentForm.slug}`}
-              target="blank"
-            >
-              Visualizar
-            </a>
-            {/* <a
-              href={`${url}/form/${companyName}/${currentForm.slug}`}
-              target="blank"
-            >
-              {`${url}/form/${companyName}/${currentForm.slug}`}
-            </a> */}
-            <button type="button">Editar</button>
-          </FirstButtonRow>
-          <UrlContainer>
-            <strong>url:</strong>
-            <a
-              href={`${url}/form/${companyName}/${currentForm.slug}`}
-              target="blank"
-            >
-              {`${url}/form/${companyName}/${currentForm.slug}`}
-            </a>
-          </UrlContainer>
-          <FormContainer>
-            <h1>{currentForm.title}</h1>
-            <p>{currentForm.message}</p>
-            {editFormField ? (
-              <EditFormField
-                closeWindow={() => handleCloseEditField()}
-                field={selectedField}
-              />
-            ) : (
-              <FakeFieldSection>
-                {currentForm &&
-                  currentForm.fields &&
-                  currentForm.fields.length > 0 &&
-                  sortFormFields(currentForm.fields).map(field => {
-                    return (
-                      <FakeField key={field.id}>
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEditField(field)}
-                        >
-                          <MdEdit size={24} />
-                        </button>
-                        <strong>{field.title}</strong>
-                        <FakeInput />
-                      </FakeField>
-                    );
-                  })}
-              </FakeFieldSection>
-            )}
+  const handleDeleteForm = useCallback(() => {
+    currentForm && deleteForm(currentForm.id);
+    setDeleteFormConfirmation(false);
+    handleCloseWindow();
+  }, [currentForm, deleteForm, handleCloseWindow]);
 
-            {addFormField && (
-              <AddFormField closeComponent={() => handleAddFormField(false)} />
-            )}
-            <AddField type="button" onClick={() => handleAddFormField(true)}>
-              <MdAdd size={32} />
-            </AddField>
-          </FormContainer>
-        </Container>
+  const handleDeleteFormConfirmation = useCallback((e: boolean) => {
+    setDeleteFormConfirmation(e);
+  }, []);
+
+  const handleFormStyles = useCallback((e: boolean) => {
+    setEditFormStyles(e);
+  }, []);
+
+  useEffect(() => {
+    if (currentForm && currentForm.styles) {
+      const { background_color } = currentForm.styles;
+      const { text_color } = currentForm.styles;
+      const { button_color } = currentForm.styles;
+      const { button_text_color } = currentForm.styles;
+      setFormStyles({
+        background_color,
+        text_color,
+        button_color,
+        button_text_color,
+      });
+    }
+  }, [currentForm]);
+
+  return (
+    <>
+      {editFormStyles && (
+        <EditFormStyles
+          form={currentForm}
+          handleCloseWindow={() => handleFormStyles(false)}
+        />
       )}
-    </WindowFormContainer>
+      <WindowFormContainer onHandleCloseWindow={handleCloseWindow}>
+        {deleteFormConfirmation && (
+          <ConfirmationWindow
+            closeWindow={() => handleDeleteFormConfirmation(false)}
+            firstButtonFunction={handleDeleteForm}
+            firstButtonLabel="Deletar"
+            message="Deseja realmente deletar este formulário?"
+            secondButtonFunction={() => handleDeleteFormConfirmation(false)}
+            secondButtonLabel="Não deletar"
+            zIndex={17}
+          />
+        )}
+        {currentForm && currentForm.id && (
+          <Container>
+            <FirstButtonRow>
+              <button type="button" onClick={() => handleFormStyles(true)}>
+                Definir Cores
+              </button>
+              <button type="button">Opções de envio</button>
+            </FirstButtonRow>
+            <UrlContainer>
+              <strong>Url</strong>
+              <a
+                href={`${url}/form/${companyName}/${currentForm.slug}`}
+                target="blank"
+              >
+                {`${url}/form/${companyName}/${currentForm.slug}`}
+              </a>
+            </UrlContainer>
+            <FormContainer formStyles={formStyles}>
+              <h1>{currentForm.title}</h1>
+              <p>{currentForm.message}</p>
+              {editFormField ? (
+                <EditFormField
+                  closeWindow={() => handleCloseEditField()}
+                  field={selectedField}
+                />
+              ) : (
+                <FakeFieldSection>
+                  {currentForm &&
+                    currentForm.fields &&
+                    currentForm.fields.length > 0 &&
+                    sortFormFields(currentForm.fields).map(field => {
+                      return (
+                        <FakeField formStyles={formStyles} key={field.id}>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditField(field)}
+                          >
+                            <MdEdit size={24} />
+                          </button>
+                          <strong>{field.title}</strong>
+                          <FakeInput />
+                        </FakeField>
+                      );
+                    })}
+                  <FakeButton formStyles={formStyles} type="button">
+                    Enviar
+                  </FakeButton>
+                </FakeFieldSection>
+              )}
+
+              {addFormField && (
+                <AddFormField
+                  closeComponent={() => handleAddFormField(false)}
+                />
+              )}
+              <AddField type="button" onClick={() => handleAddFormField(true)}>
+                <MdAdd size={32} />
+              </AddField>
+              <Button
+                type="button"
+                style={{
+                  background: 'red',
+                  paddingTop: '1rem',
+                  paddingBottom: '1rem',
+                }}
+                onClick={() => handleDeleteFormConfirmation(true)}
+              >
+                <FiTrash2 size={24} />
+                Deletar Formulário
+              </Button>
+            </FormContainer>
+          </Container>
+        )}
+      </WindowFormContainer>
+    </>
   );
 };
 
