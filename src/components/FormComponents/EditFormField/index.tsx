@@ -59,7 +59,7 @@ const EditFormField: React.FC<IProps> = ({ closeWindow, field }) => {
     }
     deleteFormField(field.id);
     handleDeleteConfirmation(false);
-    closeWindow();
+    return closeWindow();
   }, [deleteFormField, addToast, closeWindow, handleDeleteConfirmation, field]);
 
   const handleSubmit = useCallback(
@@ -90,12 +90,12 @@ const EditFormField: React.FC<IProps> = ({ closeWindow, field }) => {
           title: e.title,
           type: e.type,
         });
-        closeWindow();
+        return closeWindow();
       } catch (err) {
         throw new Error(err);
       }
     },
-    [closeWindow, updateFormField, isRequired, field],
+    [closeWindow, addToast, updateFormField, isRequired, field],
   );
 
   const handleIsRequired = useCallback((e: boolean) => {
