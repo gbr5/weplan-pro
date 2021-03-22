@@ -1,5 +1,6 @@
 import IFormEmailNotificationDTO from './IFormEmailNotificationDTO';
 import IFormFieldDTO from './IFormFieldDTO';
+import IFormLandingPageDTO from './IFormLandingPageDTO';
 import IFormStylesDTO from './IFormStylesDTO';
 import IFormSuccessMessageDTO from './IFormSuccessMessageDTO';
 
@@ -14,4 +15,5 @@ export default interface IFormDTO {
   emailNotifications: IFormEmailNotificationDTO[];
   styles: IFormStylesDTO;
   successMessage: IFormSuccessMessageDTO;
+  landingPage: IFormLandingPageDTO;
 }

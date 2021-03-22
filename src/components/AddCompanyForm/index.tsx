@@ -50,19 +50,23 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
           <h2>Novo Formulário</h2>
           <section>
             <strong>Dê um nome ao formulário</strong>
+            <p>O nome do formulário é visível apenas para a empresa</p>
             <Input name="name" />
           </section>
           <section>
-            <strong>Insira o título da página</strong>
+            <strong>Insira o título do formulário</strong>
             <p>O título irá aparecer no topo da página</p>
             <Input name="title" />
           </section>
           <section>
-            <strong>Deixe uma breve descrição sobre a página</strong>
+            <strong>Descrição:</strong>
+            <p>O campo de descrição é opcional</p>
+            <p>Ele aparece como um texto menor abaixo do título</p>
             <Input name="message" />
           </section>
           <span>
             <strong>Ative o formulário para utilizá-lo</strong>
+            <p>Caso queira, poderá alterar posteriormente</p>
             <button
               type="button"
               onClick={() => handleIsFormActive(!isFormActive)}

@@ -10,7 +10,20 @@ import { Container, ListContainer, FormSection, ButtonForm } from './styles';
 const FormDashboard: React.FC = () => {
   const [addCompanyForm, setAddCompanyForm] = useState(false);
   const [formPage, setFormPage] = useState(false);
-  const { userForms, handleSetCurrentForm, currentForm } = useForm();
+  const { userForms, getForms, handleSetCurrentForm, currentForm } = useForm();
+
+  const [forms, setForms] = useState(userForms);
+
+  const handleGetForms = useCallback(async () => {
+    const response = await getForms();
+    setForms(response);
+  }, [getForms]);
+
+  useEffect(() => {
+    if (userForms.length !== forms.length) {
+      handleGetForms();
+    }
+  }, [handleGetForms, userForms, forms]);
 
   const handleAddForm = useCallback((e: boolean) => {
     setAddCompanyForm(e);
@@ -53,7 +66,7 @@ const FormDashboard: React.FC = () => {
         </span>
 
         <ListContainer>
-          {userForms.map(form => {
+          {forms.map(form => {
             return (
               <FormSection key={form.id}>
                 <ButtonForm

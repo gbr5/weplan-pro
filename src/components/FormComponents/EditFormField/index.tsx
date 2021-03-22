@@ -27,15 +27,9 @@ interface IProps {
 
 const EditFormField: React.FC<IProps> = ({ closeWindow, field }) => {
   const formRef = useRef<FormHandles>(null);
-  const { updateFormField, deleteFormField } = useForm();
+  const { updateFormField, deleteFormField, fieldTypes } = useForm();
   const [isRequired, setIsRequired] = useState(field.isRequired);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
-
-  const fieldTypes: ChackBoxOption[] = [
-    { id: 'text', label: 'Texto', value: 'text' },
-    { id: 'date', label: 'Data', value: 'date' },
-    { id: 'number', label: 'Número', value: 'number' },
-  ];
 
   const defaultType = fieldTypes.find(
     thisField => thisField.value === field.type,

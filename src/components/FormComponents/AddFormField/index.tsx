@@ -11,27 +11,14 @@ import SelectField from '../SelectField';
 
 import { Container } from './styles';
 
-interface ChackBoxOption {
-  id: string;
-  value: string;
-  label: string;
-}
-
 interface IProps {
   closeComponent: Function;
 }
 
 const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
   const formRef = useRef<FormHandles>(null);
-  const { createFormField, currentForm } = useForm();
+  const { createFormField, currentForm, fieldTypes } = useForm();
   const [isRequired, setIsRequired] = useState(true);
-
-  const fieldTypes: ChackBoxOption[] = [
-    { id: 'text', label: 'Texto', value: 'text' },
-    { id: 'email', label: 'Email', value: 'email' },
-    { id: 'date', label: 'Data', value: 'date' },
-    { id: 'number', label: 'Número', value: 'number' },
-  ];
 
   const handleSubmit = useCallback(
     (e: ICreateFormFieldDTO) => {
