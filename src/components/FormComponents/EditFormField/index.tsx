@@ -6,6 +6,7 @@ import { MdClose } from 'react-icons/md';
 import ICreateFormFieldDTO from '../../../dtos/ICreateFormFieldDTO';
 import IFormFieldDTO from '../../../dtos/IFormFieldDTO';
 import { useForm } from '../../../hooks/form';
+import { useToast } from '../../../hooks/toast';
 import { textToSlug } from '../../../utils/textToSlug';
 import Button from '../../Button';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
@@ -27,6 +28,7 @@ interface IProps {
 
 const EditFormField: React.FC<IProps> = ({ closeWindow, field }) => {
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
   const { updateFormField, deleteFormField, fieldTypes } = useForm();
   const [isRequired, setIsRequired] = useState(field.isRequired);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
@@ -40,13 +42,44 @@ const EditFormField: React.FC<IProps> = ({ closeWindow, field }) => {
   }, []);
 
   const handleDeleteField = useCallback(() => {
+    if (field.name === 'name') {
+      return addToast({
+        type: 'error',
+        title: 'Não é permitido excluir o campo "name"',
+        description:
+          'Ele é utilizado para identificar a pessoa que respondeu ao formulário!',
+      });
+    }
+    if (field.name === 'email') {
+      return addToast({
+        type: 'error',
+        title: 'Não é permitido excluir o campo "email"',
+        description: 'É necessário ter uma forma de contato com a pessoa!',
+      });
+    }
     deleteFormField(field.id);
     handleDeleteConfirmation(false);
     closeWindow();
-  }, [deleteFormField, closeWindow, handleDeleteConfirmation, field]);
+  }, [deleteFormField, addToast, closeWindow, handleDeleteConfirmation, field]);
 
   const handleSubmit = useCallback(
     (e: ICreateFormFieldDTO) => {
+      if (field.name === 'name') {
+        return addToast({
+          type: 'error',
+          title: 'Não é permitido editar o campo "name"',
+          description:
+            'Este campo é uma variável chave para podermos otimizar o sistema para você!',
+        });
+      }
+      if (field.name === 'email') {
+        return addToast({
+          type: 'error',
+          title: 'Não é permitido editar o campo "email"',
+          description:
+            'Este campo é uma variável chave para podermos otimizar o sistema para você!',
+        });
+      }
       try {
         updateFormField({
           ...field,

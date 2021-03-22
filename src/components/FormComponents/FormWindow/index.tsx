@@ -150,12 +150,14 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
                     sortFormFields(currentForm.fields).map(field => {
                       return (
                         <FakeField formStyles={formStyles} key={field.id}>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditField(field)}
-                          >
-                            <MdEdit size={24} />
-                          </button>
+                          {field.name !== 'name' && field.name !== 'email' && (
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditField(field)}
+                            >
+                              <MdEdit size={24} />
+                            </button>
+                          )}
                           <strong>{field.title}</strong>
                           <FakeInput />
                         </FakeField>
