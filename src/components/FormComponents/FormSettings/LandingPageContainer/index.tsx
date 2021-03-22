@@ -33,9 +33,10 @@ const LandingPageContainer: React.FC = () => {
   }, [currentForm, currentForm.landingPage]);
 
   useEffect(() => {
-    if (currentForm && currentForm.landingPage && currentForm.landingPage.id)
+    if (currentForm && currentForm.landingPage && currentForm.landingPage.id) {
       setUrl(currentForm.landingPage.url);
-    setLandingPageId(currentForm.landingPage.id);
+      setLandingPageId(currentForm.landingPage.id);
+    }
   }, [currentForm, currentForm.landingPage]);
 
   const handleEditLandingPageField = useCallback((e: boolean) => {

@@ -20,4 +20,8 @@ export const Container = styled.div`
     color: var(--letter-color-1);
     font-size: 1rem;
   }
+
+  button {
+    font-size: 1.4rem;
+  }
 `;

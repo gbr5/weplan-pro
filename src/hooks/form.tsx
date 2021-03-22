@@ -64,6 +64,7 @@ const FormProvider: React.FC = ({ children }) => {
         addToast({
           type: 'success',
           title: 'Formulário criado com sucesso!',
+          description: 'Para ativar vá até configurações do formulário',
         });
         getForms();
         return thisForm.data;

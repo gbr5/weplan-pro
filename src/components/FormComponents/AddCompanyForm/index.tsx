@@ -1,14 +1,14 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
 import { Container } from './styles';
-import Input from '../Input';
-import ICreateFormDTO from '../../dtos/ICreateFormDTO';
-import Button from '../Button';
-import { textToSlug } from '../../utils/textToSlug';
-import { useForm } from '../../hooks/form';
-import WindowFormContainer from '../FormComponents/WindowFormContainer';
+import Input from '../../Input';
+import ICreateFormDTO from '../../../dtos/ICreateFormDTO';
+import Button from '../../Button';
+import { textToSlug } from '../../../utils/textToSlug';
+import { useForm } from '../../../hooks/form';
+import WindowFormContainer from '../WindowFormContainer';
 
 interface IProps {
   handleCloseWindow: Function;
@@ -17,7 +17,7 @@ interface IProps {
 const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
   const { createForm, handleSetCurrentForm } = useForm();
   const formRef = useRef<FormHandles>(null);
-  const [isFormActive, setIsFormActive] = useState(false);
+  // const [isFormActive, setIsFormActive] = useState(false);
 
   const handleSubmitForm = useCallback(
     (e: ICreateFormDTO) => {
@@ -27,7 +27,7 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
           name: e.name,
           title: e.title,
           message: e.message,
-          isActive: isFormActive,
+          isActive: false,
         }).then(response => {
           handleSetCurrentForm(response);
           handleCloseWindow();
@@ -36,12 +36,12 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
         throw new Error(err);
       }
     },
-    [isFormActive, createForm, handleCloseWindow, handleSetCurrentForm],
+    [createForm, handleCloseWindow, handleSetCurrentForm],
   );
 
-  const handleIsFormActive = useCallback((e: boolean) => {
-    setIsFormActive(e);
-  }, []);
+  // const handleIsFormActive = useCallback((e: boolean) => {
+  //   setIsFormActive(e);
+  // }, []);
 
   return (
     <WindowFormContainer onHandleCloseWindow={handleCloseWindow}>
@@ -64,7 +64,7 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
             <p>Ele aparece como um texto menor abaixo do título</p>
             <Input name="message" />
           </section>
-          <span>
+          {/* <span>
             <strong>Ative o formulário para utilizá-lo</strong>
             <p>Caso queira, poderá alterar posteriormente</p>
             <button
@@ -73,7 +73,7 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
             >
               {isFormActive ? 'Ativo' : 'Inativo'}
             </button>
-          </span>
+          </span> */}
 
           <Button type="submit">Criar formulário</Button>
         </Container>
