@@ -13,4 +13,11 @@ export const Container = styled.div`
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--secondary-color);
   }
+
+  > p {
+    margin-top: 0.5rem;
+    line-height: 1.6rem;
+    color: var(--letter-color-1);
+    font-size: 1rem;
+  }
 `;

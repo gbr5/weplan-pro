@@ -100,7 +100,7 @@ const ResponseEmailContainer: React.FC = () => {
       )}
 
       <h2>E-mail Resposta</h2>
-      <p>Confirmação para quem respondeu ao formulário.</p>
+      <p>E-mail de confirmação para quem respondeu ao formulário.</p>
       {emailResponse && responseEmailNotification ? (
         <Button
           type="button"

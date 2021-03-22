@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
-import Swicth from 'react-switch';
-import { ThemeContext } from 'styled-components';
+import React from 'react';
 
 import { MdHelp, MdSchedule } from 'react-icons/md';
 import { FiPower } from 'react-icons/fi';
 import WindowContainer from '../WindowContainer';
-import { useToggleTheme } from '../../hooks/theme';
 
-import { Container, ToggleButton } from './styles';
+import { Container } from './styles';
+// ToggleButton
 import { useAuth } from '../../hooks/auth';
 
 interface IProps {
@@ -26,8 +24,8 @@ const SettingsWindow: React.FC<IProps> = ({
   handleOpenFormDashboard,
 }) => {
   const { signOut } = useAuth();
-  const { themeBoolean, toggleTheme } = useToggleTheme();
-  const { colors } = useContext(ThemeContext);
+  // const { themeBoolean, toggleTheme } = useToggleTheme();
+  // const { colors } = useContext(ThemeContext);
   return (
     <WindowContainer
       onHandleCloseWindow={() => handleCloseWindow()}
@@ -40,7 +38,7 @@ const SettingsWindow: React.FC<IProps> = ({
       }}
     >
       <Container>
-        <ToggleButton>
+        {/* <ToggleButton>
           <h3>Tema {themeBoolean ? 'Escuro' : 'Claro'}</h3>
           <Swicth
             onChange={toggleTheme}
@@ -53,7 +51,7 @@ const SettingsWindow: React.FC<IProps> = ({
             offColor={colors.secondary}
             onColor={colors.primary}
           />
-        </ToggleButton>
+        </ToggleButton> */}
         <button type="button" onClick={() => handleContactPageDashboard()}>
           Página de contato
         </button>
@@ -62,13 +60,13 @@ const SettingsWindow: React.FC<IProps> = ({
         </button>
 
         <button type="button" onClick={() => handleAppointmentsWindow()}>
-          <MdSchedule />
+          <MdSchedule size={24} />
         </button>
         <button type="button" onClick={() => handleHelpWindow()}>
-          <MdHelp />
+          <MdHelp size={24} />
         </button>
         <button type="button" onClick={signOut}>
-          <FiPower />
+          <FiPower size={24} />
         </button>
       </Container>
     </WindowContainer>
