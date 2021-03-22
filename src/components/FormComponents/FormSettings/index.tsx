@@ -38,6 +38,16 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
     }
   }, [currentForm]);
 
+  useEffect(() => {
+    if (
+      currentForm &&
+      currentForm.landingPage &&
+      currentForm.landingPage.isActive
+    ) {
+      setLandingPage(true);
+    }
+  }, [currentForm]);
+
   const handleAddEmail = useCallback(
     (e: IEmailInputSubmitDTO) => {
       if (internalEmailNotification && internalEmailNotification.id) {

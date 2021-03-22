@@ -35,7 +35,13 @@ const LandingPageContainer: React.FC = () => {
   }, []);
 
   const handleIsLandingPageActive = useCallback((e: boolean) => {
-    setIsLandingPageActive(e);
+    if (currentForm && currentForm.landingPage && currentForm.landingPage.id) {
+      updateFormLandingPage({
+        ...currentForm.landingPage,
+        isActive: e,
+      });
+      setIsLandingPageActive(e);
+    }
   }, []);
 
   const handleSubmit = useCallback(
