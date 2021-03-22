@@ -11,6 +11,7 @@ import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import AddFormField from '../AddFormField';
 import EditFormField from '../EditFormField';
 import EditFormStyles from '../EditFormStyles';
+import FormSettings from '../FormSettings';
 import WindowFormContainer from '../WindowFormContainer';
 
 import {
@@ -36,6 +37,7 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
   const [addFormField, setAddFormField] = useState(false);
   const [editFormField, setEditFormField] = useState(false);
   const [editFormStyles, setEditFormStyles] = useState(false);
+  const [formSettings, setFormSettings] = useState(false);
   const [selectedField, setSelectedField] = useState({} as IFormFieldDTO);
   const [formStyles, setFormStyles] = useState(defaultFormStyles);
   const [deleteFormConfirmation, setDeleteFormConfirmation] = useState(false);
@@ -71,6 +73,10 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
     setEditFormStyles(e);
   }, []);
 
+  const handleFormSettings = useCallback((e: boolean) => {
+    setFormSettings(e);
+  }, []);
+
   useEffect(() => {
     if (currentForm && currentForm.styles) {
       const { background_color } = currentForm.styles;
@@ -88,6 +94,9 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
 
   return (
     <>
+      {formSettings && (
+        <FormSettings closeWindow={() => handleFormSettings(false)} />
+      )}
       {editFormStyles && (
         <EditFormStyles
           form={currentForm}
@@ -112,7 +121,9 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
               <button type="button" onClick={() => handleFormStyles(true)}>
                 Definir Cores
               </button>
-              <button type="button">Opções de envio</button>
+              <button type="button" onClick={() => handleFormSettings(true)}>
+                Configurações
+              </button>
             </FirstButtonRow>
             <UrlContainer>
               <strong>Url</strong>

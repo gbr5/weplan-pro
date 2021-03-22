@@ -19,7 +19,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  padding: 32px;
+  padding: 1rem;
   background: var(--header-background-color);
   border-radius: 8px;
   gap: 16px;
