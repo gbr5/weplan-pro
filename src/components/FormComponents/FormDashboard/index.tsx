@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import IFormDTO from '../../../dtos/IFormDTO';
 import { useForm } from '../../../hooks/form';
-import AddCompanyForm from '../../AddCompanyForm';
+import AddCompanyForm from '../AddCompanyForm';
 import FormWindow from '../FormWindow';
 
 import { Container, ListContainer, FormSection, ButtonForm } from './styles';

@@ -35,6 +35,10 @@ export const SubContainer = styled.div`
     border-radius: 4px;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   }
+
+  button {
+    font-size: 1.5rem;
+  }
 `;
 
 interface IButtonProps {

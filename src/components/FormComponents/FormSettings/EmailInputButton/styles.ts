@@ -17,6 +17,7 @@ export const EmailButton = styled.button`
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
   padding-left: 1rem;
+  margin: 0.5rem 0 0.5rem;
 
   p {
     text-align: left;
