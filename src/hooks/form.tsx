@@ -139,8 +139,9 @@ const FormProvider: React.FC = ({ children }) => {
       if (findSameNotificationType) {
         return addToast({
           type: 'error',
-          title: 'Já existe um e-mail para este tipo de notificação.',
-          description: 'Tente editá-lo!',
+          title: 'Este formulário já possui um e-mail resposta.',
+          description:
+            'Não é possível ter mais de um. Tente editar o já existente!',
         });
       }
       try {
@@ -155,14 +156,13 @@ const FormProvider: React.FC = ({ children }) => {
         getForm(data.form_id);
         return addToast({
           type: 'success',
-          title: 'Notificação criada com sucesso!',
-          description: 'Só falta adicionar os destinatários.',
+          title: 'E-mail resposta criado com sucesso!',
         });
       } catch (err) {
         addToast({
           type: 'error',
-          title: 'Erro ao criar configurações do email!',
-          description: 'Tente novamente',
+          title: 'Erro ao criar e-mail resposta!',
+          description: 'Tente novamente!',
         });
         throw new Error(err);
       }
@@ -183,8 +183,9 @@ const FormProvider: React.FC = ({ children }) => {
       if (form.landingPage) {
         return addToast({
           type: 'error',
-          title: 'Já existe uma landing page associada a esse formulário.',
-          description: 'Tente editá-la!',
+          title: 'Este formulário já possui uma landing page!',
+          description:
+            'Não é possível ter mais de uma. Tente editar a já existente.',
         });
       }
       try {
