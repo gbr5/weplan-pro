@@ -4,31 +4,36 @@ import styled, { css } from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+
+  > p {
+    margin-top: 0.5rem;
+    line-height: 1.6rem;
+    color: var(--letter-color-1);
+    font-size: 1rem;
+  }
 `;
 
 export const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  background: var(--background-color);
   border-radius: 8px;
   width: 100%;
-  height: 100%;
   padding: 0.5rem;
   margin-top: 1rem;
-  padding-bottom: 1.5rem;
+  padding: 1rem 0;
 
-  span {
+  h3 {
     display: flex;
-    flex-direction: column;
-    margin-top: 1rem;
-
-    h3 {
-      text-align: left;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--letter-color-2);
-    }
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: var(--background-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--letter-color-2);
+    height: 3rem;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -45,14 +50,16 @@ export const BooleanButton = styled.button<IButtonProps>`
   border: none;
 
   width: 100%;
-  height: 40px;
+  height: 3rem;
+  border-radius: 4px;
 
+  margin: 1rem 0 1rem;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
 
   ${props =>
     props.isActive &&
     css`
-      background: var(--secondary-color);
+      background: var(--title-color);
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
     `}
 `;

@@ -41,6 +41,10 @@ const SuccessMessageContainer: React.FC = () => {
   return (
     <Container>
       <h2>Mensagem de sucesso</h2>
+      <p>
+        A mensagem de sucesso é exibida após a conclusão do formulário, caso a
+        landing page não esteja ativa
+      </p>
       {editSuccessMessage ? (
         <SubContainer>
           <EditButton

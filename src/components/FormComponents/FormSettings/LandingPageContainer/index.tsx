@@ -17,6 +17,8 @@ const LandingPageContainer: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [editLandingPage, setEditLandingPage] = useState(false);
   const [isLandingPageActive, setIsLandingPageActive] = useState(false);
+  const [url, setUrl] = useState('');
+  const [landingPageId, setLandingPageId] = useState('');
 
   useEffect(() => {
     if (
@@ -28,7 +30,13 @@ const LandingPageContainer: React.FC = () => {
     } else {
       setIsLandingPageActive(false);
     }
-  }, [currentForm]);
+  }, [currentForm, currentForm.landingPage]);
+
+  useEffect(() => {
+    if (currentForm && currentForm.landingPage && currentForm.landingPage.id)
+      setUrl(currentForm.landingPage.url);
+    setLandingPageId(currentForm.landingPage.id);
+  }, [currentForm, currentForm.landingPage]);
 
   const handleEditLandingPageField = useCallback((e: boolean) => {
     setEditLandingPage(e);
@@ -36,11 +44,7 @@ const LandingPageContainer: React.FC = () => {
 
   const handleIsLandingPageActive = useCallback(
     (e: boolean) => {
-      if (
-        currentForm &&
-        currentForm.landingPage &&
-        currentForm.landingPage.id
-      ) {
+      if (landingPageId !== '') {
         updateFormLandingPage({
           ...currentForm.landingPage,
           isActive: e,
@@ -48,7 +52,7 @@ const LandingPageContainer: React.FC = () => {
         setIsLandingPageActive(e);
       }
     },
-    [currentForm, updateFormLandingPage],
+    [currentForm, updateFormLandingPage, landingPageId],
   );
 
   const handleSubmit = useCallback(
@@ -83,18 +87,14 @@ const LandingPageContainer: React.FC = () => {
     <Container>
       <h2>Landing Page</h2>
       <p>
-        A landing page é uma página externa para onde o usuário será encaminhado
-        após concluir o preenchimento do formulário.
+        A landing page é uma página externa, para onde o usuário será
+        encaminhado após concluir o preenchimento do formulário.
       </p>
       <SubContainer>
         {editLandingPage ? (
           <>
             <Form ref={formRef} onSubmit={handleSubmit}>
-              <Input
-                name="url"
-                defaultValue={currentForm.landingPage.url || ''}
-                placeholder={currentForm.landingPage.url || ''}
-              />
+              <Input name="url" defaultValue={url} placeholder={url} />
             </Form>
             <Button type="submit">Salvar</Button>
             <Button
@@ -115,22 +115,18 @@ const LandingPageContainer: React.FC = () => {
               type="button"
               onClick={() => handleEditLandingPageField(true)}
             >
-              {currentForm &&
-              currentForm.landingPage &&
-              currentForm.landingPage.id
-                ? 'Editar'
-                : 'Criar'}
+              {landingPageId !== '' && url !== '' ? 'Editar' : 'Criar'}
             </Button>
           </>
         )}
-      </SubContainer>
 
-      <BooleanButton
-        onClick={() => handleIsLandingPageActive(!isLandingPageActive)}
-        isActive={isLandingPageActive}
-      >
-        {isLandingPageActive ? 'Ativo' : 'Inativo'}
-      </BooleanButton>
+        <BooleanButton
+          onClick={() => handleIsLandingPageActive(!isLandingPageActive)}
+          isActive={isLandingPageActive}
+        >
+          {isLandingPageActive ? 'Ativo' : 'Inativo'}
+        </BooleanButton>
+      </SubContainer>
     </Container>
   );
 };

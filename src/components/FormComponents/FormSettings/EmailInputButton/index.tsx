@@ -4,7 +4,7 @@ import IFormEmailNotificationRecipientDTO from '../../../../dtos/IFormEmailNotif
 import { useForm } from '../../../../hooks/form';
 import EmailInput from '../../../GeneralComponents/EmailInput';
 
-import { Container } from './styles';
+import { Container, EmailButton } from './styles';
 
 interface IProps {
   recipient: IFormEmailNotificationRecipientDTO;
@@ -36,9 +36,12 @@ const EmailInputButton: React.FC<IProps> = ({ recipient }) => {
           handleSubmit={(e: IEmailInputSubmitDTO) => handleEditRecipient(e)}
         />
       ) : (
-        <button type="button" onClick={() => handleEditRecipientField(true)}>
-          {recipient.sending_type} | {recipient.email}
-        </button>
+        <EmailButton
+          type="button"
+          onClick={() => handleEditRecipientField(true)}
+        >
+          <p>{recipient.sending_type}</p> | <strong>{recipient.email}</strong>
+        </EmailButton>
       )}
     </Container>
   );

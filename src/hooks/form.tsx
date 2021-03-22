@@ -182,8 +182,8 @@ const FormProvider: React.FC = ({ children }) => {
       if (form.landingPage) {
         return addToast({
           type: 'error',
-          title: 'Já existe um e-mail para este tipo de notificação.',
-          description: 'Tente editá-lo!',
+          title: 'Já existe uma landing page associada a esse formulário.',
+          description: 'Tente editá-la!',
         });
       }
       try {
