@@ -17,6 +17,8 @@ const LandingPageContainer: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [editLandingPage, setEditLandingPage] = useState(false);
   const [isLandingPageActive, setIsLandingPageActive] = useState(false);
+  const [url, setUrl] = useState('');
+  const [landingPageId, setLandingPageId] = useState('');
 
   useEffect(() => {
     if (
@@ -24,6 +26,8 @@ const LandingPageContainer: React.FC = () => {
       currentForm.landingPage &&
       currentForm.landingPage.isActive
     ) {
+      setUrl(currentForm.landingPage.url);
+      setLandingPageId(currentForm.landingPage.id);
       setIsLandingPageActive(currentForm.landingPage.isActive);
     } else {
       setIsLandingPageActive(false);
@@ -36,11 +40,7 @@ const LandingPageContainer: React.FC = () => {
 
   const handleIsLandingPageActive = useCallback(
     (e: boolean) => {
-      if (
-        currentForm &&
-        currentForm.landingPage &&
-        currentForm.landingPage.id
-      ) {
+      if (landingPageId !== '') {
         updateFormLandingPage({
           ...currentForm.landingPage,
           isActive: e,
@@ -48,30 +48,29 @@ const LandingPageContainer: React.FC = () => {
         setIsLandingPageActive(e);
       }
     },
-    [currentForm, updateFormLandingPage],
+    [currentForm, updateFormLandingPage, landingPageId],
   );
 
   const handleSubmit = useCallback(
     (e: IFormLandingPageDTO) => {
-      if (currentForm) {
-        if (currentForm.landingPage && currentForm.landingPage.id) {
-          updateFormLandingPage({
-            id: currentForm.landingPage.id,
-            form_id: currentForm.id,
-            url: e.url,
-            isActive: isLandingPageActive,
-          });
-        } else {
-          createFormLandingPage({
-            form_id: currentForm.id,
-            isActive: isLandingPageActive,
-            url: e.url,
-          });
-        }
-        setEditLandingPage(false);
+      if (landingPageId !== '') {
+        updateFormLandingPage({
+          id: currentForm.landingPage.id,
+          form_id: currentForm.id,
+          url: e.url,
+          isActive: isLandingPageActive,
+        });
+      } else {
+        createFormLandingPage({
+          form_id: currentForm.id,
+          isActive: isLandingPageActive,
+          url: e.url,
+        });
       }
+      setEditLandingPage(false);
     },
     [
+      landingPageId,
       currentForm,
       createFormLandingPage,
       updateFormLandingPage,
@@ -90,11 +89,7 @@ const LandingPageContainer: React.FC = () => {
         {editLandingPage ? (
           <>
             <Form ref={formRef} onSubmit={handleSubmit}>
-              <Input
-                name="url"
-                defaultValue={currentForm.landingPage.url || ''}
-                placeholder={currentForm.landingPage.url || ''}
-              />
+              <Input name="url" defaultValue={url} placeholder={url} />
             </Form>
             <Button type="submit">Salvar</Button>
             <Button
@@ -115,11 +110,7 @@ const LandingPageContainer: React.FC = () => {
               type="button"
               onClick={() => handleEditLandingPageField(true)}
             >
-              {currentForm &&
-              currentForm.landingPage &&
-              currentForm.landingPage.id
-                ? 'Editar'
-                : 'Criar'}
+              {landingPageId !== '' ? 'Editar' : 'Criar'}
             </Button>
           </>
         )}
