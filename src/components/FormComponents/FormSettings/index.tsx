@@ -82,7 +82,8 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
     >
       <Container>
         <aside>
-          <h2>Configurações {currentForm && currentForm.name}</h2>
+          <h3>Configurações</h3>
+          <h2>{currentForm && currentForm.name}</h2>
         </aside>
         <section>
           <h2>E-mail de notificação interna</h2>
@@ -108,7 +109,7 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
         <section>
           <h2>Após Preenchimento</h2>
           <strong>Quando o formulário for enviado</strong>
-          <strong>o usuário será encaminhado para</strong>
+          <strong>o usuário será encaminhado para:</strong>
           <ButtonContainer>
             <BooleanButton
               onClick={() => handleIsLandingPageActive(true)}

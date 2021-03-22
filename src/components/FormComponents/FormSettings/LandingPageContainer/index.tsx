@@ -26,13 +26,17 @@ const LandingPageContainer: React.FC = () => {
       currentForm.landingPage &&
       currentForm.landingPage.isActive
     ) {
-      setUrl(currentForm.landingPage.url);
-      setLandingPageId(currentForm.landingPage.id);
       setIsLandingPageActive(currentForm.landingPage.isActive);
     } else {
       setIsLandingPageActive(false);
     }
-  }, [currentForm]);
+  }, [currentForm, currentForm.landingPage]);
+
+  useEffect(() => {
+    if (currentForm && currentForm.landingPage && currentForm.landingPage.id)
+      setUrl(currentForm.landingPage.url);
+    setLandingPageId(currentForm.landingPage.id);
+  }, [currentForm, currentForm.landingPage]);
 
   const handleEditLandingPageField = useCallback((e: boolean) => {
     setEditLandingPage(e);
@@ -53,24 +57,25 @@ const LandingPageContainer: React.FC = () => {
 
   const handleSubmit = useCallback(
     (e: IFormLandingPageDTO) => {
-      if (landingPageId !== '') {
-        updateFormLandingPage({
-          id: currentForm.landingPage.id,
-          form_id: currentForm.id,
-          url: e.url,
-          isActive: isLandingPageActive,
-        });
-      } else {
-        createFormLandingPage({
-          form_id: currentForm.id,
-          isActive: isLandingPageActive,
-          url: e.url,
-        });
+      if (currentForm) {
+        if (currentForm.landingPage && currentForm.landingPage.id) {
+          updateFormLandingPage({
+            id: currentForm.landingPage.id,
+            form_id: currentForm.id,
+            url: e.url,
+            isActive: isLandingPageActive,
+          });
+        } else {
+          createFormLandingPage({
+            form_id: currentForm.id,
+            isActive: isLandingPageActive,
+            url: e.url,
+          });
+        }
+        setEditLandingPage(false);
       }
-      setEditLandingPage(false);
     },
     [
-      landingPageId,
       currentForm,
       createFormLandingPage,
       updateFormLandingPage,
@@ -82,8 +87,8 @@ const LandingPageContainer: React.FC = () => {
     <Container>
       <h2>Landing Page</h2>
       <p>
-        A landing page é uma página externa para onde o usuário será encaminhado
-        após concluir o preenchimento do formulário.
+        A landing page é uma página externa, para onde o usuário será
+        encaminhado após concluir o preenchimento do formulário.
       </p>
       <SubContainer>
         {editLandingPage ? (
@@ -110,18 +115,18 @@ const LandingPageContainer: React.FC = () => {
               type="button"
               onClick={() => handleEditLandingPageField(true)}
             >
-              {landingPageId !== '' ? 'Editar' : 'Criar'}
+              {landingPageId !== '' && url !== '' ? 'Editar' : 'Criar'}
             </Button>
           </>
         )}
-      </SubContainer>
 
-      <BooleanButton
-        onClick={() => handleIsLandingPageActive(!isLandingPageActive)}
-        isActive={isLandingPageActive}
-      >
-        {isLandingPageActive ? 'Ativo' : 'Inativo'}
-      </BooleanButton>
+        <BooleanButton
+          onClick={() => handleIsLandingPageActive(!isLandingPageActive)}
+          isActive={isLandingPageActive}
+        >
+          {isLandingPageActive ? 'Ativo' : 'Inativo'}
+        </BooleanButton>
+      </SubContainer>
     </Container>
   );
 };

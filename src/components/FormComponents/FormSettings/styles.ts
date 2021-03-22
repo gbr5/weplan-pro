@@ -5,7 +5,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  gap: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   width: 100%;
@@ -17,7 +16,23 @@ export const Container = styled.div`
   overflow-y: scroll;
 
   aside {
+    display: flex;
+    flex-direction: column;
     position: relative;
+    margin-bottom: 1rem;
+    flex: 1;
+
+    h3 {
+      color: var(--title-color);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      /* font-size:  */
+      border-bottom: 1px solid var(--title-color);
+      text-transform: capitalize;
+      text-align: center;
+      padding-bottom: 0.5rem;
+    }
 
     > button {
       position: absolute;
@@ -37,12 +52,17 @@ export const Container = styled.div`
     padding: 1rem 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
     text-align: center;
+    margin: 1rem 0 1rem;
 
     h2 {
       width: 100%;
       text-align: center;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--secondary-color);
+    }
+    > strong {
+      color: var(--letter-color-1);
+      font-size: 1.1rem;
     }
   }
   section:last-child {
@@ -81,7 +101,7 @@ export const AddField = styled.button`
 
   transition: 0.3s;
 
-  margin: 2rem auto;
+  margin: 1rem auto 2rem;
 
   &:hover {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
@@ -92,9 +112,8 @@ export const AddField = styled.button`
 export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
-  gap: 1rem;
 `;
 
 interface IButtonProps {
@@ -125,4 +144,11 @@ export const BooleanButton = styled.button<IButtonProps>`
       color: var(--secondary-color);
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
     `}
+
+  &:first-child {
+    margin-right: 1rem;
+  }
+  &:last-child {
+    margin-left: 1rem;
+  }
 `;
