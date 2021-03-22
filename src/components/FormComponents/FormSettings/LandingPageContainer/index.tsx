@@ -34,15 +34,22 @@ const LandingPageContainer: React.FC = () => {
     setEditLandingPage(e);
   }, []);
 
-  const handleIsLandingPageActive = useCallback((e: boolean) => {
-    if (currentForm && currentForm.landingPage && currentForm.landingPage.id) {
-      updateFormLandingPage({
-        ...currentForm.landingPage,
-        isActive: e,
-      });
-      setIsLandingPageActive(e);
-    }
-  }, []);
+  const handleIsLandingPageActive = useCallback(
+    (e: boolean) => {
+      if (
+        currentForm &&
+        currentForm.landingPage &&
+        currentForm.landingPage.id
+      ) {
+        updateFormLandingPage({
+          ...currentForm.landingPage,
+          isActive: e,
+        });
+        setIsLandingPageActive(e);
+      }
+    },
+    [currentForm, updateFormLandingPage],
+  );
 
   const handleSubmit = useCallback(
     (e: IFormLandingPageDTO) => {
