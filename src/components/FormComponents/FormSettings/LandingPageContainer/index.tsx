@@ -96,8 +96,8 @@ const LandingPageContainer: React.FC = () => {
           <>
             <Form ref={formRef} onSubmit={handleSubmit}>
               <Input name="url" defaultValue={url} placeholder={url} />
+              <Button type="submit">Salvar</Button>
             </Form>
-            <Button type="submit">Salvar</Button>
             <Button
               type="button"
               onClick={() => handleEditLandingPageField(false)}
