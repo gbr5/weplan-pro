@@ -1,9 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { MdAccessAlarm, MdClose, MdContacts, MdGridOn } from 'react-icons/md';
+import {
+  MdClose,
+  MdContacts,
+  MdGridOn,
+  MdNotificationsActive,
+} from 'react-icons/md';
 import { useContactPage } from '../../../hooks/contactPages';
 import WindowFormContainer from '../../FormComponents/WindowFormContainer';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import ContactPageSettings from '../ContactPageSettings/index';
+import ImageGridSection from '../ImageGridSection';
 import UpdatePageImage from '../UpdatePageImage';
 
 import {
@@ -22,8 +28,18 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
   const [editContactPageSettings, setEditContactPageSettings] = useState(false);
   const [editContactPageImage, setEditContactPageImage] = useState(false);
   const [activeCampaignBanner, setActiveCampaignBanner] = useState(false);
+  const [imageGridSection, setImageGridSection] = useState(true);
   const iconSize = 24;
   const { currentContactPage } = useContactPage();
+
+  const closeAllSection = useCallback(() => {
+    setImageGridSection(false);
+  }, []);
+
+  const handleOpenImageGridSection = useCallback(() => {
+    closeAllSection();
+    setImageGridSection(true);
+  }, [closeAllSection]);
 
   const handleEditHeader = useCallback((e: boolean) => {
     setEditHeader(e);
@@ -116,16 +132,18 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
           <h2>{currentContactPage.title}</h2>
         </ContactPageHeader>
         <PageMenu>
-          <button type="button">
+          <button onClick={handleOpenImageGridSection} type="button">
             <MdGridOn size={iconSize} />
           </button>
           <button type="button">
-            <MdAccessAlarm size={iconSize} />
+            <MdNotificationsActive size={iconSize} />
           </button>
           <button type="button">
             <MdContacts size={iconSize} />
           </button>
         </PageMenu>
+
+        {imageGridSection && <ImageGridSection />}
       </Container>
     </WindowFormContainer>
   );

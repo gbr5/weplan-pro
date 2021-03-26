@@ -1,27 +1,27 @@
 import React, { ChangeEvent, useCallback } from 'react';
 import { FiCamera } from 'react-icons/fi';
-import WindowContainer from '../../WindowContainer';
-import avatar from '../../../assets/avatar_placeholder.jpg';
+import WindowContainer from '../../../WindowContainer';
+import avatar from '../../../../assets/avatar_placeholder.jpg';
 
 import { Container, AvatarInput } from './styles';
-import { useContactPage } from '../../../hooks/contactPages';
+import { useContactPage } from '../../../../hooks/contactPages';
 
 interface IProps {
   closeWindow: Function;
 }
 
-const UpdatePageImage: React.FC<IProps> = ({ closeWindow }) => {
-  const { currentContactPage, updateContactPageMainImage } = useContactPage();
+const UploadPostImage: React.FC<IProps> = ({ closeWindow }) => {
+  const { patchContactPageImagePost } = useContactPage();
 
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updateContactPageMainImage(e);
+      patchContactPageImagePost(e);
       closeWindow();
     },
-    [updateContactPageMainImage, closeWindow],
+    [closeWindow, patchContactPageImagePost],
   );
 
-  const showAvatar = currentContactPage.main_image_url || avatar;
+  const showAvatar = avatar;
 
   return (
     <WindowContainer
@@ -35,9 +35,8 @@ const UpdatePageImage: React.FC<IProps> = ({ closeWindow }) => {
       }}
     >
       <Container>
-        <strong>Faça o upload da imagem principal da página</strong>
         <AvatarInput>
-          <img src={showAvatar} alt="Page" />
+          <img src={showAvatar} alt="Page Avatar" />
           <label htmlFor="image_url">
             <FiCamera />
             <input type="file" id="image_url" onChange={handleAvatarChange} />
@@ -48,4 +47,4 @@ const UpdatePageImage: React.FC<IProps> = ({ closeWindow }) => {
   );
 };
 
-export default UpdatePageImage;
+export default UploadPostImage;
