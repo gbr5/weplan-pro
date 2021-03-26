@@ -9,6 +9,7 @@ import React, {
 import IContactPageCampaignDTO from '../dtos/IContactPageCampaignDTO';
 import IContactPageContextDTO from '../dtos/IContactPageContextDTO';
 import IContactPageDTO from '../dtos/IContactPageDTO';
+import IContactPagePostDTO from '../dtos/IContactPagePostDTO';
 import IContactPageSEODTO from '../dtos/IContactPageSEODTO';
 import ICreateContactPageCampaignDTO from '../dtos/ICreateContactPageCampaignDTO';
 import ICreateContactPageDTO from '../dtos/ICreateContactPageDTO';
@@ -23,6 +24,9 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 
 const ContactPageProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
+  const [currentContactPagePost, setCurrentContactPagePost] = useState<
+    IContactPagePostDTO
+  >({} as IContactPagePostDTO);
   const [currentContactPage, setCurrentContactPage] = useState<IContactPageDTO>(
     {} as IContactPageDTO,
   );
@@ -89,7 +93,6 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages],
   );
-
   const createContactPageSEO = useCallback(
     async (data: ICreateContactPageSEODTO) => {
       try {
@@ -119,7 +122,6 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPage, getContactPages, currentContactPage],
   );
-
   const createContactPageCampaign = useCallback(
     async (data: ICreateContactPageCampaignDTO) => {
       try {
@@ -152,11 +154,46 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPage, getContactPages, currentContactPage],
   );
-
+  const handleSetCurrentPost = useCallback((e: IContactPagePostDTO) => {
+    setCurrentContactPagePost(e);
+  }, []);
+  const createContactPagePost = useCallback(
+    async (destination_url: string) => {
+      try {
+        const post = await api.post('contact-page-post', {
+          contact_page_id: currentContactPage.id,
+          destination_url,
+          image_url: '',
+        });
+        handleSetCurrentPost(post.data);
+        addToast({
+          type: 'success',
+          title: 'Post criado com sucesso!',
+          description: 'Agora falta fazer o upload da imagem!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+        return post.data;
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível criar o post',
+          description: 'Tente novamente!',
+        });
+        throw new Error(err);
+      }
+    },
+    [
+      addToast,
+      getContactPage,
+      getContactPages,
+      currentContactPage,
+      handleSetCurrentPost,
+    ],
+  );
   const removeCurrentContactPage = useCallback(() => {
     setCurrentContactPage({} as IContactPageDTO);
   }, []);
-
   const handleSetCurrentContactPage = useCallback(
     (data: IContactPageDTO) => {
       removeCurrentContactPage();
@@ -164,7 +201,6 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [removeCurrentContactPage],
   );
-
   const updateContactPage = useCallback(
     async (data: IContactPageDTO) => {
       try {
@@ -192,7 +228,6 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage],
   );
-
   const updateContactPageSEO = useCallback(
     async (data: IContactPageSEODTO) => {
       try {
@@ -219,7 +254,30 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage],
   );
-
+  const updateContactPagePost = useCallback(
+    async (data: IContactPagePostDTO) => {
+      try {
+        await api.put(`contact-page-post/${data.id}`, {
+          image_url: data.image_url,
+          destination_url: data.destination_url,
+        });
+        addToast({
+          type: 'success',
+          title: 'Post da página atualizado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o post da página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage.id],
+  );
   const updateContactPageCampaign = useCallback(
     async (data: IContactPageCampaignDTO) => {
       try {
@@ -283,6 +341,47 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage, currentContactPage],
   );
+  const patchContactPageImagePost = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      try {
+        if (e.target.files) {
+          const data = new FormData();
+          const postId = currentContactPage.id;
+          data.append('image_url', e.target.files[0]);
+          await api.patch(
+            `/contact-page-image-post/${currentContactPagePost.id}`,
+            data,
+          );
+          getContactPage(postId);
+          getContactPages();
+          addToast({
+            type: 'success',
+            title: 'Imagem atualizado com sucesso.',
+          });
+        } else {
+          addToast({
+            type: 'error',
+            title: 'Erro na atualização',
+            description: 'Ocorreu um erro a imagem da página, tente novamente.',
+          });
+        }
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o campo!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [
+      addToast,
+      currentContactPagePost,
+      getContactPages,
+      getContactPage,
+      currentContactPage,
+    ],
+  );
   const deleteContactPage = useCallback(
     async (id: string) => {
       try {
@@ -312,6 +411,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
           title: 'SEO deletado com sucesso!',
         });
         getContactPages();
+        getContactPage(currentContactPage.id);
       } catch (err) {
         addToast({
           type: 'error',
@@ -321,7 +421,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getContactPages],
+    [addToast, getContactPage, currentContactPage, getContactPages],
   );
   const deleteContactPageCampaign = useCallback(
     async (id: string) => {
@@ -332,6 +432,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
           title: 'Campanha deletada com sucesso!',
         });
         getContactPages();
+        getContactPage(currentContactPage.id);
       } catch (err) {
         addToast({
           type: 'error',
@@ -341,27 +442,53 @@ const ContactPageProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getContactPages],
+    [addToast, getContactPages, getContactPage, currentContactPage],
   );
-
+  const deleteContactPagePost = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`contact-page-post/${id}`);
+        addToast({
+          type: 'success',
+          title: 'Post deletado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar post!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage],
+  );
   return (
     <ContactPageContext.Provider
       value={{
         currentContactPage,
+        currentContactPagePost,
         currentContactPages,
         getContactPage,
         getContactPages,
         createContactPage,
         createContactPageSEO,
         createContactPageCampaign,
+        createContactPagePost,
         updateContactPage,
         updateContactPageSEO,
         updateContactPageCampaign,
         updateContactPageMainImage,
+        updateContactPagePost,
         deleteContactPage,
         deleteContactPageSEO,
         deleteContactPageCampaign,
+        deleteContactPagePost,
         handleSetCurrentContactPage,
+        handleSetCurrentPost,
+        patchContactPageImagePost,
       }}
     >
       {children}
