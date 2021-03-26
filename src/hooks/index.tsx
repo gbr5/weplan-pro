@@ -4,12 +4,15 @@ import { AuthProvider } from './auth';
 import { ToastProvider } from './toast';
 import { ThemeModeProvider } from './theme';
 import { FormProvider } from './form';
+import { ContactPageProvider } from './contactPages';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
     <AuthProvider>
       <ToastProvider>
-        <FormProvider>{children}</FormProvider>
+        <FormProvider>
+          <ContactPageProvider>{children}</ContactPageProvider>
+        </FormProvider>
       </ToastProvider>
     </AuthProvider>
   </ThemeModeProvider>

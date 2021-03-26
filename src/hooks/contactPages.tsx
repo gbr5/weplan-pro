@@ -1,0 +1,382 @@
+import React, {
+  ChangeEvent,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import IContactPageCampaignDTO from '../dtos/IContactPageCampaignDTO';
+import IContactPageContextDTO from '../dtos/IContactPageContextDTO';
+import IContactPageDTO from '../dtos/IContactPageDTO';
+import IContactPageSEODTO from '../dtos/IContactPageSEODTO';
+import ICreateContactPageCampaignDTO from '../dtos/ICreateContactPageCampaignDTO';
+import ICreateContactPageDTO from '../dtos/ICreateContactPageDTO';
+import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
+import api from '../services/api';
+import { textToSlug } from '../utils/textToSlug';
+import { useToast } from './toast';
+
+const ContactPageContext = createContext<IContactPageContextDTO>(
+  {} as IContactPageContextDTO,
+);
+
+const ContactPageProvider: React.FC = ({ children }) => {
+  const { addToast } = useToast();
+  const [currentContactPage, setCurrentContactPage] = useState<IContactPageDTO>(
+    {} as IContactPageDTO,
+  );
+  const [currentContactPages, setCurrentContactPages] = useState<
+    IContactPageDTO[]
+  >([]);
+
+  const getContactPage = useCallback(async (id: string) => {
+    try {
+      const response = await api.get<IContactPageDTO>(
+        `/user-contact-page/show/${id}`,
+      );
+      setCurrentContactPage(response.data);
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
+  const getContactPages = useCallback(async () => {
+    try {
+      const response = await api.get<IContactPageDTO[]>('/user-contact-page');
+      setCurrentContactPages(response.data);
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    getContactPages();
+  }, [getContactPages]);
+
+  const createContactPage = useCallback(
+    async (data: ICreateContactPageDTO) => {
+      try {
+        const thisContactPage = await api.post<IContactPageDTO>(
+          'user-contact-page',
+          {
+            slug: textToSlug(data.title),
+            cta_label: data.cta_label,
+            title: data.title,
+            cta_url: data.cta_url,
+            image_url: '',
+            isActive: false,
+          },
+        );
+        addToast({
+          type: 'success',
+          title: 'ContactPageulário criado com sucesso!',
+          description: 'Para ativar vá até configurações do formulário',
+        });
+        getContactPages();
+        setCurrentContactPage(thisContactPage.data);
+        return thisContactPage.data;
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao criar formulário!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages],
+  );
+
+  const createContactPageSEO = useCallback(
+    async (data: ICreateContactPageSEODTO) => {
+      try {
+        await api.post('contact-page-seo', {
+          contact_page_id: data.contact_page_id,
+          image_url: currentContactPage.image_url || '',
+          title: data.title,
+          description: data.description,
+          shouldIndexPage: true,
+        });
+        addToast({
+          type: 'success',
+          title: 'SEO criado com sucesso!',
+          description:
+            'Agora a sua página está pronta para ser indexada no google!',
+        });
+        getContactPages();
+        getContactPage(data.contact_page_id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível criar o SEO da sua página',
+          description: 'Tente novamente!',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPage, getContactPages, currentContactPage],
+  );
+
+  const createContactPageCampaign = useCallback(
+    async (data: ICreateContactPageCampaignDTO) => {
+      try {
+        await api.post('contact-page-campaign', {
+          contact_page_id: currentContactPage.id,
+          name: data.name,
+          message: data.message,
+          cta_label: data.cta_label,
+          url: data.url,
+          text_color: '#111',
+          background_color: '#ff99af',
+          cta_text_color: '#111',
+          cta_background_color: '#ff9900',
+        });
+        addToast({
+          type: 'success',
+          title: 'Campanha criado com sucesso!',
+          description: 'Você já pode customizar e ativar a sua campanha!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível criar a campanha da sua página',
+          description: 'Tente novamente!',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPage, getContactPages, currentContactPage],
+  );
+
+  const removeCurrentContactPage = useCallback(() => {
+    setCurrentContactPage({} as IContactPageDTO);
+  }, []);
+
+  const handleSetCurrentContactPage = useCallback(
+    (data: IContactPageDTO) => {
+      removeCurrentContactPage();
+      setCurrentContactPage(data);
+    },
+    [removeCurrentContactPage],
+  );
+
+  const updateContactPage = useCallback(
+    async (data: IContactPageDTO) => {
+      try {
+        await api.put(`user-contact-page/${data.id}`, {
+          slug: data.slug,
+          title: data.title,
+          cta_label: data.cta_label,
+          cta_url: data.cta_url,
+          isActive: data.isActive,
+        });
+        addToast({
+          type: 'success',
+          title: 'Página de contato atualizada com sucesso!',
+        });
+        getContactPages();
+        getContactPage(data.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar a página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage],
+  );
+
+  const updateContactPageSEO = useCallback(
+    async (data: IContactPageSEODTO) => {
+      try {
+        await api.put(`contact-page-seo/${data.id}`, {
+          image_url: data.image_url,
+          title: data.title,
+          description: data.description,
+          shouldIndexPage: data.shouldIndexPage,
+        });
+        addToast({
+          type: 'success',
+          title: 'SEO da página atualizado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(data.contact_page_id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o SEO da página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage],
+  );
+
+  const updateContactPageCampaign = useCallback(
+    async (data: IContactPageCampaignDTO) => {
+      try {
+        await api.put(`contact-page-campaign/${data.id}`, {
+          name: data.name,
+          message: data.message,
+          cta_label: data.cta_label,
+          url: data.url,
+          text_color: data.text_color,
+          background_color: data.background_color,
+          cta_text_color: data.cta_text_color,
+          cta_background_color: data.cta_background_color,
+          isActive: data.isActive,
+        });
+        addToast({
+          type: 'success',
+          title: 'Campanha da página atualizada com sucesso!',
+        });
+        getContactPage(currentContactPage.id);
+        getContactPages();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar a campanha da página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, currentContactPage, getContactPages, getContactPage],
+  );
+  const updateContactPageMainImage = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      try {
+        if (e.target.files) {
+          const data = new FormData();
+          const pageId = currentContactPage.id;
+          data.append('image_url', e.target.files[0]);
+          await api.patch(`/user-contact-page/image/${pageId}`, data);
+          getContactPage(pageId);
+          getContactPages();
+          addToast({
+            type: 'success',
+            title: 'Imagem atualizado com sucesso.',
+          });
+        } else {
+          addToast({
+            type: 'error',
+            title: 'Erro na atualização',
+            description: 'Ocorreu um erro a imagem da página, tente novamente.',
+          });
+        }
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o campo!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage],
+  );
+  const deleteContactPage = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`user-contact-page/${id}`);
+        addToast({
+          type: 'success',
+          title: 'ContactPageulário deletado com sucesso!',
+        });
+        getContactPages();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar formulário!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages],
+  );
+  const deleteContactPageSEO = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`contact-page-seo/${id}`);
+        addToast({
+          type: 'success',
+          title: 'SEO deletado com sucesso!',
+        });
+        getContactPages();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar SEO!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages],
+  );
+  const deleteContactPageCampaign = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`contact-page-campaign/${id}`);
+        addToast({
+          type: 'success',
+          title: 'Campanha deletada com sucesso!',
+        });
+        getContactPages();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar campanha!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages],
+  );
+
+  return (
+    <ContactPageContext.Provider
+      value={{
+        currentContactPage,
+        currentContactPages,
+        getContactPage,
+        getContactPages,
+        createContactPage,
+        createContactPageSEO,
+        createContactPageCampaign,
+        updateContactPage,
+        updateContactPageSEO,
+        updateContactPageCampaign,
+        updateContactPageMainImage,
+        deleteContactPage,
+        deleteContactPageSEO,
+        deleteContactPageCampaign,
+        handleSetCurrentContactPage,
+      }}
+    >
+      {children}
+    </ContactPageContext.Provider>
+  );
+};
+
+function useContactPage(): IContactPageContextDTO {
+  const context = useContext(ContactPageContext);
+
+  if (!context) {
+    throw new Error('useToggleTheme must be used within a theme provider');
+  }
+
+  return context;
+}
+
+export { ContactPageProvider, useContactPage };

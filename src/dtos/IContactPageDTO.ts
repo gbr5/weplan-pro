@@ -7,7 +7,6 @@ import IContactPageSEODTO from './IContactPageSEODTO';
 export default interface IContactPageDTO {
   id: string;
   slug: string;
-  image_url: string;
   title: string;
   cta_label: string;
   cta_url: string;
@@ -17,4 +16,6 @@ export default interface IContactPageDTO {
   forms: IContactPageFormDTO[];
   campaigns: IContactPageCampaignDTO[];
   seo: IContactPageSEODTO;
+  main_image_url: string;
+  image_url: string;
 }

@@ -17,13 +17,24 @@ interface IProps {
 }
 
 const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
-  const { currentForm, createEmailNotificationRecipient } = useForm();
+  const {
+    currentForm,
+    updateForm,
+    createEmailNotificationRecipient,
+  } = useForm();
   const [addEmail, setAddEmail] = useState(false);
 
   const [landingPage, setLandingPage] = useState(false);
   const [internalEmailNotification, setInternalEmailNotification] = useState(
     {} as IFormEmailNotificationDTO,
   );
+
+  const handleIsFormActive = useCallback(() => {
+    updateForm({
+      ...currentForm,
+      isActive: !currentForm.isActive,
+    });
+  }, [updateForm, currentForm]);
 
   useEffect(() => {
     if (
@@ -85,7 +96,14 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
           <h3>Configurações</h3>
           <h2>{currentForm && currentForm.name}</h2>
         </aside>
+
         <section>
+          <BooleanButton
+            onClick={handleIsFormActive}
+            isActive={currentForm.isActive}
+          >
+            {currentForm.isActive ? 'Formulário Ativo' : 'Ativar Formulário'}
+          </BooleanButton>
           <h2>E-mail de notificação interna</h2>
           {internalEmailNotification &&
             internalEmailNotification.recipients &&

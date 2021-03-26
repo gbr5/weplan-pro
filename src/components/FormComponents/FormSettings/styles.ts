@@ -121,28 +121,27 @@ interface IButtonProps {
 }
 
 export const BooleanButton = styled.button<IButtonProps>`
-  background: var(--secondary-color);
-  color: var(--primary-color);
-  border: none;
-
-  height: 3rem;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  background: ${shade(0.5, '#ff9900')};
+  font-size: 1.2rem;
+
+  border: none;
+
   width: 100%;
+  height: 3rem;
+  border-radius: 4px;
 
-  font-size: 1rem;
-
-  border-radius: 5px;
+  margin-top: 1rem;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
 
   ${props =>
     props.isActive &&
     css`
-      background: ${shade(0.5, '#ff9900')};
-      color: var(--secondary-color);
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+      background: var(--title-color);
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+      font-size: 1rem;
     `}
 
   &:first-child {

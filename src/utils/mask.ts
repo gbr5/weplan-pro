@@ -2,11 +2,13 @@ export function slug(
   e: React.FormEvent<HTMLInputElement>,
 ): React.FormEvent<HTMLInputElement> {
   let { value } = e.currentTarget;
+  value = value.toLowerCase();
+  value = value.normalize('NFD');
   value = value.replace(/\s+/g, '-');
-  value = value.replace(/[^\w-]+/g, '');
+  value = value.replace(/[^\w-]+/g, '-');
   value = value.replace(/--+/g, '-');
-  value = value.replace(/^-+/, '');
-  value = value.replace(/-+$/, '');
+  value = value.replace(/^-+/, '-');
+  value = value.replace(/-+$/, '-');
   e.currentTarget.value = value;
 
   return e;
