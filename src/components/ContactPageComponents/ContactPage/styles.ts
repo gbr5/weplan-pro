@@ -77,3 +77,53 @@ export const PageMenu = styled.div`
     border: none;
   }
 `;
+
+interface IActiveCampaignProps {
+  backgroundColor: string;
+  textColor: string;
+  ctaBackgroundColor: string;
+  ctaTextColor: string;
+}
+
+export const ActiveCampaign = styled.div<IActiveCampaignProps>`
+  display: flex;
+  background: ${props => props.backgroundColor};
+  color: ${props => props.textColor};
+  height: 3rem;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+
+  position: relative;
+
+  a {
+    background: ${props => props.ctaBackgroundColor};
+    color: ${props => props.ctaTextColor};
+    text-decoration: none;
+    height: 2rem;
+    padding: 0.4rem;
+    min-width: 6rem;
+    text-align: center;
+
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+    &:hover {
+      background: ${props => shade(0.2, `${props.ctaBackgroundColor}`)};
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  span {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    button {
+      background: transparent;
+      border: none;
+      color: var(--red-color);
+    }
+  }
+`;
