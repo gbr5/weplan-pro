@@ -9,6 +9,7 @@ import { useContactPage } from '../../../hooks/contactPages';
 import WindowFormContainer from '../../FormComponents/WindowFormContainer';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import ContactPageSettings from '../ContactPageSettings/index';
+import CTASection from '../CTASection';
 import ImageGridSection from '../ImageGridSection';
 import UpdatePageImage from '../UpdatePageImage';
 
@@ -25,16 +26,23 @@ interface IProps {
 
 const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
   const [editHeader, setEditHeader] = useState(false);
+  const [ctaSection, setCTASection] = useState(true);
   const [editContactPageSettings, setEditContactPageSettings] = useState(false);
   const [editContactPageImage, setEditContactPageImage] = useState(false);
   const [activeCampaignBanner, setActiveCampaignBanner] = useState(false);
-  const [imageGridSection, setImageGridSection] = useState(true);
+  const [imageGridSection, setImageGridSection] = useState(false);
   const iconSize = 24;
   const { currentContactPage } = useContactPage();
 
   const closeAllSection = useCallback(() => {
     setImageGridSection(false);
+    setCTASection(false);
   }, []);
+
+  const handleCTASection = useCallback(() => {
+    closeAllSection();
+    setCTASection(true);
+  }, [closeAllSection]);
 
   const handleOpenImageGridSection = useCallback(() => {
     closeAllSection();
@@ -135,7 +143,7 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
           <button onClick={handleOpenImageGridSection} type="button">
             <MdGridOn size={iconSize} />
           </button>
-          <button type="button">
+          <button onClick={handleCTASection} type="button">
             <MdNotificationsActive size={iconSize} />
           </button>
           <button type="button">
@@ -144,6 +152,7 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
         </PageMenu>
 
         {imageGridSection && <ImageGridSection />}
+        {ctaSection && <CTASection />}
       </Container>
     </WindowFormContainer>
   );
