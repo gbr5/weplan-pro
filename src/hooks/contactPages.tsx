@@ -9,10 +9,12 @@ import React, {
 import IContactPageCampaignDTO from '../dtos/IContactPageCampaignDTO';
 import IContactPageContextDTO from '../dtos/IContactPageContextDTO';
 import IContactPageDTO from '../dtos/IContactPageDTO';
+import IContactPageLinkDTO from '../dtos/IContactPageLinkDTO';
 import IContactPagePostDTO from '../dtos/IContactPagePostDTO';
 import IContactPageSEODTO from '../dtos/IContactPageSEODTO';
 import ICreateContactPageCampaignDTO from '../dtos/ICreateContactPageCampaignDTO';
 import ICreateContactPageDTO from '../dtos/ICreateContactPageDTO';
+import ICreateContactPageLinkDTO from '../dtos/ICreateContactPageLinkDTO';
 import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
@@ -92,6 +94,36 @@ const ContactPageProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, getContactPages],
+  );
+  const createContactPageLink = useCallback(
+    async (data: ICreateContactPageLinkDTO) => {
+      try {
+        await api.post('contact-page-link', {
+          contact_page_id: currentContactPage.id,
+          label: data.label,
+          url: data.url,
+          text_color: data.text_color,
+          background_color: data.background_color,
+          isActive: true,
+        });
+        addToast({
+          type: 'success',
+          title: 'Botão criado com sucesso!',
+          description:
+            'Agora a sua página está pronta para ser indexada no google!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível criar o botão',
+          description: 'Tente novamente!',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPage, getContactPages, currentContactPage],
   );
   const createContactPageSEO = useCallback(
     async (data: ICreateContactPageSEODTO) => {
@@ -253,6 +285,33 @@ const ContactPageProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, getContactPages, getContactPage],
+  );
+  const updateContactPageLink = useCallback(
+    async (data: IContactPageLinkDTO) => {
+      try {
+        await api.put(`contact-page-link/${data.id}`, {
+          label: data.label,
+          url: data.url,
+          text_color: data.text_color,
+          background_color: data.background_color,
+          isActive: data.isActive,
+        });
+        addToast({
+          type: 'success',
+          title: 'Botão da página atualizado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o botão da página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage.id],
   );
   const updateContactPagePost = useCallback(
     async (data: IContactPagePostDTO) => {
@@ -444,6 +503,27 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage, currentContactPage],
   );
+  const deleteContactPageLink = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`contact-page-link/${id}`);
+        addToast({
+          type: 'success',
+          title: 'Botão deletado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar botão!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage],
+  );
   const deleteContactPagePost = useCallback(
     async (id: string) => {
       try {
@@ -477,15 +557,18 @@ const ContactPageProvider: React.FC = ({ children }) => {
         createContactPageSEO,
         createContactPageCampaign,
         createContactPagePost,
+        createContactPageLink,
         updateContactPage,
         updateContactPageSEO,
         updateContactPageCampaign,
         updateContactPageMainImage,
         updateContactPagePost,
+        updateContactPageLink,
         deleteContactPage,
         deleteContactPageSEO,
         deleteContactPageCampaign,
         deleteContactPagePost,
+        deleteContactPageLink,
         handleSetCurrentContactPage,
         handleSetCurrentPost,
         patchContactPageImagePost,
