@@ -12,10 +12,14 @@ import IStageCardDTO from '../../dtos/IStageCardDTO';
 import ModuleMenu from '../../components/ModuleMenu';
 import ContactPageDashboard from '../../components/ContactPageComponents/ContactPageDashboard';
 import FormDashboard from '../../components/FormComponents/FormDashboard';
+import { useForm } from '../../hooks/form';
+import { useContactPage } from '../../hooks/contactPages';
 
 const SupplierDashboard: React.FC = () => {
+  const { getForms } = useForm();
+  const { getContactPages } = useContactPage();
   const [modulesMenu, setModulesMenu] = useState(true);
-  const [dashboard, setDashboard] = useState(false);
+  const [dashboard, setDashboard] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
   const [productionSection, setProductionSection] = useState(false);
   const [projectSection, setProjectSection] = useState(false);
@@ -23,7 +27,7 @@ const SupplierDashboard: React.FC = () => {
   const [title, setTitle] = useState('Dashboard');
   const [selectedFunnel, setSelectedFunnel] = useState('');
   const [cardPage, setCardPage] = useState(false);
-  const [contactPageDashboard, setContactPageDashboard] = useState(true);
+  const [contactPageDashboard, setContactPageDashboard] = useState(false);
   const [formPageDashboard, setFormPageDashboard] = useState(false);
   const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(
     {} as IStageCardDTO,
@@ -42,13 +46,15 @@ const SupplierDashboard: React.FC = () => {
 
   const handleContactPageDashboard = useCallback(() => {
     closeAllWindows();
+    getContactPages();
     setContactPageDashboard(true);
-  }, [closeAllWindows]);
+  }, [closeAllWindows, getContactPages]);
 
   const handleFormDashboard = useCallback(() => {
     closeAllWindows();
     setFormPageDashboard(true);
-  }, [closeAllWindows]);
+    getForms();
+  }, [closeAllWindows, getForms]);
 
   const handleChangeModule = useCallback(
     (props: string) => {
