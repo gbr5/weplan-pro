@@ -128,8 +128,8 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
             ctaTextColor={activeCampaign.text_color}
             textColor={activeCampaign.cta_text_color}
           >
-            <h2>{activeCampaign.message}</h2>
             <a href={activeCampaign.url}>{activeCampaign.cta_label}</a>
+            <h2>{activeCampaign.message}</h2>
             <span>
               <button type="button" onClick={() => handleActiveCampaign(false)}>
                 <MdClose size={24} />
@@ -143,9 +143,9 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
               src={currentContactPage.main_image_url}
               alt={currentContactPage.title}
             />
-            <p>{currentContactPage.cta_label}</p>
+            <h2>{currentContactPage.title}</h2>
           </span>
-          <h2>{currentContactPage.title}</h2>
+          <p>{currentContactPage.cta_label}</p>
         </ContactPageHeader>
         <PageMenu>
           <button onClick={handleOpenImageGridSection} type="button">

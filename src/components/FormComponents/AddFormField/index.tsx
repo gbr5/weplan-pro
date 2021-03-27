@@ -66,6 +66,7 @@ const AddFormField: React.FC<IProps> = ({ closeComponent }) => {
         <section>
           <strong>Tipo do campo</strong>
           <SelectField
+            isSearchable={false}
             defaultValue={fieldTypes[0]}
             name="type"
             options={fieldTypes}
