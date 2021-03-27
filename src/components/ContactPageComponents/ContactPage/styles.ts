@@ -39,27 +39,31 @@ export const ContactPageHeader = styled.button`
       margin-right: 1rem;
     }
 
-    > p {
-      width: 104px;
-      height: 2.5rem;
-      border-radius: 4px;
-      background: var(--secondary-color);
-      text-decoration: none;
-      color: var(--letter-color-5);
+    > h2 {
+      text-transform: capitalize;
+    }
+  }
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  > p {
+    width: 104px;
+    height: 2.5rem;
+    border-radius: 4px;
+    background: var(--secondary-color);
+    text-decoration: none;
+    color: var(--letter-color-5);
 
-      font-size: 1rem;
-      text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    text-transform: uppercase;
 
-      &:hover {
-        background: ${shade(0.2, '#ff9900')};
-        box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-      }
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background: ${shade(0.2, '#ff9900')};
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
     }
   }
 `;
