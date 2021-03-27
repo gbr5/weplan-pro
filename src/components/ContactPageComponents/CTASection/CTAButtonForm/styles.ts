@@ -2,24 +2,30 @@ import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  /* flex-direction: column; */
   position: relative;
 
-  padding: 1rem auto;
   overflow-y: scroll;
   width: 100%;
+  padding: 0.5rem;
+
+  border-radius: 8px;
+  background: #c9c9c9;
 
   span {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.2rem;
+    right: 0.2rem;
     button {
       background: transparent;
       border: none;
       color: var(--red-color);
     }
+  }
+
+  h2 {
+    margin: 1.5rem auto 1rem;
   }
 `;
 

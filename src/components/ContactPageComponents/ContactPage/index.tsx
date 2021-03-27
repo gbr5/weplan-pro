@@ -8,6 +8,7 @@ import {
 import { useContactPage } from '../../../hooks/contactPages';
 import WindowFormContainer from '../../FormComponents/WindowFormContainer';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
+import ContactPageFormSection from '../ContactPageFormSection';
 import ContactPageSettings from '../ContactPageSettings/index';
 import CTASection from '../CTASection';
 import ImageGridSection from '../ImageGridSection';
@@ -27,6 +28,7 @@ interface IProps {
 const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
   const [editHeader, setEditHeader] = useState(false);
   const [ctaSection, setCTASection] = useState(true);
+  const [contactPageFormSection, setContactPageFormSection] = useState(false);
   const [editContactPageSettings, setEditContactPageSettings] = useState(false);
   const [editContactPageImage, setEditContactPageImage] = useState(false);
   const [activeCampaignBanner, setActiveCampaignBanner] = useState(false);
@@ -37,11 +39,17 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
   const closeAllSection = useCallback(() => {
     setImageGridSection(false);
     setCTASection(false);
+    setContactPageFormSection(false);
   }, []);
 
   const handleCTASection = useCallback(() => {
     closeAllSection();
     setCTASection(true);
+  }, [closeAllSection]);
+
+  const handleContactPageFormSection = useCallback(() => {
+    closeAllSection();
+    setContactPageFormSection(true);
   }, [closeAllSection]);
 
   const handleOpenImageGridSection = useCallback(() => {
@@ -146,13 +154,14 @@ const ContactPage: React.FC<IProps> = ({ closeWindow }) => {
           <button onClick={handleCTASection} type="button">
             <MdNotificationsActive size={iconSize} />
           </button>
-          <button type="button">
+          <button onClick={() => handleContactPageFormSection()} type="button">
             <MdContacts size={iconSize} />
           </button>
         </PageMenu>
 
         {imageGridSection && <ImageGridSection />}
         {ctaSection && <CTASection />}
+        {contactPageFormSection && <ContactPageFormSection />}
       </Container>
     </WindowFormContainer>
   );

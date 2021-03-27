@@ -41,5 +41,6 @@ export default interface IFormContextDTO {
   deleteFormEmailNotification: (
     data: Omit<IFormEmailNotificationDTO, 'recipients'>,
   ) => void;
+  deleteFormEmailNotificationRecipient: (id: string) => void;
   handleSetCurrentForm: (data: IFormDTO) => void;
 }

@@ -28,9 +28,6 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
   const [deleteButtonConfirmation, setDeleteButtonConfirmation] = useState(
     false,
   );
-  const [isActive, setIsActive] = useState(
-    (buttonLink && buttonLink.isActive) || false,
-  );
   const [backgroundColor, setBackgroundColor] = useState(
     (buttonLink && buttonLink.background_color) || '#ff9900',
   );
@@ -76,7 +73,6 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
           text_color: textColor,
           label: e.label,
           url: e.url,
-          isActive,
         });
       closeComponent();
     },
@@ -87,12 +83,15 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
       updateContactPageLink,
       textColor,
       backgroundColor,
-      isActive,
     ],
   );
-  const handleIsActive = useCallback((e: boolean) => {
-    setIsActive(e);
-  }, []);
+  const handleIsActive = useCallback(() => {
+    buttonLink &&
+      updateContactPageLink({
+        ...buttonLink,
+        isActive: !buttonLink.isActive,
+      });
+  }, [buttonLink, updateContactPageLink]);
   const label = (buttonLink && buttonLink.label) || '';
   const url = (buttonLink && buttonLink.url) || '';
   return (
@@ -115,21 +114,23 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
         />
       )}
       <Form ref={formRef} onSubmit={handleCTA}>
-        {buttonLink && (
-          <IsActiveButton
-            isActive={isActive}
-            isActiveLabel="CTA Ativo"
-            notActiveLabel="Ativar CTA"
-            onClickFunction={() => handleIsActive(!isActive)}
-          />
-        )}
         <Container>
           <span>
             <button onClick={() => closeComponent()} type="button">
               <MdClose size={24} />
             </button>
           </span>
-          <h2>{buttonLink ? 'Editar Botão CTA' : 'Criar Botão CTA'}</h2>
+          <h2>
+            {buttonLink ? `Editar CTA ${buttonLink.label}` : 'Criar Botão CTA'}
+          </h2>
+          {buttonLink && (
+            <IsActiveButton
+              isActive={buttonLink.isActive}
+              isActiveLabel="CTA Ativo"
+              notActiveLabel="Ativar CTA"
+              onClickFunction={() => handleIsActive()}
+            />
+          )}
           <Field>
             <strong>Texto do botão</strong>
             <Input defaultValue={label} name="label" />
@@ -138,10 +139,16 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
             <strong>Url de destino</strong>
             <Input defaultValue={url} name="url" />
           </Field>
+          {buttonLink && (
+            <Field>
+              <strong>Posição do botão</strong>
+              <Input defaultValue={buttonLink.position} name="position" />
+            </Field>
+          )}
           <Field>
             <strong>Cor de fundo do botão</strong>
             <ButtonExample
-              color="#000"
+              color="#ccc"
               backgroundColor={backgroundColor}
               type="button"
               onClick={() => handleOpenColorPicker('background')}
@@ -152,15 +159,24 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
           <Field>
             <strong>Cor do texto botão</strong>
             <ButtonExample
-              color="#000"
+              color="#ccc"
               backgroundColor={textColor}
               type="button"
               onClick={() => handleOpenColorPicker('text')}
             >
-              Definir Cor de Fundo
+              Definir Cor do Texto
             </ButtonExample>
           </Field>
-          <Button type="submit">Criar</Button>
+          <Button type="submit">{buttonLink ? 'Salvar' : 'Criar'}</Button>
+          <Button
+            style={{
+              background: 'red',
+            }}
+            type="button"
+            onClick={() => handleDeleteCTAConfirmation(true)}
+          >
+            Deletar CTA
+          </Button>
         </Container>
       </Form>
     </>
