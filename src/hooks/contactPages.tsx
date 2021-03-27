@@ -9,6 +9,7 @@ import React, {
 import IContactPageCampaignDTO from '../dtos/IContactPageCampaignDTO';
 import IContactPageContextDTO from '../dtos/IContactPageContextDTO';
 import IContactPageDTO from '../dtos/IContactPageDTO';
+import IContactPageFormDTO from '../dtos/IContactPageFormDTO';
 import IContactPageLinkDTO from '../dtos/IContactPageLinkDTO';
 import IContactPagePostDTO from '../dtos/IContactPagePostDTO';
 import IContactPageSEODTO from '../dtos/IContactPageSEODTO';
@@ -16,6 +17,7 @@ import ICreateContactPageCampaignDTO from '../dtos/ICreateContactPageCampaignDTO
 import ICreateContactPageDTO from '../dtos/ICreateContactPageDTO';
 import ICreateContactPageLinkDTO from '../dtos/ICreateContactPageLinkDTO';
 import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
+import IFormDTO from '../dtos/IFormDTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
 import { useToast } from './toast';
@@ -223,6 +225,31 @@ const ContactPageProvider: React.FC = ({ children }) => {
       handleSetCurrentPost,
     ],
   );
+  const createContactPageForm = useCallback(
+    async (data: IFormDTO) => {
+      try {
+        await api.post('contact-page-form', {
+          contact_page_id: currentContactPage.id,
+          form_id: data.id,
+          isActive: true,
+        });
+        addToast({
+          type: 'success',
+          title: 'Formulário adicionado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível criar o post',
+          description: 'Tente novamente!',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPage, getContactPages, currentContactPage],
+  );
   const removeCurrentContactPage = useCallback(() => {
     setCurrentContactPage({} as IContactPageDTO);
   }, []);
@@ -285,6 +312,29 @@ const ContactPageProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, getContactPages, getContactPage],
+  );
+  const updateContactPageForm = useCallback(
+    async (data: IContactPageFormDTO) => {
+      try {
+        await api.put(`contact-page-form/${data.id}`, {
+          isActive: !data.isActive,
+        });
+        addToast({
+          type: 'success',
+          title: 'Formulário da página atualizado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar o formulário da página!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, currentContactPage, getContactPage],
   );
   const updateContactPageLink = useCallback(
     async (data: IContactPageLinkDTO) => {
@@ -545,6 +595,27 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage, currentContactPage],
   );
+  const deleteContactPageForm = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`contact-page-form/${id}`);
+        addToast({
+          type: 'success',
+          title: 'Formulário deletado com sucesso!',
+        });
+        getContactPages();
+        getContactPage(currentContactPage.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar formulário!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getContactPages, getContactPage, currentContactPage],
+  );
   return (
     <ContactPageContext.Provider
       value={{
@@ -557,17 +628,20 @@ const ContactPageProvider: React.FC = ({ children }) => {
         createContactPageSEO,
         createContactPageCampaign,
         createContactPagePost,
+        createContactPageForm,
         createContactPageLink,
         updateContactPage,
         updateContactPageSEO,
         updateContactPageCampaign,
         updateContactPageMainImage,
+        updateContactPageForm,
         updateContactPagePost,
         updateContactPageLink,
         deleteContactPage,
         deleteContactPageSEO,
         deleteContactPageCampaign,
         deleteContactPagePost,
+        deleteContactPageForm,
         deleteContactPageLink,
         handleSetCurrentContactPage,
         handleSetCurrentPost,

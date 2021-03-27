@@ -2,16 +2,20 @@ import React, { useCallback, useState } from 'react';
 import IEmailInputSubmitDTO from '../../../../dtos/IEmailInputSubmitDTO';
 import IFormEmailNotificationRecipientDTO from '../../../../dtos/IFormEmailNotificationRecipientDTO';
 import { useForm } from '../../../../hooks/form';
+import Button from '../../../Button';
 import EmailInput from '../../../GeneralComponents/EmailInput';
 
-import { Container, EmailButton } from './styles';
+import { Container, EmailButton, EditEmailContainer } from './styles';
 
 interface IProps {
   recipient: IFormEmailNotificationRecipientDTO;
 }
 
 const EmailInputButton: React.FC<IProps> = ({ recipient }) => {
-  const { updateFormEmailNotificationRecipient } = useForm();
+  const {
+    updateFormEmailNotificationRecipient,
+    deleteFormEmailNotificationRecipient,
+  } = useForm();
   const [editRecipient, setEditRecipient] = useState(false);
   const handleEditRecipientField = useCallback((e: boolean) => {
     setEditRecipient(e);
@@ -28,13 +32,22 @@ const EmailInputButton: React.FC<IProps> = ({ recipient }) => {
     },
     [updateFormEmailNotificationRecipient, handleEditRecipientField, recipient],
   );
+
+  const handleDeleteRecipient = useCallback(() => {
+    deleteFormEmailNotificationRecipient(recipient.id);
+  }, [deleteFormEmailNotificationRecipient, recipient]);
   return (
     <Container>
       {editRecipient ? (
-        <EmailInput
-          closeComponent={() => handleEditRecipientField(false)}
-          handleSubmit={(e: IEmailInputSubmitDTO) => handleEditRecipient(e)}
-        />
+        <EditEmailContainer>
+          <EmailInput
+            closeComponent={() => handleEditRecipientField(false)}
+            handleSubmit={(e: IEmailInputSubmitDTO) => handleEditRecipient(e)}
+          />
+          <Button type="button" onClick={handleDeleteRecipient}>
+            Deletar Destinatário
+          </Button>
+        </EditEmailContainer>
       ) : (
         <EmailButton
           type="button"

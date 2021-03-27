@@ -6,6 +6,14 @@ export const Container = styled.div`
   justify-content: center;
 `;
 
+export const EditEmailContainer = styled.div`
+  display: block;
+
+  > button {
+    margin-top: 1rem;
+  }
+`;
+
 export const EmailButton = styled.button`
   display: flex;
   align-items: center;

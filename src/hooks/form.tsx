@@ -480,6 +480,27 @@ const FormProvider: React.FC = ({ children }) => {
     },
     [addToast, getForms, getForm],
   );
+  const deleteFormEmailNotificationRecipient = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`form-email-notification-recipient/${id}`);
+        addToast({
+          type: 'success',
+          title: 'Destinatário deletado com sucesso!',
+        });
+        getForms();
+        currentForm && currentForm.id && getForm(currentForm.id);
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar email!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getForms, currentForm, getForm],
+  );
 
   const defaultFormStyles = {
     background_color: '#c9c9c9',
@@ -519,6 +540,7 @@ const FormProvider: React.FC = ({ children }) => {
         deleteForm,
         deleteFormField,
         deleteFormEmailNotification,
+        deleteFormEmailNotificationRecipient,
         handleSetCurrentForm,
       }}
     >
