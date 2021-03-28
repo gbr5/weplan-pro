@@ -41,6 +41,7 @@ const UserForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const handleSubmit = useCallback(
     async e => {
+      console.log({ e, form });
       setLoading(true);
       try {
         const formResults = JSON.stringify(e)
@@ -57,18 +58,23 @@ const UserForm: React.FC = () => {
               value,
             };
           });
+        console.log({
+          form_id: form.id,
+          formResults,
+        });
 
         await api.post('send-form-results', {
           form_id: form.id,
           formResults,
         });
+        console.log('Cheguei aqui pessu!!');
         addToast({
           type: 'success',
           title: 'Formulário enviado com sucesso',
         });
-        if (form.landingPage && form.landingPage.isActive) {
-          window.location.replace(form.landingPage.url);
-        }
+        // if (form.landingPage && form.landingPage.isActive) {
+        //   window.location.replace(form.landingPage.url);
+        // }
         if (form.successMessage && form.successMessage.title) {
           history.push(`/success-message/${form.successMessage.id}`);
         }
