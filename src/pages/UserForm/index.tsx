@@ -91,16 +91,31 @@ const UserForm: React.FC = () => {
     [form, addToast, history],
   );
 
+  const background = (form.styles && form.styles.background_color) || '#c9c9c9';
+  const text = (form.styles && form.styles.text_color) || '#010101';
+  const buttonBackground =
+    (form.styles && form.styles.button_color) || '#FF9900';
+  const buttonText =
+    (form.styles && form.styles.button_text_color) || '#010101';
   return (
     <Container>
-      <WePlanButtons>
-        <button type="button">Sou WePlan!</button>
-        <button type="button">Quero ser WePlan!</button>
-      </WePlanButtons>
-      <h1>{form.title}</h1>
-      <p>{form.message}</p>
       <Form ref={formRef} onSubmit={handleSubmit}>
-        <FormContainer>
+        <FormContainer
+          background={background}
+          text={text}
+          buttonBackground={buttonBackground}
+          buttonText={buttonText}
+        >
+          <WePlanButtons>
+            <a target="blank" href="https://www.weplan.party">
+              Sou WePlan!
+            </a>
+            <a target="blank" href="https://www.weplan.party/signup">
+              Quero ser WePlan!
+            </a>
+          </WePlanButtons>
+          <h1>{form.title}</h1>
+          <p>{form.message}</p>
           {form &&
             form.fields &&
             form.fields.map(field => {
@@ -115,10 +130,10 @@ const UserForm: React.FC = () => {
                 </InputField>
               );
             })}
+          <Button loading={loading} type="submit">
+            {loading ? <FiLoader /> : 'Enviar'}
+          </Button>
         </FormContainer>
-        <Button loading={loading} type="submit">
-          {loading ? <FiLoader /> : 'Enviar'}
-        </Button>
       </Form>
     </Container>
   );
