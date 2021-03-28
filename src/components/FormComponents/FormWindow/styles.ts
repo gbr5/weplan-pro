@@ -7,19 +7,16 @@ interface IFormProps {
 }
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: block;
   align-items: center;
   justify-content: stretch;
   margin-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
 
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
 
-  overflow-y: scroll;
-
-  gap: 1rem;
+  /* overflow-y: scroll; */
 `;
 
 export const FirstButtonRow = styled.div`
@@ -27,8 +24,6 @@ export const FirstButtonRow = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-
-  gap: 1rem;
 
   > a,
   > button {
@@ -45,10 +40,15 @@ export const FirstButtonRow = styled.div`
     height: 2rem;
     transition: 0.3s;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
-
     &:hover {
       background: ${shade(0.2, `#ff9900`)};
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    &:first-child {
+      margin-right: 0.5rem;
+    }
+    &:last-child {
+      margin-left: 0.5rem;
     }
   }
 `;
@@ -64,7 +64,7 @@ export const UrlContainer = styled.div`
   box-shadow: 0 0 4px 3px rgba(150, 150, 150, 0.2);
   width: 100%;
   max-width: 600px;
-  gap: 1rem;
+  margin: 1rem auto;
 
   strong {
     border-bottom: 1px solid var(--secondary-color);
@@ -80,9 +80,8 @@ export const UrlContainer = styled.div`
 `;
 
 export const FormContainer = styled.div<IFormProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
+  text-align: center;
   justify-content: flex-start;
 
   gap: 1rem;
@@ -92,30 +91,31 @@ export const FormContainer = styled.div<IFormProps>`
   color: ${props => props.formStyles.text_color};
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   width: 100%;
-  height: 100%;
-  min-height: 600px;
+  height: 70vh;
+  /* min-height: 600px; */
   max-width: 600px;
 
   border-radius: 4px;
 
   overflow-y: scroll;
 
-  h1 {
+  > h1 {
     text-transform: capitalize;
     color: ${props => props.formStyles.text_color};
+    margin-bottom: 1rem;
   }
-  p {
+  > p {
     color: ${props => props.formStyles.text_color};
+    margin-bottom: 1rem;
   }
 `;
 
 export const FakeFieldSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  display: block;
   width: 100%;
+  margin: 1rem auto;
 
-  padding: 0 2rem;
+  padding: 0 2rem 2rem;
 
   @media (max-width: 800px) {
     padding: 0 1rem;
@@ -137,7 +137,7 @@ export const AddField = styled.button`
 
   transition: 0.3s;
 
-  margin: 2rem auto;
+  margin: 3rem auto;
 
   &:hover {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
@@ -161,11 +161,13 @@ export const FakeField = styled.div<IFormProps>`
   gap: 1rem;
   align-items: stretch;
   justify-content: center;
+  margin: 1rem auto;
 
   position: relative;
 
-  strong {
+  > strong {
     color: ${props => props.formStyles.text_color};
+    margin: 0.5rem auto;
   }
 
   > button {
@@ -174,6 +176,7 @@ export const FakeField = styled.div<IFormProps>`
     right: 8px;
     background: transparent;
     border: none;
+    margin: 0.5rem auto;
 
     color: var(--red-color);
   }
@@ -198,6 +201,7 @@ export const FakeButton = styled.button<IFormProps>`
   border-radius: 10px;
   padding: 16px;
   width: 100%;
+  margin: 1 2rem;
 
   border: 2px solid var(--input-container-color);
   color: ${props => props.formStyles.button_text_color};

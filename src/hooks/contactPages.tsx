@@ -20,6 +20,7 @@ import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
 import IFormDTO from '../dtos/IFormDTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
+import { useAuth } from './auth';
 import { useToast } from './toast';
 
 const ContactPageContext = createContext<IContactPageContextDTO>(
@@ -27,6 +28,7 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 );
 
 const ContactPageProvider: React.FC = ({ children }) => {
+  const { company } = useAuth();
   const { addToast } = useToast();
   const [currentContactPagePost, setCurrentContactPagePost] = useState<
     IContactPagePostDTO
@@ -61,8 +63,10 @@ const ContactPageProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    getContactPages();
-  }, [getContactPages]);
+    if (company && company.id) {
+      getContactPages();
+    }
+  }, [getContactPages, company]);
 
   const createContactPage = useCallback(
     async (data: ICreateContactPageDTO) => {
