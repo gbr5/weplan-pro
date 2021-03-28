@@ -18,11 +18,13 @@ import IFormLandingPageDTO from '../dtos/IFormLandingPageDTO';
 import IFormStylesDTO from '../dtos/IFormStylesDTO';
 import IFormSuccessMessageDTO from '../dtos/IFormSuccessMessageDTO';
 import api from '../services/api';
+import { useAuth } from './auth';
 import { useToast } from './toast';
 
 const FormContext = createContext<IFormContextDTO>({} as IFormContextDTO);
 
 const FormProvider: React.FC = ({ children }) => {
+  const { company, signOut } = useAuth();
   const { addToast } = useToast();
   const [currentForm, setCurrentForm] = useState<IFormDTO>({} as IFormDTO);
   const [userForms, setUserForms] = useState<IFormDTO[]>([]);
@@ -48,8 +50,12 @@ const FormProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    getForms();
-  }, [getForms]);
+    if (company) {
+      getForms();
+    } else {
+      signOut();
+    }
+  }, [getForms, company, signOut]);
 
   const createForm = useCallback(
     async (data: ICreateFormDTO) => {
