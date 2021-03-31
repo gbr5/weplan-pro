@@ -3,9 +3,9 @@ import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
 import { Container } from './styles';
-import { useAuth } from '../../../../../../hooks/auth';
 import api from '../../../../../../services/api';
 import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
+import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -21,7 +21,7 @@ const AddCardTaskForm: React.FC<IProps> = ({
   cardCheckList,
 }: IProps) => {
   const { addToast } = useToast();
-  const { person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [taskName, setTaskName] = useState('');
 
@@ -40,7 +40,7 @@ const AddCardTaskForm: React.FC<IProps> = ({
         });
       }
       await api.post(`check-lists/tasks/${cardCheckList.check_list.id}`, {
-        owner_id: person.id,
+        owner_id: employee.user.id,
         task: taskName,
         color: 'rgb(179, 182, 178)',
         isActive: true,
@@ -73,7 +73,7 @@ const AddCardTaskForm: React.FC<IProps> = ({
     day,
     month,
     year,
-    person,
+    employee,
   ]);
 
   return (

@@ -8,13 +8,13 @@ import WindowContainer from '../WindowContainer';
 import { useToast } from '../../hooks/toast';
 
 import { Container } from './styles';
-import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import SelectStageWindow from '../SelectStageWindow';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import CreateCompanyCustomerForm from '../CreateCompanyCustomerForm';
 import SelectCustomerWindow from '../SelectCustomerWindow';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -30,8 +30,7 @@ const AddCardForm: React.FC<IProps> = ({
   chosenFunnel,
 }: IProps) => {
   const { addToast } = useToast();
-  const { funnels, person, company } = useAuth();
-
+  const { employee } = useEmployeeAuth();
   const [cardName, setCardName] = useState('');
   const [selectStageWindow, setSelectStageWindow] = useState(true);
   const [selectCustomerWindow, setSelectCustomerWindow] = useState(false);
@@ -69,12 +68,12 @@ const AddCardForm: React.FC<IProps> = ({
       const response = await api.post(`funnels/${selectedStage.id}/cards`, {
         weplanEvent: false,
         name: cardName,
-        card_owner: person.id,
+        card_owner: employee.user.id,
       });
       const card_unique_name = response.data.unique_name;
 
       await api.post(`card/participants`, {
-        user_id: person.id,
+        user_id: employee.user.id,
         card_unique_name,
       });
 
@@ -104,7 +103,7 @@ const AddCardForm: React.FC<IProps> = ({
     addToast,
     cardName,
     selectedStage,
-    person,
+    employee,
     selectedCustomer,
     handleCloseWindow,
     handleSetCurrentFunnel,
@@ -113,7 +112,7 @@ const AddCardForm: React.FC<IProps> = ({
   const getCompanyContacts = useCallback(() => {
     try {
       api
-        .get<ICompanyContactDTO[]>(`/company/contacts/${company.id}`)
+        .get<ICompanyContactDTO[]>(`/company/contacts/${employee.company.id}`)
         .then(response => {
           const companyCustomers = response.data.filter(
             xCustomer => xCustomer.company_contact_type === 'Customer',
@@ -127,7 +126,7 @@ const AddCardForm: React.FC<IProps> = ({
     } catch (err) {
       throw new Error(err);
     }
-  }, [company]);
+  }, [employee.company]);
 
   const handleSelectCustomer = useCallback((props: ICompanyContactDTO) => {
     setSelectedCustomer(props);
@@ -143,13 +142,21 @@ const AddCardForm: React.FC<IProps> = ({
   }, [getCompanyContacts]);
 
   useEffect(() => {
-    const thisFunnel = funnels.find(funnel => funnel.name === chosenFunnel);
-    if (thisFunnel && thisFunnel.stages.length > 0) {
-      setStages(thisFunnel.stages);
-    } else {
-      handleCloseWindow();
+    if (
+      employee.company &&
+      employee.company.supplierFunnels &&
+      employee.company.supplierFunnels.length > 0
+    ) {
+      const thisFunnel = employee.company.supplierFunnels.find(
+        funnel => funnel.name === chosenFunnel,
+      );
+      if (thisFunnel && thisFunnel.stages.length > 0) {
+        setStages(thisFunnel.stages);
+      } else {
+        handleCloseWindow();
+      }
     }
-  }, [funnels, chosenFunnel, handleCloseWindow]);
+  }, [employee.company, chosenFunnel, handleCloseWindow]);
 
   return (
     <>

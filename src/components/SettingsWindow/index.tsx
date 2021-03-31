@@ -6,7 +6,7 @@ import WindowContainer from '../WindowContainer';
 
 import { Container } from './styles';
 // ToggleButton
-import { useAuth } from '../../hooks/auth';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IProps {
   handleCloseWindow: Function;
@@ -23,7 +23,7 @@ const SettingsWindow: React.FC<IProps> = ({
   handleHelpWindow,
   handleOpenFormDashboard,
 }) => {
-  const { signOut } = useAuth();
+  const { signOut } = useEmployeeAuth();
   // const { themeBoolean, toggleTheme } = useToggleTheme();
   // const { colors } = useContext(ThemeContext);
   return (

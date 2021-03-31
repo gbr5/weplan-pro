@@ -3,10 +3,10 @@ import WindowContainer from '../../../../WindowContainer';
 import { useToast } from '../../../../../hooks/toast';
 
 import { Container, Employee } from './styles';
-import { useAuth } from '../../../../../hooks/auth';
 import api from '../../../../../services/api';
 import IUserEmployeeDTO from '../../../../../dtos/IUserEmployeeDTO';
 import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
+import { useEmployeeAuth } from '../../../../../hooks/employeeAuth';
 
 interface IProps {
   card: IStageCardDTO;
@@ -22,7 +22,7 @@ const AddCardParticipantForm: React.FC<IProps> = ({
   getCardParticipants,
 }: IProps) => {
   const { addToast } = useToast();
-  const { person, company } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [employees, setEmployees] = useState<IUserEmployeeDTO[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<IUserEmployeeDTO>(
@@ -34,12 +34,13 @@ const AddCardParticipantForm: React.FC<IProps> = ({
       try {
         api
           .get<IUserEmployeeDTO[]>(
-            `supplier-employees/${company.id}?name=${props}`,
+            `supplier-employees/${employee.company.id}?name=${props}`,
           )
           .then(response => {
             const allEmployees = response.data.filter(
               thisEmployee =>
-                thisEmployee.employee.id !== person.id && thisEmployee.isActive,
+                thisEmployee.employee.id !== employee.user.id &&
+                thisEmployee.isActive,
             );
             setEmployees(allEmployees);
           });
@@ -47,7 +48,7 @@ const AddCardParticipantForm: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [company, person],
+    [employee],
   );
 
   const handleSelectEmployee = useCallback(

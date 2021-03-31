@@ -5,20 +5,30 @@ import avatar from '../../../assets/avatar_placeholder.jpg';
 
 import { Container, AvatarInput } from './styles';
 import { useContactPage } from '../../../hooks/contactPages';
+import Button from '../../Button';
 
 interface IProps {
   closeWindow: Function;
 }
 
 const UpdatePageImage: React.FC<IProps> = ({ closeWindow }) => {
-  const { currentContactPage, updateContactPageMainImage } = useContactPage();
+  const {
+    currentContactPage,
+    updateContactPageMainImage,
+    uploadProgress,
+  } = useContactPage();
 
   const handleAvatarChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updateContactPageMainImage(e);
-      closeWindow();
+      try {
+        updateContactPageMainImage(e);
+      } catch (err) {
+        throw new Error(err);
+      } finally {
+        // closeWindow();
+      }
     },
-    [updateContactPageMainImage, closeWindow],
+    [updateContactPageMainImage],
   );
 
   const showAvatar = currentContactPage.main_image_url || avatar;
@@ -43,6 +53,13 @@ const UpdatePageImage: React.FC<IProps> = ({ closeWindow }) => {
             <input type="file" id="image_url" onChange={handleAvatarChange} />
           </label>
         </AvatarInput>
+        <p>Progresso: {uploadProgress}%</p>
+
+        {uploadProgress === 100 && (
+          <Button type="button" onClick={() => closeWindow()}>
+            Fechar Janela
+          </Button>
+        )}
       </Container>
     </WindowContainer>
   );

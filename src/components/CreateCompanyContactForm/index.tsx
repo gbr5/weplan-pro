@@ -6,10 +6,10 @@ import CreateCompanyContactInfoForm from '../CreateCompanyContactInfoForm';
 import { useToast } from '../../hooks/toast';
 
 import { ContactTypeButton, ContactTypeContainer, Container } from './styles';
-import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import Input from '../Input';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IFormDTO {
   name: string;
@@ -28,7 +28,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
   updateCompanyContacts,
 }: IProps) => {
   const { addToast } = useToast();
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
   const formRef = useRef<FormHandles>(null);
 
   const [company_contact_type, setCompanyContactType] = useState('');
@@ -43,7 +43,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
     async (data: IFormDTO) => {
       try {
         const response = await api.post(`company/contact`, {
-          company_id: company.id,
+          company_id: employee.company.id,
           name: data.name,
           description: data.description,
           company_contact_type,
@@ -70,7 +70,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
     },
     [
       addToast,
-      company,
+      employee.company,
       updateCompanyContacts,
       company_contact_type,
       weplanUser,

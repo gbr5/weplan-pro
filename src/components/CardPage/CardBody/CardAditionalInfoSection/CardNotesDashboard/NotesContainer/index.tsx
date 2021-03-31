@@ -3,9 +3,9 @@ import React, { useCallback, useState } from 'react';
 import { Container } from './styles';
 
 import ICardNotesDTO from '../../../../../../dtos/ICardNotesDTO';
-import { useAuth } from '../../../../../../hooks/auth';
 import api from '../../../../../../services/api';
 import IUserDTO from '../../../../../../dtos/IUserDTO';
+import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 
 interface IProps {
   cardNote: ICardNotesDTO;
@@ -18,7 +18,7 @@ const NotesContainer: React.FC<IProps> = ({
   isSelected,
   handleSetSelectedNote,
 }: IProps) => {
-  const { person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [author, setAuthor] = useState<IUserDTO>({} as IUserDTO);
 
@@ -31,7 +31,7 @@ const NotesContainer: React.FC<IProps> = ({
     }
   }, [cardNote]);
 
-  if (cardNote.user_id !== person.id) {
+  if (cardNote.user_id !== employee.user.id) {
     getAuthor();
   }
 
@@ -43,7 +43,7 @@ const NotesContainer: React.FC<IProps> = ({
       <p>{cardNote.note}</p>
       <div>
         <strong>{cardNote.created_at}</strong>
-        {cardNote.user_id !== person.id && <strong>{author}</strong>}
+        {cardNote.user_id !== employee.user.id && <strong>{author}</strong>}
         {cardNote.created_at !== cardNote.updated_at && (
           <strong>Atualizado{cardNote.updated_at}</strong>
         )}

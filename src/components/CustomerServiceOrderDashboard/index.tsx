@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ICustomerServiceOrderDTO from '../../dtos/ICustomerServiceOrderDTO';
-import { useAuth } from '../../hooks/auth';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 import api from '../../services/api';
 import CustomerServiceOrderWindow from '../CustomerServiceOrderWindow';
 
@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 const CustomerServiceOrderDashboard: React.FC = () => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [serviceOrderWindow, setServiceOrderWindow] = useState(false);
   const [respondedServiceOrders, setRespondedServiceOrders] = useState(false);
@@ -52,7 +52,7 @@ const CustomerServiceOrderDashboard: React.FC = () => {
     try {
       api
         .get<ICustomerServiceOrderDTO[]>(
-          `/service-order/customer/${company.id}`,
+          `/service-order/customer/${employee.company.id}`,
         )
         .then(response => {
           setRespondedCustomerServiceOrders(
@@ -65,7 +65,7 @@ const CustomerServiceOrderDashboard: React.FC = () => {
     } catch (err) {
       throw new Error(err);
     }
-  }, [company]);
+  }, [employee.company]);
 
   useEffect(() => {
     getCustomerServiceOrders();

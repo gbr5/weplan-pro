@@ -7,7 +7,6 @@ import { Container, Menu } from './styles';
 import logo from '../../assets/weplan.svg';
 
 import SettingsWindow from '../SettingsWindow';
-// import { useAuth } from '../../hooks/auth';
 
 interface IPropsDTO {
   module: string;
@@ -24,7 +23,6 @@ const Header: React.FC<IPropsDTO> = ({
   handleContactPageDashboard,
   handleFormDashboard,
 }: IPropsDTO) => {
-  // const { userEmployee } = useAuth();
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
 

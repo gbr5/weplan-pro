@@ -12,6 +12,7 @@ import ICreateContactPageSEODTO from './ICreateContactPageSEODTO';
 import IFormDTO from './IFormDTO';
 
 export default interface IContactPageContextDTO {
+  uploadProgress: number;
   currentContactPage: IContactPageDTO;
   currentContactPagePost: IContactPagePostDTO;
   currentContactPages: IContactPageDTO[];

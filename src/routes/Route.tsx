@@ -5,7 +5,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import { useAuth } from '../hooks/auth';
+import { useEmployeeAuth } from '../hooks/employeeAuth';
 
 interface RouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -17,13 +17,13 @@ const Route: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { userEmployee } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   return (
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        return isPrivate === !!userEmployee ? (
+        return isPrivate === !!employee ? (
           <Component />
         ) : (
           <Redirect

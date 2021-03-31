@@ -3,15 +3,15 @@ import { Form } from '@unform/web';
 import React, { useCallback, useRef, useState } from 'react';
 import { MdEdit } from 'react-icons/md';
 import ICreateContactPageSEODTO from '../../../../dtos/ICreateContactPageSEODTO';
-import { useAuth } from '../../../../hooks/auth';
 import { useContactPage } from '../../../../hooks/contactPages';
+import { useEmployeeAuth } from '../../../../hooks/employeeAuth';
 import Button from '../../../Button';
 import Input from '../../../Input';
 
 import { Container, FormContainer, SEOContainer } from './styles';
 
 const SEOSection: React.FC = () => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
   const formRef = useRef<FormHandles>(null);
   const {
     currentContactPage,
@@ -126,8 +126,8 @@ const SEOSection: React.FC = () => {
                 resultado do Google
               </p>
               <Input
-                defaultValue={`${currentContactPage.title} | ${company.name}`}
-                placeholder={`${currentContactPage.title} | ${company.name}`}
+                defaultValue={`${currentContactPage.title} | ${employee.company.name}`}
+                placeholder={`${currentContactPage.title} | ${employee.company.name}`}
                 name="title"
               />
             </section>

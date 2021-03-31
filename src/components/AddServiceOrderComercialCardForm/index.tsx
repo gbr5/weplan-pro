@@ -8,13 +8,13 @@ import WindowContainer from '../WindowContainer';
 import { useToast } from '../../hooks/toast';
 
 import { Container, Employee } from './styles';
-import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import SelectStageWindow from '../SelectStageWindow';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import ICustomerServiceOrderDTO from '../../dtos/ICustomerServiceOrderDTO';
 import IUserEmployeeDTO from '../../dtos/IUserEmployeeDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -32,7 +32,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
   serviceOrder,
 }: IProps) => {
   const { addToast } = useToast();
-  const { funnels, company, person, userEmployee } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [cardName, setCardName] = useState('');
   const [cardUniqueName, setCardUniqueName] = useState('');
@@ -65,16 +65,16 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
   const getCompanyEmployees = useCallback(() => {
     try {
       api
-        .get<IUserEmployeeDTO[]>(`/supplier-employees/${company.id}`)
+        .get<IUserEmployeeDTO[]>(`/supplier-employees/${employee.company.id}`)
         .then(response => {
           setCompanyEmployees(
-            response.data.filter(employee => employee.isActive),
+            response.data.filter(thisEmployee => thisEmployee.isActive),
           );
         });
     } catch (err) {
       throw new Error(err);
     }
-  }, [company]);
+  }, [employee.company]);
 
   useEffect(() => {
     getCompanyEmployees();
@@ -98,7 +98,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
         const response = await api.post(`funnels/${selectedStage.id}/cards`, {
           weplanEvent: false,
           name: cardName,
-          card_owner: person.id,
+          card_owner: employee.user.id,
         });
         Promise.all([
           api.post(`/card/customer-service-orders`, {
@@ -106,7 +106,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
             card_unique_name: cardName,
           }),
           api.post(`card/participants`, {
-            user_id: userEmployee.id,
+            user_id: employee.id,
             card_unique_name: response.data.card_unique_name,
           }),
         ]);
@@ -167,7 +167,6 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       throw new Error(err);
     }
   }, [
-    userEmployee,
     addToast,
     cardName,
     selectedStage,
@@ -175,7 +174,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
     handleCloseWindow,
     serviceOrder,
     handleCloseAllWindow,
-    person,
+    employee,
     addPersonAsCardOwner,
     addPersonAsCardParticipant,
     selectedCompanyEmployee,
@@ -187,13 +186,15 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
   }, []);
 
   useEffect(() => {
-    const thisFunnel = funnels.find(funnel => funnel.name === 'Comercial');
+    const thisFunnel = employee.company.supplierFunnels.find(
+      funnel => funnel.name === 'Comercial',
+    );
     if (thisFunnel && thisFunnel.stages.length > 0) {
       setStages(thisFunnel.stages);
     } else {
       handleCloseWindow();
     }
-  }, [funnels, handleCloseWindow]);
+  }, [employee.company.supplierFunnels, handleCloseWindow]);
 
   const handlePersonAsCardOwnerQuestion = useCallback((props: boolean) => {
     if (props) {
@@ -288,14 +289,14 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
             width: '60%',
           }}
         >
-          {companyEmployees.map(employee => {
+          {companyEmployees.map(thisEmployee => {
             return (
-              <div key={employee.id}>
+              <div key={thisEmployee.id}>
                 <Employee
                   type="button"
-                  onClick={() => handleSetSelectedEmployee(employee)}
+                  onClick={() => handleSetSelectedEmployee(thisEmployee)}
                 >
-                  <p>{employee.employee.name}</p>
+                  <p>{thisEmployee.employee.name}</p>
                 </Employee>
               </div>
             );

@@ -14,10 +14,6 @@ interface IParams {
   id: string;
 }
 
-interface IFormProps {
-  [key: string]: unknown;
-}
-
 const UserForm: React.FC = () => {
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
@@ -41,7 +37,6 @@ const UserForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const handleSubmit = useCallback(
     async e => {
-      console.log({ e, form });
       setLoading(true);
       try {
         const formResults = JSON.stringify(e)
@@ -58,16 +53,11 @@ const UserForm: React.FC = () => {
               value,
             };
           });
-        console.log({
-          form_id: form.id,
-          formResults,
-        });
 
         await api.post('send-form-results', {
           form_id: form.id,
           formResults,
         });
-        console.log('Cheguei aqui pessu!!');
         addToast({
           type: 'success',
           title: 'Formulário enviado com sucesso',

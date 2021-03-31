@@ -8,7 +8,7 @@ import IFunnelCardInfoFieldDTO from '../../../../dtos/IFunnelCardInfoFieldDTO';
 import IFunnelDTO from '../../../../dtos/IFunnelDTO';
 import IStageCardDTO from '../../../../dtos/IStageCardDTO';
 import IUserDTO from '../../../../dtos/IUserDTO';
-import { useAuth } from '../../../../hooks/auth';
+import { useEmployeeAuth } from '../../../../hooks/employeeAuth';
 import api from '../../../../services/api';
 import CardBudgetsWindow from './CardBudgetsWindow';
 import CardCustomersWindow from './CardCustomersWindow';
@@ -27,7 +27,7 @@ interface IProps {
 }
 
 const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
-  const { funnels } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
@@ -45,14 +45,16 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
   >([]);
 
   useEffect(() => {
-    const thisFunnel = funnels.find(xFunnel => xFunnel.name === selectedFunnel);
+    const thisFunnel = employee.company.supplierFunnels.find(
+      xFunnel => xFunnel.name === selectedFunnel,
+    );
 
     if (thisFunnel) {
       setFunnel(thisFunnel);
     } else {
-      setFunnel(funnels[0]);
+      setFunnel(employee.company.supplierFunnels[0]);
     }
-  }, [funnels, selectedFunnel]);
+  }, [employee.company.supplierFunnels, selectedFunnel]);
 
   const handleCloseAllWindows = useCallback(() => {
     setCardParticipantsWindow(false);

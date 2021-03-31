@@ -5,7 +5,6 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
 
 import getValidationErrors from '../../utils/getValidationErros';
@@ -20,6 +19,8 @@ import {
   AnimationContainer,
   Background,
 } from './styles';
+import GoogleLoginComponent from '../../components/AuthComponents/GoogleLoginComponent';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface SignInFormData {
   email: string;
@@ -30,7 +31,7 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
 
-  const { signIn } = useAuth();
+  const { signIn } = useEmployeeAuth();
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
@@ -92,6 +93,8 @@ const SignIn: React.FC = () => {
           <h1>
             WePlan <strong>PRO</strong>
           </h1>
+
+          <GoogleLoginComponent buttonText="Entre com o Google" />
 
           <Form ref={formRef} onSubmit={handleSubmit}>
             <div>
