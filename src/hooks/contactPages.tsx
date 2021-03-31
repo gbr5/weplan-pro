@@ -483,6 +483,8 @@ const ContactPageProvider: React.FC = ({ children }) => {
             data,
             {
               onUploadProgress,
+              maxContentLength: Infinity,
+              timeout: 180000,
             },
           );
           getContactPage(postId);
