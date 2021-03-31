@@ -440,6 +440,8 @@ const ContactPageProvider: React.FC = ({ children }) => {
           data.append('image_url', e.target.files[0]);
           await api.patch(`/user-contact-page/image/${pageId}`, data, {
             onUploadProgress,
+            maxContentLength: Infinity,
+            timeout: 5000000,
           });
           getContactPage(pageId);
           getContactPages();
@@ -483,7 +485,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
             data,
             {
               onUploadProgress,
-              maxContentLength: 20 * 1024 * 1024,
+              maxContentLength: Infinity,
               timeout: 5000000,
             },
           );
