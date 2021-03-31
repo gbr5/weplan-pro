@@ -2,7 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 import '../../styles/global';
 
-import signInBackgroundImg from '../../assets/signInImage1.jpg';
+import signInBackgroundImg from '../../assets/lotus_flower-by-Daniel_Holtzhouse.jpeg';
 
 export const Container = styled.div`
   height: 100vh;
@@ -25,11 +25,22 @@ export const Content = styled.div`
 const appearFromLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateX(-480px);
+    transform: translateX(-80px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+`;
+
+export const LogoContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  img {
+    height: 3rem;
   }
 `;
 
@@ -64,73 +75,83 @@ export const ToggleButton = styled.span`
     }
   }
 `;
+
 export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    width: 100%;
-    animation: ${appearFromLeft} 0.5s;
-  }
-
+  place-content: center;
+  animation: ${appearFromLeft} 0.5s;
   h1 {
     color: var(--primary-color);
-    font-size: 80px;
+    font-size: 3rem;
   }
-
   form {
-    margin: 40px 0;
+    margin: 1rem 0;
     width: 340px;
     text-align: center;
-    animation: ${appearFromLeft} 0.8s;
-
     h1 {
       color: var(--title-color);
       margin-bottom: 24px;
-      font-size: 32px;
+      font-size: 2rem;
     }
-
     a {
       color: var(--letter-color-5);
       display: block;
       margin-top: 24px;
       text-decoration: none;
       transition: color 0.15s;
-
+      border-radius: 4px;
+      background: rgba(255, 105, 1, 0.4);
+      box-shadow: var(--window-box-shadow);
       &:hover {
-        color: ${shade(0.2, '#f4ede8')};
+        /* color: ${shade(0.2, '#f4ede8')}; */
+        color: var(--title-color);
+        background: rgba(10, 10, 10, 0.4);
+        box-shadow: var(--box-shadow);
       }
     }
   }
-
   > a {
     color: var(--primary-color);
     font-weight: 500;
-    display: block;
     margin-top: 24px;
     text-decoration: none;
     transition: color 0.15s;
-    font-size: 24px;
-
+    font-size: 1rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+
+    background: var(--secondary-color);
+    border-radius: 4px;
+    height: 3rem;
+    width: 100%;
+    padding: 0 1rem;
 
     svg {
-      margin-right: 16px;
+      margin-right: auto;
+    }
+
+    p {
+      margin: auto;
     }
 
     &:hover {
       color: ${shade(0.2, '#ff9000')};
+      background: var(--primary-color);
     }
   }
 `;
 
 export const Background = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  z-index: -1;
   flex: 1;
   background: url(${signInBackgroundImg}) no-repeat center;
   background-size: cover;

@@ -11,13 +11,14 @@ import getValidationErrors from '../../utils/getValidationErros';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-
+import weplanLogo from '../../assets/WePlanLogo.svg';
 import {
   Container,
   ToggleButton,
   Content,
   AnimationContainer,
   Background,
+  LogoContainer,
 } from './styles';
 import GoogleLoginComponent from '../../components/AuthComponents/GoogleLoginComponent';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
@@ -90,26 +91,19 @@ const SignIn: React.FC = () => {
       <Background />
       <Content>
         <AnimationContainer>
-          <h1>
-            WePlan <strong>PRO</strong>
-          </h1>
-
-          <GoogleLoginComponent buttonText="Entre com o Google" />
+          <LogoContainer>
+            <img src={weplanLogo} alt="WePlan - Party" />
+            <h1>WePlan</h1>
+          </LogoContainer>
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <div>
-              <h3>Work</h3> <h1>SMART!</h1>
-            </div>
-            <div>
-              <h2>A genialidade está na simplicidade,</h2>
-            </div>
-            <div>
-              <h2>A excelência nos detalhes !</h2>
-            </div>
+            <h1>Faça seu login</h1>
+            <GoogleLoginComponent buttonText="Entre com o Google" />
             <Input
               name="email"
               icon={FiMail}
-              type="text"
+              type="email"
+              inputMode="email"
               placeholder="E-mail"
             />
             <Input
@@ -124,11 +118,11 @@ const SignIn: React.FC = () => {
           </Form>
           <Link to="/signup">
             <FiLogIn />
-            Cadastrar como empresa de evento
+            <p>Cadastrar como empresa de evento</p>
           </Link>
           <a href="https://www.weplan.party" target="blank">
             <FiLogIn />
-            Cadastrar como usuário final
+            <p>Cadastrar como usuário final</p>
           </a>
         </AnimationContainer>
       </Content>
