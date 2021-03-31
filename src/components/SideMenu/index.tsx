@@ -1,7 +1,6 @@
 import React, { MouseEventHandler } from 'react';
 import { FiCalendar, FiChevronsLeft } from 'react-icons/fi';
 import { MdFlare, MdSchedule, MdToday, MdContacts } from 'react-icons/md';
-import { useAuth } from '../../hooks/auth';
 import checkListIcon from '../../assets/task_icon.svg';
 import meetingIcon from '../../assets/meeting.svg';
 
@@ -11,6 +10,7 @@ import {
   Button,
   MainDashboardImageButton,
 } from './styles';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IProps {
   handleSideMenu: MouseEventHandler;
@@ -29,12 +29,15 @@ const SideMenu: React.FC<IProps> = ({
   handleCompanyDashboard,
   handleCustomerServiceOrderDashboard,
 }: IProps) => {
-  const { companyInfo, company } = useAuth();
+  const { employee } = useEmployeeAuth();
   return (
     <>
       <Container>
         <MainDashboardImageButton type="button" onClick={handleMainDashboard}>
-          <img src={companyInfo.logo_url} alt={company.name} />
+          <img
+            src={employee.company.companyInfo.logo_url}
+            alt={employee.company.name}
+          />
         </MainDashboardImageButton>
         {isActive && (
           <ArrowButton type="button" onClick={handleSideMenu}>

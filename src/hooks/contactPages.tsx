@@ -20,7 +20,7 @@ import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
 import IFormDTO from '../dtos/IFormDTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
-import { useAuth } from './auth';
+import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
 
 const ContactPageContext = createContext<IContactPageContextDTO>(
@@ -28,7 +28,7 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 );
 
 const ContactPageProvider: React.FC = ({ children }) => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
   const { addToast } = useToast();
   const [currentContactPagePost, setCurrentContactPagePost] = useState<
     IContactPagePostDTO
@@ -39,6 +39,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
   const [currentContactPages, setCurrentContactPages] = useState<
     IContactPageDTO[]
   >([]);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const getContactPage = useCallback(async (id: string) => {
     try {
@@ -63,10 +64,10 @@ const ContactPageProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (company && company.id) {
+    if (employee?.company && employee.company.id) {
       getContactPages();
     }
-  }, [getContactPages, company]);
+  }, [getContactPages, employee]);
 
   const createContactPage = useCallback(
     async (data: ICreateContactPageDTO) => {
@@ -391,6 +392,13 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, getContactPages, getContactPage, currentContactPage.id],
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onUploadProgress = useCallback((e: ProgressEvent) => {
+    setUploadProgress(Math.round((e.loaded / e.total) * 100));
+    console.log('Progress: ', `${Math.round((e.loaded / e.total) * 100)} %`);
+  }, []);
+
   const updateContactPageCampaign = useCallback(
     async (data: IContactPageCampaignDTO) => {
       try {
@@ -422,6 +430,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
     },
     [addToast, currentContactPage, getContactPages, getContactPage],
   );
+
   const updateContactPageMainImage = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
       try {
@@ -429,7 +438,9 @@ const ContactPageProvider: React.FC = ({ children }) => {
           const data = new FormData();
           const pageId = currentContactPage.id;
           data.append('image_url', e.target.files[0]);
-          await api.patch(`/user-contact-page/image/${pageId}`, data);
+          await api.patch(`/user-contact-page/image/${pageId}`, data, {
+            onUploadProgress,
+          });
           getContactPage(pageId);
           getContactPages();
           addToast({
@@ -452,7 +463,13 @@ const ContactPageProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getContactPages, getContactPage, currentContactPage],
+    [
+      addToast,
+      getContactPages,
+      getContactPage,
+      onUploadProgress,
+      currentContactPage,
+    ],
   );
   const patchContactPageImagePost = useCallback(
     async (e: ChangeEvent<HTMLInputElement>) => {
@@ -464,6 +481,9 @@ const ContactPageProvider: React.FC = ({ children }) => {
           await api.patch(
             `/contact-page-image-post/${currentContactPagePost.id}`,
             data,
+            {
+              onUploadProgress,
+            },
           );
           getContactPage(postId);
           getContactPages();
@@ -493,6 +513,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
       getContactPages,
       getContactPage,
       currentContactPage,
+      onUploadProgress,
     ],
   );
   const deleteContactPage = useCallback(
@@ -623,6 +644,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
   return (
     <ContactPageContext.Provider
       value={{
+        uploadProgress,
         currentContactPage,
         currentContactPagePost,
         currentContactPages,

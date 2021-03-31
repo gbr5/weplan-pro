@@ -3,10 +3,10 @@ import WindowContainer from '../../../../WindowContainer';
 import { useToast } from '../../../../../hooks/toast';
 
 import { Container, Contact, CompanyContactList } from './styles';
-import { useAuth } from '../../../../../hooks/auth';
 import api from '../../../../../services/api';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
 import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
+import { useEmployeeAuth } from '../../../../../hooks/employeeAuth';
 
 interface IProps {
   card: IStageCardDTO;
@@ -22,7 +22,7 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
   getCardCustomers,
 }: IProps) => {
   const { addToast } = useToast();
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [employees, setContacts] = useState<ICompanyContactDTO[]>([]);
   const [customerDescription, setCustomerDescription] = useState(
@@ -37,7 +37,7 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
       try {
         api
           .get<ICompanyContactDTO[]>(
-            `company/contacts/${company.id}?name=${props}`,
+            `company/contacts/${employee.company.id}?name=${props}`,
           )
           .then(response => {
             setContacts(response.data);
@@ -46,7 +46,7 @@ const CreateCardCustomerForm: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [company],
+    [employee],
   );
 
   const handleSelectContact = useCallback(

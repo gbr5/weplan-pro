@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { Modules, ModuleTitle } from './styles';
 
-import { useAuth } from '../../hooks/auth';
+import { useManagementModule } from '../../hooks/managementModules';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IPropsDTO {
   title: string;
@@ -13,15 +14,20 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
   title,
   handleChangeModule,
 }: IPropsDTO) => {
-  const { company, companyInfo, modules, funnels } = useAuth();
+  const { employee } = useEmployeeAuth();
+  const { getEmployeeModules, employeeModules } = useManagementModule();
+
+  useEffect(() => {
+    getEmployeeModules(employee.id);
+  }, [getEmployeeModules, employee]);
 
   const [comercialModule, setComercialModule] = useState(false);
   const [productionModule, setProductionModule] = useState(false);
   const [projectsModule, setProjectsModule] = useState(false);
   const [financialModule, setFinancialModule] = useState(false);
   useEffect(() => {
-    modules.map(thisModule => {
-      const thisCompanyFunnel = funnels.find(
+    employeeModules.map(thisModule => {
+      const thisCompanyFunnel = employee.company.supplierFunnels.find(
         xFunnel => xFunnel.name === thisModule.management_module,
       );
       if (thisCompanyFunnel) {
@@ -35,11 +41,14 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
       }
       return thisModule;
     });
-  }, [modules, funnels]);
+  }, [employeeModules, employee.company.supplierFunnels]);
 
   return (
     <Modules>
-      <img src={companyInfo.logo_url} alt={company.name} />
+      <img
+        src={employee.company.companyInfo.logo_url}
+        alt={employee.company.name}
+      />
       <button type="button" onClick={() => handleChangeModule('Dashboard')}>
         <ModuleTitle isActive={title === 'Dashboard'}>
           <strong>Dashboard</strong>

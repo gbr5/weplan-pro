@@ -1,20 +1,23 @@
 import React from 'react';
 
-import { AuthProvider } from './auth';
+import { EmployeeAuthProvider } from './employeeAuth';
 import { ToastProvider } from './toast';
 import { ThemeModeProvider } from './theme';
 import { FormProvider } from './form';
 import { ContactPageProvider } from './contactPages';
+import { ManagementModuleProvider } from './managementModules';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
-    <AuthProvider>
+    <EmployeeAuthProvider>
       <ToastProvider>
         <FormProvider>
-          <ContactPageProvider>{children}</ContactPageProvider>
+          <ManagementModuleProvider>
+            <ContactPageProvider>{children}</ContactPageProvider>
+          </ManagementModuleProvider>
         </FormProvider>
       </ToastProvider>
-    </AuthProvider>
+    </EmployeeAuthProvider>
   </ThemeModeProvider>
 );
 

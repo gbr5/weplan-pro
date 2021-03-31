@@ -12,6 +12,7 @@
     "react-color": "^2.19.3",
     "react-day-picker": "^7.4.8",
     "react-dom": "^16.13.1",
+    "react-google-login": "^5.2.2",
     "react-icons": "^3.10.0",
     "react-input-mask": "^2.0.4",
     "react-pdf": "^5.0.0",

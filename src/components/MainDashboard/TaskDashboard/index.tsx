@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdFlag } from 'react-icons/md';
-import { useAuth } from '../../../hooks/auth';
 import api from '../../../services/api';
 
 import sleepyTask from '../../../assets/sleepyTask1.svg';
@@ -19,6 +18,7 @@ import {
 } from './styles';
 import TaskStatusContainer from './TaskStatusContainer';
 import TaskPriorityContainer from './TaskPriorityContainer';
+import { useEmployeeAuth } from '../../../hooks/employeeAuth';
 
 interface ITasks {
   id: string;
@@ -34,7 +34,7 @@ interface ITasks {
 }
 
 const TaskDashboard: React.FC = () => {
-  const { company, person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [employeeNotStartedTasks, setEmployeeNotStartedTasks] = useState<
     ITasks[]
@@ -57,24 +57,29 @@ const TaskDashboard: React.FC = () => {
 
   const getEmployeeTasks = useCallback(() => {
     try {
-      api
-        .get<ITasks[]>(`check-lists/tasks/${company.id}/${person.id}`)
-        .then(response => {
-          const activeTasks = response.data.filter(task => task.isActive);
-          setEmployeeNotStartedTasks(
-            activeTasks.filter(task => task.status === '1'),
-          );
-          setEmployeeInProgressTasks(
-            activeTasks.filter(task => task.status === '2'),
-          );
-          setEmployeeFinishedTasks(
-            activeTasks.filter(task => task.status === '3'),
-          );
-        });
+      employee &&
+        employee.company &&
+        employee.user &&
+        api
+          .get<ITasks[]>(
+            `check-lists/tasks/${employee.company.id}/${employee.user.id}`,
+          )
+          .then(response => {
+            const activeTasks = response.data.filter(task => task.isActive);
+            setEmployeeNotStartedTasks(
+              activeTasks.filter(task => task.status === '1'),
+            );
+            setEmployeeInProgressTasks(
+              activeTasks.filter(task => task.status === '2'),
+            );
+            setEmployeeFinishedTasks(
+              activeTasks.filter(task => task.status === '3'),
+            );
+          });
     } catch (err) {
       throw new Error(err);
     }
-  }, [company, person]);
+  }, [employee]);
 
   useEffect(() => {
     getEmployeeTasks();

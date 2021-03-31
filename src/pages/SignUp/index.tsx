@@ -22,7 +22,7 @@ import {
   QuestionTitle,
   ToggleButton,
 } from './styles';
-import { useAuth } from '../../hooks/auth';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface SignUpForm {
   name: string;
@@ -57,7 +57,7 @@ const SignUp: React.FC = () => {
   const [contactInfo, setContactInfo] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const { addToast } = useToast();
-  const { signIn } = useAuth();
+  const { signIn } = useEmployeeAuth();
 
   const handleSubmitContactInfo = useCallback(
     async (data: IContactInfo) => {

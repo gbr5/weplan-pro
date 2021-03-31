@@ -37,6 +37,7 @@ export const ContactPageHeader = styled.button`
       height: 2.6rem;
       border-radius: 50%;
       margin-right: 1rem;
+      width: 2.6rem;
     }
 
     > h2 {

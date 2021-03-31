@@ -10,12 +10,12 @@ import { Container, ArrowButton, FirstRow, SecondRow } from './styles';
 import TaskDashboard from './TaskDashboard';
 import ITasks from '../../dtos/ITaskDTO';
 import api from '../../services/api';
-import { useAuth } from '../../hooks/auth';
 import CustomerServiceOrderDashboard from '../CustomerServiceOrderDashboard';
 import CompanyContactDashboard from '../CompanyContactDashboard';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 const MainDashboard: React.FC = () => {
-  const { company, person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [sideMenu, setSideMenu] = useState(true);
   const [mainDashboard, setMainDashboard] = useState(true);
@@ -58,18 +58,24 @@ const MainDashboard: React.FC = () => {
   }, [handleCloseAllDashboardAndWindows]);
 
   const getEmployeeTasks = useCallback(() => {
-    api
-      .get<ITasks[]>(`/check-lists/tasks/${company.id}/${person.id}`, {
-        params: {
-          year: selectedDate.getFullYear(),
-          month: selectedDate.getMonth() + 1,
-          day: selectedDate.getDate(),
-        },
-      })
-      .then(response => {
-        setDayTasks(response.data);
-      });
-  }, [selectedDate, company, person]);
+    employee &&
+      employee.company &&
+      employee.user &&
+      api
+        .get<ITasks[]>(
+          `/check-lists/tasks/${employee?.company.id}/${employee.user.id}`,
+          {
+            params: {
+              year: selectedDate.getFullYear(),
+              month: selectedDate.getMonth() + 1,
+              day: selectedDate.getDate(),
+            },
+          },
+        )
+        .then(response => {
+          setDayTasks(response.data);
+        });
+  }, [selectedDate, employee]);
 
   useEffect(() => {
     getEmployeeTasks();

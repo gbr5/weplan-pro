@@ -8,10 +8,10 @@ import { useToast } from '../../../../../hooks/toast';
 import getValidationErrors from '../../../../../utils/getValidationErros';
 import Input from '../../../../Input';
 import { Container } from './styles';
-import { useAuth } from '../../../../../hooks/auth';
 import api from '../../../../../services/api';
 import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
+import { useEmployeeAuth } from '../../../../../hooks/employeeAuth';
 
 interface IFormDTO {
   description: string;
@@ -38,7 +38,7 @@ const AddCardBudgetForm: React.FC<IProps> = ({
   const formRef = useRef<FormHandles>(null);
 
   const { addToast } = useToast();
-  const { company, person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const handleSubmit = useCallback(
     async (data: IFormDTO) => {
@@ -62,8 +62,8 @@ const AddCardBudgetForm: React.FC<IProps> = ({
 
         await api.post(`card/budgets`, {
           customer_id: customers[0].id,
-          company_id: company.id,
-          sales_person_id: person.id,
+          company_id: employee.company.id,
+          sales_person_id: employee.user.id,
           card_unique_name: card.unique_name,
           description: data.description,
           value: Number(data.value),
@@ -92,15 +92,7 @@ const AddCardBudgetForm: React.FC<IProps> = ({
         });
       }
     },
-    [
-      addToast,
-      getCardBudgets,
-      handleCloseWindow,
-      card,
-      company,
-      person,
-      customers,
-    ],
+    [addToast, getCardBudgets, handleCloseWindow, card, employee, customers],
   );
 
   return (

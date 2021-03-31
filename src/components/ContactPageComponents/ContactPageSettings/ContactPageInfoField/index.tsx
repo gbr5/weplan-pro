@@ -3,8 +3,8 @@ import { Form } from '@unform/web';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { MdClose, MdEdit } from 'react-icons/md';
 import IContactPageDTO from '../../../../dtos/IContactPageDTO';
-import { useAuth } from '../../../../hooks/auth';
 import { useContactPage } from '../../../../hooks/contactPages';
+import { useEmployeeAuth } from '../../../../hooks/employeeAuth';
 import Button from '../../../Button';
 import Input from '../../../Input';
 
@@ -19,7 +19,7 @@ const ContactPageInfoField: React.FC<IProps> = ({
   contactPageInfoField,
   defaultContactPageInfoField,
 }) => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
   const [editField, setEditField] = useState(false);
   const { currentContactPage, updateContactPage } = useContactPage();
   const formRef = useRef<FormHandles>(null);
@@ -119,9 +119,9 @@ const ContactPageInfoField: React.FC<IProps> = ({
           <span>
             {contactPageInfoField === 'slug' ? (
               <a
-                href={`${process.env.EXTERNAL_PAGE}/links/${company.trimmed_name}/${defaultContactPageInfoField}`}
+                href={`${process.env.EXTERNAL_PAGE}/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
               >
-                {`${process.env.EXTERNAL_PAGE}/links/${company.trimmed_name}/${defaultContactPageInfoField}`}
+                {`${process.env.EXTERNAL_PAGE}/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
               </a>
             ) : (
               <p>{defaultContactPageInfoField}</p>

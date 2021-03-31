@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
-import { useAuth } from '../../hooks/auth';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 import api from '../../services/api';
 
 import {
@@ -12,7 +12,7 @@ import {
 } from './styles';
 
 const CompanyContactDashboard: React.FC = () => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [weplanContactUsersSection, setWeplanContactUsersSection] = useState(
     false,
@@ -62,7 +62,7 @@ const CompanyContactDashboard: React.FC = () => {
   const getCompanyContacts = useCallback(() => {
     try {
       api
-        .get<ICompanyContactDTO[]>(`company/contacts/${company.id}`)
+        .get<ICompanyContactDTO[]>(`company/contacts/${employee.company.id}`)
         .then(response => {
           setCustomers(
             response.data.filter(
@@ -97,7 +97,7 @@ const CompanyContactDashboard: React.FC = () => {
     } catch (err) {
       throw new Error(err);
     }
-  }, [company]);
+  }, [employee]);
 
   const handleSelectContact = useCallback(
     (props: ICompanyContactDTO) => {

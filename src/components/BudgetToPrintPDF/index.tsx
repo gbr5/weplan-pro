@@ -11,7 +11,6 @@ import React, {
 import { useReactToPrint } from 'react-to-print';
 import ICardBudgetDTO from '../../dtos/ICardBudgetDTO';
 import ICardBudgetInstallmentDTO from '../../dtos/ICardBudgetInstallmentDTO';
-import { useAuth } from '../../hooks/auth';
 import WindowContainer from '../WindowContainer';
 
 import imgPlaceholder from '../../assets/weplan.svg';
@@ -23,6 +22,7 @@ import {
   PrintButtonContainer,
   Footer,
 } from './styles';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 interface IProps extends AnchorHTMLAttributes<HTMLElement> {
   budget: ICardBudgetDTO;
@@ -34,7 +34,7 @@ const BudgetToPrintPDF: React.FC<IProps> = ({
   onHandleCloseWindow,
   ...rest
 }: IProps) => {
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
   const componentRef = useRef<HTMLDivElement>(null);
 
   const [sortedInstallments, setSortedInstallments] = useState<
@@ -84,10 +84,10 @@ const BudgetToPrintPDF: React.FC<IProps> = ({
           <PageHeader>
             <span>
               <img
-                src={company.avatar_url || imgPlaceholder}
-                alt={company.name}
+                src={employee.company.avatar_url || imgPlaceholder}
+                alt={employee.company.name}
               />
-              <h3>Orçamento | {company.name}</h3>
+              <h3>Orçamento | {employee.company.name}</h3>
               <p>{`${today}`}</p>
             </span>
           </PageHeader>

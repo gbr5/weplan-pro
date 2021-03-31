@@ -3,9 +3,9 @@ import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
 import { Container } from './styles';
-import { useAuth } from '../../../../../../hooks/auth';
 import api from '../../../../../../services/api';
 import IStageCardDTO from '../../../../../../dtos/IStageCardDTO';
+import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 
 interface IProps {
   card: IStageCardDTO;
@@ -21,7 +21,7 @@ const CreateNoteForm: React.FC<IProps> = ({
   handleCloseWindow,
 }: IProps) => {
   const { addToast } = useToast();
-  const { person } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const [note, setNote] = useState('');
 
@@ -35,7 +35,7 @@ const CreateNoteForm: React.FC<IProps> = ({
         });
       }
       await api.post(`cards/notes`, {
-        user_id: person.id,
+        user_id: employee.user.id,
         card_unique_name: card.unique_name,
         note,
       });
@@ -56,7 +56,7 @@ const CreateNoteForm: React.FC<IProps> = ({
 
       throw new Error(err);
     }
-  }, [addToast, handleCloseWindow, person, card, getCardNotes, note]);
+  }, [addToast, handleCloseWindow, employee.user, card, getCardNotes, note]);
 
   return (
     <WindowContainer

@@ -3,9 +3,9 @@ import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
 import { Container } from './styles';
-import { useAuth } from '../../../../../../hooks/auth';
 import api from '../../../../../../services/api';
 import IStageCardDTO from '../../../../../../dtos/IStageCardDTO';
+import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 
 interface IProps {
   card: IStageCardDTO;
@@ -21,7 +21,7 @@ const CreateCheckListForm: React.FC<IProps> = ({
   handleCloseWindow,
 }: IProps) => {
   const { addToast } = useToast();
-  const { company } = useAuth();
+  const { employee } = useEmployeeAuth();
 
   const now = new Date();
   const day = now.getDate() + 3;
@@ -46,7 +46,7 @@ const CreateCheckListForm: React.FC<IProps> = ({
         });
       }
       const response = await api.post(`check-lists`, {
-        user_id: company.id,
+        user_id: employee.company.id,
         name: checkListName,
         color: 'rgb(179, 182, 178)',
         isActive: true,
@@ -80,7 +80,7 @@ const CreateCheckListForm: React.FC<IProps> = ({
     addToast,
     checkListName,
     handleCloseWindow,
-    company,
+    employee,
     card,
     day,
     month,

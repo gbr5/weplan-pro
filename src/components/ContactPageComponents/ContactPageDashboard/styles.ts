@@ -67,6 +67,7 @@ export const PageSection = styled.button`
 
   img {
     height: 3rem;
+    width: 3rem;
     border-radius: 50%;
     margin-right: 1rem;
   }
