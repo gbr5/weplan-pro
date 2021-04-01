@@ -6,7 +6,7 @@ export default interface IEmployeeDTO {
   id: string;
   email: string;
   position: string;
-  user: IUserDTO;
+  employeeUser: IUserDTO;
   company: IUserDTO;
   files: IEmployeeFileDTO[];
   confirmations: IUserConfirmationDTO[];

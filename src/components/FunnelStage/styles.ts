@@ -8,12 +8,16 @@ export const Container = styled.div`
   gap: 5px;
   padding: 5px 2px 5px;
   background: var(--background-color);
-  width: 19.485%;
+  min-width: 19.375vw;
   height: 100%;
   box-sizing: border-box;
   border-radius: 5px;
   box-sizing: border-box;
   border: 0.5px solid var(--card-color);
+
+  @media (max-width: 1200px) {
+    min-width: 350px;
+  }
 
   h1 {
     display: flex;
@@ -58,10 +62,10 @@ interface ICardProps {
 
 export const Card = styled.div<ICardProps>`
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: stretch;
   padding: auto;
-  padding-right: 0;
+  padding: 0.5rem;
   background: var(--card-color);
   border-radius: 2px;
   gap: 5px;
@@ -71,11 +75,23 @@ export const Card = styled.div<ICardProps>`
 
   button {
     display: flex;
-    gap: 5px;
+    margin-left: auto;
+    padding: 0;
+    background: transparent;
+    border: none;
+    text-align: left;
 
+    &:first-child {
+      width: 100%;
+    }
+
+    &:last-child {
+      text-align: center;
+      min-width: 2rem;
+    }
     h3 {
       color: var(--letter-color-5);
-      font-size: 12px;
+      font-size: 1.2rem;
       margin-right: auto;
     }
 
@@ -85,16 +101,10 @@ export const Card = styled.div<ICardProps>`
     }
     strong {
       font-weight: 500;
-      font-size: 12px;
-      color: var(--letter-color-5);
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      margin-left: auto;
     }
-  }
-
-  button {
-    margin-left: auto;
-    padding: 0;
-    background: transparent;
-    border: none;
   }
 
   ${props =>
@@ -103,5 +113,11 @@ export const Card = styled.div<ICardProps>`
       background: var(--header-primary);
       color: var(--header-background-color);
       border: 1px solid var(--letter-color-5);
+
+      button {
+        strong {
+          color: var(--primary-color);
+        }
+      }
     `}
 `;

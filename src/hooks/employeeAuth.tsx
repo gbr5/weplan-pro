@@ -67,7 +67,7 @@ const EmployeeAuthProvider: React.FC = ({ children }) => {
     const { token, employee } = response.data;
 
     const findSupplier = await api.get(
-      `/supplier-employees/employee/${employee.user.id}/${employee.company.id}`,
+      `/supplier-employees/employee/${employee.employeeUser.id}/${employee.company.id}`,
     );
     const isSupplier = findSupplier.data;
 

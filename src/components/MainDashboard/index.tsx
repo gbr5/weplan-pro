@@ -60,10 +60,10 @@ const MainDashboard: React.FC = () => {
   const getEmployeeTasks = useCallback(() => {
     employee &&
       employee.company &&
-      employee.user &&
+      employee.employeeUser &&
       api
         .get<ITasks[]>(
-          `/check-lists/tasks/${employee?.company.id}/${employee.user.id}`,
+          `/check-lists/tasks/${employee?.company.id}/${employee.employeeUser.id}`,
           {
             params: {
               year: selectedDate.getFullYear(),

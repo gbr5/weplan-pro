@@ -6,6 +6,7 @@ import { ThemeModeProvider } from './theme';
 import { FormProvider } from './form';
 import { ContactPageProvider } from './contactPages';
 import { ManagementModuleProvider } from './managementModules';
+import { StageCardProvider } from './stageCard';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
@@ -13,7 +14,9 @@ const AppProvider: React.FC = ({ children }) => (
       <ToastProvider>
         <FormProvider>
           <ManagementModuleProvider>
-            <ContactPageProvider>{children}</ContactPageProvider>
+            <StageCardProvider>
+              <ContactPageProvider>{children}</ContactPageProvider>
+            </StageCardProvider>
           </ManagementModuleProvider>
         </FormProvider>
       </ToastProvider>

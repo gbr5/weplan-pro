@@ -35,7 +35,7 @@ const CreateNoteForm: React.FC<IProps> = ({
         });
       }
       await api.post(`cards/notes`, {
-        user_id: employee.user.id,
+        user_id: employee.employeeUser.id,
         card_unique_name: card.unique_name,
         note,
       });
@@ -56,7 +56,14 @@ const CreateNoteForm: React.FC<IProps> = ({
 
       throw new Error(err);
     }
-  }, [addToast, handleCloseWindow, employee.user, card, getCardNotes, note]);
+  }, [
+    addToast,
+    handleCloseWindow,
+    employee.employeeUser,
+    card,
+    getCardNotes,
+    note,
+  ]);
 
   return (
     <WindowContainer

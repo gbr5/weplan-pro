@@ -1,5 +1,5 @@
-import ICompanyInfoDTO from '../hooks/ICompanyInfoDTO';
-import IPersonInfoDTO from '../hooks/IPersonInfoDTO';
+import ICompanyInfoDTO from './ICompanyInfoDTO';
+import IPersonInfoDTO from './IPersonInfoDTO';
 import IFunnelDTO from './IFunnelDTO';
 
 export default interface IUserDTO {

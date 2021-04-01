@@ -63,7 +63,7 @@ const AddCardBudgetForm: React.FC<IProps> = ({
         await api.post(`card/budgets`, {
           customer_id: customers[0].id,
           company_id: employee.company.id,
-          sales_person_id: employee.user.id,
+          sales_person_id: employee.employeeUser.id,
           card_unique_name: card.unique_name,
           description: data.description,
           value: Number(data.value),

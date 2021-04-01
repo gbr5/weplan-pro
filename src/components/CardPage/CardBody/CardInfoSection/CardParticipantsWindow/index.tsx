@@ -6,8 +6,8 @@ import React, {
 } from 'react';
 import { MdDelete } from 'react-icons/md';
 import ICardParticipantDTO from '../../../../../dtos/ICardParticipantDTO';
-import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
 import { useEmployeeAuth } from '../../../../../hooks/employeeAuth';
+import { useStageCard } from '../../../../../hooks/stageCard';
 import { useToast } from '../../../../../hooks/toast';
 import api from '../../../../../services/api';
 import WindowContainer from '../../../../WindowContainer';
@@ -22,17 +22,16 @@ import {
 } from './styles';
 
 interface IProps {
-  card: IStageCardDTO;
   handleCloseWindow: Function;
   onHandleCloseWindow: MouseEventHandler;
 }
 
 const CardParticipantsWindow: React.FC<IProps> = ({
-  card,
   handleCloseWindow,
   onHandleCloseWindow,
 }: IProps) => {
   const { employee } = useEmployeeAuth();
+  const { selectedCard } = useStageCard();
 
   const { addToast } = useToast();
 
@@ -61,24 +60,27 @@ const CardParticipantsWindow: React.FC<IProps> = ({
   const addUserAsCardParticipant = useCallback(async () => {
     try {
       employee &&
-        employee.user &&
+        employee.employeeUser &&
         (await api.post('card/participants', {
-          user_id: employee.user.id,
-          card_unique_name: card.unique_name,
+          user_id: employee.employeeUser.id,
+          card_unique_name: selectedCard.unique_name,
         }));
       handleCloseWindow();
     } catch (err) {
       throw new Error(err);
     }
-  }, [handleCloseWindow, employee, card]);
+  }, [handleCloseWindow, employee, selectedCard]);
 
   const getCardParticipants = useCallback(() => {
     try {
       api
-        .get<ICardParticipantDTO[]>(`card/participants/${card.unique_name}`)
+        .get<ICardParticipantDTO[]>(
+          `card/participants/${selectedCard.unique_name}`,
+        )
         .then(response => {
           const userParticipant = response.data.find(
-            xParticipant => xParticipant.participant.id === employee.user.id,
+            xParticipant =>
+              xParticipant.participant.id === employee.employeeUser.id,
           );
           userParticipant === undefined && addUserAsCardParticipant();
           setParticipants(response.data);
@@ -86,7 +88,7 @@ const CardParticipantsWindow: React.FC<IProps> = ({
     } catch (err) {
       throw new Error(err);
     }
-  }, [card, addUserAsCardParticipant, employee.user]);
+  }, [selectedCard, addUserAsCardParticipant, employee.employeeUser]);
 
   const deleteCardParticipant = useCallback(
     async (props: ICardParticipantDTO) => {
@@ -118,7 +120,7 @@ const CardParticipantsWindow: React.FC<IProps> = ({
         <AddCardParticipantForm
           onHandleCloseWindow={() => setCreateCardParticipantForm(false)}
           handleCloseWindow={handleCloseParticipantForm}
-          card={card}
+          card={selectedCard}
           getCardParticipants={getCardParticipants}
         />
       )}
@@ -151,7 +153,7 @@ const CardParticipantsWindow: React.FC<IProps> = ({
               >
                 <h1>{participant.participant.name}</h1>
               </BooleanButton>
-              {card.card_owner !== participant.participant.id && (
+              {selectedCard.card_owner !== participant.participant.id && (
                 <RemoveParticipantButton
                   type="button"
                   isActive={participant.id === selectedCardParticipant.id}

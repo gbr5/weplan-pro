@@ -8,16 +8,9 @@ import { useEmployeeAuth } from '../../hooks/employeeAuth';
 interface IProps {
   funnel: string;
   handleCardPage: Function;
-  handleSelectCard: Function;
-  selectedCard: IStageCardDTO;
 }
 
-const KanbanFunnel: React.FC<IProps> = ({
-  funnel,
-  handleCardPage,
-  handleSelectCard,
-  selectedCard,
-}) => {
+const KanbanFunnel: React.FC<IProps> = ({ funnel, handleCardPage }) => {
   const { employee } = useEmployeeAuth();
   const thisFunnel = employee.company.supplierFunnels.find(
     xFunnel => xFunnel.name === funnel,
@@ -40,32 +33,22 @@ const KanbanFunnel: React.FC<IProps> = ({
   return (
     <Container>
       <FunnelStage
-        handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-        selectedCard={selectedCard}
         handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
         stage={first}
       />
       <FunnelStage
-        handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-        selectedCard={selectedCard}
         handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
         stage={second}
       />
       <FunnelStage
-        handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-        selectedCard={selectedCard}
         handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
         stage={third}
       />
       <FunnelStage
-        handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-        selectedCard={selectedCard}
         handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
         stage={fourth}
       />
       <FunnelStage
-        handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-        selectedCard={selectedCard}
         handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
         stage={fifth}
       />

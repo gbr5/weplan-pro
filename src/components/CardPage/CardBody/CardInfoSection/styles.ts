@@ -41,10 +41,10 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--background-color);
-  gap: 5px;
-  position: relative;
+  position: absolute;
+  left: 0;
+  z-index: 2;
   padding: 32px 5px 5px;
-
   animation: ${appearFromLeft} 1s;
 
   > div {
@@ -133,10 +133,11 @@ export const CardParticipantsButton = styled.button`
     border: 1px solid var(--header-background-color);
   }
 `;
+
 export const ButtonArrowMenu = styled.button`
   position: absolute;
   left: 8px;
-  top: 8px;
+  top: -3rem;
 
   display: flex;
   align-items: center;

@@ -1,45 +1,12 @@
 import React, { MouseEventHandler } from 'react';
 import { MdAdd } from 'react-icons/md';
+import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
 import WindowContainer from '../../../../../WindowContainer';
 
 import { List, Item } from './styles';
 
-interface ITasks {
-  id: string;
-  check_list_id: string;
-  task: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  status: string;
-  due_date: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
-interface ICheckList {
-  id: string;
-  name: string;
-  color: string;
-  isActive: boolean;
-  priority: string;
-  due_date: string;
-  tasks: ITasks[];
-}
-
-interface ICardCheckList {
-  id: string;
-  card_id: string;
-  check_list_id: string;
-  card_unique_name: string;
-  created_at: Date;
-  updated_at: Date;
-  check_list: ICheckList;
-}
-
 interface IProps {
-  // eslint-disable-next-line react/require-default-props
-  cardCheckLists: ICardCheckList[];
+  cardCheckLists: ICardCheckListDTO[];
   handleSetSelectedCheckList: Function;
   onHandleCloseWindow: MouseEventHandler;
 }
@@ -63,6 +30,7 @@ const SelectCardCheckListWindow: React.FC<IProps> = ({
       <List>
         {cardCheckLists.map(cardCheckList => (
           <Item
+            key={cardCheckList.id}
             type="button"
             onClick={() => handleSetSelectedCheckList(cardCheckList)}
           >

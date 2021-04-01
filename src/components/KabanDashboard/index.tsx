@@ -7,16 +7,9 @@ import { Container, BottomLine, UpperLine } from './styles';
 interface IProps {
   funnel: string;
   handleCardPage: Function;
-  handleSelectCard: Function;
-  selectedCard: IStageCardDTO;
 }
 
-const KanbanDashboard: React.FC<IProps> = ({
-  funnel,
-  handleCardPage,
-  handleSelectCard,
-  selectedCard,
-}) => {
+const KanbanDashboard: React.FC<IProps> = ({ funnel, handleCardPage }) => {
   return (
     <>
       <UpperLine />
@@ -24,8 +17,6 @@ const KanbanDashboard: React.FC<IProps> = ({
         <KanbanFunnel
           funnel={funnel}
           handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-          handleSelectCard={(e: IStageCardDTO) => handleSelectCard(e)}
-          selectedCard={selectedCard}
         />
       </Container>
       <BottomLine />

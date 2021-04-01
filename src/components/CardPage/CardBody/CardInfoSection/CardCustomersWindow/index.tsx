@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { MdDelete } from 'react-icons/md';
 import ICardCustomerDTO from '../../../../../dtos/ICardCustomerDTO';
-import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
+import { useStageCard } from '../../../../../hooks/stageCard';
 import { useToast } from '../../../../../hooks/toast';
 import api from '../../../../../services/api';
 import WindowContainer from '../../../../WindowContainer';
@@ -21,17 +21,16 @@ import {
 } from './styles';
 
 interface IProps {
-  card: IStageCardDTO;
   handleCloseWindow: Function;
   onHandleCloseWindow: MouseEventHandler;
 }
 
 const CardCustomersWindow: React.FC<IProps> = ({
-  card,
   handleCloseWindow,
   onHandleCloseWindow,
 }: IProps) => {
   const { addToast } = useToast();
+  const { selectedCard } = useStageCard();
 
   const [createCardCustomerForm, setCreateCardCustomerForm] = useState(false);
   const [selectedCardCustomer, setSelectedCardCustomer] = useState<
@@ -56,14 +55,14 @@ const CardCustomersWindow: React.FC<IProps> = ({
   const getCardCustomers = useCallback(() => {
     try {
       api
-        .get<ICardCustomerDTO[]>(`card/customers/${card.unique_name}`)
+        .get<ICardCustomerDTO[]>(`card/customers/${selectedCard.unique_name}`)
         .then(response => {
           setCustomers(response.data);
         });
     } catch (err) {
       throw new Error(err);
     }
-  }, [card]);
+  }, [selectedCard]);
 
   const deleteCardCustomer = useCallback(
     async (props: ICardCustomerDTO) => {
@@ -96,7 +95,7 @@ const CardCustomersWindow: React.FC<IProps> = ({
         <CreateCardCustomerForm
           onHandleCloseWindow={() => setCreateCardCustomerForm(false)}
           handleCloseWindow={handleCloseCustomerForm}
-          card={card}
+          card={selectedCard}
           getCardCustomers={getCardCustomers}
         />
       )}
@@ -129,7 +128,7 @@ const CardCustomersWindow: React.FC<IProps> = ({
               >
                 <h1>{customer.customer.name}</h1>
               </BooleanButton>
-              {card.card_owner !== customer.customer.id && (
+              {selectedCard.card_owner !== customer.customer.id && (
                 <RemoveCustomerButton
                   type="button"
                   isActive={customer.id === selectedCardCustomer.id}

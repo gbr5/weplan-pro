@@ -1,15 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import IStageCardDTO from '../../../../dtos/IStageCardDTO';
 import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
 
 import { Container, MenuHeader, MenuLine, MenuBooleanButton } from './styles';
 
-interface IProps {
-  card: IStageCardDTO;
-}
-
-const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
+const CardAditionalInfoSection: React.FC = () => {
   const [taskSection, setTaskSection] = useState(true);
   const [notesSection, setNotesSection] = useState(false);
   const [historySection, setHistorySection] = useState(false);
@@ -92,8 +87,8 @@ const CardAditionalInfoSection: React.FC<IProps> = ({ card }) => {
             Arquivos
           </MenuBooleanButton>
         </MenuHeader>
-        {!!taskSection && <CardTaskDashboard card={card} />}
-        {!!notesSection && <CardNotesDashboard card={card} />}
+        {!!taskSection && <CardTaskDashboard />}
+        {!!notesSection && <CardNotesDashboard />}
         {!!participantsSection && (
           <>
             <h1>ParticipantsSection</h1>

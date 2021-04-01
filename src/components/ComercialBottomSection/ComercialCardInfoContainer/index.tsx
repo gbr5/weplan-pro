@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
-import IStageCardDTO from '../../../dtos/IStageCardDTO';
 import IUserDTO from '../../../dtos/IUserDTO';
+import { useStageCard } from '../../../hooks/stageCard';
 import api from '../../../services/api';
 
 import { Container, Main } from './styles';
@@ -12,13 +12,8 @@ interface ICardCustomer {
   description: string;
 }
 
-interface IProps {
-  selectedCard: IStageCardDTO;
-}
-
-const ComercialCardInfoContainer: React.FC<IProps> = ({
-  selectedCard,
-}: IProps) => {
+const ComercialCardInfoContainer: React.FC = () => {
+  const { selectedCard } = useStageCard();
   const [cardOwner, setCardOwner] = useState<IUserDTO>({} as IUserDTO);
   const [cardCustomers, setCardCustomers] = useState<ICardCustomer[]>([]);
 
@@ -60,11 +55,11 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
       <Container>
         <div>
           <p>Nome</p>
-          <p>{selectedCard.name}</p>
+          <p>{selectedCard && selectedCard.name}</p>
         </div>
         <div>
           <p>Última alteração</p>
-          <p>{selectedCard.updated_at}</p>
+          <p>{selectedCard && selectedCard.updated_at}</p>
         </div>
         <div>
           <p>Responsável</p>
@@ -78,7 +73,7 @@ const ComercialCardInfoContainer: React.FC<IProps> = ({
         </div>
         <div>
           <p>Cliente Weplan</p>
-          <p>{selectedCard.weplanEvent}</p>
+          <p>{selectedCard && selectedCard.weplanEvent}</p>
         </div>
       </Container>
     </Main>

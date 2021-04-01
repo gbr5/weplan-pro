@@ -6,9 +6,9 @@ import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
 import IFunnelCardInfoDTO from '../../../../dtos/IFunnelCardInfoDTO';
 import IFunnelCardInfoFieldDTO from '../../../../dtos/IFunnelCardInfoFieldDTO';
 import IFunnelDTO from '../../../../dtos/IFunnelDTO';
-import IStageCardDTO from '../../../../dtos/IStageCardDTO';
 import IUserDTO from '../../../../dtos/IUserDTO';
 import { useEmployeeAuth } from '../../../../hooks/employeeAuth';
+import { useStageCard } from '../../../../hooks/stageCard';
 import api from '../../../../services/api';
 import CardBudgetsWindow from './CardBudgetsWindow';
 import CardCustomersWindow from './CardCustomersWindow';
@@ -22,12 +22,12 @@ import {
 } from './styles';
 
 interface IProps {
-  card: IStageCardDTO;
   selectedFunnel: string;
 }
 
-const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
+const CardInfoSection: React.FC<IProps> = ({ selectedFunnel }) => {
   const { employee } = useEmployeeAuth();
+  const { selectedCard } = useStageCard();
 
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
@@ -74,28 +74,30 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
   const getFunnelCardInfo = useCallback(() => {
     try {
       api
-        .get(`/funnels/card/company-funnel-card-info/${card.unique_name}`)
+        .get(
+          `/funnels/card/company-funnel-card-info/${selectedCard.unique_name}`,
+        )
         .then(response => {
           setSelectedFunnelCardInfo(response.data);
         });
     } catch (err) {
       throw new Error(err);
     }
-  }, [card]);
+  }, [selectedCard]);
 
   const getCardOwner = useCallback(() => {
     try {
-      api.get<IUserDTO>(`/users/${card.card_owner}`).then(response => {
+      api.get<IUserDTO>(`/users/${selectedCard.card_owner}`).then(response => {
         setCardOwner(response.data);
       });
     } catch (err) {
       throw new Error(err);
     }
-  }, [card]);
+  }, [selectedCard]);
   const getCardCustomers = useCallback(() => {
     try {
       api
-        .get<ICardCustomerDTO[]>(`/card/customers/${card.unique_name}`)
+        .get<ICardCustomerDTO[]>(`/card/customers/${selectedCard.unique_name}`)
         .then(response => {
           setCustomers(
             response.data.map(xCardCustomer => xCardCustomer.customer),
@@ -104,7 +106,7 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
     } catch (err) {
       throw new Error(err);
     }
-  }, [card]);
+  }, [selectedCard]);
 
   useEffect(() => {
     getCardCustomers();
@@ -129,20 +131,17 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
       {cardParticipantsWindow && (
         <CardParticipantsWindow
           handleCloseWindow={handleCloseAllWindows}
-          card={card}
           onHandleCloseWindow={() => setCardParticipantsWindow(false)}
         />
       )}
       {cardCustomersWindow && (
         <CardCustomersWindow
           handleCloseWindow={handleCloseAllWindows}
-          card={card}
           onHandleCloseWindow={() => setCardCustomersWindow(false)}
         />
       )}
       {cardBudgetsWindow && (
         <CardBudgetsWindow
-          card={card}
           customers={customers}
           onHandleCloseWindow={() => setCardBudgetsWindow(false)}
         />
@@ -179,7 +178,7 @@ const CardInfoSection: React.FC<IProps> = ({ card, selectedFunnel }) => {
             <div>
               <span>
                 <strong>Nome:</strong>
-                <p>{card.name}</p>
+                <p>{selectedCard.name}</p>
                 <button type="button">
                   <MdEdit />
                 </button>

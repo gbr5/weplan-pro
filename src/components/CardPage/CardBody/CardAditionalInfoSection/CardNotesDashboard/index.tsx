@@ -1,24 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { FiChevronDown } from 'react-icons/fi';
-import api from '../../../../../services/api';
 
 import { Main, ContainerMenu } from './styles';
-import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
 import NotesContainer from './NotesContainer';
 import ICardNotesDTO from '../../../../../dtos/ICardNotesDTO';
 import CreateNoteForm from './CreateNoteForm';
+import { useStageCard } from '../../../../../hooks/stageCard';
 
-interface IProps {
-  card: IStageCardDTO;
-}
-
-const CardNotesDashboard: React.FC<IProps> = ({ card }: IProps) => {
+const CardNotesDashboard: React.FC = () => {
+  const {
+    selectedCard,
+    selectedNote,
+    getCardNotes,
+    selectNote,
+    cardNotes,
+  } = useStageCard();
   const [createCardNoteWindow, setCreateCardNoteWindow] = useState(false);
-  const [selectedNote, setSelectedNote] = useState<ICardNotesDTO>(
-    {} as ICardNotesDTO,
-  );
-  const [cardNotes, setCardNotes] = useState<ICardNotesDTO[]>([]);
 
   const handleCreateCardNoteWindow = useCallback(() => {
     setCreateCardNoteWindow(true);
@@ -27,23 +25,16 @@ const CardNotesDashboard: React.FC<IProps> = ({ card }: IProps) => {
     setCreateCardNoteWindow(false);
   }, []);
 
-  const getCardNotes = useCallback(props => {
-    try {
-      api.get<ICardNotesDTO[]>(`cards/notes/${props}`).then(response => {
-        setCardNotes(response.data);
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, []);
-
-  const handleSetSelectedNote = useCallback((props: ICardNotesDTO) => {
-    setSelectedNote(props);
-  }, []);
+  const handleSetSelectedNote = useCallback(
+    (props: ICardNotesDTO) => {
+      selectNote(props);
+    },
+    [selectNote],
+  );
 
   useEffect(() => {
-    getCardNotes(card.unique_name);
-  }, [getCardNotes, card]);
+    getCardNotes();
+  }, [getCardNotes]);
 
   return (
     <Main>
@@ -74,7 +65,7 @@ const CardNotesDashboard: React.FC<IProps> = ({ card }: IProps) => {
         <CreateNoteForm
           handleCloseWindow={handleCloseCreateCardNoteWindow}
           onHandleCloseWindow={() => setCreateCardNoteWindow(false)}
-          card={card}
+          card={selectedCard}
           getCardNotes={getCardNotes}
         />
       )}

@@ -39,7 +39,7 @@ const AddCardParticipantForm: React.FC<IProps> = ({
           .then(response => {
             const allEmployees = response.data.filter(
               thisEmployee =>
-                thisEmployee.employee.id !== employee.user.id &&
+                thisEmployee.employee.id !== employee.employeeUser.id &&
                 thisEmployee.isActive,
             );
             setEmployees(allEmployees);
