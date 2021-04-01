@@ -1,11 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
+  display: block;
   padding: 5px 2px 5px;
   background: var(--background-color);
   min-width: 19.375vw;
@@ -24,10 +20,10 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 5px;
     font-size: 16px;
     border-bottom: 0.2px solid var(--letter-color-4);
     width: 100%;
+    margin: 0.2rem auto;
     strong {
       color: var(--letter-color-4);
       display: flex;
