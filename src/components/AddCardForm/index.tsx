@@ -16,6 +16,7 @@ import CreateCompanyCustomerForm from '../CreateCompanyCustomerForm';
 import SelectCustomerWindow from '../SelectCustomerWindow';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
 import { useFunnel } from '../../hooks/funnel';
+import { useCompanyContact } from '../../hooks/companyContacts';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -32,6 +33,7 @@ const AddCardForm: React.FC<IProps> = ({
 }: IProps) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
+  const { companyContacts } = useCompanyContact();
   const { funnels } = useFunnel();
   const [cardName, setCardName] = useState('');
   const [selectStageWindow, setSelectStageWindow] = useState(true);
@@ -111,24 +113,16 @@ const AddCardForm: React.FC<IProps> = ({
     handleSetCurrentFunnel,
   ]);
 
-  const getCompanyContacts = useCallback(() => {
-    try {
-      api
-        .get<ICompanyContactDTO[]>(`/company/contacts/${employee.company.id}`)
-        .then(response => {
-          const companyCustomers = response.data.filter(
-            xCustomer => xCustomer.company_contact_type === 'Customer',
-          );
-          if (companyCustomers.length <= 0) {
-            setCreateCompanyCustomerFormWindow(true);
-          } else {
-            setCustomers(companyCustomers);
-          }
-        });
-    } catch (err) {
-      throw new Error(err);
+  useEffect(() => {
+    const companyCustomers = companyContacts.filter(
+      xCustomer => xCustomer.company_contact_type === 'Customer',
+    );
+    if (companyCustomers.length <= 0) {
+      setCreateCompanyCustomerFormWindow(true);
+    } else {
+      setCustomers(companyCustomers);
     }
-  }, [employee.company]);
+  }, [companyContacts]);
 
   const handleSelectCustomer = useCallback((props: ICompanyContactDTO) => {
     setSelectedCustomer(props);
@@ -138,10 +132,6 @@ const AddCardForm: React.FC<IProps> = ({
   const handleCloseSelectStageWindow = useCallback(() => {
     setSelectStageWindow(false);
   }, []);
-
-  useEffect(() => {
-    getCompanyContacts();
-  }, [getCompanyContacts]);
 
   useEffect(() => {
     if (funnels.length > 0) {
@@ -158,12 +148,8 @@ const AddCardForm: React.FC<IProps> = ({
     <>
       {createCompanyCustomerFormWindow && (
         <CreateCompanyCustomerForm
-          setSelectedCustomer={(e: ICompanyContactDTO) =>
-            setSelectedCustomer(e)
-          }
           handleCloseWindow={handleCloseCompanyCustomerFormWindow}
           onHandleCloseWindow={() => setCreateCompanyCustomerFormWindow(false)}
-          updateCompanyContacts={getCompanyContacts}
         />
       )}
       <WindowContainer

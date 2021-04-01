@@ -16,7 +16,7 @@ interface IProps {
   handleSideMenu: MouseEventHandler;
   handleMainDashboard: MouseEventHandler;
   handleTaskDashboard: MouseEventHandler;
-  handleCompanyDashboard: MouseEventHandler;
+  handleContactDashboard: MouseEventHandler;
   handleCustomerServiceOrderDashboard: MouseEventHandler;
   isActive: boolean;
 }
@@ -26,7 +26,7 @@ const SideMenu: React.FC<IProps> = ({
   isActive,
   handleMainDashboard,
   handleTaskDashboard,
-  handleCompanyDashboard,
+  handleContactDashboard,
   handleCustomerServiceOrderDashboard,
 }: IProps) => {
   const { employee } = useEmployeeAuth();
@@ -54,7 +54,7 @@ const SideMenu: React.FC<IProps> = ({
           <Button type="button">
             <img src={meetingIcon} alt="WePlan_Meeting" />
           </Button>
-          <Button type="button" onClick={handleCompanyDashboard}>
+          <Button type="button" onClick={handleContactDashboard}>
             <MdContacts />
           </Button>
           <Button type="button">

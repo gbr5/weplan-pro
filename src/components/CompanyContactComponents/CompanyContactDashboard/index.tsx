@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
-import { useEmployeeAuth } from '../../hooks/employeeAuth';
-import api from '../../services/api';
+import { useCompanyContact } from '../../../hooks/companyContacts';
 
 import {
   Container,
@@ -12,32 +10,33 @@ import {
 } from './styles';
 
 const CompanyContactDashboard: React.FC = () => {
-  const { employee } = useEmployeeAuth();
+  const {
+    companyContacts,
+    getCompanyContacts,
+    selectedContact,
+    selectContact,
+    customersContacts,
+    suppliersContacts,
+    othersContacts,
+    employeesContacts,
+    weplanUsersContacts,
+    outsourcedsContacts,
+  } = useCompanyContact();
+
+  useEffect(() => {
+    getCompanyContacts();
+  }, [getCompanyContacts]);
 
   const [weplanContactUsersSection, setWeplanContactUsersSection] = useState(
     false,
   );
   const [allContactsSection, setAllContactsSection] = useState(true);
 
-  const [customers, setCustomers] = useState<ICompanyContactDTO[]>([]);
   const [customersSection, setCustomersSection] = useState(true);
   const [suppliersSection, setSuppliersSection] = useState(false);
-  const [suppliers, setSuppliers] = useState<ICompanyContactDTO[]>([]);
   const [outsourcedsSection, setOutsourcedsSection] = useState(false);
-  const [outsourceds, setOutsourceds] = useState<ICompanyContactDTO[]>([]);
   const [employeesSection, setEmployeesSection] = useState(false);
-  const [employees, setEmployees] = useState<ICompanyContactDTO[]>([]);
-  const [others, setOthers] = useState<ICompanyContactDTO[]>([]);
   const [othersSection, setOthersSection] = useState(false);
-  const [weplanCompanyContacts, setWeplanCompanyContacts] = useState<
-    ICompanyContactDTO[]
-  >([]);
-  const [companyContacts, setCompanyContacts] = useState<ICompanyContactDTO[]>(
-    [],
-  );
-  const [selectedContact, setSelectedContact] = useState<ICompanyContactDTO>(
-    {} as ICompanyContactDTO,
-  );
 
   const closeAllSections = useCallback(() => {
     setCustomersSection(false);
@@ -58,60 +57,6 @@ const CompanyContactDashboard: React.FC = () => {
     },
     [closeAllSections],
   );
-
-  const getCompanyContacts = useCallback(() => {
-    try {
-      api
-        .get<ICompanyContactDTO[]>(`company/contacts/${employee.company.id}`)
-        .then(response => {
-          setCustomers(
-            response.data.filter(
-              contact => contact.company_contact_type === 'Customer',
-            ),
-          );
-          setSuppliers(
-            response.data.filter(
-              contact => contact.company_contact_type === 'Supplier',
-            ),
-          );
-          setEmployees(
-            response.data.filter(
-              contact => contact.company_contact_type === 'Employee',
-            ),
-          );
-          setOutsourceds(
-            response.data.filter(
-              contact => contact.company_contact_type === 'Outsourced',
-            ),
-          );
-          setOthers(
-            response.data.filter(
-              contact => contact.company_contact_type === 'Other',
-            ),
-          );
-          setCompanyContacts(response.data);
-          setWeplanCompanyContacts(
-            response.data.filter(contact => contact.weplanUser),
-          );
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [employee]);
-
-  const handleSelectContact = useCallback(
-    (props: ICompanyContactDTO) => {
-      if (selectedContact.id === props.id) {
-        return setSelectedContact({} as ICompanyContactDTO);
-      }
-      return setSelectedContact(props);
-    },
-    [selectedContact],
-  );
-
-  useEffect(() => {
-    getCompanyContacts();
-  }, [getCompanyContacts]);
 
   return (
     <>
@@ -191,7 +136,7 @@ const CompanyContactDashboard: React.FC = () => {
         <FirstRow>
           {allContactsSection &&
             weplanContactUsersSection &&
-            weplanCompanyContacts.map(contact => {
+            weplanUsersContacts.map(contact => {
               let contactType = '';
               if (contact.company_contact_type === 'Customer') {
                 contactType = 'Cliente';
@@ -214,10 +159,7 @@ const CompanyContactDashboard: React.FC = () => {
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>Nome: {contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                     <p>Tipo de contato: {contactType}</p>
@@ -249,10 +191,7 @@ const CompanyContactDashboard: React.FC = () => {
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                     <p>Tipo de contato: {contactType}</p>
@@ -262,16 +201,13 @@ const CompanyContactDashboard: React.FC = () => {
             })}
           {!allContactsSection &&
             customersSection &&
-            customers.map(contact => {
+            customersContacts.map(contact => {
               return (
                 <CompanyContact
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                   </button>
@@ -280,16 +216,13 @@ const CompanyContactDashboard: React.FC = () => {
             })}
           {!allContactsSection &&
             suppliersSection &&
-            suppliers.map(contact => {
+            suppliersContacts.map(contact => {
               return (
                 <CompanyContact
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                   </button>
@@ -298,16 +231,13 @@ const CompanyContactDashboard: React.FC = () => {
             })}
           {!allContactsSection &&
             employeesSection &&
-            employees.map(contact => {
+            employeesContacts.map(contact => {
               return (
                 <CompanyContact
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                   </button>
@@ -316,16 +246,13 @@ const CompanyContactDashboard: React.FC = () => {
             })}
           {!allContactsSection &&
             outsourcedsSection &&
-            outsourceds.map(contact => {
+            outsourcedsContacts.map(contact => {
               return (
                 <CompanyContact
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                   </button>
@@ -334,16 +261,13 @@ const CompanyContactDashboard: React.FC = () => {
             })}
           {!allContactsSection &&
             othersSection &&
-            others.map(contact => {
+            othersContacts.map(contact => {
               return (
                 <CompanyContact
                   isActive={selectedContact.id === contact.id}
                   key={contact.id}
                 >
-                  <button
-                    type="button"
-                    onClick={() => handleSelectContact(contact)}
-                  >
+                  <button type="button" onClick={() => selectContact(contact)}>
                     <p>{contact.name}</p>
                     <p>Descrição: {contact.description}</p>
                   </button>
