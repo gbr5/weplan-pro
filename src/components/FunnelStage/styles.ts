@@ -48,9 +48,7 @@ export const Container = styled.div`
 `;
 
 export const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: block;
   height: 240px;
   width: 100%;
   overflow-y: scroll;
@@ -68,8 +66,7 @@ export const Card = styled.div<ICardProps>`
   padding: 0.5rem;
   background: var(--card-color);
   border-radius: 2px;
-  gap: 5px;
-
+  margin-top: 0.2rem;
   width: 100%;
   height: 48px;
 
