@@ -8,7 +8,7 @@ import { FiCheckSquare, FiSquare, FiTrash } from 'react-icons/fi';
 import { MdPrint } from 'react-icons/md';
 import ICardBudgetDTO from '../../../../../dtos/ICardBudgetDTO';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
-import IStageCardDTO from '../../../../../dtos/IStageCardDTO';
+import { useStageCard } from '../../../../../hooks/stageCard';
 import { useToast } from '../../../../../hooks/toast';
 import api from '../../../../../services/api';
 import BudgetToPrintPDF from '../../../../BudgetToPrintPDF';
@@ -25,17 +25,16 @@ import {
 } from './styles';
 
 interface IProps {
-  card: IStageCardDTO;
   customers: ICompanyContactDTO[];
   onHandleCloseWindow: MouseEventHandler;
 }
 
 const CardBudgetsWindow: React.FC<IProps> = ({
-  card,
   customers,
   onHandleCloseWindow,
 }: IProps) => {
   const { addToast } = useToast();
+  const { selectedCard } = useStageCard();
 
   const [createCardBudgetForm, setCreateCardBudgetForm] = useState(false);
   const [budgetToPrintWindow, setBudgetToPrintWindow] = useState(false);
@@ -68,7 +67,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
   const getCardBudgets = useCallback(() => {
     try {
       api
-        .get<ICardBudgetDTO[]>(`card/budgets/${card.unique_name}`)
+        .get<ICardBudgetDTO[]>(`card/budgets/${selectedCard.unique_name}`)
         .then(response => {
           setValidBudgets(response.data.filter(xBudget => xBudget.isValid));
           setInvalidBudgets(response.data.filter(xBudget => !xBudget.isValid));
@@ -76,7 +75,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
     } catch (err) {
       throw new Error(err);
     }
-  }, [card]);
+  }, [selectedCard]);
 
   const validateCardBudget = useCallback(
     async (thisBudget: ICardBudgetDTO) => {
@@ -123,7 +122,7 @@ const CardBudgetsWindow: React.FC<IProps> = ({
           customers={customers}
           onHandleCloseWindow={() => setCreateCardBudgetForm(false)}
           handleCloseWindow={handleCloseBudgetForm}
-          card={card}
+          card={selectedCard}
           getCardBudgets={getCardBudgets}
         />
       )}

@@ -31,7 +31,7 @@ const NotesContainer: React.FC<IProps> = ({
     }
   }, [cardNote]);
 
-  if (cardNote.user_id !== employee.user.id) {
+  if (cardNote.user_id !== employee.employeeUser.id) {
     getAuthor();
   }
 
@@ -43,7 +43,9 @@ const NotesContainer: React.FC<IProps> = ({
       <p>{cardNote.note}</p>
       <div>
         <strong>{cardNote.created_at}</strong>
-        {cardNote.user_id !== employee.user.id && <strong>{author}</strong>}
+        {cardNote.user_id !== employee.employeeUser.id && (
+          <strong>{author}</strong>
+        )}
         {cardNote.created_at !== cardNote.updated_at && (
           <strong>Atualizado{cardNote.updated_at}</strong>
         )}

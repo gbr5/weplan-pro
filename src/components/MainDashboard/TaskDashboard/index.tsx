@@ -59,10 +59,10 @@ const TaskDashboard: React.FC = () => {
     try {
       employee &&
         employee.company &&
-        employee.user &&
+        employee.employeeUser &&
         api
           .get<ITasks[]>(
-            `check-lists/tasks/${employee.company.id}/${employee.user.id}`,
+            `check-lists/tasks/${employee.company.id}/${employee.employeeUser.id}`,
           )
           .then(response => {
             const activeTasks = response.data.filter(task => task.isActive);

@@ -40,7 +40,7 @@ const AddCardTaskForm: React.FC<IProps> = ({
         });
       }
       await api.post(`check-lists/tasks/${cardCheckList.check_list.id}`, {
-        owner_id: employee.user.id,
+        owner_id: employee.employeeUser.id,
         task: taskName,
         color: 'rgb(179, 182, 178)',
         isActive: true,

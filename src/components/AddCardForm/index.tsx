@@ -68,12 +68,12 @@ const AddCardForm: React.FC<IProps> = ({
       const response = await api.post(`funnels/${selectedStage.id}/cards`, {
         weplanEvent: false,
         name: cardName,
-        card_owner: employee.user.id,
+        card_owner: employee.employeeUser.id,
       });
       const card_unique_name = response.data.unique_name;
 
       await api.post(`card/participants`, {
-        user_id: employee.user.id,
+        user_id: employee.employeeUser.id,
         card_unique_name,
       });
 

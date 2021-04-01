@@ -1,27 +1,24 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import IFunnelStageDTO from '../../../dtos/IFunnelStageDTO';
-import IStageCardDTO from '../../../dtos/IStageCardDTO';
 import { useEmployeeAuth } from '../../../hooks/employeeAuth';
+import { useStageCard } from '../../../hooks/stageCard';
 import { useToast } from '../../../hooks/toast';
 import api from '../../../services/api';
 
 import { Container, StageButton } from './styles';
 
 interface IProps {
-  card: IStageCardDTO;
   selectedFunnel: string;
   handleUpdateFunnel: Function;
 }
 
 const CardHeader: React.FC<IProps> = ({
-  card,
   selectedFunnel,
   handleUpdateFunnel,
 }) => {
   const { employee } = useEmployeeAuth();
+  const { selectedCard, selectCard } = useStageCard();
   const { addToast } = useToast();
-
-  const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(card);
 
   const handleCompareStageOrder = useCallback(
     (a: IFunnelStageDTO, b: IFunnelStageDTO) => {
@@ -55,13 +52,13 @@ const CardHeader: React.FC<IProps> = ({
     async (xStage: IFunnelStageDTO) => {
       try {
         const response = await api.put(
-          `/funnels/${card.stage_id}/cards/${card.id}`,
+          `/funnels/${selectedCard.stage_id}/cards/${selectedCard.id}`,
           {
-            weplanEvent: card.weplanEvent,
-            name: card.name,
+            weplanEvent: selectedCard.weplanEvent,
+            name: selectedCard.name,
             isActive: true,
             new_stage_id: xStage.id,
-            new_card_owner: card.card_owner,
+            new_card_owner: selectedCard.card_owner,
           },
         );
 
@@ -70,7 +67,7 @@ const CardHeader: React.FC<IProps> = ({
         xStage.name === 'Projects' && handleUpdateFunnel('Projetos');
         xStage.name === 'Financial' && handleUpdateFunnel('Financeiro');
 
-        setSelectedCard(response.data);
+        selectCard(response.data);
 
         addToast({
           type: 'success',
@@ -88,7 +85,7 @@ const CardHeader: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [card, addToast, handleUpdateFunnel],
+    [selectCard, selectedCard, addToast, handleUpdateFunnel],
   );
 
   return (

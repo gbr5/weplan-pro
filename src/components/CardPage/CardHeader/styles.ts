@@ -19,6 +19,10 @@ export const Container = styled.div`
     justify-content: stretch;
     width: 100%;
     height: 32px;
+
+    @media (max-width: 1100px) {
+      overflow-x: scroll;
+    }
   }
 `;
 
@@ -31,6 +35,7 @@ export const StageButton = styled.div<IProps>`
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-width: 16rem;
   height: 100%;
   transition: 0.3s;
   &:hover {

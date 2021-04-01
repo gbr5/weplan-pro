@@ -3,9 +3,13 @@ import '../../../../styles/global';
 
 export const MenuHeader = styled.div`
   display: flex;
-  width: 100%;
+  width: 98vw;
   height: 50px;
   border-bottom: 1px solid var(--letter-color-4);
+
+  @media (max-width: 1100px) {
+    overflow-x: scroll;
+  }
 `;
 
 export const MenuLine = styled.span`
@@ -53,17 +57,4 @@ export const Container = styled.div`
   background: var(--background-color);
   gap: 5px;
   padding: 5px;
-
-  > button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: transparent;
-    border: none;
-  }
-
-  > div {
-    display: flex;
-    width: 100%;
-  }
 `;

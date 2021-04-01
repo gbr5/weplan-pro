@@ -5,8 +5,8 @@ export const Main = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-sizing: border-box;
-  width: 100%;
+  /* box-sizing: border-box; */
+  width: 98vw;
   text-align: center;
   overflow-y: scroll;
 
@@ -25,6 +25,10 @@ export const ContainerMenu = styled.div`
   padding: 24px;
   background: var(--letter-color-3);
 
+  @media (max-width: 1100px) {
+    overflow-x: scroll;
+  }
+
   p {
     font-size: 20px;
     border-bottom: 2px solid var(--header-primary);
@@ -33,9 +37,13 @@ export const ContainerMenu = styled.div`
     height: 100%;
     border-radius: 8px;
     box-shadow: var(--box-shadow);
+
+    @media (max-width: 1100px) {
+      display: none;
+    }
   }
 
-  button {
+  > button {
     background: transparent;
     border: none;
     margin-right: auto;
@@ -43,7 +51,7 @@ export const ContainerMenu = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    padding: 0.5rem;
 
     strong {
       height: 32px;

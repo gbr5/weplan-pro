@@ -1,40 +1,37 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
-import api from '../../services/api';
+import { useManagementModule } from '../../hooks/managementModules';
+import { useStageCard } from '../../hooks/stageCard';
 
 import { Container, Card, CardContainer } from './styles';
 
 interface IProps {
   stage: IFunnelStageDTO;
-  selectedCard: IStageCardDTO;
   handleCardPage: Function;
-  handleSelectCard: Function;
 }
 
-const FunnelStage: React.FC<IProps> = ({
-  stage,
-  handleCardPage,
-  handleSelectCard,
-  selectedCard,
-}) => {
-  const [cards, setCards] = useState<IStageCardDTO[]>([]);
-
-  const getStageCards = useCallback(() => {
-    try {
-      api.get(`/funnels/${stage.id}/cards`).then(response => {
-        setCards(response.data);
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [stage]);
+const FunnelStage: React.FC<IProps> = ({ stage, handleCardPage }) => {
+  const { selectedCard, selectCard, getCards } = useStageCard();
+  const { employeeModules } = useManagementModule();
+  const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
 
   useEffect(() => {
-    getStageCards();
-  }, [getStageCards]);
+    const moduleAccessLevel = employeeModules.find(
+      module => module.management_module === stage.name,
+    );
+
+    getCards({
+      access_level: moduleAccessLevel?.access_level || 3,
+      stage_id: stage.id,
+    }).then(response => {
+      if (response) {
+        setStageCards(response);
+      }
+    });
+  }, [getCards, stage, employeeModules]);
 
   return (
     <Container>
@@ -48,17 +45,18 @@ const FunnelStage: React.FC<IProps> = ({
         </strong>
       </h1>
       <CardContainer>
-        {cards.map(card => (
-          <Card isActive={selectedCard.id === card.id} key={card.id}>
-            <button type="button" onClick={() => handleSelectCard(card)}>
-              <h3>{card.name}</h3>
-              <strong>{card.weplanEvent ? 'WePlan' : ''}</strong>
-            </button>
-            <button type="button" onClick={() => handleCardPage(card)}>
-              <FiChevronRight size={24} />
-            </button>
-          </Card>
-        ))}
+        {stageCards &&
+          stageCards.map(card => (
+            <Card isActive={selectedCard.id === card.id} key={card.id}>
+              <button type="button" onClick={() => selectCard(card)}>
+                <h3>{card.name}</h3>
+                <strong>{card.weplanEvent ? 'WP' : ''}</strong>
+              </button>
+              <button type="button" onClick={() => handleCardPage(card)}>
+                <FiChevronRight size={28} />
+              </button>
+            </Card>
+          ))}
       </CardContainer>
     </Container>
   );

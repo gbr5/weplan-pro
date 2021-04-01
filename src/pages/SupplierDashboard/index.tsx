@@ -14,10 +14,12 @@ import ContactPageDashboard from '../../components/ContactPageComponents/Contact
 import FormDashboard from '../../components/FormComponents/FormDashboard';
 import { useForm } from '../../hooks/form';
 import { useContactPage } from '../../hooks/contactPages';
+import { useStageCard } from '../../hooks/stageCard';
 
 const SupplierDashboard: React.FC = () => {
   const { getForms } = useForm();
   const { getContactPages } = useContactPage();
+  const { selectCard } = useStageCard();
   const [modulesMenu, setModulesMenu] = useState(true);
   const [dashboard, setDashboard] = useState(true);
   const [comercialSection, setComercialSection] = useState(false);
@@ -29,9 +31,6 @@ const SupplierDashboard: React.FC = () => {
   const [cardPage, setCardPage] = useState(false);
   const [contactPageDashboard, setContactPageDashboard] = useState(false);
   const [formPageDashboard, setFormPageDashboard] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(
-    {} as IStageCardDTO,
-  );
 
   const closeAllWindows = useCallback(() => {
     setDashboard(false);
@@ -85,7 +84,7 @@ const SupplierDashboard: React.FC = () => {
 
   const handleCardPage = useCallback(
     (card: IStageCardDTO) => {
-      setSelectedCard(card);
+      selectCard(card);
       title === 'Comercial' && setSelectedFunnel('Comercial');
       title === 'Produção' && setSelectedFunnel('Production');
       title === 'Projetos' && setSelectedFunnel('Projects');
@@ -94,7 +93,7 @@ const SupplierDashboard: React.FC = () => {
       setCardPage(true);
       return card;
     },
-    [closeAllWindows, title],
+    [closeAllWindows, selectCard, title],
   );
 
   const handleSetCurrentFunnel = useCallback(() => {
@@ -123,35 +122,27 @@ const SupplierDashboard: React.FC = () => {
         {!!comercialSection && (
           <>
             <KanbanDashboard
-              selectedCard={selectedCard}
               handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-              handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
               funnel="Comercial"
             />
-            <ComercialBottomSection selectedCard={selectedCard} />
+            <ComercialBottomSection />
           </>
         )}
         {!!productionSection && (
           <KanbanDashboard
-            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Production"
           />
         )}
         {!!projectSection && (
           <KanbanDashboard
-            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Projects"
           />
         )}
         {!!financialSection && (
           <KanbanDashboard
-            selectedCard={selectedCard}
             handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-            handleSelectCard={(e: IStageCardDTO) => setSelectedCard(e)}
             funnel="Financial"
           />
         )}
@@ -159,7 +150,6 @@ const SupplierDashboard: React.FC = () => {
           <CardPage
             handleUpdateFunnel={(e: string) => handleChangeModule(e)}
             selectedFunnel={selectedFunnel}
-            card={selectedCard}
           />
         )}
       </Content>

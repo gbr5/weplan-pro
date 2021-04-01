@@ -98,7 +98,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
         const response = await api.post(`funnels/${selectedStage.id}/cards`, {
           weplanEvent: false,
           name: cardName,
-          card_owner: employee.user.id,
+          card_owner: employee.employeeUser.id,
         });
         Promise.all([
           api.post(`/card/customer-service-orders`, {
