@@ -2,13 +2,12 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import IFunnelDTO from '../dtos/IFunnelDTO';
 
 import api from '../services/api';
-import { useEmployeeAuth } from './employeeAuth';
 
 interface IFunnelContextData {
   funnels: IFunnelDTO[];
   selectedFunnel: IFunnelDTO;
   selectFunnel(data: IFunnelDTO): void;
-  getFunnels(): void;
+  getFunnels(company_id: string): void;
 }
 
 const FunnelContext = createContext<IFunnelContextData>(
@@ -16,8 +15,6 @@ const FunnelContext = createContext<IFunnelContextData>(
 );
 
 const FunnelProvider: React.FC = ({ children }) => {
-  const { employee } = useEmployeeAuth();
-  const { company } = employee;
   const [funnels, setFunnels] = useState<IFunnelDTO[]>([]);
 
   const [selectedFunnel, setSelectedFunnel] = useState({} as IFunnelDTO);
@@ -26,14 +23,14 @@ const FunnelProvider: React.FC = ({ children }) => {
     setSelectedFunnel(data);
   }, []);
 
-  const getFunnels = useCallback(async () => {
+  const getFunnels = useCallback(async (company_id: string) => {
     try {
-      const response = await api.get<IFunnelDTO[]>(`funnels/${company.id}`);
+      const response = await api.get<IFunnelDTO[]>(`funnels/${company_id}`);
       setFunnels(response.data);
     } catch (err) {
       throw new Error(err);
     }
-  }, [company]);
+  }, []);
 
   return (
     <FunnelContext.Provider

@@ -24,8 +24,8 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
   }, [getEmployeeModules]);
 
   useEffect(() => {
-    getFunnels();
-  }, [getFunnels]);
+    getFunnels(employee.company.id);
+  }, [getFunnels, employee]);
 
   const [comercialModule, setComercialModule] = useState(false);
   const [productionModule, setProductionModule] = useState(false);
