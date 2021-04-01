@@ -18,8 +18,7 @@ const FunnelContext = createContext<IFunnelContextData>(
 const FunnelProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
   const { company } = employee;
-  const { supplierFunnels } = company;
-  const [funnels, setFunnels] = useState(supplierFunnels);
+  const [funnels, setFunnels] = useState<IFunnelDTO[]>([]);
 
   const [selectedFunnel, setSelectedFunnel] = useState({} as IFunnelDTO);
 

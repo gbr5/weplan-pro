@@ -15,6 +15,7 @@ import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import CreateCompanyCustomerForm from '../CreateCompanyCustomerForm';
 import SelectCustomerWindow from '../SelectCustomerWindow';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import { useFunnel } from '../../hooks/funnel';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -31,6 +32,7 @@ const AddCardForm: React.FC<IProps> = ({
 }: IProps) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
+  const { funnels } = useFunnel();
   const [cardName, setCardName] = useState('');
   const [selectStageWindow, setSelectStageWindow] = useState(true);
   const [selectCustomerWindow, setSelectCustomerWindow] = useState(false);
@@ -142,21 +144,15 @@ const AddCardForm: React.FC<IProps> = ({
   }, [getCompanyContacts]);
 
   useEffect(() => {
-    if (
-      employee.company &&
-      employee.company.supplierFunnels &&
-      employee.company.supplierFunnels.length > 0
-    ) {
-      const thisFunnel = employee.company.supplierFunnels.find(
-        funnel => funnel.name === chosenFunnel,
-      );
+    if (funnels.length > 0) {
+      const thisFunnel = funnels.find(funnel => funnel.name === chosenFunnel);
       if (thisFunnel && thisFunnel.stages.length > 0) {
         setStages(thisFunnel.stages);
       } else {
         handleCloseWindow();
       }
     }
-  }, [employee.company, chosenFunnel, handleCloseWindow]);
+  }, [funnels, chosenFunnel, handleCloseWindow]);
 
   return (
     <>

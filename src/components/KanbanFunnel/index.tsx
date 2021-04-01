@@ -3,7 +3,7 @@ import React from 'react';
 import { Container } from './styles';
 import FunnelStage from '../FunnelStage';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
-import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import { useFunnel } from '../../hooks/funnel';
 
 interface IProps {
   funnel: string;
@@ -11,10 +11,8 @@ interface IProps {
 }
 
 const KanbanFunnel: React.FC<IProps> = ({ funnel, handleCardPage }) => {
-  const { employee } = useEmployeeAuth();
-  const thisFunnel = employee.company.supplierFunnels.find(
-    xFunnel => xFunnel.name === funnel,
-  );
+  const { funnels } = useFunnel();
+  const thisFunnel = funnels.find(xFunnel => xFunnel.name === funnel);
 
   if (!thisFunnel) {
     throw new Error('Funnel not found');
