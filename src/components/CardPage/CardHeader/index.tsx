@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import IFunnelStageDTO from '../../../dtos/IFunnelStageDTO';
-import { useEmployeeAuth } from '../../../hooks/employeeAuth';
+import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
 import { useToast } from '../../../hooks/toast';
 import api from '../../../services/api';
@@ -16,7 +16,7 @@ const CardHeader: React.FC<IProps> = ({
   selectedFunnel,
   handleUpdateFunnel,
 }) => {
-  const { employee } = useEmployeeAuth();
+  const { funnels } = useFunnel();
   const { selectedCard, selectCard } = useStageCard();
   const { addToast } = useToast();
 
@@ -34,19 +34,15 @@ const CardHeader: React.FC<IProps> = ({
   );
 
   const funnelStages = useMemo(() => {
-    const currentStages = employee.company.supplierFunnels
+    const currentStages = funnels
       .find(funnel => funnel.name === selectedFunnel)
       ?.stages.sort(handleCompareStageOrder);
 
     if (currentStages !== undefined) {
       return currentStages;
     }
-    return employee.company.supplierFunnels[0].stages;
-  }, [
-    employee.company.supplierFunnels,
-    selectedFunnel,
-    handleCompareStageOrder,
-  ]);
+    return funnels[0].stages;
+  }, [funnels, selectedFunnel, handleCompareStageOrder]);
 
   const handleMoveCardThroughStages = useCallback(
     async (xStage: IFunnelStageDTO) => {

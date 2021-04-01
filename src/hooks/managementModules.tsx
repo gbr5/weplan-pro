@@ -2,10 +2,11 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import IManagementModuleDTO from '../dtos/IManagementModuleDTO';
 
 import api from '../services/api';
+import { useEmployeeAuth } from './employeeAuth';
 
 interface IManagementModuleContextData {
   employeeModules: IManagementModuleDTO[];
-  getEmployeeModules(employee_id: string): Promise<void>;
+  getEmployeeModules(): Promise<void>;
 }
 
 const ManagementModuleContext = createContext<IManagementModuleContextData>(
@@ -13,20 +14,21 @@ const ManagementModuleContext = createContext<IManagementModuleContextData>(
 );
 
 const ManagementModuleProvider: React.FC = ({ children }) => {
+  const { employee } = useEmployeeAuth();
   const [employeeModules, setEmployeeModules] = useState<
     IManagementModuleDTO[]
   >([]);
 
-  const getEmployeeModules = useCallback(async (employee_id: string) => {
+  const getEmployeeModules = useCallback(async () => {
     try {
       const response = await api.get<IManagementModuleDTO[]>(
-        `employee-management-modules/${employee_id}`,
+        `employee-management-modules/${employee.id}`,
       );
       setEmployeeModules(response.data);
     } catch (err) {
       throw new Error(err);
     }
-  }, []);
+  }, [employee]);
 
   return (
     <ManagementModuleContext.Provider

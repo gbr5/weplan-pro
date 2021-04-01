@@ -4,6 +4,7 @@ import { Modules, ModuleTitle } from './styles';
 
 import { useManagementModule } from '../../hooks/managementModules';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import { useFunnel } from '../../hooks/funnel';
 
 interface IPropsDTO {
   title: string;
@@ -16,10 +17,15 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
 }: IPropsDTO) => {
   const { employee } = useEmployeeAuth();
   const { getEmployeeModules, employeeModules } = useManagementModule();
+  const { getFunnels, funnels } = useFunnel();
 
   useEffect(() => {
-    getEmployeeModules(employee.id);
-  }, [getEmployeeModules, employee]);
+    getEmployeeModules();
+  }, [getEmployeeModules]);
+
+  useEffect(() => {
+    getFunnels();
+  }, [getFunnels]);
 
   const [comercialModule, setComercialModule] = useState(false);
   const [productionModule, setProductionModule] = useState(false);
@@ -27,7 +33,7 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
   const [financialModule, setFinancialModule] = useState(false);
   useEffect(() => {
     employeeModules.map(thisModule => {
-      const thisCompanyFunnel = employee.company.supplierFunnels.find(
+      const thisCompanyFunnel = funnels.find(
         xFunnel => xFunnel.name === thisModule.management_module,
       );
       if (thisCompanyFunnel) {
@@ -41,7 +47,7 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
       }
       return thisModule;
     });
-  }, [employeeModules, employee.company.supplierFunnels]);
+  }, [employeeModules, funnels]);
 
   return (
     <Modules>

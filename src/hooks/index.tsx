@@ -7,6 +7,7 @@ import { FormProvider } from './form';
 import { ContactPageProvider } from './contactPages';
 import { ManagementModuleProvider } from './managementModules';
 import { StageCardProvider } from './stageCard';
+import { FunnelProvider } from './funnel';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
@@ -14,9 +15,11 @@ const AppProvider: React.FC = ({ children }) => (
       <ToastProvider>
         <FormProvider>
           <ManagementModuleProvider>
-            <StageCardProvider>
-              <ContactPageProvider>{children}</ContactPageProvider>
-            </StageCardProvider>
+            <FunnelProvider>
+              <StageCardProvider>
+                <ContactPageProvider>{children}</ContactPageProvider>
+              </StageCardProvider>
+            </FunnelProvider>
           </ManagementModuleProvider>
         </FormProvider>
       </ToastProvider>

@@ -15,6 +15,7 @@ import ICustomerServiceOrderDTO from '../../dtos/ICustomerServiceOrderDTO';
 import IUserEmployeeDTO from '../../dtos/IUserEmployeeDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import { useFunnel } from '../../hooks/funnel';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -33,6 +34,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
 }: IProps) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
+  const { funnels } = useFunnel();
 
   const [cardName, setCardName] = useState('');
   const [cardUniqueName, setCardUniqueName] = useState('');
@@ -186,15 +188,13 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
   }, []);
 
   useEffect(() => {
-    const thisFunnel = employee.company.supplierFunnels.find(
-      funnel => funnel.name === 'Comercial',
-    );
+    const thisFunnel = funnels.find(funnel => funnel.name === 'Comercial');
     if (thisFunnel && thisFunnel.stages.length > 0) {
       setStages(thisFunnel.stages);
     } else {
       handleCloseWindow();
     }
-  }, [employee.company.supplierFunnels, handleCloseWindow]);
+  }, [funnels, handleCloseWindow]);
 
   const handlePersonAsCardOwnerQuestion = useCallback((props: boolean) => {
     if (props) {
