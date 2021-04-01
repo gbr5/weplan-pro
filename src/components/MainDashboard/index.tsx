@@ -11,7 +11,7 @@ import TaskDashboard from './TaskDashboard';
 import ITasks from '../../dtos/ITaskDTO';
 import api from '../../services/api';
 import CustomerServiceOrderDashboard from '../CustomerServiceOrderDashboard';
-import CompanyContactDashboard from '../CompanyContactDashboard';
+import CompanyContactDashboard from '../CompanyContactComponents/CompanyContactDashboard';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
 
 const MainDashboard: React.FC = () => {
@@ -48,7 +48,7 @@ const MainDashboard: React.FC = () => {
     handleCloseAllDashboardAndWindows();
     setTaskDashboard(true);
   }, [handleCloseAllDashboardAndWindows]);
-  const handleCompanyDashboard = useCallback(() => {
+  const handleContactDashboard = useCallback(() => {
     handleCloseAllDashboardAndWindows();
     setCompanyDashboard(true);
   }, [handleCloseAllDashboardAndWindows]);
@@ -88,7 +88,7 @@ const MainDashboard: React.FC = () => {
           <SideMenu
             handleMainDashboard={handleMainDashboard}
             handleTaskDashboard={handleTaskDashboard}
-            handleCompanyDashboard={handleCompanyDashboard}
+            handleContactDashboard={handleContactDashboard}
             handleCustomerServiceOrderDashboard={
               handleCustomerServiceOrderDashboard
             }

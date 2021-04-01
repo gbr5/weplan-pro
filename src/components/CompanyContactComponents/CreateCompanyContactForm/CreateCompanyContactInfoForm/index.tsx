@@ -1,12 +1,11 @@
 import React, { useCallback, useRef } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useToast } from '../../hooks/toast';
+import { useToast } from '../../../../hooks/toast';
 
 import { Container } from './styles';
-import api from '../../services/api';
-import Input from '../Input';
-import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
+import Input from '../../../Input';
+import { useCompanyContact } from '../../../../hooks/companyContacts';
 
 interface IFormDTO {
   whatsapp: string;
@@ -19,73 +18,63 @@ interface IFormDTO {
 }
 
 interface IProps {
-  company_contact: ICompanyContactDTO;
   handleCloseWindow: Function;
-  updateCompanyContacts: Function;
 }
 
 const CreateCompanyContactInfoForm: React.FC<IProps> = ({
-  company_contact,
   handleCloseWindow,
-  updateCompanyContacts,
 }: IProps) => {
   const { addToast } = useToast();
+  const { getCompanyContacts, createCompanyContactInfo } = useCompanyContact();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
     async (data: IFormDTO) => {
       try {
         if (data.phone !== '' || undefined || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Telefone',
             info: data.phone,
           });
         }
         if (data.whatsapp !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Whatsapp',
             info: data.whatsapp,
           });
         }
         if (data.email !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Email',
             info: data.email,
           });
         }
         if (data.address !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Address',
             info: data.address,
           });
         }
         if (data.facebook !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Facebook',
             info: data.facebook,
           });
         }
         if (data.instagram !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Instagram',
             info: data.instagram,
           });
         }
         if (data.linkedin !== '' || undefined) {
-          await api.post(`company/contacts/info`, {
-            company_contact_id: company_contact.id,
+          createCompanyContactInfo({
             info_type: 'Linkedin',
             info: data.linkedin,
           });
         }
 
-        updateCompanyContacts();
+        getCompanyContacts();
         handleCloseWindow();
         return addToast({
           type: 'success',
@@ -103,7 +92,7 @@ const CreateCompanyContactInfoForm: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [addToast, handleCloseWindow, updateCompanyContacts, company_contact],
+    [addToast, createCompanyContactInfo, handleCloseWindow, getCompanyContacts],
   );
 
   const inputStyle = {

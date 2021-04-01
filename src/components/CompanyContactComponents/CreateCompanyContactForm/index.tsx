@@ -1,15 +1,13 @@
 import React, { MouseEventHandler, useCallback, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import WindowContainer from '../WindowContainer';
-import CreateCompanyContactInfoForm from '../CreateCompanyContactInfoForm';
-import { useToast } from '../../hooks/toast';
+import WindowContainer from '../../WindowContainer';
+import CreateCompanyContactInfoForm from './CreateCompanyContactInfoForm';
+import { useToast } from '../../../hooks/toast';
 
 import { ContactTypeButton, ContactTypeContainer, Container } from './styles';
-import api from '../../services/api';
-import Input from '../Input';
-import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
-import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import Input from '../../Input';
+import { useCompanyContact } from '../../../hooks/companyContacts';
 
 interface IFormDTO {
   name: string;
@@ -19,39 +17,31 @@ interface IFormDTO {
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
-  updateCompanyContacts: Function;
 }
 
 const CreateCompanyContactForm: React.FC<IProps> = ({
   onHandleCloseWindow,
   handleCloseWindow,
-  updateCompanyContacts,
 }: IProps) => {
   const { addToast } = useToast();
-  const { employee } = useEmployeeAuth();
+  const { createCompanyContact } = useCompanyContact();
   const formRef = useRef<FormHandles>(null);
 
   const [company_contact_type, setCompanyContactType] = useState('');
   const [contactInfo, setContactInfo] = useState(false);
   const [weplanUser, setWeplanUser] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
-  const [companyContact, setCompanyContact] = useState<ICompanyContactDTO>(
-    {} as ICompanyContactDTO,
-  );
 
   const handleSubmit = useCallback(
     async (data: IFormDTO) => {
       try {
-        const response = await api.post(`company/contact`, {
-          company_id: employee.company.id,
+        createCompanyContact({
           name: data.name,
           description: data.description,
           company_contact_type,
           weplanUser,
           isCompany,
         });
-        setCompanyContact(response.data);
-        updateCompanyContacts();
         setContactInfo(true);
         return addToast({
           type: 'success',
@@ -70,8 +60,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
     },
     [
       addToast,
-      employee.company,
-      updateCompanyContacts,
+      createCompanyContact,
       company_contact_type,
       weplanUser,
       isCompany,
@@ -194,11 +183,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
             <button type="submit">Salvar</button>
           </Form>
         ) : (
-          <CreateCompanyContactInfoForm
-            company_contact={companyContact}
-            handleCloseWindow={handleCloseWindow}
-            updateCompanyContacts={updateCompanyContacts}
-          />
+          <CreateCompanyContactInfoForm handleCloseWindow={handleCloseWindow} />
         )}
       </Container>
     </WindowContainer>
