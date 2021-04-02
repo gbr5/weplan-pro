@@ -17,10 +17,10 @@ import { useEmployeeAuth } from '../../hooks/employeeAuth';
 const MainDashboard: React.FC = () => {
   const { employee } = useEmployeeAuth();
 
-  const [sideMenu, setSideMenu] = useState(true);
-  const [mainDashboard, setMainDashboard] = useState(true);
+  const [sideMenu, setSideMenu] = useState(false);
+  const [mainDashboard, setMainDashboard] = useState(false);
   const [taskDashboard, setTaskDashboard] = useState(false);
-  const [companyContactDashboard, setCompanyDashboard] = useState(false);
+  const [companyContactDashboard, setCompanyDashboard] = useState(true);
   const [
     customerServiceOrderDashboard,
     setCustomerServiceOrderDashboard,

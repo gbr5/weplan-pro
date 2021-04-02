@@ -2,33 +2,26 @@ import styled, { css } from 'styled-components';
 import '../../../styles/global';
 
 export const Container = styled.div`
-  position: relative;
-  width: 100%;
+  width: 80vw;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   padding: 5px;
-  box-sizing: border-box;
+  margin: 2rem 0rem 3rem 4rem;
+  /* box-sizing: border-box; */
 
-  > button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: transparent;
-    border: none;
+  > input {
+    padding: 0.5rem;
+    width: 16rem;
+    border-radius: 8px;
+    color: #010101;
+    margin: 1rem 0;
   }
 `;
 
 export const FirstRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  justify-content: left;
-  width: 100%;
+  display: block;
+  width: 80vw;
   height: 100%;
-  padding: 0 0 0 50px;
 `;
 
 interface IButtonProps {
@@ -36,8 +29,12 @@ interface IButtonProps {
 }
 
 export const MenuButton = styled.button<IButtonProps>`
-  background: transparent;
+  height: 2.5rem;
+  min-width: 8rem;
+  margin: 0.5rem;
+  background: rgba(150, 150, 150);
   border: none;
+  border-radius: 5px;
 
   ${props =>
     props.isActive &&
@@ -58,36 +55,8 @@ export const CompanyContactMenu = styled.div`
   height: 40px;
 `;
 
-interface IBooleanProps {
-  isActive: boolean;
-}
-
-export const CompanyContact = styled.span<IBooleanProps>`
+export const ContactTypeSection = styled.div`
   display: flex;
-  width: 100%;
-  height: 32px;
-  color: var(--letter-color-5);
-  background: var(--card-background-color);
-
-  button {
-    background: transparent;
-    border: none;
-    width: 100%;
-
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    gap: 16px;
-  }
-
-  ${props =>
-    props.isActive &&
-    css`
-      background: var(--header-background-color);
-      opacity: 0.8;
-
-      button {
-        color: var(--title-color);
-      }
-    `}
+  width: 90vw;
+  overflow-x: scroll;
 `;

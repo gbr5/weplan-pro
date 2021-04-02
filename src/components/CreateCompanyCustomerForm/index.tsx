@@ -11,6 +11,7 @@ import { useCompanyContact } from '../../hooks/companyContacts';
 
 interface IFormDTO {
   name: string;
+  family_name: string;
   description: string;
 }
 
@@ -36,6 +37,7 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
       try {
         createCompanyContact({
           name: data.name,
+          family_name: data.family_name,
           description: data.description,
           company_contact_type: 'Customer',
           weplanUser,
@@ -83,6 +85,14 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
           <Form ref={formRef} onSubmit={handleSubmit}>
             <div>
               <h3>Nome do cliente</h3>
+              <Input
+                name="name"
+                containerStyle={inputStyle}
+                placeholder="Nome completo do cliente"
+              />
+            </div>
+            <div>
+              <h3>Sobrenome do cliente</h3>
               <Input
                 name="name"
                 containerStyle={inputStyle}

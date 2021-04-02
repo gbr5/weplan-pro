@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useState,
-  useContext,
-  useEffect,
-} from 'react';
+import React, { createContext, useCallback, useState, useContext } from 'react';
 
 import ICompanyContactDTO from '../dtos/ICompanyContactDTO';
 import ICompanyContactInfoDTO from '../dtos/ICompanyContactInfoDTO';
@@ -23,6 +17,7 @@ interface ICompanyContactContextData {
   companyContacts: ICompanyContactDTO[];
   selectContact(data: ICompanyContactDTO): void;
   createCompanyContact(data: ICreateCompanyContactDTO): void;
+  updateCompanyContactIsNew(data: ICompanyContactDTO): void;
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
   getCompanyContacts(): void;
 }
@@ -62,7 +57,47 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       const response = await api.get<ICompanyContactDTO[]>(
         `/company/contacts/${employee.company.id}`,
       );
-      setCompanyContacts(response.data);
+      setCompanyContacts(
+        response.data.sort((a: ICompanyContactDTO, b: ICompanyContactDTO) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }),
+      );
+      if (response.data.length > 0) {
+        setCustomersContacts(
+          response.data.filter(
+            contact => contact.company_contact_type === 'Customer',
+          ),
+        );
+        setSuppliersContacts(
+          response.data.filter(
+            contact => contact.company_contact_type === 'Supplier',
+          ),
+        );
+        setEmployeesContacts(
+          response.data.filter(
+            contact => contact.company_contact_type === 'Employee',
+          ),
+        );
+        setOutsourcedsContacts(
+          response.data.filter(
+            contact => contact.company_contact_type === 'Outsourced',
+          ),
+        );
+        setOthersContacts(
+          response.data.filter(
+            contact => contact.company_contact_type === 'Other',
+          ),
+        );
+        setWeplanUsersContacts(
+          response.data.filter(contact => contact.weplanUser),
+        );
+      }
     } catch (err) {
       throw new Error(err);
     }
@@ -71,9 +106,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const createCompanyContact = useCallback(
     async (data: ICreateCompanyContactDTO) => {
       try {
-        const response = await api.post(`company/contact`, {
+        const response = await api.post(`company/contacts`, {
           company_id: employee.company.id,
           name: data.name,
+          family_name: data.family_name,
           description: data.description,
           company_contact_type: data.company_contact_type,
           weplanUser: data.weplanUser,
@@ -86,6 +122,18 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       }
     },
     [employee, getCompanyContacts],
+  );
+
+  const updateCompanyContactIsNew = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/is-new/${data.id}`);
+        getCompanyContacts();
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts],
   );
 
   const createCompanyContactInfo = useCallback(
@@ -112,38 +160,6 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     },
     [selectedContact],
   );
-  useEffect(() => {
-    if (companyContacts && companyContacts.length > 0) {
-      setCustomersContacts(
-        companyContacts.filter(
-          contact => contact.company_contact_type === 'Customer',
-        ),
-      );
-      setSuppliersContacts(
-        companyContacts.filter(
-          contact => contact.company_contact_type === 'Supplier',
-        ),
-      );
-      setEmployeesContacts(
-        companyContacts.filter(
-          contact => contact.company_contact_type === 'Employee',
-        ),
-      );
-      setOutsourcedsContacts(
-        companyContacts.filter(
-          contact => contact.company_contact_type === 'Outsourced',
-        ),
-      );
-      setOthersContacts(
-        companyContacts.filter(
-          contact => contact.company_contact_type === 'Other',
-        ),
-      );
-      setWeplanUsersContacts(
-        companyContacts.filter(contact => contact.weplanUser),
-      );
-    }
-  }, [companyContacts]);
 
   return (
     <CompanyContactContext.Provider
@@ -159,6 +175,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         companyContacts,
         getCompanyContacts,
         createCompanyContact,
+        updateCompanyContactIsNew,
         createCompanyContactInfo,
       }}
     >
