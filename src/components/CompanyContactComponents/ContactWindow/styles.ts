@@ -21,6 +21,7 @@ export const Container = styled.div`
 export const ContactContainer = styled.div`
   display: flex;
   margin: 1rem auto;
+
   > p {
     font-size: 1.2rem;
 
@@ -28,6 +29,18 @@ export const ContactContainer = styled.div`
       border-bottom: 1px solid var(--letter-color-5);
       min-width: 6rem;
       margin-right: 1rem;
+    }
+  }
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    width: 100%;
+    > p {
+      &:first-child {
+        margin: 0;
+      }
+      text-align: center;
+      margin-bottom: 0.5rem;
     }
   }
 `;

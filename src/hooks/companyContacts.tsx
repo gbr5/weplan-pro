@@ -1,12 +1,16 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
+import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 
 import ICompanyContactDTO from '../dtos/ICompanyContactDTO';
 import ICompanyContactInfoDTO from '../dtos/ICompanyContactInfoDTO';
 import ICreateCompanyContactDTO from '../dtos/ICreateCompanyContactDTO';
 import api from '../services/api';
 import { useEmployeeAuth } from './employeeAuth';
+import { useToast } from './toast';
 
 interface ICompanyContactContextData {
+  contactTypes: ICheckBoxOptionDTO[];
+  contactInfoTypes: ICheckBoxOptionDTO[];
   selectedContact: ICompanyContactDTO;
   customersContacts: ICompanyContactDTO[];
   suppliersContacts: ICompanyContactDTO[];
@@ -16,15 +20,24 @@ interface ICompanyContactContextData {
   weplanUsersContacts: ICompanyContactDTO[];
   companyContacts: ICompanyContactDTO[];
   selectContact(data: ICompanyContactDTO): void;
+  deleteCompanyContact(data: ICompanyContactDTO): void;
   createCompanyContact(data: ICreateCompanyContactDTO): void;
   updateCompanyContactIsNew(data: ICompanyContactDTO): void;
+  updateCompanyContactIsCompany(data: ICompanyContactDTO): void;
+  updateCompanyContactName(data: ICompanyContactDTO): void;
+  updateCompanyContactFamilyName(data: ICompanyContactDTO): void;
+  updateCompanyContactDescription(data: ICompanyContactDTO): void;
+  updateCompanyContactType(data: ICompanyContactDTO): void;
+  updateCompanyContactWeplanUser(data: ICompanyContactDTO): void;
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
+  updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
   getCompanyContacts(): void;
 }
 
 const CompanyContactContext = createContext({} as ICompanyContactContextData);
 
 const CompanyContactContextProvider: React.FC = ({ children }) => {
+  const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
   const [selectedContact, setSelectedContact] = useState(
     {} as ICompanyContactDTO,
@@ -68,40 +81,59 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           return 0;
         }),
       );
-      if (response.data.length > 0) {
-        setCustomersContacts(
-          response.data.filter(
-            contact => contact.company_contact_type === 'Customer',
-          ),
-        );
-        setSuppliersContacts(
-          response.data.filter(
-            contact => contact.company_contact_type === 'Supplier',
-          ),
-        );
-        setEmployeesContacts(
-          response.data.filter(
-            contact => contact.company_contact_type === 'Employee',
-          ),
-        );
-        setOutsourcedsContacts(
-          response.data.filter(
-            contact => contact.company_contact_type === 'Outsourced',
-          ),
-        );
-        setOthersContacts(
-          response.data.filter(
-            contact => contact.company_contact_type === 'Other',
-          ),
-        );
-        setWeplanUsersContacts(
-          response.data.filter(contact => contact.weplanUser),
-        );
-      }
+      setCustomersContacts(
+        response.data.filter(
+          contact => contact.company_contact_type === 'Customer',
+        ),
+      );
+      setSuppliersContacts(
+        response.data.filter(
+          contact => contact.company_contact_type === 'Supplier',
+        ),
+      );
+      setEmployeesContacts(
+        response.data.filter(
+          contact => contact.company_contact_type === 'Employee',
+        ),
+      );
+      setOutsourcedsContacts(
+        response.data.filter(
+          contact => contact.company_contact_type === 'Outsourced',
+        ),
+      );
+      setOthersContacts(
+        response.data.filter(
+          contact => contact.company_contact_type === 'Other',
+        ),
+      );
+      setWeplanUsersContacts(
+        response.data.filter(contact => contact.weplanUser),
+      );
     } catch (err) {
       throw new Error(err);
     }
   }, [employee]);
+
+  const deleteCompanyContact = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.delete(`company/contacts/${data.id}`);
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato deletado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
 
   const createCompanyContact = useCallback(
     async (data: ICreateCompanyContactDTO) => {
@@ -117,11 +149,154 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         });
         setSelectedContact(response.data);
         getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato criado com sucesso',
+        });
       } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao criar contato',
+          description: 'Tente novamente',
+        });
         throw new Error(err);
       }
     },
-    [employee, getCompanyContacts],
+    [getCompanyContacts, employee, addToast],
+  );
+
+  const updateCompanyContactIsCompany = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/is-company/${data.id}`);
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
+
+  const updateCompanyContactWeplanUser = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/weplan-user/${data.id}`);
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
+
+  const updateCompanyContactType = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/type/${data.id}`, {
+          company_contact_type: data.company_contact_type,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
+
+  const updateCompanyContactDescription = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/description/${data.id}`, {
+          description: data.description,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
+
+  const updateCompanyContactFamilyName = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/family-name/${data.id}`, {
+          family_name: data.family_name,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
+  );
+
+  const updateCompanyContactName = useCallback(
+    async (data: ICompanyContactDTO) => {
+      try {
+        await api.put(`company/contacts/name/${data.id}`, {
+          name: data.name,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
   );
 
   const updateCompanyContactIsNew = useCallback(
@@ -129,11 +304,20 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       try {
         await api.put(`company/contacts/is-new/${data.id}`);
         getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
       } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
         throw new Error(err);
       }
     },
-    [getCompanyContacts],
+    [getCompanyContacts, addToast],
   );
 
   const createCompanyContactInfo = useCallback(
@@ -144,11 +328,45 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           info_type: data.info_type,
           info: data.info,
         });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato criado com sucesso',
+        });
       } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao criar contato',
+          description: 'Tente novamente',
+        });
         throw new Error(err);
       }
     },
-    [selectedContact],
+    [getCompanyContacts, selectedContact, addToast],
+  );
+
+  const updateCompanyContactInfo = useCallback(
+    async (data: ICompanyContactInfoDTO) => {
+      try {
+        await api.put(`company/contacts/info/${data.id}`, {
+          info_type: data.info_type,
+          info: data.info,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Contato atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
   );
 
   const selectContact = useCallback(
@@ -161,9 +379,29 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     [selectedContact],
   );
 
+  const contactInfoTypes: ICheckBoxOptionDTO[] = [
+    { id: 'Phone', label: 'Telefone', value: 'Phone' },
+    { id: 'Email', label: 'Email', value: 'Email' },
+    { id: 'Address', label: 'Endereço', value: 'Address' },
+    { id: 'Whatsapp', label: 'Whatsapp', value: 'Whatsapp' },
+    { id: 'Facebook', label: 'Facebook', value: 'Facebook' },
+    { id: 'Instagram', label: 'Instagram', value: 'Instagram' },
+    { id: 'Linkedin', label: 'Linkedin', value: 'Linkedin' },
+    { id: 'Twitter', label: 'Twitter', value: 'Twitter' },
+  ];
+
+  const contactTypes: ICheckBoxOptionDTO[] = [
+    { id: 'Customers', label: 'Clientes', value: 'Customers' },
+    { id: 'Suppliers', label: 'Fornecedores', value: 'Suppliers' },
+    { id: 'Employees', label: 'Funcionários', value: 'Employees' },
+    { id: 'Outsourceds', label: 'Terceirizados', value: 'Outsourceds' },
+    { id: 'Others', label: 'Outros', value: 'Others' },
+  ];
   return (
     <CompanyContactContext.Provider
       value={{
+        contactInfoTypes,
+        contactTypes,
         selectContact,
         customersContacts,
         suppliersContacts,
@@ -175,8 +413,16 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         companyContacts,
         getCompanyContacts,
         createCompanyContact,
+        deleteCompanyContact,
+        updateCompanyContactName,
+        updateCompanyContactFamilyName,
+        updateCompanyContactDescription,
+        updateCompanyContactType,
+        updateCompanyContactWeplanUser,
         updateCompanyContactIsNew,
+        updateCompanyContactIsCompany,
         createCompanyContactInfo,
+        updateCompanyContactInfo,
       }}
     >
       {children}

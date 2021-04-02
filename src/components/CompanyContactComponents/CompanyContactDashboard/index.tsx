@@ -145,7 +145,8 @@ const CompanyContactDashboard: React.FC = () => {
 
   const handleCloseContactWindow = useCallback(() => {
     setContactWindow(false);
-  }, []);
+    getCompanyContacts();
+  }, [getCompanyContacts]);
 
   return (
     <>
