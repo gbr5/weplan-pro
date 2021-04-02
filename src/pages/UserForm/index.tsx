@@ -69,6 +69,7 @@ const UserForm: React.FC = () => {
           info_type: 'Email',
           info: email,
         });
+        setGoogleAutoFill(true);
       } catch (err) {
         throw new Error(err);
       }
@@ -93,7 +94,6 @@ const UserForm: React.FC = () => {
             },
           );
           handleCreateCompanyContactInfo(email, response.data.id);
-          setGoogleAutoFill(true);
         } catch (err) {
           throw new Error(err);
         }
@@ -122,7 +122,7 @@ const UserForm: React.FC = () => {
             };
           });
 
-        if (!googleAutoFill) {
+        if (googleAutoFill) {
           const { name, email } = e;
 
           const newContact = await handleCreateCompanyContact(name);
