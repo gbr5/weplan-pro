@@ -29,6 +29,7 @@ const GoogleFormAutoFill: React.FC<IProps> = ({
     },
     [handleGetUserInfo],
   );
+
   const onFailure = useCallback(
     async (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
       console.log('[Login Failed] response:', res);
