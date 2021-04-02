@@ -127,10 +127,7 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
             </FirstButtonRow>
             <UrlContainer>
               <strong>Url</strong>
-              <a
-                href={`${url}/form/${companyName}/${currentForm.slug}`}
-                target="blank"
-              >
+              <a href={`${url}/${currentForm.id}`} target="blank">
                 {`${url}/form/${companyName}/${currentForm.slug}`}
               </a>
             </UrlContainer>
