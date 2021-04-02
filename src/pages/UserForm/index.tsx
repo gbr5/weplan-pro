@@ -9,6 +9,9 @@ import { Container, FormContainer, InputField, WePlanButtons } from './styles';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useToast } from '../../hooks/toast';
+import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
+import IGoogleProfileObjectDTO from '../../dtos/IGoogleProfileObjectDTO';
+import GoogleFormAutoFill from '../../components/FormComponents/GoogleFormAutoFill';
 
 interface IParams {
   id: string;
@@ -20,6 +23,7 @@ const UserForm: React.FC = () => {
   const { id } = useParams<IParams>();
   const [form, setForm] = useState({} as IFormDTO);
   const history = useHistory();
+  const [googleAutoFill, setGoogleAutoFill] = useState(false);
 
   const handleGetUserForm = useCallback(async () => {
     try {
@@ -33,6 +37,70 @@ const UserForm: React.FC = () => {
   useEffect(() => {
     handleGetUserForm();
   }, [handleGetUserForm]);
+
+  const handleCreateCompanyContact = useCallback(
+    async (name: string) => {
+      try {
+        const response = await api.post<ICompanyContactDTO>(
+          `company/contacts`,
+          {
+            company_id: form.user_id,
+            name,
+            family_name: '',
+            description: `Formulário - ${form.name}`,
+            company_contact_type: 'Others',
+            weplanUser: false,
+            isCompany: false,
+          },
+        );
+        return response.data;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [form],
+  );
+
+  const handleCreateCompanyContactInfo = useCallback(
+    async (email: string, company_contact_id: string) => {
+      try {
+        await api.post(`company/contacts/info`, {
+          company_contact_id,
+          info_type: 'Email',
+          info: email,
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [],
+  );
+
+  const handleCreateCompanyContactWithGoogle = useCallback(
+    async ({ email, givenName, familyName }: IGoogleProfileObjectDTO) => {
+      if (form && form.id) {
+        try {
+          const response = await api.post<ICompanyContactDTO>(
+            `company/contacts`,
+            {
+              company_id: form.user_id,
+              name: givenName,
+              family_name: familyName,
+              description: `Formulário - ${form.name}`,
+              company_contact_type: 'Others',
+              weplanUser: false,
+              isCompany: false,
+            },
+          );
+          handleCreateCompanyContactInfo(email, response.data.id);
+          setGoogleAutoFill(true);
+        } catch (err) {
+          throw new Error(err);
+        }
+      }
+    },
+    [form, handleCreateCompanyContactInfo],
+  );
 
   const [loading, setLoading] = useState(false);
   const handleSubmit = useCallback(
@@ -54,6 +122,13 @@ const UserForm: React.FC = () => {
             };
           });
 
+        if (!googleAutoFill) {
+          const { name, email } = e;
+
+          const newContact = await handleCreateCompanyContact(name);
+          const company_contact_id = newContact.id;
+          handleCreateCompanyContactInfo(email, company_contact_id);
+        }
         await api.post('send-form-results', {
           form_id: form.id,
           formResults,
@@ -78,7 +153,14 @@ const UserForm: React.FC = () => {
         setLoading(false);
       }
     },
-    [form, addToast, history],
+    [
+      form,
+      addToast,
+      history,
+      handleCreateCompanyContactInfo,
+      handleCreateCompanyContact,
+      googleAutoFill,
+    ],
   );
 
   const background = (form.styles && form.styles.background_color) || '#c9c9c9';
@@ -104,10 +186,17 @@ const UserForm: React.FC = () => {
               Quero ser WePlan!
             </a>
           </WePlanButtons>
+          <GoogleFormAutoFill
+            buttonText="Preencha com o Google"
+            handleGetUserInfo={(e: IGoogleProfileObjectDTO) =>
+              handleCreateCompanyContactWithGoogle(e)
+            }
+          />
           <h1>{form.title}</h1>
           <p>{form.message}</p>
           {form &&
             form.fields &&
+            !googleAutoFill &&
             form.fields.map(field => {
               return (
                 <InputField key={field.id}>
@@ -120,6 +209,25 @@ const UserForm: React.FC = () => {
                 </InputField>
               );
             })}
+          {form &&
+            form.fields &&
+            googleAutoFill &&
+            form.fields
+              .filter(
+                field => field.name !== 'name' && !field.name.includes('email'),
+              )
+              .map(field => {
+                return (
+                  <InputField key={field.id}>
+                    <strong>{field.title}</strong>
+                    <Input
+                      type={field.type}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                    />
+                  </InputField>
+                );
+              })}
           <Button loading={loading} type="submit">
             {loading ? <FiLoader /> : 'Enviar'}
           </Button>

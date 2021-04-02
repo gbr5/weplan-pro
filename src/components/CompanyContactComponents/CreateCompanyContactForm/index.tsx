@@ -37,6 +37,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
       try {
         createCompanyContact({
           name: data.name,
+          family_name: '',
           description: data.description,
           company_contact_type,
           weplanUser,
