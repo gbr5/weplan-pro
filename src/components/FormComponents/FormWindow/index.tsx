@@ -2,10 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FiTrash2 } from 'react-icons/fi';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import IFormFieldDTO from '../../../dtos/IFormFieldDTO';
-import { useEmployeeAuth } from '../../../hooks/employeeAuth';
 import { useForm } from '../../../hooks/form';
 import { sortFormFields } from '../../../utils/sortFormFields';
-import { textToSlug } from '../../../utils/textToSlug';
 import Button from '../../Button';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import AddFormField from '../AddFormField';
@@ -32,7 +30,6 @@ interface IProps {
 
 const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
   const { currentForm, deleteForm, defaultFormStyles } = useForm();
-  const { employee } = useEmployeeAuth();
 
   const [addFormField, setAddFormField] = useState(false);
   const [editFormField, setEditFormField] = useState(false);
@@ -42,8 +39,7 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
   const [formStyles, setFormStyles] = useState(defaultFormStyles);
   const [deleteFormConfirmation, setDeleteFormConfirmation] = useState(false);
 
-  const url = 'https://weplanweb.vercel.app';
-  const companyName = textToSlug(employee.company.name);
+  const url = 'https://weplan.pro';
 
   const handleAddFormField = useCallback((e: boolean) => {
     setAddFormField(e);
