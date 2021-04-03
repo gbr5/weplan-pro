@@ -72,7 +72,6 @@ const UserForm: React.FC = () => {
           info_type: 'Email',
           info: email,
         });
-        setGoogleAutoFill(true);
       } catch (err) {
         throw new Error(err);
       }
@@ -96,6 +95,7 @@ const UserForm: React.FC = () => {
               isCompany: false,
             },
           );
+          setGoogleAutoFill(true);
           setGoogleProfileObject(data);
           handleCreateCompanyContactInfo(data.email, response.data.id);
         } catch (err) {
