@@ -97,7 +97,9 @@ const UserForm: React.FC = () => {
           );
           setGoogleAutoFill(true);
           setGoogleProfileObject(data);
-          handleCreateCompanyContactInfo(data.email, response.data.id);
+          const { email } = data;
+          const company_contact_id = response.data.id;
+          handleCreateCompanyContactInfo(email, company_contact_id);
         } catch (err) {
           throw new Error(err);
         }
