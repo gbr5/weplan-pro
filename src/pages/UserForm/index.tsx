@@ -24,6 +24,7 @@ const UserForm: React.FC = () => {
   const [form, setForm] = useState({} as IFormDTO);
   const history = useHistory();
   const [googleAutoFill, setGoogleAutoFill] = useState(false);
+  const [contactId, setContactId] = useState('');
   const [googleProfileObject, setGoogleProfileObject] = useState(
     {} as IGoogleProfileObjectDTO,
   );
@@ -83,6 +84,8 @@ const UserForm: React.FC = () => {
     async (data: IGoogleProfileObjectDTO) => {
       if (form && form.id) {
         try {
+          setGoogleAutoFill(true);
+          setGoogleProfileObject(data);
           const response = await api.post<ICompanyContactDTO>(
             `company/contacts`,
             {
@@ -95,17 +98,14 @@ const UserForm: React.FC = () => {
               isCompany: false,
             },
           );
-          setGoogleAutoFill(true);
-          setGoogleProfileObject(data);
-          const { email } = data;
-          const company_contact_id = response.data.id;
-          handleCreateCompanyContactInfo(email, company_contact_id);
+          console.log(response.data);
+          setContactId(response.data.id);
         } catch (err) {
           throw new Error(err);
         }
       }
     },
-    [form, handleCreateCompanyContactInfo],
+    [form],
   );
 
   const [loading, setLoading] = useState(false);
@@ -135,8 +135,10 @@ const UserForm: React.FC = () => {
           handleCreateCompanyContactInfo(email, company_contact_id);
         } else {
           console.log(googleProfileObject);
-          formResults.push({ name: 'name', value: googleProfileObject.name });
-          formResults.push({ name: 'email', value: googleProfileObject.email });
+          const { name, email } = googleProfileObject;
+          formResults.push({ name: 'name', value: name });
+          formResults.push({ name: 'email', value: email });
+          handleCreateCompanyContactInfo(email, contactId);
         }
         console.log(formResults);
         await api.post('send-form-results', {
@@ -171,6 +173,7 @@ const UserForm: React.FC = () => {
       handleCreateCompanyContact,
       googleAutoFill,
       googleProfileObject,
+      contactId,
     ],
   );
 
