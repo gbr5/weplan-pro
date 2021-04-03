@@ -4,6 +4,7 @@ import Button from '../../Button';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import WindowContainer from '../../WindowContainer';
 import ContactInfoField from './ContactInfoField';
+import ContactNote from './ContactNote';
 
 import { Container } from './styles';
 
@@ -77,12 +78,19 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
       )}
       <Container>
         <h1>{selectedContact.name}</h1>
-        <p>{contactType}</p>
+        <p>Categoria: {contactType}</p>
 
-        <p>{selectedContact.description}</p>
+        <p> Descrição: {selectedContact.description}</p>
 
-        {selectedContact.contact_infos.map(contact => {
-          return <ContactInfoField key={contact.id} contactField={contact} />;
+        <h3>Contatos</h3>
+        {selectedContact.contact_infos.map(contactInfo => {
+          return (
+            <ContactInfoField key={contactInfo.id} contactField={contactInfo} />
+          );
+        })}
+        <h3>Notas</h3>
+        {selectedContact.notes.map(note => {
+          return <ContactNote key={note.id} contactNote={note} />;
         })}
 
         <Button
