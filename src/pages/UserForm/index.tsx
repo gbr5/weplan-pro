@@ -24,6 +24,9 @@ const UserForm: React.FC = () => {
   const [form, setForm] = useState({} as IFormDTO);
   const history = useHistory();
   const [googleAutoFill, setGoogleAutoFill] = useState(false);
+  const [googleProfileObject, setGoogleProfileObject] = useState(
+    {} as IGoogleProfileObjectDTO,
+  );
 
   const handleGetUserForm = useCallback(async () => {
     try {
@@ -78,22 +81,23 @@ const UserForm: React.FC = () => {
   );
 
   const handleCreateCompanyContactWithGoogle = useCallback(
-    async ({ email, givenName, familyName }: IGoogleProfileObjectDTO) => {
+    async (data: IGoogleProfileObjectDTO) => {
       if (form && form.id) {
         try {
           const response = await api.post<ICompanyContactDTO>(
             `company/contacts`,
             {
               company_id: form.user_id,
-              name: givenName,
-              family_name: familyName,
+              name: data.givenName,
+              family_name: data.familyName,
               description: `Formulário - ${form.name}`,
               company_contact_type: 'Others',
               weplanUser: false,
               isCompany: false,
             },
           );
-          handleCreateCompanyContactInfo(email, response.data.id);
+          setGoogleProfileObject(data);
+          handleCreateCompanyContactInfo(data.email, response.data.id);
         } catch (err) {
           throw new Error(err);
         }
@@ -122,13 +126,17 @@ const UserForm: React.FC = () => {
             };
           });
 
-        if (googleAutoFill) {
+        if (!googleAutoFill) {
           const { name, email } = e;
-
           const newContact = await handleCreateCompanyContact(name);
           const company_contact_id = newContact.id;
           handleCreateCompanyContactInfo(email, company_contact_id);
+        } else {
+          console.log(googleProfileObject);
+          formResults.push({ name: 'name', value: googleProfileObject.name });
+          formResults.push({ name: 'email', value: googleProfileObject.email });
         }
+        console.log(formResults);
         await api.post('send-form-results', {
           form_id: form.id,
           formResults,
@@ -160,6 +168,7 @@ const UserForm: React.FC = () => {
       handleCreateCompanyContactInfo,
       handleCreateCompanyContact,
       googleAutoFill,
+      googleProfileObject,
     ],
   );
 
