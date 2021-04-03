@@ -98,7 +98,6 @@ const UserForm: React.FC = () => {
               isCompany: false,
             },
           );
-          console.log(response.data);
           setContactId(response.data.id);
         } catch (err) {
           throw new Error(err);
@@ -109,6 +108,21 @@ const UserForm: React.FC = () => {
   );
 
   const [loading, setLoading] = useState(false);
+
+  const handleCreateCompanyContactNote = useCallback(
+    async (note: string, company_contact_id: string) => {
+      try {
+        await api.post(`company/contacts/notes`, {
+          company_contact_id,
+          note,
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [],
+  );
+
   const handleSubmit = useCallback(
     async e => {
       setLoading(true);
@@ -129,18 +143,41 @@ const UserForm: React.FC = () => {
           });
 
         if (!googleAutoFill) {
+          const stringResults = JSON.stringify(formResults)
+            .replace(/\[/, '\n')
+            .replace(/\]/g, '\n')
+            .replace(/"/g, '')
+            .replace(/\b,/g, '')
+            .replace(/\b;/g, '')
+            .replace(/{name:/g, '\n')
+            .replace(/value:/g, ':\n')
+            .replace(/},/g, '\n')
+            .replace(/}/g, '\n');
           const { name, email } = e;
           const newContact = await handleCreateCompanyContact(name);
           const company_contact_id = newContact.id;
           handleCreateCompanyContactInfo(email, company_contact_id);
+          const note = `${form.name}\n${stringResults}`;
+          handleCreateCompanyContactNote(note, company_contact_id);
         } else {
-          console.log(googleProfileObject);
           const { name, email } = googleProfileObject;
           formResults.push({ name: 'name', value: name });
           formResults.push({ name: 'email', value: email });
+          const stringResults = JSON.stringify(formResults)
+            .replace(/\[/, '\n')
+            .replace(/\]/g, '\n')
+            .replace(/"/g, '')
+            .replace(/\b,/g, '')
+            .replace(/\b;/g, '')
+            .replace(/{name:/g, '\n')
+            .replace(/value:/g, ':\n')
+            .replace(/},/g, '\n')
+            .replace(/}/g, '\n');
           handleCreateCompanyContactInfo(email, contactId);
+          const note = `${form.name}\n${stringResults}`;
+          handleCreateCompanyContactNote(note, contactId);
         }
-        console.log(formResults);
+
         await api.post('send-form-results', {
           form_id: form.id,
           formResults,
@@ -149,6 +186,7 @@ const UserForm: React.FC = () => {
           type: 'success',
           title: 'Formulário enviado com sucesso',
         });
+
         // if (form.landingPage && form.landingPage.isActive) {
         //   window.location.replace(form.landingPage.url);
         // }
@@ -174,6 +212,7 @@ const UserForm: React.FC = () => {
       googleAutoFill,
       googleProfileObject,
       contactId,
+      handleCreateCompanyContactNote,
     ],
   );
 
@@ -212,6 +251,19 @@ const UserForm: React.FC = () => {
             form.fields &&
             !googleAutoFill &&
             form.fields.map(field => {
+              if (field.type === 'textarea') {
+                return (
+                  <InputField key={field.id}>
+                    <strong>{field.title}</strong>
+                    <textarea
+                      name={field.name}
+                      defaultValue={field.placeholder}
+                      cols={27}
+                      rows={5}
+                    />
+                  </InputField>
+                );
+              }
               return (
                 <InputField key={field.id}>
                   <strong>{field.title}</strong>
@@ -231,6 +283,19 @@ const UserForm: React.FC = () => {
                 field => field.name !== 'name' && !field.name.includes('email'),
               )
               .map(field => {
+                if (field.type === 'textarea') {
+                  return (
+                    <InputField key={field.id}>
+                      <strong>{field.title}</strong>
+                      <textarea
+                        name={field.name}
+                        defaultValue={field.placeholder}
+                        cols={30}
+                        rows={5}
+                      />
+                    </InputField>
+                  );
+                }
                 return (
                   <InputField key={field.id}>
                     <strong>{field.title}</strong>

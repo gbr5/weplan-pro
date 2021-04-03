@@ -1,4 +1,5 @@
 import ICompanyContactInfoDTO from './ICompanyContactInfoDTO';
+import ICompanyContactNoteDTO from './ICompanyContactNoteDTO';
 
 export default interface ICompanyContactDTO {
   id: string;
@@ -10,4 +11,5 @@ export default interface ICompanyContactDTO {
   isCompany: boolean;
   isNew: boolean;
   contact_infos: ICompanyContactInfoDTO[];
+  notes: ICompanyContactNoteDTO[];
 }

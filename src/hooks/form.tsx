@@ -517,6 +517,7 @@ const FormProvider: React.FC = ({ children }) => {
 
   const fieldTypes: ICheckBoxOptionDTO[] = [
     { id: 'text', label: 'Texto', value: 'text' },
+    { id: 'textarea', label: 'Área de Texto', value: 'textarea' },
     { id: 'email', label: 'Email', value: 'email' },
     { id: 'date', label: 'Data', value: 'date' },
     { id: 'number', label: 'Número', value: 'number' },

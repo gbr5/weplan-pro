@@ -3,6 +3,7 @@ import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 
 import ICompanyContactDTO from '../dtos/ICompanyContactDTO';
 import ICompanyContactInfoDTO from '../dtos/ICompanyContactInfoDTO';
+import ICompanyContactNoteDTO from '../dtos/ICompanyContactNoteDTO';
 import ICreateCompanyContactDTO from '../dtos/ICreateCompanyContactDTO';
 import api from '../services/api';
 import { useEmployeeAuth } from './employeeAuth';
@@ -30,7 +31,9 @@ interface ICompanyContactContextData {
   updateCompanyContactType(data: ICompanyContactDTO): void;
   updateCompanyContactWeplanUser(data: ICompanyContactDTO): void;
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
+  createCompanyContactNote(note: string): void;
   updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
+  updateCompanyContactNote(data: ICompanyContactNoteDTO): void;
   getCompanyContacts(): void;
 }
 
@@ -320,6 +323,30 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     [getCompanyContacts, addToast],
   );
 
+  const createCompanyContactNote = useCallback(
+    async (note: string) => {
+      try {
+        await api.post(`company/contacts/notes`, {
+          company_contact_id: selectedContact.id,
+          note,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Nota criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao criar nota',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, selectedContact, addToast],
+  );
+
   const createCompanyContactInfo = useCallback(
     async (data: Omit<ICompanyContactInfoDTO, 'id'>) => {
       try {
@@ -343,6 +370,30 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       }
     },
     [getCompanyContacts, selectedContact, addToast],
+  );
+
+  const updateCompanyContactNote = useCallback(
+    async (data: ICompanyContactNoteDTO) => {
+      try {
+        await api.put(`company/contacts/notes/${data.id}`, {
+          isNew: data.isNew,
+          note: data.note,
+        });
+        getCompanyContacts();
+        addToast({
+          type: 'success',
+          title: 'Nota atualizado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao atualizar nota',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, addToast],
   );
 
   const updateCompanyContactInfo = useCallback(
@@ -422,7 +473,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         updateCompanyContactIsNew,
         updateCompanyContactIsCompany,
         createCompanyContactInfo,
+        createCompanyContactNote,
         updateCompanyContactInfo,
+        updateCompanyContactNote,
       }}
     >
       {children}

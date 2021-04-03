@@ -9,6 +9,8 @@ export const Container = styled.div`
   width: 100%;
   height: 90%;
   border-radius: 8px;
+  overflow-x: scroll;
+  padding-bottom: 2rem;
 
   > h1 {
     width: 100%;

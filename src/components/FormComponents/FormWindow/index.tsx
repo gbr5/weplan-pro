@@ -122,10 +122,19 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
               </button>
             </FirstButtonRow>
             <UrlContainer>
-              <strong>Url</strong>
-              <a href={`${url}/form/${currentForm.id}`} target="blank">
-                {`${url}/form/${currentForm.id}`}
-              </a>
+              {currentForm.emailNotifications &&
+              currentForm.emailNotifications.length > 0 ? (
+                <>
+                  <strong>Url</strong>
+                  <a href={`${url}/form/${currentForm.id}`} target="blank">
+                    {`${url}/form/${currentForm.id}`}
+                  </a>
+                </>
+              ) : (
+                <Button type="button" onClick={() => handleFormSettings(true)}>
+                  Terminar configurações
+                </Button>
+              )}
             </UrlContainer>
             <FormContainer formStyles={formStyles}>
               <h1>{currentForm.title}</h1>

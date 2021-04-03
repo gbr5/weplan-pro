@@ -113,4 +113,11 @@ export const InputField = styled.div`
   > strong {
     margin-bottom: 0.8rem;
   }
+
+  > textarea {
+    border-radius: 8px;
+    line-height: 2rem;
+    font-size: 1.2rem;
+    padding: 0.3rem;
+  }
 `;
