@@ -9,7 +9,6 @@ import { Container, FormContainer, InputField, WePlanButtons } from './styles';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useToast } from '../../hooks/toast';
-import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import IGoogleProfileObjectDTO from '../../dtos/IGoogleProfileObjectDTO';
 import GoogleFormAutoFill from '../../components/FormComponents/GoogleFormAutoFill';
 
@@ -24,7 +23,6 @@ const UserForm: React.FC = () => {
   const [form, setForm] = useState({} as IFormDTO);
   const history = useHistory();
   const [googleAutoFill, setGoogleAutoFill] = useState(false);
-  const [contactId, setContactId] = useState('');
   const [googleProfileObject, setGoogleProfileObject] = useState(
     {} as IGoogleProfileObjectDTO,
   );
@@ -42,63 +40,12 @@ const UserForm: React.FC = () => {
     handleGetUserForm();
   }, [handleGetUserForm]);
 
-  const handleCreateCompanyContact = useCallback(
-    async (name: string) => {
-      try {
-        const response = await api.post<ICompanyContactDTO>(
-          `company/contacts`,
-          {
-            company_id: form.user_id,
-            name,
-            family_name: '',
-            description: `Formulário - ${form.name}`,
-            company_contact_type: 'Others',
-            weplanUser: false,
-            isCompany: false,
-          },
-        );
-        return response.data;
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [form],
-  );
-
-  const handleCreateCompanyContactInfo = useCallback(
-    async (email: string, company_contact_id: string) => {
-      try {
-        await api.post(`company/contacts/info`, {
-          company_contact_id,
-          info_type: 'Email',
-          info: email,
-        });
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [],
-  );
-
   const handleCreateCompanyContactWithGoogle = useCallback(
     async (data: IGoogleProfileObjectDTO) => {
       if (form && form.id) {
         try {
           setGoogleAutoFill(true);
           setGoogleProfileObject(data);
-          const response = await api.post<ICompanyContactDTO>(
-            `company/contacts`,
-            {
-              company_id: form.user_id,
-              name: data.givenName,
-              family_name: data.familyName,
-              description: `Formulário - ${form.name}`,
-              company_contact_type: 'Others',
-              weplanUser: false,
-              isCompany: false,
-            },
-          );
-          setContactId(response.data.id);
         } catch (err) {
           throw new Error(err);
         }
@@ -108,20 +55,6 @@ const UserForm: React.FC = () => {
   );
 
   const [loading, setLoading] = useState(false);
-
-  const handleCreateCompanyContactNote = useCallback(
-    async (note: string, company_contact_id: string) => {
-      try {
-        await api.post(`company/contacts/notes`, {
-          company_contact_id,
-          note,
-        });
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [],
-  );
 
   const handleSubmit = useCallback(
     async e => {
@@ -142,40 +75,11 @@ const UserForm: React.FC = () => {
             };
           });
 
-        if (!googleAutoFill) {
-          const stringResults = JSON.stringify(formResults)
-            .replace(/\[/, '\n')
-            .replace(/\]/g, '\n')
-            .replace(/"/g, '')
-            .replace(/\b,/g, '')
-            .replace(/\b;/g, '')
-            .replace(/{name:/g, '\n')
-            .replace(/value:/g, ':\n')
-            .replace(/},/g, '\n')
-            .replace(/}/g, '\n');
-          const { name, email } = e;
-          const newContact = await handleCreateCompanyContact(name);
-          const company_contact_id = newContact.id;
-          handleCreateCompanyContactInfo(email, company_contact_id);
-          const note = `${form.name}\n${stringResults}`;
-          handleCreateCompanyContactNote(note, company_contact_id);
-        } else {
-          const { name, email } = googleProfileObject;
-          formResults.push({ name: 'name', value: name });
+        if (googleAutoFill) {
+          const { givenName, name, email, familyName } = googleProfileObject;
+          formResults.push({ name: 'name', value: givenName || name });
+          formResults.push({ name: 'family_name', value: familyName });
           formResults.push({ name: 'email', value: email });
-          const stringResults = JSON.stringify(formResults)
-            .replace(/\[/, '\n')
-            .replace(/\]/g, '\n')
-            .replace(/"/g, '')
-            .replace(/\b,/g, '')
-            .replace(/\b;/g, '')
-            .replace(/{name:/g, '\n')
-            .replace(/value:/g, ':\n')
-            .replace(/},/g, '\n')
-            .replace(/}/g, '\n');
-          handleCreateCompanyContactInfo(email, contactId);
-          const note = `${form.name}\n${stringResults}`;
-          handleCreateCompanyContactNote(note, contactId);
         }
 
         await api.post('send-form-results', {
@@ -187,9 +91,9 @@ const UserForm: React.FC = () => {
           title: 'Formulário enviado com sucesso',
         });
 
-        // if (form.landingPage && form.landingPage.isActive) {
-        //   window.location.replace(form.landingPage.url);
-        // }
+        if (form.landingPage && form.landingPage.isActive) {
+          window.location.replace(form.landingPage.url);
+        }
         if (form.successMessage && form.successMessage.title) {
           history.push(`/success-message/${form.successMessage.id}`);
         }
@@ -203,17 +107,7 @@ const UserForm: React.FC = () => {
         setLoading(false);
       }
     },
-    [
-      form,
-      addToast,
-      history,
-      handleCreateCompanyContactInfo,
-      handleCreateCompanyContact,
-      googleAutoFill,
-      googleProfileObject,
-      contactId,
-      handleCreateCompanyContactNote,
-    ],
+    [form, addToast, history, googleAutoFill, googleProfileObject],
   );
 
   const background = (form.styles && form.styles.background_color) || '#c9c9c9';
