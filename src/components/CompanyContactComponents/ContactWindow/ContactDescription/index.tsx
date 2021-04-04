@@ -1,0 +1,76 @@
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import React, { useCallback, useRef, useState } from 'react';
+import { MdClose, MdEdit } from 'react-icons/md';
+import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
+import { useCompanyContact } from '../../../../hooks/companyContacts';
+import Button from '../../../Button';
+
+import { Container, FieldContainer, EditFieldContainer } from './styles';
+
+const ContactDescription: React.FC = () => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const iconSize = 24;
+
+  const {
+    updateCompanyContactDescription,
+    selectedContact,
+  } = useCompanyContact();
+  const formRef = useRef<FormHandles>(null);
+  const [editContactField, setEditContactField] = useState(false);
+
+  const handleSubmit = useCallback(
+    (data: ICompanyContactDTO) => {
+      updateCompanyContactDescription(selectedContact.id, data.description);
+      setEditContactField(false);
+    },
+    [updateCompanyContactDescription, selectedContact],
+  );
+
+  const handleEditField = useCallback((e: boolean) => {
+    setEditContactField(e);
+  }, []);
+  return (
+    <Container>
+      <span>
+        <button
+          type="button"
+          onClick={() => handleEditField(!editContactField)}
+        >
+          {editContactField ? (
+            <MdClose size={iconSize} />
+          ) : (
+            <MdEdit size={iconSize} />
+          )}
+        </button>
+      </span>
+      {editContactField ? (
+        <>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <EditFieldContainer>
+              <section>
+                <strong>Descrição</strong>
+                <textarea
+                  ref={textAreaRef}
+                  cols={22}
+                  rows={6}
+                  defaultValue={selectedContact.description}
+                  placeholder={selectedContact.description}
+                  name="description"
+                />
+              </section>
+              <Button type="submit">Salvar</Button>
+            </EditFieldContainer>
+          </Form>
+        </>
+      ) : (
+        <FieldContainer>
+          <strong>Descrição</strong>
+          <p>{selectedContact.description}</p>
+        </FieldContainer>
+      )}
+    </Container>
+  );
+};
+
+export default ContactDescription;

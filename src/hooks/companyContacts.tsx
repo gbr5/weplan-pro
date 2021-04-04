@@ -24,12 +24,12 @@ interface ICompanyContactContextData {
   deleteCompanyContact(data: ICompanyContactDTO): void;
   createCompanyContact(data: ICreateCompanyContactDTO): void;
   updateCompanyContactIsNew(data: ICompanyContactDTO): void;
-  updateCompanyContactIsCompany(data: ICompanyContactDTO): void;
-  updateCompanyContactName(data: ICompanyContactDTO): void;
-  updateCompanyContactFamilyName(data: ICompanyContactDTO): void;
-  updateCompanyContactDescription(data: ICompanyContactDTO): void;
-  updateCompanyContactType(data: ICompanyContactDTO): void;
-  updateCompanyContactWeplanUser(data: ICompanyContactDTO): void;
+  updateCompanyContactIsCompany(id: string): void;
+  updateCompanyContactName(id: string, name: string): void;
+  updateCompanyContactFamilyName(id: string, family_name: string): void;
+  updateCompanyContactDescription(id: string, description: string): void;
+  updateCompanyContactType(id: string, company_contact_type: string): void;
+  updateCompanyContactWeplanUser(id: string): void;
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
   createCompanyContactNote(note: string): void;
   updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
@@ -169,9 +169,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactIsCompany = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string) => {
       try {
-        await api.put(`company/contacts/is-company/${data.id}`);
+        await api.put(`company/contacts/is-company/${id}`);
         getCompanyContacts();
         addToast({
           type: 'success',
@@ -190,9 +190,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactWeplanUser = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string) => {
       try {
-        await api.put(`company/contacts/weplan-user/${data.id}`);
+        await api.put(`company/contacts/weplan-user/${id}`);
         getCompanyContacts();
         addToast({
           type: 'success',
@@ -211,10 +211,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactType = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string, company_contact_type: string) => {
       try {
-        await api.put(`company/contacts/type/${data.id}`, {
-          company_contact_type: data.company_contact_type,
+        await api.put(`company/contacts/type/${id}`, {
+          company_contact_type,
         });
         getCompanyContacts();
         addToast({
@@ -234,10 +234,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactDescription = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string, description: string) => {
       try {
-        await api.put(`company/contacts/description/${data.id}`, {
-          description: data.description,
+        await api.put(`company/contacts/description/${id}`, {
+          description,
         });
         getCompanyContacts();
         addToast({
@@ -257,10 +257,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactFamilyName = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string, family_name: string) => {
       try {
-        await api.put(`company/contacts/family-name/${data.id}`, {
-          family_name: data.family_name,
+        await api.put(`company/contacts/family-name/${id}`, {
+          family_name,
         });
         getCompanyContacts();
         addToast({
@@ -280,10 +280,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactName = useCallback(
-    async (data: ICompanyContactDTO) => {
+    async (id: string, name: string) => {
       try {
-        await api.put(`company/contacts/name/${data.id}`, {
-          name: data.name,
+        await api.put(`company/contacts/name/${id}`, {
+          name,
         });
         getCompanyContacts();
         addToast({

@@ -9,6 +9,7 @@ import Button from '../../../Button';
 // import Input from '../../../Input';
 
 import { Container, FieldContainer, EditFieldContainer } from './styles';
+import formatStringToDate from '../../../../utils/formatDateToString';
 
 interface IProps {
   contactNote: ICompanyContactNoteDTO;
@@ -30,7 +31,7 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
       company_contact_id: contactNote.company_contact_id,
       created_at: contactNote.created_at,
       isNew: contactNote.isNew,
-      upated_at: contactNote.upated_at,
+      updated_at: contactNote.updated_at,
     });
     setEditContactField(false);
   }, [updateCompanyContactNote, contactNote]);
@@ -66,7 +67,6 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
           <EditFieldContainer>
             <section>
               <textarea
-                // dangerouslySetInnerHTML={{ __html: contactNote.note }}
                 ref={textAreaRef}
                 cols={22}
                 rows={6}
@@ -85,7 +85,12 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
           {/* {htmlToDOM(contactNote.note, () => {})} */}
           <p>{contactNote.note}</p>
           <footer>
-            <p>{contactNote.created_at}</p>
+            <p>Criado: {formatStringToDate(String(contactNote.created_at))}</p>
+            {contactNote.created_at !== contactNote.updated_at && (
+              <p>
+                Atualizado: {formatStringToDate(String(contactNote.updated_at))}
+              </p>
+            )}
           </footer>
         </FieldContainer>
       )}

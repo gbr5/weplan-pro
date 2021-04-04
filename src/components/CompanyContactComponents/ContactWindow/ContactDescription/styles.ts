@@ -3,15 +3,13 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: block;
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  padding: 0.4rem;
 
   > span {
     position: absolute;
     top: 0.2rem;
     right: 0.2rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       display: flex;
@@ -24,9 +22,9 @@ export const Container = styled.div`
 
 export const EditFieldContainer = styled.div`
   display: block;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   padding: 0.5rem;
-  padding-top: 2rem;
+  padding-top: 1rem;
   flex: 1;
   background: var(--letter-color-2);
   border-radius: 4px;
@@ -43,42 +41,13 @@ export const EditFieldContainer = styled.div`
 
 export const FieldContainer = styled.div`
   display: flex;
-  margin: 1rem auto;
+  flex-direction: column;
+  margin: 0.5rem auto;
 
   > strong {
-    font-size: 1.2rem;
-    border-bottom: 1px solid var(--letter-color-5);
-    min-width: 6rem;
-    margin-right: 1rem;
-  }
-
-  > p {
-    font-size: 1.2rem;
-  }
-
-  > footer {
-    margin-left: auto;
-    margin-top: 1rem;
-    border-radius: 2px;
-    padding: 0.3rem;
-    background: rgba(215, 210, 208);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-
-    > p {
-      font-size: 0.8rem;
-      color: rgba(0, 0, 0, 0.95);
-    }
-  }
-
-  @media (max-width: 700px) {
-    flex-direction: column;
     width: 100%;
-    > p {
-      &:first-child {
-        margin: 0;
-      }
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
+    border-bottom: 1px solid var(--letter-color-3);
+    margin: 0.5rem 0;
+    text-align: left;
   }
 `;
