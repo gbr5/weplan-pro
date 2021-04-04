@@ -76,9 +76,16 @@ const UserForm: React.FC = () => {
           });
 
         if (googleAutoFill) {
-          const { givenName, name, email, familyName } = googleProfileObject;
+          const {
+            givenName,
+            name,
+            email,
+            familyName,
+            imageUrl,
+          } = googleProfileObject;
           formResults.push({ name: 'name', value: givenName || name });
           formResults.push({ name: 'family_name', value: familyName });
+          formResults.push({ name: 'google_avatar', value: imageUrl });
           formResults.push({ name: 'email', value: email });
         }
 
