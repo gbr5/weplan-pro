@@ -18,6 +18,12 @@ export const Container = styled.div`
     margin: 1rem auto;
     text-align: center;
   }
+
+  > h3 {
+    margin: 1rem auto 0.8rem;
+    border-bottom: 1px solid var(--secondary-color);
+    text-align: center;
+  }
 `;
 
 export const ContactContainer = styled.div`

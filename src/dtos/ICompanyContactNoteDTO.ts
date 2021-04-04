@@ -4,5 +4,5 @@ export default interface ICompanyContactNoteDTO {
   note: string;
   isNew: boolean;
   created_at: Date;
-  upated_at: Date;
+  updated_at: Date;
 }

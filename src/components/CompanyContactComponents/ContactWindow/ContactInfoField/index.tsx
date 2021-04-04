@@ -2,7 +2,6 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MdClose, MdEdit } from 'react-icons/md';
-import ICheckBoxOptionDTO from '../../../../dtos/ICheckBoxOptionDTO';
 import ICompanyContactInfoDTO from '../../../../dtos/ICompanyContactInfoDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
 import Button from '../../../Button';
@@ -21,9 +20,7 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
   const { updateCompanyContactInfo, contactInfoTypes } = useCompanyContact();
   const formRef = useRef<FormHandles>(null);
   const [editContactField, setEditContactField] = useState(false);
-  const [defaultInfoType, setDefaultInfoType] = useState(
-    {} as ICheckBoxOptionDTO,
-  );
+  const [defaultInfoType, setDefaultInfoType] = useState(contactInfoTypes[0]);
 
   useEffect(() => {
     const response = contactInfoTypes.find(
@@ -68,7 +65,7 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
               <strong>Tipo de contato</strong>
               <SelectField
                 isSearchable={false}
-                defaultValue={defaultInfoType || contactInfoTypes[0]}
+                defaultValue={defaultInfoType}
                 name="info_type"
                 options={contactInfoTypes}
               />
@@ -86,7 +83,7 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
         </Form>
       ) : (
         <FieldContainer>
-          <strong>{contactField.info_type}</strong>
+          <strong>{defaultInfoType.label}</strong>
           <p>{contactField.info}</p>
         </FieldContainer>
       )}
