@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
@@ -22,6 +22,7 @@ import {
 } from './styles';
 import GoogleLoginComponent from '../../components/AuthComponents/GoogleLoginComponent';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import SignUpContainer from '../../components/SignUpComponents/SignUpContainer';
 
 interface SignInFormData {
   email: string;
@@ -34,6 +35,12 @@ const SignIn: React.FC = () => {
 
   const { signIn } = useEmployeeAuth();
   const { addToast } = useToast();
+
+  const [isSignin, setIsSignin] = useState(true);
+
+  const handleSignin = useCallback((e: boolean) => {
+    setIsSignin(e);
+  }, []);
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -82,11 +89,13 @@ const SignIn: React.FC = () => {
 
   return (
     <Container>
-      <ToggleButton>
-        <Link to="/">
+      <ToggleButton signin={isSignin}>
+        <button type="button" onClick={() => handleSignin(false)}>
           <h2>Cadastro</h2>
-        </Link>
-        <h3>Login</h3>
+        </button>
+        <button type="button" onClick={() => handleSignin(true)}>
+          <h3>Login</h3>
+        </button>
       </ToggleButton>
       <Background />
       <Content>
@@ -96,34 +105,40 @@ const SignIn: React.FC = () => {
             <h1>WePlan</h1>
           </LogoContainer>
 
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Faça seu login</h1>
-            <GoogleLoginComponent buttonText="Entre com o Google" />
-            <Input
-              name="email"
-              icon={FiMail}
-              type="email"
-              inputMode="email"
-              placeholder="E-mail"
-            />
-            <Input
-              name="password"
-              icon={FiLock}
-              type="password"
-              placeholder="Senha"
-            />
+          {isSignin ? (
+            <>
+              <Form ref={formRef} onSubmit={handleSubmit}>
+                <h1>Faça seu login</h1>
+                <GoogleLoginComponent buttonText="Entre com o Google" />
+                <Input
+                  name="email"
+                  icon={FiMail}
+                  type="email"
+                  inputMode="email"
+                  placeholder="E-mail"
+                />
+                <Input
+                  name="password"
+                  icon={FiLock}
+                  type="password"
+                  placeholder="Senha"
+                />
 
-            <Button type="submit">Entrar</Button>
-            <Link to="/forgot-password">Esqueci minha senha</Link>
-          </Form>
-          <Link to="/signup">
-            <FiLogIn />
-            <p>Cadastrar como empresa de evento</p>
-          </Link>
-          <a href="https://www.weplan.party" target="blank">
-            <FiLogIn />
-            <p>Cadastrar como usuário final</p>
-          </a>
+                <Button type="submit">Entrar</Button>
+                <Link to="/forgot-password">Esqueci minha senha</Link>
+              </Form>
+              <Link to="/signup">
+                <FiLogIn />
+                <p>Cadastrar como empresa de evento</p>
+              </Link>
+              <a href="https://www.weplan.party" target="blank">
+                <FiLogIn />
+                <p>Cadastrar como usuário final</p>
+              </a>
+            </>
+          ) : (
+            <SignUpContainer />
+          )}
         </AnimationContainer>
       </Content>
       <Background />
