@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { shade } from 'polished';
 import '../../styles/global';
 
@@ -39,12 +39,16 @@ export const LogoContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 32px;
-  img {
+  > img {
     height: 3rem;
   }
 `;
 
-export const ToggleButton = styled.span`
+interface IToggleProps {
+  signin: boolean;
+}
+
+export const ToggleButton = styled.span<IToggleProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,13 +57,52 @@ export const ToggleButton = styled.span`
   left: 8px;
   gap: 16px;
 
-  h3 {
+  > button {
+    background: transparent;
+    border: none;
+
+    > h3 {
+      font-size: 20px;
+      font-weight: 500px;
+      color: var(--title-color);
+
+      ${props =>
+        props.signin &&
+        css`
+          font-size: 20px;
+          font-weight: 500px;
+          color: var(--letter-color-3);
+          transition: 0.5s;
+          &:hover {
+            color: var(--primary-color);
+          }
+        `}
+    }
+    > h2 {
+      font-size: 20px;
+      font-weight: 500px;
+      color: var(--letter-color-3);
+      transition: 0.5s;
+      &:hover {
+        color: var(--primary-color);
+      }
+      ${props =>
+        props.signin &&
+        css`
+          font-size: 20px;
+          font-weight: 500px;
+          color: var(--title-color);
+        `}
+    }
+  }
+
+  > h3 {
     font-size: 20px;
     font-weight: 500px;
     color: var(--title-color);
   }
 
-  a {
+  > a {
     background: transparent;
     border: none;
     text-decoration: none;
