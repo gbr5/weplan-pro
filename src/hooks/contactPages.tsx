@@ -20,7 +20,6 @@ import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
 import IFormDTO from '../dtos/IFormDTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
-import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
 
 const ContactPageContext = createContext<IContactPageContextDTO>(
@@ -28,7 +27,6 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 );
 
 const ContactPageProvider: React.FC = ({ children }) => {
-  const { employee } = useEmployeeAuth();
   const { addToast } = useToast();
   const [currentContactPagePost, setCurrentContactPagePost] = useState<
     IContactPagePostDTO
@@ -57,6 +55,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
     try {
       const response = await api.get<IContactPageDTO[]>('/user-contact-page');
       setCurrentContactPages(response.data);
+      localStorage.setItem('@WP-PRO:e-links', JSON.stringify(response.data));
       return response.data;
     } catch (err) {
       throw new Error(err);
@@ -64,10 +63,15 @@ const ContactPageProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (employee?.company && employee.company.id) {
+    const findContactPages = localStorage.getItem('@WP-PRO:e-links');
+
+    if (findContactPages) {
+      const parsedPages = JSON.parse(findContactPages);
+      setCurrentContactPages(parsedPages);
+    } else {
       getContactPages();
     }
-  }, [getContactPages, employee]);
+  }, [getContactPages]);
 
   const createContactPage = useCallback(
     async (data: ICreateContactPageDTO) => {

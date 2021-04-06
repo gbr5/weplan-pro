@@ -21,12 +21,8 @@ import {
   CardParticipantsButton,
 } from './styles';
 
-interface IProps {
-  selectedFunnel: string;
-}
-
-const CardInfoSection: React.FC<IProps> = ({ selectedFunnel }) => {
-  const { funnels } = useFunnel();
+const CardInfoSection: React.FC = () => {
+  const { funnels, selectedFunnel } = useFunnel();
   const { selectedCard } = useStageCard();
 
   const [cardInfo, setCardInfo] = useState(false);
@@ -45,7 +41,9 @@ const CardInfoSection: React.FC<IProps> = ({ selectedFunnel }) => {
   >([]);
 
   useEffect(() => {
-    const thisFunnel = funnels.find(xFunnel => xFunnel.name === selectedFunnel);
+    const thisFunnel = funnels.find(
+      xFunnel => xFunnel.name === selectedFunnel.name,
+    );
 
     if (thisFunnel) {
       setFunnel(thisFunnel);

@@ -4,15 +4,11 @@ import CardInfoSection from './CardInfoSection';
 
 import { Container, LeftSide } from './styles';
 
-interface IProps {
-  selectedFunnel: string;
-}
-
-const CardBody: React.FC<IProps> = ({ selectedFunnel }) => {
+const CardBody: React.FC = () => {
   return (
     <Container>
       <LeftSide>
-        <CardInfoSection selectedFunnel={selectedFunnel} />
+        <CardInfoSection />
       </LeftSide>
       <CardAditionalInfoSection />
     </Container>

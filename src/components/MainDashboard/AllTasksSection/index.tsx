@@ -33,7 +33,7 @@ interface ITasks {
   updated_at: Date;
 }
 
-const TaskDashboard: React.FC = () => {
+const AllTasksSection: React.FC = () => {
   const { employee } = useEmployeeAuth();
 
   const [employeeNotStartedTasks, setEmployeeNotStartedTasks] = useState<
@@ -354,4 +354,4 @@ const TaskDashboard: React.FC = () => {
   );
 };
 
-export default TaskDashboard;
+export default AllTasksSection;

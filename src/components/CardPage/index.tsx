@@ -5,20 +5,12 @@ import { Container } from './styles';
 import CardHeader from './CardHeader';
 import CardBody from './CardBody';
 
-interface IProps {
-  selectedFunnel: string;
-  handleUpdateFunnel: Function;
-}
-
-const CardPage: React.FC<IProps> = ({ selectedFunnel, handleUpdateFunnel }) => {
+const CardPage: React.FC = () => {
   return (
     <>
       <Container>
-        <CardHeader
-          handleUpdateFunnel={(e: string) => handleUpdateFunnel(e)}
-          selectedFunnel={selectedFunnel}
-        />
-        <CardBody selectedFunnel={selectedFunnel} />
+        <CardHeader />
+        <CardBody />
       </Container>
     </>
   );

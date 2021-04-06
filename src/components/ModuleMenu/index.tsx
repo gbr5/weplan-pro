@@ -16,16 +16,8 @@ const ModuleMenu: React.FC<IPropsDTO> = ({
   handleChangeModule,
 }: IPropsDTO) => {
   const { employee } = useEmployeeAuth();
-  const { getEmployeeModules, employeeModules } = useManagementModule();
-  const { getFunnels, funnels } = useFunnel();
-
-  useEffect(() => {
-    getEmployeeModules();
-  }, [getEmployeeModules]);
-
-  useEffect(() => {
-    getFunnels(employee.company.id);
-  }, [getFunnels, employee]);
+  const { employeeModules } = useManagementModule();
+  const { funnels } = useFunnel();
 
   const [comercialModule, setComercialModule] = useState(false);
   const [productionModule, setProductionModule] = useState(false);
