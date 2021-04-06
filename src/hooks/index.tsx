@@ -10,6 +10,7 @@ import { CompanyContactContextProvider } from './companyContacts';
 import { StageCardProvider } from './stageCard';
 import { FunnelProvider } from './funnel';
 import { SignUpProvider } from './signUp';
+import { HomeControllerProvider } from './homeController';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
@@ -21,7 +22,11 @@ const AppProvider: React.FC = ({ children }) => (
               <ManagementModuleProvider>
                 <FunnelProvider>
                   <StageCardProvider>
-                    <ContactPageProvider>{children}</ContactPageProvider>
+                    <ContactPageProvider>
+                      <HomeControllerProvider>
+                        {children}
+                      </HomeControllerProvider>
+                    </ContactPageProvider>
                   </StageCardProvider>
                 </FunnelProvider>
               </ManagementModuleProvider>

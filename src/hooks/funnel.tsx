@@ -1,13 +1,22 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import IFunnelDTO from '../dtos/IFunnelDTO';
 
 import api from '../services/api';
+import { useEmployeeAuth } from './employeeAuth';
+import { useManagementModule } from './managementModules';
 
 interface IFunnelContextData {
+  selectedFunnelAccessLevel: number;
   funnels: IFunnelDTO[];
   selectedFunnel: IFunnelDTO;
   selectFunnel(data: IFunnelDTO): void;
-  getFunnels(company_id: string): void;
+  getFunnels(company_id: string): Promise<IFunnelDTO[]>;
 }
 
 const FunnelContext = createContext<IFunnelContextData>(
@@ -15,27 +24,53 @@ const FunnelContext = createContext<IFunnelContextData>(
 );
 
 const FunnelProvider: React.FC = ({ children }) => {
+  const { employee } = useEmployeeAuth();
+  const { employeeModules } = useManagementModule();
   const [funnels, setFunnels] = useState<IFunnelDTO[]>([]);
-
   const [selectedFunnel, setSelectedFunnel] = useState({} as IFunnelDTO);
+  const [selectedFunnelAccessLevel, setSelectedFunnelAccessLevel] = useState(3);
 
-  const selectFunnel = useCallback((data: IFunnelDTO) => {
-    setSelectedFunnel(data);
+  const selectFunnel = useCallback((funnel: IFunnelDTO) => {
+    setSelectedFunnel(funnel);
+    localStorage.setItem('@WP-PRO:selected-funnel', JSON.stringify(funnel));
   }, []);
 
   const getFunnels = useCallback(async (company_id: string) => {
     try {
       const response = await api.get<IFunnelDTO[]>(`funnels/${company_id}`);
-      setFunnels(response.data);
+      localStorage.setItem('@WP-PRO:funnels', JSON.stringify(response.data));
+      if (response.data.length >= 1) {
+        setSelectedFunnel(response.data[0]);
+      }
+      return response.data;
     } catch (err) {
       throw new Error(err);
     }
   }, []);
 
+  useEffect(() => {
+    const findFunnels = localStorage.getItem('@WP-PRO:funnels');
+    if (findFunnels) {
+      setFunnels(JSON.parse(findFunnels));
+    } else {
+      getFunnels(employee.company.id);
+    }
+  }, [getFunnels, employee]);
+
+  useEffect(() => {
+    if (selectedFunnel && selectedFunnel.id && employeeModules.length > 0) {
+      const selectedModule = employeeModules.filter(
+        thismodule => thismodule.management_module === selectedFunnel.name,
+      );
+      setSelectedFunnelAccessLevel(Number(selectedModule[0].access_level));
+    }
+  }, [selectedFunnel, employeeModules]);
+
   return (
     <FunnelContext.Provider
       value={{
         selectedFunnel,
+        selectedFunnelAccessLevel,
         funnels,
         selectFunnel,
         getFunnels,

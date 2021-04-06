@@ -1,32 +1,17 @@
-import React, { useCallback, useState, MouseEventHandler } from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { useHistory } from 'react-router-dom';
-import { FiSettings, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiSettings } from 'react-icons/fi';
 import { Container, Menu } from './styles';
 
 import logo from '../../assets/weplan.svg';
 
 import SettingsWindow from '../SettingsWindow';
+import { useHomeController } from '../../hooks/homeController';
 
-interface IPropsDTO {
-  module: string;
-  modulesMenu: boolean;
-  handleModulesMenu: MouseEventHandler;
-  handleContactPageDashboard: Function;
-  handleFormDashboard: Function;
-}
-
-const Header: React.FC<IPropsDTO> = ({
-  module,
-  modulesMenu,
-  handleModulesMenu,
-  handleContactPageDashboard,
-  handleFormDashboard,
-}: IPropsDTO) => {
+const Header: React.FC = () => {
+  const { selectPage } = useHomeController();
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
-
-  const history = useHistory();
 
   const closeAllWindows = useCallback(() => {
     setHelpWindow(false);
@@ -38,11 +23,6 @@ const Header: React.FC<IPropsDTO> = ({
     setHelpWindow(!helpWindow);
   }, [closeAllWindows, helpWindow]);
 
-  const handleHelpWindow = useCallback(() => {
-    closeAllWindows();
-    setHelpWindow(!helpWindow);
-  }, [closeAllWindows, helpWindow]);
-
   const handleSettingsWindow = useCallback(() => {
     closeAllWindows();
     setSettingsWindow(!settingsWindow);
@@ -50,37 +30,21 @@ const Header: React.FC<IPropsDTO> = ({
 
   const handleOpenContactPageDashboard = useCallback(() => {
     closeAllWindows();
-    handleContactPageDashboard();
-  }, [closeAllWindows, handleContactPageDashboard]);
+    selectPage('Contacts');
+  }, [closeAllWindows, selectPage]);
 
   const handleOpenFormDashboard = useCallback(() => {
     closeAllWindows();
-    handleFormDashboard();
-  }, [closeAllWindows, handleFormDashboard]);
-
-  const handleNavigateToDashboard = useCallback(() => {
-    history.push('/dashboard');
-  }, [history]);
+    selectPage('Forms');
+  }, [closeAllWindows, selectPage]);
 
   return (
     <>
       <Container>
-        <button type="button" onClick={handleNavigateToDashboard}>
+        <button type="button" onClick={() => selectPage('Home')}>
           <img src={logo} alt="WePlan" />
-          {/* <h1>PRO</h1> */}
+          <h1>PRO</h1>
         </button>
-
-        <h2>
-          {module}
-
-          <button type="button" onClick={handleModulesMenu}>
-            {modulesMenu ? (
-              <FiChevronDown size={40} />
-            ) : (
-              <FiChevronUp size={40} />
-            )}
-          </button>
-        </h2>
 
         <Menu>
           <button type="button" onClick={handleSettingsWindow}>
@@ -91,7 +55,7 @@ const Header: React.FC<IPropsDTO> = ({
       {!!settingsWindow && (
         <SettingsWindow
           handleAppointmentsWindow={handleAppointmentsWindow}
-          handleHelpWindow={handleHelpWindow}
+          handleHelpWindow={() => selectPage('Home')}
           handleCloseWindow={handleSettingsWindow}
           handleContactPageDashboard={handleOpenContactPageDashboard}
           handleOpenFormDashboard={handleOpenFormDashboard}

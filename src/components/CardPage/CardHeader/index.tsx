@@ -7,16 +7,8 @@ import api from '../../../services/api';
 
 import { Container, StageButton } from './styles';
 
-interface IProps {
-  selectedFunnel: string;
-  handleUpdateFunnel: Function;
-}
-
-const CardHeader: React.FC<IProps> = ({
-  selectedFunnel,
-  handleUpdateFunnel,
-}) => {
-  const { funnels } = useFunnel();
+const CardHeader: React.FC = () => {
+  const { funnels, selectedFunnel, selectFunnel } = useFunnel();
   const { selectedCard, selectCard } = useStageCard();
   const { addToast } = useToast();
 
@@ -35,7 +27,7 @@ const CardHeader: React.FC<IProps> = ({
 
   const funnelStages = useMemo(() => {
     const currentStages = funnels
-      .find(funnel => funnel.name === selectedFunnel)
+      .find(funnel => funnel.name === selectedFunnel.name)
       ?.stages.sort(handleCompareStageOrder);
 
     if (currentStages !== undefined) {
@@ -57,12 +49,11 @@ const CardHeader: React.FC<IProps> = ({
             new_card_owner: selectedCard.card_owner,
           },
         );
+        const nextFunnel = funnels.filter(
+          funnel => funnel.name === xStage.name,
+        );
 
-        xStage.name === 'Comercial' && handleUpdateFunnel('Comercial');
-        xStage.name === 'Production' && handleUpdateFunnel('Produção');
-        xStage.name === 'Projects' && handleUpdateFunnel('Projetos');
-        xStage.name === 'Financial' && handleUpdateFunnel('Financeiro');
-
+        selectFunnel(nextFunnel[0]);
         selectCard(response.data);
 
         addToast({
@@ -81,7 +72,7 @@ const CardHeader: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [selectCard, selectedCard, addToast, handleUpdateFunnel],
+    [selectCard, selectedCard, addToast, funnels, selectFunnel],
   );
 
   return (

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
+import { useHomeController } from '../../hooks/homeController';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
 
@@ -10,13 +11,21 @@ import { Container, Card, CardContainer } from './styles';
 
 interface IProps {
   stage: IFunnelStageDTO;
-  handleCardPage: Function;
 }
 
-const FunnelStage: React.FC<IProps> = ({ stage, handleCardPage }) => {
+const FunnelStage: React.FC<IProps> = ({ stage }) => {
   const { selectedCard, selectCard, getCards } = useStageCard();
+  const { selectPage } = useHomeController();
   const { employeeModules } = useManagementModule();
   const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
+
+  const handleSelectPage = useCallback(
+    (e: IStageCardDTO) => {
+      selectCard(e);
+      selectPage('Card');
+    },
+    [selectPage, selectCard],
+  );
 
   useEffect(() => {
     const moduleAccessLevel = employeeModules.find(
@@ -52,7 +61,7 @@ const FunnelStage: React.FC<IProps> = ({ stage, handleCardPage }) => {
                 <h3>{card.name}</h3>
                 <strong>{card.weplanEvent ? 'WP' : ''}</strong>
               </button>
-              <button type="button" onClick={() => handleCardPage(card)}>
+              <button type="button" onClick={() => handleSelectPage(card)}>
                 <FiChevronRight size={28} />
               </button>
             </Card>

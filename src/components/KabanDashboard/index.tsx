@@ -1,24 +1,15 @@
 import React from 'react';
-import IStageCardDTO from '../../dtos/IStageCardDTO';
+import { useFunnel } from '../../hooks/funnel';
 import KanbanFunnel from '../KanbanFunnel';
 
 import { Container, BottomLine, UpperLine } from './styles';
 
-interface IProps {
-  funnel: string;
-  handleCardPage: Function;
-}
-
-const KanbanDashboard: React.FC<IProps> = ({ funnel, handleCardPage }) => {
+const KanbanDashboard: React.FC = () => {
+  const { selectedFunnel } = useFunnel();
   return (
     <>
       <UpperLine />
-      <Container>
-        <KanbanFunnel
-          funnel={funnel}
-          handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        />
-      </Container>
+      <Container>{selectedFunnel && <KanbanFunnel />}</Container>
       <BottomLine />
     </>
   );

@@ -2,17 +2,13 @@ import React from 'react';
 
 import { Container } from './styles';
 import FunnelStage from '../FunnelStage';
-import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useFunnel } from '../../hooks/funnel';
 
-interface IProps {
-  funnel: string;
-  handleCardPage: Function;
-}
-
-const KanbanFunnel: React.FC<IProps> = ({ funnel, handleCardPage }) => {
-  const { funnels } = useFunnel();
-  const thisFunnel = funnels.find(xFunnel => xFunnel.name === funnel);
+const KanbanFunnel: React.FC = () => {
+  const { funnels, selectedFunnel } = useFunnel();
+  const thisFunnel = funnels.find(
+    xFunnel => xFunnel.name === selectedFunnel.name,
+  );
 
   if (!thisFunnel) {
     throw new Error('Funnel not found');
@@ -30,26 +26,15 @@ const KanbanFunnel: React.FC<IProps> = ({ funnel, handleCardPage }) => {
 
   return (
     <Container>
-      <FunnelStage
-        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        stage={first}
-      />
-      <FunnelStage
-        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        stage={second}
-      />
-      <FunnelStage
-        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        stage={third}
-      />
-      <FunnelStage
-        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        stage={fourth}
-      />
-      <FunnelStage
-        handleCardPage={(e: IStageCardDTO) => handleCardPage(e)}
-        stage={fifth}
-      />
+      {selectedFunnel && selectedFunnel.id && (
+        <>
+          <FunnelStage stage={first} />
+          <FunnelStage stage={second} />
+          <FunnelStage stage={third} />
+          <FunnelStage stage={fourth} />
+          <FunnelStage stage={fifth} />
+        </>
+      )}
     </Container>
   );
 };

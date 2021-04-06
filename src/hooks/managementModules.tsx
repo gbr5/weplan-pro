@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import IManagementModuleDTO from '../dtos/IManagementModuleDTO';
 
 import api from '../services/api';
@@ -25,10 +31,24 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
         `employee-management-modules/${employee.id}`,
       );
       setEmployeeModules(response.data);
+      localStorage.setItem(
+        '@WP-PRO:employee-modules',
+        JSON.stringify(response.data),
+      );
     } catch (err) {
       throw new Error(err);
     }
   }, [employee]);
+
+  useEffect(() => {
+    const modules = localStorage.getItem('@WP-PRO:employee-modules');
+    if (modules) {
+      const parsedModules = JSON.parse(modules);
+      setEmployeeModules(parsedModules);
+    } else {
+      getEmployeeModules();
+    }
+  }, [getEmployeeModules]);
 
   return (
     <ManagementModuleContext.Provider
