@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { MdHelp, MdSchedule } from 'react-icons/md';
 import { FiPower } from 'react-icons/fi';
@@ -26,6 +26,11 @@ const SettingsWindow: React.FC<IProps> = ({
   const { signOut } = useEmployeeAuth();
   // const { themeBoolean, toggleTheme } = useToggleTheme();
   // const { colors } = useContext(ThemeContext);
+
+  const handleSignout = useCallback(() => {
+    localStorage.clear();
+    signOut();
+  }, [signOut]);
   return (
     <WindowContainer
       onHandleCloseWindow={() => handleCloseWindow()}
@@ -65,7 +70,7 @@ const SettingsWindow: React.FC<IProps> = ({
         <button type="button" onClick={() => handleHelpWindow()}>
           <MdHelp size={24} />
         </button>
-        <button type="button" onClick={signOut}>
+        <button type="button" onClick={handleSignout}>
           <FiPower size={24} />
         </button>
       </Container>

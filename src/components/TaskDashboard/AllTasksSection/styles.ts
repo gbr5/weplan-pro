@@ -7,10 +7,9 @@ export const Main = styled.div`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  padding: 0 48px;
   text-align: center;
 
-  h2 {
+  > h2 {
     width: 100%;
     margin: 0 auto;
   }
@@ -40,7 +39,10 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
   transition: 0.3s;
   padding: 5px;
   font-size: 24px;
-  color: var(--letter-color-4);
+  color: var(--letter-color-5);
+
+  min-height: 3rem;
+  width: 100%;
 
   &:hover {
     opacity: 1;
@@ -67,6 +69,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   text-align: left;
+  min-height: 20rem;
 
   box-sizing: border-box;
   display: flex;
@@ -96,11 +99,11 @@ export const Task = styled.div`
 
   &:hover {
     opacity: 0.8;
-    div {
+    > div {
       background: transparent;
       border: none;
-      span {
-        p {
+      > span {
+        > p {
           color: var(--letter-color-5);
           &:nth-child(2) {
             color: var(--letter-color-5);
@@ -108,16 +111,16 @@ export const Task = styled.div`
         }
       }
     }
-    button {
+    > button {
       background: transparent;
       border: none;
-      svg {
+      > svg {
         color: var(--letter-color-5);
       }
     }
   }
 
-  div {
+  > div {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -126,19 +129,19 @@ export const Task = styled.div`
 
     width: 100%;
 
-    span {
+    > span {
       display: flex;
       width: 100%;
       padding-right: 16px;
 
-      p {
+      > p {
         margin: 0 auto;
         color: var(--letter-color-2);
       }
     }
   }
 
-  button {
+  > button {
     background: transparent;
     border: none;
     width: 60px;
@@ -148,12 +151,12 @@ export const Task = styled.div`
     justify-content: center;
     transition: 0.3s;
 
-    svg {
+    > svg {
       color: var(--header-primary);
     }
 
     &:hover {
-      svg {
+      > svg {
         color: var(--title-color);
       }
     }

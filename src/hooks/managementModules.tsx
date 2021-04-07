@@ -23,7 +23,18 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
   const [employeeModules, setEmployeeModules] = useState<
     IManagementModuleDTO[]
-  >([]);
+  >(() => {
+    if (employee && employee.id) {
+      const findModules = localStorage.getItem(
+        `@WP-PRO:${employee.id}|employee-modules`,
+      );
+      if (findModules) {
+        return JSON.parse(findModules);
+      }
+      return [];
+    }
+    return [];
+  });
 
   const getEmployeeModules = useCallback(async () => {
     try {
@@ -32,7 +43,7 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
       );
       setEmployeeModules(response.data);
       localStorage.setItem(
-        '@WP-PRO:employee-modules',
+        `@WP-PRO:${employee.id}|employee-modules`,
         JSON.stringify(response.data),
       );
     } catch (err) {
@@ -41,14 +52,18 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
   }, [employee]);
 
   useEffect(() => {
-    const modules = localStorage.getItem('@WP-PRO:employee-modules');
-    if (modules) {
-      const parsedModules = JSON.parse(modules);
-      setEmployeeModules(parsedModules);
-    } else {
-      getEmployeeModules();
+    if (employee && employee.id) {
+      const modules = localStorage.getItem(
+        `@WP-PRO:${employee.id}|employee-modules`,
+      );
+      if (modules) {
+        const parsedModules = JSON.parse(modules);
+        setEmployeeModules(parsedModules);
+      } else {
+        getEmployeeModules();
+      }
     }
-  }, [getEmployeeModules]);
+  }, [getEmployeeModules, employee]);
 
   return (
     <ManagementModuleContext.Provider

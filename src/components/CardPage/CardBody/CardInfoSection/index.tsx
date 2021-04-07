@@ -109,7 +109,7 @@ const CardInfoSection: React.FC = () => {
   }, [getCardCustomers]);
 
   useEffect(() => {
-    if (funnel.id) {
+    if (funnel && funnel.id) {
       getFunnelCardInfoField();
     }
   }, [getFunnelCardInfoField, funnel]);

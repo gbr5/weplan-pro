@@ -17,7 +17,7 @@ const HomeDashboard: React.FC = () => {
   const { selectFunnel, funnels } = useFunnel();
 
   const selectComercialKanban = useCallback(async () => {
-    if (funnels) {
+    if (funnels.length > 0) {
       const comercialFunnel = funnels.filter(
         funnel => funnel.name === 'Comercial',
       );

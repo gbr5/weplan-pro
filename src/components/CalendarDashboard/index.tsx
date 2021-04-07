@@ -1,25 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 // import { isToday, format, parseISO, isAfter } from 'date-fns';
 // import ptBR from 'date-fns/locale/pt-BR';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
+import { useTask } from '../../hooks/task';
 import { Calendar } from './styles';
 
-interface IProps {
-  handleSetDate: Function;
-}
-
-const DashboardCalendar: React.FC<IProps> = ({ handleSetDate }: IProps) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const DashboardCalendar: React.FC = () => {
+  const { selectTaskDate, selectedDate } = useTask();
 
   const handleDateChange = useCallback(
     (day: Date, modifiers: DayModifiers) => {
       if ((modifiers.available, !modifiers.disabled)) {
-        setSelectedDate(day);
-        handleSetDate(day);
+        selectTaskDate(day);
       }
     },
-    [handleSetDate],
+    [selectTaskDate],
   );
 
   return (

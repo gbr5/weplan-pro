@@ -1,101 +1,71 @@
-import React, { useCallback, useMemo } from 'react';
-import IFunnelStageDTO from '../../../dtos/IFunnelStageDTO';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { MdEdit } from 'react-icons/md';
 import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
-import { useToast } from '../../../hooks/toast';
-import api from '../../../services/api';
+import Button from '../../Button';
+import CardFunnelStageMenu from './CardFunnelStageMenu';
+import EditCardTitle from './EditCardTitle';
 
-import { Container, StageButton } from './styles';
+import { Container, CardTitle, StageButton } from './styles';
 
 const CardHeader: React.FC = () => {
-  const { funnels, selectedFunnel, selectFunnel } = useFunnel();
-  const { selectedCard, selectCard } = useStageCard();
-  const { addToast } = useToast();
+  const iconsize = 24;
+  const { selectedCard } = useStageCard();
+  const { selectedFunnel } = useFunnel();
+  const [updateStage, setUpdateStage] = useState(false);
+  const [updateCardName, setUpdateCardName] = useState(false);
 
-  const handleCompareStageOrder = useCallback(
-    (a: IFunnelStageDTO, b: IFunnelStageDTO) => {
-      if (Number(a.funnel_order) - Number(b.funnel_order) > 0) {
-        return 1;
-      }
-      if (Number(a.funnel_order) - Number(b.funnel_order) < 0) {
-        return -1;
-      }
-      return 0;
-    },
-    [],
-  );
+  const handleUpdateStage = useCallback((e: boolean) => {
+    setUpdateStage(e);
+  }, []);
 
-  const funnelStages = useMemo(() => {
-    const currentStages = funnels
-      .find(funnel => funnel.name === selectedFunnel.name)
-      ?.stages.sort(handleCompareStageOrder);
+  const handleUpdateCardName = useCallback((e: boolean) => {
+    setUpdateCardName(e);
+  }, []);
 
-    if (currentStages !== undefined) {
-      return currentStages;
-    }
-    return funnels[0].stages;
-  }, [funnels, selectedFunnel, handleCompareStageOrder]);
-
-  const handleMoveCardThroughStages = useCallback(
-    async (xStage: IFunnelStageDTO) => {
-      try {
-        const response = await api.put(
-          `/funnels/${selectedCard.stage_id}/cards/${selectedCard.id}`,
-          {
-            weplanEvent: selectedCard.weplanEvent,
-            name: selectedCard.name,
-            isActive: true,
-            new_stage_id: xStage.id,
-            new_card_owner: selectedCard.card_owner,
-          },
-        );
-        const nextFunnel = funnels.filter(
-          funnel => funnel.name === xStage.name,
-        );
-
-        selectFunnel(nextFunnel[0]);
-        selectCard(response.data);
-
-        addToast({
-          type: 'success',
-          title: 'Card alterado com sucesso',
-          description:
-            'Você já pode visualizar as alterações no seu dashboard.',
-        });
-      } catch (err) {
-        addToast({
-          type: 'error',
-          title: 'Erro ao alterar card',
-          description: 'Erro ao editar card, tente novamente.',
-        });
-
-        throw new Error(err);
-      }
-    },
-    [selectCard, selectedCard, addToast, funnels, selectFunnel],
-  );
+  const stageName = useMemo(() => {
+    const stage = selectedFunnel.stages.filter(
+      thisStage => thisStage.id === selectedCard.stage_id,
+    );
+    return stage[0].name;
+  }, [selectedCard, selectedFunnel]);
 
   return (
-    <>
-      <Container>
-        <h2>{selectedCard.name}</h2>
-        <span>
-          {funnelStages.map(stage => (
-            <StageButton
-              isActive={stage.id === selectedCard.stage_id}
-              key={stage.id}
-            >
-              <button
-                onClick={() => handleMoveCardThroughStages(stage)}
-                type="button"
-              >
-                {stage.name}
-              </button>
-            </StageButton>
-          ))}
-        </span>
-      </Container>
-    </>
+    <Container>
+      <CardTitle>
+        <span>Nome do Card</span>
+        <button
+          type="button"
+          onClick={() => handleUpdateCardName(!updateCardName)}
+        >
+          <MdEdit size={iconsize} />
+        </button>
+        {updateCardName ? (
+          <EditCardTitle closeComponent={() => handleUpdateCardName(false)} />
+        ) : (
+          <h2>{selectedCard.name}</h2>
+        )}
+      </CardTitle>
+      {!updateStage ? (
+        <StageButton type="button" onClick={() => handleUpdateStage(true)}>
+          <FiChevronLeft size={iconsize} />
+          <h3>{stageName}</h3>
+          <FiChevronRight size={iconsize} />
+        </StageButton>
+      ) : (
+        <>
+          <CardFunnelStageMenu />
+          <Button
+            style={{ background: 'red', color: 'black' }}
+            type="button"
+            onClick={() => handleUpdateStage(false)}
+          >
+            Fechar
+          </Button>
+        </>
+      )}
+    </Container>
   );
 };
 

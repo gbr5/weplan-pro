@@ -26,13 +26,31 @@ const FormContext = createContext<IFormContextDTO>({} as IFormContextDTO);
 const FormProvider: React.FC = ({ children }) => {
   const { employee, signOut } = useEmployeeAuth();
   const { addToast } = useToast();
-  const [currentForm, setCurrentForm] = useState<IFormDTO>({} as IFormDTO);
-  const [userForms, setUserForms] = useState<IFormDTO[]>([]);
+  const [currentForm, setCurrentForm] = useState<IFormDTO>(() => {
+    const form = localStorage.getItem('@WP-PRO:current-form');
+
+    if (form) {
+      return JSON.parse(form);
+    }
+    return {} as IFormDTO;
+  });
+  const [userForms, setUserForms] = useState<IFormDTO[]>(() => {
+    const forms = localStorage.getItem('@WP-PRO:company-forms');
+
+    if (forms) {
+      return JSON.parse(forms);
+    }
+    return [];
+  });
 
   const getForm = useCallback(async (id: string) => {
     try {
       const response = await api.get<IFormDTO>(`/user-form/show/${id}`);
       setCurrentForm(response.data);
+      localStorage.setItem(
+        '@WP-PRO:current-form',
+        JSON.stringify(response.data),
+      );
       return response.data;
     } catch (err) {
       throw new Error(err);
@@ -43,6 +61,10 @@ const FormProvider: React.FC = ({ children }) => {
     try {
       const response = await api.get<IFormDTO[]>('/user-form');
       setUserForms(response.data);
+      localStorage.setItem(
+        '@WP-PRO:company-forms',
+        JSON.stringify(response.data),
+      );
       return response.data;
     } catch (err) {
       throw new Error(err);
@@ -50,8 +72,14 @@ const FormProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (employee?.company) {
-      getForms();
+    if (employee) {
+      const storedForms = localStorage.getItem('@WP-PRO:company-forms');
+
+      if (storedForms) {
+        setUserForms(JSON.parse(storedForms));
+      } else {
+        getForms();
+      }
     } else {
       signOut();
     }

@@ -20,6 +20,7 @@ import ICreateContactPageSEODTO from '../dtos/ICreateContactPageSEODTO';
 import IFormDTO from '../dtos/IFormDTO';
 import api from '../services/api';
 import { textToSlug } from '../utils/textToSlug';
+import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
 
 const ContactPageContext = createContext<IContactPageContextDTO>(
@@ -27,6 +28,7 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 );
 
 const ContactPageProvider: React.FC = ({ children }) => {
+  const { employee } = useEmployeeAuth();
   const { addToast } = useToast();
   const [currentContactPagePost, setCurrentContactPagePost] = useState<
     IContactPagePostDTO
@@ -63,15 +65,17 @@ const ContactPageProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const findContactPages = localStorage.getItem('@WP-PRO:e-links');
+    if (employee && employee.id) {
+      const findContactPages = localStorage.getItem('@WP-PRO:e-links');
 
-    if (findContactPages) {
-      const parsedPages = JSON.parse(findContactPages);
-      setCurrentContactPages(parsedPages);
-    } else {
-      getContactPages();
+      if (findContactPages) {
+        const parsedPages = JSON.parse(findContactPages);
+        setCurrentContactPages(parsedPages);
+      } else {
+        getContactPages();
+      }
     }
-  }, [getContactPages]);
+  }, [getContactPages, employee]);
 
   const createContactPage = useCallback(
     async (data: ICreateContactPageDTO) => {
