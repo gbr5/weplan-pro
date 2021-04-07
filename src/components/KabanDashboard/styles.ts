@@ -35,6 +35,12 @@ const lineAppearFromTop = keyframes`
   }
 `;
 
+export const FunnelTitle = styled.h2`
+  width: 100%;
+  text-align: center;
+  margin: 5rem 0 1rem;
+`;
+
 export const Container = styled.div`
   width: 100%;
   height: 100%;

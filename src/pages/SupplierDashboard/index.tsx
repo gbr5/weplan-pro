@@ -5,7 +5,6 @@ import { Container, Content } from './styles';
 import Header from '../../components/Header';
 import KanbanDashboard from '../../components/KabanDashboard';
 import TaskDashboard from '../../components/TaskDashboard';
-import ComercialBottomSection from '../../components/ComercialBottomSection';
 import CardPage from '../../components/CardPage';
 import ContactPageDashboard from '../../components/ContactPageComponents/ContactPageDashboard';
 import FormDashboard from '../../components/FormComponents/FormDashboard';
@@ -30,12 +29,7 @@ const SupplierDashboard: React.FC = () => {
         {funnels.length > 0 &&
           selectedFunnel &&
           selectedFunnel.id &&
-          selectedPage === 'Comercial' && (
-            <>
-              <KanbanDashboard />
-              <ComercialBottomSection />
-            </>
-          )}
+          selectedPage === 'Comercial' && <KanbanDashboard />}
         {selectedPage === 'Card' && <CardPage />}
         {selectedPage === 'Contacts' && <CompanyContactDashboard />}
 

@@ -9,7 +9,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--background-color);
-  gap: 5px;
+  margin: 0.2rem 0;
 
   > button {
     position: absolute;
