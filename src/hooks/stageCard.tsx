@@ -1,10 +1,13 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
 import ICardNotesDTO from '../dtos/ICardNotesDTO';
+import IFunnelStageDTO from '../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../dtos/IStageCardDTO';
 
 import api from '../services/api';
 import { useEmployeeAuth } from './employeeAuth';
+import { useFunnel } from './funnel';
+import { useToast } from './toast';
 
 interface ICardFilterParams {
   stage_id: string;
@@ -23,6 +26,8 @@ interface IStageCardContextData {
   getCards(data: ICardFilterParams): Promise<IStageCardDTO[] | undefined>;
   getCardCheckLists(): void;
   getCardNotes(): void;
+  updateCardStage(stage: IFunnelStageDTO): void;
+  updateCard(card: IStageCardDTO): void;
 }
 
 const StageCardContext = createContext<IStageCardContextData>(
@@ -31,7 +36,15 @@ const StageCardContext = createContext<IStageCardContextData>(
 
 const StageCardProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
-  const [selectedCard, setSelectedCard] = useState({} as IStageCardDTO);
+  const { getFunnels } = useFunnel();
+  const { addToast } = useToast();
+  const [selectedCard, setSelectedCard] = useState(() => {
+    const findCard = localStorage.getItem('@WP-PRO:selected-card');
+    if (findCard) {
+      return JSON.parse(findCard);
+    }
+    return {} as IStageCardDTO;
+  });
   const [cardCheckLists, setCardCheckLists] = useState<ICardCheckListDTO[]>([]);
   const [selectedCheckList, setSelectedCheckList] = useState<ICardCheckListDTO>(
     {} as ICardCheckListDTO,
@@ -67,6 +80,7 @@ const StageCardProvider: React.FC = ({ children }) => {
 
   const selectCard = useCallback((data: IStageCardDTO) => {
     setSelectedCard(data);
+    localStorage.setItem('@WP-PRO:selected-card', JSON.stringify(data));
   }, []);
 
   const getCards = useCallback(
@@ -77,6 +91,11 @@ const StageCardProvider: React.FC = ({ children }) => {
       const response = await api.get<IStageCardDTO[]>(
         `/funnels/${stage_id}/cards`,
       );
+      localStorage.setItem(
+        `@WP-PRO:stage=${stage_id}`,
+        JSON.stringify(response.data),
+      );
+
       if (access_level === 3) {
         const filteredCards = response.data
           .filter(card => card.card_owner === employee.employeeUser.id)
@@ -111,6 +130,73 @@ const StageCardProvider: React.FC = ({ children }) => {
     }
   }, [selectedCard]);
 
+  const updateCardStage = useCallback(
+    async (xStage: IFunnelStageDTO) => {
+      try {
+        const response = await api.put(
+          `/funnels/${selectedCard.stage_id}/cards/${selectedCard.id}`,
+          {
+            weplanEvent: selectedCard.weplanEvent,
+            name: selectedCard.name,
+            isActive: true,
+            new_stage_id: xStage.id,
+            new_card_owner: selectedCard.card_owner,
+          },
+        );
+
+        selectCard(response.data);
+        getFunnels(employee.company.id);
+        addToast({
+          type: 'success',
+          title: 'Card alterado com sucesso',
+          description:
+            'Você já pode visualizar as alterações no seu dashboard.',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao alterar card',
+          description: 'Erro ao editar card, tente novamente.',
+        });
+
+        throw new Error(err);
+      }
+    },
+    [selectCard, employee, getFunnels, selectedCard, addToast],
+  );
+
+  const updateCard = useCallback(
+    async (card: IStageCardDTO) => {
+      try {
+        const response = await api.put(
+          `/funnels/${card.stage_id}/cards/${card.id}`,
+          {
+            weplanEvent: card.weplanEvent,
+            name: card.name,
+            isActive: card.isActive,
+            new_stage_id: card.stage_id,
+            new_card_owner: card.card_owner,
+          },
+        );
+        selectCard(response.data);
+        getFunnels(employee.company.id);
+        addToast({
+          type: 'success',
+          title: 'Card alterado com sucesso',
+          description:
+            'Você já pode visualizar as alterações no seu dashboard.',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível editar o card',
+          description: 'Tente novamente',
+        });
+      }
+    },
+    [addToast, selectCard, getFunnels, employee],
+  );
+
   return (
     <StageCardContext.Provider
       value={{
@@ -125,6 +211,8 @@ const StageCardProvider: React.FC = ({ children }) => {
         getCards,
         getCardCheckLists,
         getCardNotes,
+        updateCardStage,
+        updateCard,
       }}
     >
       {children}

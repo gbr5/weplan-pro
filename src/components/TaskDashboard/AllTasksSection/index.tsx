@@ -126,21 +126,21 @@ const AllTasksSection: React.FC = () => {
           type="button"
           onClick={handleNotStartedTasksSection}
         >
-          Não iniciadas
+          Início
         </StatusMenuButton>
         <StatusMenuButton
           isActive={statusSection === '2'}
           type="button"
           onClick={handleInProgressTasksSection}
         >
-          Em execução
+          Andamento
         </StatusMenuButton>
         <StatusMenuButton
           isActive={statusSection === '3'}
           type="button"
           onClick={handleFinishedTasksSection}
         >
-          Finalizadas
+          Realizadas
         </StatusMenuButton>
       </StatusMenuButtonContainer>
       <Container>

@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components';
 import '../../../styles/global';
 
 export const Container = styled.div`
-  width: 80vw;
+  width: 100%;
   height: 100%;
   display: block;
   padding: 5px;
-  margin: 2rem 0rem 3rem 4rem;
+  margin: 2rem auto;
   /* box-sizing: border-box; */
 
   > input {
@@ -20,7 +20,7 @@ export const Container = styled.div`
 
 export const FirstRow = styled.div`
   display: block;
-  width: 80vw;
+  width: 100%;
   height: 100%;
 `;
 

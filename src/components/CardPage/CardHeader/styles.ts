@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import '../../../styles/global';
 
 export const Container = styled.div`
@@ -11,60 +11,63 @@ export const Container = styled.div`
   background: var(--background-color);
   gap: 8px;
   padding: 8px;
+  width: 100%;
+`;
+
+export const CardTitle = styled.div`
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  align-items: center;
+  justify-content: center;
+  margin: 0.4rem 1rem;
+
+  > h2 {
+    margin: 2rem 1rem 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--secondary-color);
+    width: 100%;
+    text-align: center;
+  }
+
+  > button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: transparent;
+    border: none;
+    z-index: 2;
+  }
 
   > span {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: stretch;
-    justify-content: stretch;
-    width: 100%;
-    height: 32px;
-
-    @media (max-width: 1100px) {
-      overflow-x: scroll;
-    }
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    color: var(--letter-color-4);
+    z-index: 2;
   }
 `;
 
-interface IProps {
-  isActive: boolean;
-}
-
-export const StageButton = styled.div<IProps>`
+export const StageButton = styled.button`
+  background: var(--letter-color-4);
+  color: var(--letter-color-1);
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-width: 16rem;
-  height: 100%;
-  transition: 0.3s;
+
   &:hover {
-    font-weight: 500;
-    opacity: 0.7;
-    background: var(--title-color);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   }
 
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    transition: 0.3s;
-    font-size: 20px;
-
-    background: transparent;
-    border: none;
+  > h3 {
+    margin: 1rem auto;
   }
-
-  ${props =>
-    props.isActive &&
-    css`
-      background: var(--header-primary);
-
-      &:hover {
-        background: var(--header-primary);
-        opacity: 0.8;
-      }
-    `}
+  > svg {
+    margin: 1rem auto;
+  }
 `;

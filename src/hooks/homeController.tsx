@@ -1,4 +1,13 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
+import { useHistory } from 'react-router-dom';
+import { useFunnel } from './funnel';
+import { useStageCard } from './stageCard';
 
 interface IHomeControllerContextData {
   selectedPage: string;
@@ -10,11 +19,36 @@ const HomeControllerContext = createContext<IHomeControllerContextData>(
 );
 
 const HomeControllerProvider: React.FC = ({ children }) => {
-  const [selectedPage, setSelectedPage] = useState('Home');
+  const history = useHistory();
+  const { selectedFunnel } = useFunnel();
+  const { selectedCard } = useStageCard();
+  const [selectedPage, setSelectedPage] = useState(() => {
+    const currentPage = localStorage.getItem('@WP-PRO:current-page');
+
+    if (currentPage) {
+      return currentPage;
+    }
+    return 'Home';
+  });
 
   const selectPage = useCallback(async (page: string) => {
     setSelectedPage(page);
+    localStorage.setItem('@WP-PRO:current-page', page);
   }, []);
+
+  useEffect(() => {
+    const currentPage = localStorage.getItem('@WP-PRO:current-page');
+    if (
+      currentPage &&
+      selectedFunnel &&
+      selectedFunnel.id &&
+      selectedCard &&
+      selectedCard.id
+    ) {
+      setSelectedPage(currentPage);
+      // history.push(`/card/${selectedCard.name}`);
+    }
+  }, [selectedCard, history, selectedFunnel]);
 
   return (
     <HomeControllerContext.Provider value={{ selectPage, selectedPage }}>

@@ -10,9 +10,11 @@ export const Container = styled.header`
   background: var(--header-background-color);
   display: flex;
   align-items: center;
+  min-height: 4rem;
 
   > h1 {
     margin-right: 20px;
+    color: var(--letter-color-1);
 
     > button {
       background: transparent;
@@ -43,7 +45,7 @@ export const Container = styled.header`
     > button {
       background: transparent;
       border: none;
-      color: var(--letter-color-1);
+      color: var(--letter-color-3);
 
       > svg {
         transition: 0.3s;
@@ -65,7 +67,7 @@ export const Container = styled.header`
 
     > h1 {
       margin-right: 20px;
-      color: var(--letter-color-4);
+      color: var(--letter-color-3);
     }
   }
 
