@@ -14,7 +14,7 @@ const MenuList: React.FC<IProps> = ({ handleCreateCardWindow }: IProps) => {
         Card Comercial
         <MdAdd size={30} />
       </Item>
-      <Item type="button" onClick={() => handleCreateCardWindow('Production')}>
+      {/* <Item type="button" onClick={() => handleCreateCardWindow('Production')}>
         Card Produção
         <MdAdd size={30} />
       </Item>
@@ -25,7 +25,7 @@ const MenuList: React.FC<IProps> = ({ handleCreateCardWindow }: IProps) => {
       <Item type="button" onClick={() => handleCreateCardWindow('Financial')}>
         Card Financeiro
         <MdAdd size={30} />
-      </Item>
+      </Item> */}
       <Item type="button" onClick={() => handleCreateCardWindow('Comercial')}>
         Card Contato
         <MdAdd size={30} />

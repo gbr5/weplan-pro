@@ -4,12 +4,9 @@ import MenuList from './MenuList';
 import AddCardForm from '../AddCardForm';
 
 import { Button } from './styles';
+import Backdrop from '../Backdrop';
 
-interface IProps {
-  handleSetCurrentFunnel: Function;
-}
-
-const MenuButton: React.FC<IProps> = ({ handleSetCurrentFunnel }: IProps) => {
+const MenuButton: React.FC = () => {
   const [menuList, setMenuList] = useState(false);
   const [moduleName, setModuleName] = useState('');
   const [createCardWindow, setCreateCardWindow] = useState(false);
@@ -30,11 +27,13 @@ const MenuButton: React.FC<IProps> = ({ handleSetCurrentFunnel }: IProps) => {
         <MdMenu size={24} />
       </Button>
       {!!menuList && (
-        <MenuList handleCreateCardWindow={handleCreateCardWindow} />
+        <>
+          <MenuList handleCreateCardWindow={handleCreateCardWindow} />
+          <Backdrop handleCloseWindow={handleMenuList} />
+        </>
       )}
       {!!createCardWindow && (
         <AddCardForm
-          handleSetCurrentFunnel={handleSetCurrentFunnel}
           chosenFunnel={moduleName}
           onHandleCloseWindow={() => setCreateCardWindow(false)}
           handleCloseWindow={() => setCreateCardWindow(false)}

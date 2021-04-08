@@ -9,6 +9,7 @@ import { useHomeController } from '../../hooks/homeController';
 import { useFunnel } from '../../hooks/funnel';
 
 import { Container, BackButton } from './styles';
+import MenuButton from '../MenuButton';
 
 const CardPage: React.FC = () => {
   const history = useHistory();
@@ -28,6 +29,7 @@ const CardPage: React.FC = () => {
       </BackButton>
       <CardHeader />
       <CardBody />
+      <MenuButton />
     </Container>
   );
 };

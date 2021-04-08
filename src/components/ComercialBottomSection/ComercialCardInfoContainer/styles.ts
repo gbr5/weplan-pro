@@ -10,6 +10,10 @@ export const Main = styled.div`
   @media (max-width: 1100px) {
     width: 100%;
   }
+
+  > h2 {
+    margin: 0.5rem auto;
+  }
 `;
 
 export const Container = styled.div`
@@ -24,12 +28,12 @@ export const Container = styled.div`
   gap: 16px;
   padding: 8px;
 
-  div {
+  > div {
     display: flex;
     align-items: stretch;
     justify-content: stretch;
 
-    p {
+    > p {
       color: var(--letter-color-2);
       width: 150px;
       &:first-child {

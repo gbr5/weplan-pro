@@ -21,20 +21,18 @@ import { useCompanyContact } from '../../hooks/companyContacts';
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
   handleCloseWindow: Function;
-  handleSetCurrentFunnel: Function;
   chosenFunnel: string;
 }
 
 const AddCardForm: React.FC<IProps> = ({
   onHandleCloseWindow,
   handleCloseWindow,
-  handleSetCurrentFunnel,
   chosenFunnel,
 }: IProps) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
   const { companyContacts } = useCompanyContact();
-  const { funnels } = useFunnel();
+  const { funnels, getFunnels } = useFunnel();
   const [cardName, setCardName] = useState('');
   const [selectStageWindow, setSelectStageWindow] = useState(true);
   const [selectCustomerWindow, setSelectCustomerWindow] = useState(false);
@@ -88,7 +86,7 @@ const AddCardForm: React.FC<IProps> = ({
       });
 
       handleCloseWindow();
-      handleSetCurrentFunnel();
+      getFunnels(employee.company.id);
       return addToast({
         type: 'success',
         title: 'Card criado com sucesso',
@@ -110,7 +108,7 @@ const AddCardForm: React.FC<IProps> = ({
     employee,
     selectedCustomer,
     handleCloseWindow,
-    handleSetCurrentFunnel,
+    getFunnels,
   ]);
 
   useEffect(() => {
