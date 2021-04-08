@@ -23,6 +23,7 @@ export const Container = styled.div`
     ::-webkit-input-placeholder {
       color: var(--letter-color-5);
     }
+    padding: 0.4rem;
   }
 
   button {

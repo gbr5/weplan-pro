@@ -11,6 +11,8 @@ import EditFormField from '../EditFormField';
 import EditFormStyles from '../EditFormStyles';
 import FormSettings from '../FormSettings';
 import WindowFormContainer from '../WindowFormContainer';
+import EditFormSubTitle from './EditFormSubtitle';
+import EditFormTitle from './EditFormTitle';
 
 import {
   Container,
@@ -137,8 +139,8 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
               )}
             </UrlContainer>
             <FormContainer formStyles={formStyles}>
-              <h1>{currentForm.title}</h1>
-              <p>{currentForm.message}</p>
+              <EditFormTitle />
+              <EditFormSubTitle />
               {editFormField ? (
                 <EditFormField
                   closeWindow={() => handleCloseEditField()}

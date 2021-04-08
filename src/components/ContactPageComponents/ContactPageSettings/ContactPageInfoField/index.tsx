@@ -119,9 +119,10 @@ const ContactPageInfoField: React.FC<IProps> = ({
           <span>
             {contactPageInfoField === 'slug' ? (
               <a
-                href={`${process.env.EXTERNAL_PAGE}/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
+                target="blank"
+                href={`https://www.weplan.world/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
               >
-                {`${process.env.EXTERNAL_PAGE}/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
+                {`www.weplan.world/links/${employee.company.trimmed_name}/${defaultContactPageInfoField}`}
               </a>
             ) : (
               <p>{defaultContactPageInfoField}</p>

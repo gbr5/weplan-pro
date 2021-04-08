@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiTarget } from 'react-icons/fi';
-import { MdEdit, MdGroup, MdNaturePeople } from 'react-icons/md';
+import { MdGroup, MdNaturePeople } from 'react-icons/md';
 import IUserDTO from '../../../../dtos/IUserDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
 import { useFunnel } from '../../../../hooks/funnel';
@@ -17,13 +17,21 @@ import {
   ButtonArrowMenu,
   ButtonContainer,
   CardParticipantsButton,
+  InfoSection,
 } from './styles';
 
 const CardInfoSection: React.FC = () => {
   const { selectedFunnelCardInfoFields } = useFunnel();
-  const { selectedCard, funnelCardInfos } = useStageCard();
+  const {
+    selectedCard,
+    funnelCardInfos,
+    getCardCheckLists,
+    getCardCustomers,
+    getFunnelCardInfos,
+  } = useStageCard();
   const { getUserProfile } = useSignUp();
   const { customersContacts } = useCompanyContact();
+  const { getFunnelCardInfoFields, selectedFunnel } = useFunnel();
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
   const [cardCustomersWindow, setCardCustomersWindow] = useState(false);
@@ -43,6 +51,20 @@ const CardInfoSection: React.FC = () => {
   useEffect(() => {
     getCardOwner();
   }, [getCardOwner]);
+  useEffect(() => {
+    getCardCheckLists();
+  }, [getCardCheckLists]);
+  useEffect(() => {
+    getCardCustomers();
+  }, [getCardCustomers]);
+  useEffect(() => {
+    getFunnelCardInfos();
+  }, [getFunnelCardInfos]);
+  useEffect(() => {
+    selectedFunnel &&
+      selectedFunnel.id &&
+      getFunnelCardInfoFields(selectedFunnel.id);
+  }, [getFunnelCardInfoFields, selectedFunnel]);
 
   return (
     <>
@@ -101,13 +123,6 @@ const CardInfoSection: React.FC = () => {
                   <MdEdit />
                 </button> */}
               </span>
-              <span>
-                <strong>Due_date:</strong>
-                <p>20/04/20</p>
-                <button type="button">
-                  <MdEdit />
-                </button>
-              </span>
               {/* <span>
                 <strong>Última atualização:</strong>
                 <p>15/04/20</p>
@@ -123,7 +138,7 @@ const CardInfoSection: React.FC = () => {
                 </button> */}
               </span>
             </div>
-            <div>
+            <InfoSection>
               {selectedFunnelCardInfoFields.map(field => {
                 const funnelCardInfo = funnelCardInfos.find(
                   info => info.funnel_card_field_id === field.id,
@@ -139,7 +154,7 @@ const CardInfoSection: React.FC = () => {
                 }
                 return '';
               })}
-            </div>
+            </InfoSection>
           </div>
         </Container>
       ) : (

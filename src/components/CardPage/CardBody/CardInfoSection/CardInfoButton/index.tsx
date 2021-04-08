@@ -40,7 +40,7 @@ const CardInfoButton: React.FC<IProps> = ({
   return (
     <Container>
       <button onClick={() => handleEditField(!editField)} type="button">
-        <MdEdit />
+        <MdEdit size={20} />
       </button>
       {editField ? (
         <EditField>
