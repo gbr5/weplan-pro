@@ -8,6 +8,7 @@ export const Container = styled.div`
   flex-direction: center;
   position: relative;
   margin: 1rem auto;
+  text-align: center;
 
   > span {
     position: absolute;

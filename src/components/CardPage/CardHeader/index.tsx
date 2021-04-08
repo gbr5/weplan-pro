@@ -73,14 +73,9 @@ const CardHeader: React.FC = () => {
         </StageButton>
       ) : (
         <>
-          <CardFunnelStageMenu />
-          <Button
-            style={{ background: 'red', color: 'black' }}
-            type="button"
-            onClick={() => handleUpdateStage(false)}
-          >
-            Fechar
-          </Button>
+          <CardFunnelStageMenu
+            closeComponent={() => handleUpdateStage(false)}
+          />
         </>
       )}
     </Container>

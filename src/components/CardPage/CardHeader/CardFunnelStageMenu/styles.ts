@@ -1,16 +1,33 @@
 import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  width: 100%;
-  height: 32px;
+  width: 80%;
+  left: 10%;
+  height: 50%;
+  padding: 0.4rem 1rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 10%;
+  z-index: 15;
+  background: #c9c9c9;
+  border-radius: 8px;
 
   @media (max-width: 1100px) {
-    overflow-x: scroll;
+    overflow-y: scroll;
   }
+`;
+
+export const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  position: fixed;
+  top: 5rem;
+  left: 44%;
+  color: red;
 `;
 
 interface IProps {
@@ -25,13 +42,17 @@ export const StageButton = styled.div<IProps>`
   min-width: 16rem;
   height: 100%;
   transition: 0.3s;
-  &:hover {
-    font-weight: 500;
-    opacity: 0.7;
-    background: var(--title-color);
-  }
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--letter-color-1);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  margin: 1rem 0;
+  font-weight: 500;
+  opacity: 0.7;
+  background: var(--title-color);
+  height: 2rem;
 
-  button {
+  > button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,6 +69,7 @@ export const StageButton = styled.div<IProps>`
     props.isActive &&
     css`
       background: var(--header-primary);
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
 
       &:hover {
         background: var(--header-primary);
