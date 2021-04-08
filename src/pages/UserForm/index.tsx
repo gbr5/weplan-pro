@@ -29,7 +29,7 @@ const UserForm: React.FC = () => {
 
   const handleGetUserForm = useCallback(async () => {
     try {
-      const response = await api.get<IFormDTO>(`external-user-form/${id}`);
+      const response = await api.get<IFormDTO>(`/external-user-form/${id}`);
       setForm(response.data);
     } catch (err) {
       throw new Error(err);
