@@ -17,6 +17,7 @@ import { useEmployeeAuth } from '../hooks/employeeAuth';
 import { useFunnel } from '../hooks/funnel';
 import KanbanDashboard from '../components/KabanDashboard';
 import SettingsPage from '../pages/SettingsPage';
+import ComercialFunnelSettings from '../components/FunnelSettingsComponents/ComercialFunnelSettings';
 
 const Routes: React.FC = () => {
   const { employee } = useEmployeeAuth();
@@ -42,6 +43,12 @@ const Routes: React.FC = () => {
         />
       )}
       <Route path="/settings" exact component={SettingsPage} isPrivate />
+      <Route
+        path="/settings/comercial"
+        exact
+        component={ComercialFunnelSettings}
+        isPrivate
+      />
       <Route path="/dashboard" exact component={SupplierDashboard} isPrivate />
     </Switch>
   );

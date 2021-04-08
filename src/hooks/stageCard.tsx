@@ -1,6 +1,9 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
+import ICardCustomerDTO from '../dtos/ICardCustomerDTO';
 import ICardNotesDTO from '../dtos/ICardNotesDTO';
+import ICreateFunnelCardInfoDTO from '../dtos/ICreateFunnelCardInfoDTO';
+import IFunnelCardInfoDTO from '../dtos/IFunnelCardInfoDTO';
 import IFunnelStageDTO from '../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../dtos/IStageCardDTO';
 
@@ -20,15 +23,20 @@ interface IStageCardContextData {
   selectedCheckList: ICardCheckListDTO;
   cardCheckLists: ICardCheckListDTO[];
   cardNotes: ICardNotesDTO[];
+  cardCustomers: ICardCustomerDTO[];
+  funnelCardInfos: IFunnelCardInfoDTO[];
   selectCard(data: IStageCardDTO): void;
   selectNote(data: ICardNotesDTO): void;
   selectCheckList(data: ICardCheckListDTO): void;
   getCards(data: ICardFilterParams): Promise<IStageCardDTO[] | undefined>;
   getCardCheckLists(): void;
+  getFunnelCardInfos(): void;
+  getCardCustomers(): void;
   getCardNotes(): void;
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCard(card: IStageCardDTO): void;
   createCardNote(note: string): void;
+  createFunnelCardInfo(note: ICreateFunnelCardInfoDTO): void;
 }
 
 const StageCardContext = createContext<IStageCardContextData>(
@@ -54,6 +62,36 @@ const StageCardProvider: React.FC = ({ children }) => {
     {} as ICardNotesDTO,
   );
   const [cardNotes, setCardNotes] = useState<ICardNotesDTO[]>([]);
+  const [cardCustomers, setCardCustomers] = useState<ICardCustomerDTO[]>([]);
+  const [funnelCardInfos, setFunnelCardInfos] = useState<IFunnelCardInfoDTO[]>(
+    [],
+  );
+
+  const getFunnelCardInfos = useCallback(async () => {
+    try {
+      await api
+        .get(
+          `/funnels/card/company-funnel-card-info/${selectedCard.unique_name}`,
+        )
+        .then(response => {
+          setFunnelCardInfos(response.data);
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [selectedCard]);
+
+  const getCardCustomers = useCallback(() => {
+    try {
+      api
+        .get<ICardCustomerDTO[]>(`card/customers/${selectedCard.unique_name}`)
+        .then(response => {
+          setCardCustomers(response.data);
+        });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [selectedCard]);
 
   const getCardCheckLists = useCallback(() => {
     try {
@@ -77,11 +115,6 @@ const StageCardProvider: React.FC = ({ children }) => {
 
   const selectCheckList = useCallback((data: ICardCheckListDTO) => {
     setSelectedCheckList(data);
-  }, []);
-
-  const selectCard = useCallback((data: IStageCardDTO) => {
-    setSelectedCard(data);
-    localStorage.setItem('@WP-PRO:selected-card', JSON.stringify(data));
   }, []);
 
   const getCards = useCallback(
@@ -130,6 +163,17 @@ const StageCardProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, [selectedCard]);
+
+  const selectCard = useCallback(
+    (data: IStageCardDTO) => {
+      getFunnelCardInfos();
+      getCardNotes();
+      getCardCustomers();
+      setSelectedCard(data);
+      localStorage.setItem('@WP-PRO:selected-card', JSON.stringify(data));
+    },
+    [getCardCustomers, getCardNotes, getFunnelCardInfos],
+  );
 
   const updateCardStage = useCallback(
     async (xStage: IFunnelStageDTO) => {
@@ -222,6 +266,31 @@ const StageCardProvider: React.FC = ({ children }) => {
     [employee, addToast, getCardNotes, selectedCard],
   );
 
+  const createFunnelCardInfo = useCallback(
+    async (data: ICreateFunnelCardInfoDTO) => {
+      try {
+        await api.post(`/funnels/card/company-funnel-card-info`, {
+          funnel_card_field_id: data.funnel_card_field_id,
+          user_id: employee.employeeUser.id,
+          card_unique_name: selectedCard.unique_name,
+          response: data.response,
+        });
+        getFunnelCardInfos();
+        addToast({
+          type: 'success',
+          title: 'Informação salva com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao salvar informação',
+        });
+        throw new Error(err);
+      }
+    },
+    [employee, addToast, getFunnelCardInfos, selectedCard],
+  );
+
   return (
     <StageCardContext.Provider
       value={{
@@ -239,6 +308,11 @@ const StageCardProvider: React.FC = ({ children }) => {
         getCardNotes,
         updateCardStage,
         updateCard,
+        getFunnelCardInfos,
+        funnelCardInfos,
+        getCardCustomers,
+        cardCustomers,
+        createFunnelCardInfo,
       }}
     >
       {children}

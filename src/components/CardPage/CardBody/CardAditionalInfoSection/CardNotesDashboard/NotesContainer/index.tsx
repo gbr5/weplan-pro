@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Container, Note } from './styles';
 
 import ICardNotesDTO from '../../../../../../dtos/ICardNotesDTO';
-import api from '../../../../../../services/api';
 import IUserDTO from '../../../../../../dtos/IUserDTO';
 import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 import formatHourDateShort from '../../../../../../utils/formatHourDateShort';
+import { useSignUp } from '../../../../../../hooks/signUp';
 
 interface IProps {
   cardNote: ICardNotesDTO;
@@ -20,17 +20,18 @@ const NotesContainer: React.FC<IProps> = ({
   handleSetSelectedNote,
 }: IProps) => {
   const { employee } = useEmployeeAuth();
+  const { getUserProfile } = useSignUp();
 
   const [author, setAuthor] = useState<IUserDTO>({} as IUserDTO);
 
   const getAuthor = useCallback(async () => {
     try {
-      const userAuthor = await api.get(`/profile/external/${cardNote.user_id}`);
-      setAuthor(userAuthor.data);
+      const userAuthor = await getUserProfile(cardNote.user_id);
+      userAuthor && setAuthor(userAuthor);
     } catch (err) {
       throw new Error(err);
     }
-  }, [cardNote]);
+  }, [cardNote, getUserProfile]);
 
   useEffect(() => {
     if (cardNote.user_id === employee.employeeUser.id) {
