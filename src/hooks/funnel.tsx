@@ -91,6 +91,7 @@ const FunnelProvider: React.FC = ({ children }) => {
       api
         .get(`/funnels/company-funnel-card-info-field/${funnel_id}`)
         .then(response => {
+          console.log(response.data);
           setSelectedFunnelCardInfoFields(response.data);
           localStorage.setItem(
             '@WP-PRO:selected-funnel-card-info-fields',
@@ -104,6 +105,7 @@ const FunnelProvider: React.FC = ({ children }) => {
 
   const selectFunnel = useCallback(
     (funnel: IFunnelDTO) => {
+      console.log(funnel);
       getFunnelCardInfoFields(funnel.id);
       setSelectedFunnel(funnel);
       localStorage.setItem('@WP-PRO:selected-funnel', JSON.stringify(funnel));

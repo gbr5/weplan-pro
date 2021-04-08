@@ -73,7 +73,8 @@ export const Container = styled.div`
         height: 32px;
 
         > p {
-          border-bottom: 1px solid var(--title-color);
+          border-bottom: 1px solid var(--letter-color-3);
+          text-align: center;
           width: 100%;
         }
 
@@ -155,4 +156,11 @@ export const ButtonArrowMenu = styled.button`
     border: 1px solid var(--header-background-color);
     border-radius: 50%;
   }
+`;
+
+export const InfoSection = styled.div`
+  display: block;
+  overflow-y: scroll;
+  padding-bottom: 2.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.8);
 `;

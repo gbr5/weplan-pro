@@ -16,7 +16,7 @@ export const Container = styled.div`
 
   > span {
     position: absolute;
-    top: -1rem;
+    top: -2rem;
     left: 48%;
 
     > button {
