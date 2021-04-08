@@ -3,7 +3,6 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { MdEdit } from 'react-icons/md';
 import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
-import Button from '../../Button';
 import InlineFormField from '../../GeneralComponents/InlineFormField';
 import CardFunnelStageMenu from './CardFunnelStageMenu';
 
@@ -73,14 +72,9 @@ const CardHeader: React.FC = () => {
         </StageButton>
       ) : (
         <>
-          <CardFunnelStageMenu />
-          <Button
-            style={{ background: 'red', color: 'black' }}
-            type="button"
-            onClick={() => handleUpdateStage(false)}
-          >
-            Fechar
-          </Button>
+          <CardFunnelStageMenu
+            closeComponent={() => handleUpdateStage(false)}
+          />
         </>
       )}
     </Container>

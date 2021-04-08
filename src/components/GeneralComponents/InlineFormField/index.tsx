@@ -55,6 +55,7 @@ const InlineFormField: React.FC<IProps> = ({
             boxShadow: 'none',
             borderRadius: '0',
             textAlign: 'center',
+            color: 'black',
           }}
           name="name"
           defaultValue={defaultValue}

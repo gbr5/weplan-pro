@@ -49,10 +49,10 @@ export const Container = styled.div<ContainerProps>`
     width: 100%;
     background: transparent;
     border: 0;
-    color: var(--header-background-color);
+    color: var(--letter-color-5);
 
     &::placeholder {
-      color: var(--letter-color-5);
+      color: var(--letter-color-4);
     }
   }
 
