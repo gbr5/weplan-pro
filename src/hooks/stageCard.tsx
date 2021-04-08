@@ -36,7 +36,8 @@ interface IStageCardContextData {
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCard(card: IStageCardDTO): void;
   createCardNote(note: string): void;
-  createFunnelCardInfo(note: ICreateFunnelCardInfoDTO): void;
+  createFunnelCardInfo(data: ICreateFunnelCardInfoDTO): void;
+  updateFunnelCardInfo(data: IFunnelCardInfoDTO): void;
 }
 
 const StageCardContext = createContext<IStageCardContextData>(
@@ -291,6 +292,31 @@ const StageCardProvider: React.FC = ({ children }) => {
     [employee, addToast, getFunnelCardInfos, selectedCard],
   );
 
+  const updateFunnelCardInfo = useCallback(
+    async (data: IFunnelCardInfoDTO) => {
+      try {
+        await api.put(
+          `/funnels/card/company-funnel-card-info/${data.id}/${selectedCard.unique_name}/${data.funnel_card_field_id}`,
+          {
+            response: data.response,
+          },
+        );
+        getFunnelCardInfos();
+        addToast({
+          type: 'success',
+          title: 'Informação salva com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao salvar informação',
+        });
+        throw new Error(err);
+      }
+    },
+    [addToast, getFunnelCardInfos, selectedCard],
+  );
+
   return (
     <StageCardContext.Provider
       value={{
@@ -313,6 +339,7 @@ const StageCardProvider: React.FC = ({ children }) => {
         getCardCustomers,
         cardCustomers,
         createFunnelCardInfo,
+        updateFunnelCardInfo,
       }}
     >
       {children}

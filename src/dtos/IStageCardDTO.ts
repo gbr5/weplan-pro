@@ -7,4 +7,5 @@ export default interface IStageCardDTO {
   card_owner: string;
   weplanEvent: boolean;
   updated_at: Date;
+  created_at: Date;
 }

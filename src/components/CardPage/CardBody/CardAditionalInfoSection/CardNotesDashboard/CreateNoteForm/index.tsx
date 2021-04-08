@@ -29,8 +29,9 @@ const CreateNoteForm: React.FC = () => {
 
   const handleSubmit = useCallback(async () => {
     const note = textAreaRef.current?.value;
-    if (note) {
+    if (note && textAreaRef.current) {
       createCardNote(note);
+      textAreaRef.current.value = '';
     }
   }, [createCardNote]);
 

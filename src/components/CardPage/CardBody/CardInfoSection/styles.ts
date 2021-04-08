@@ -64,7 +64,7 @@ export const Container = styled.div`
       width: 100%;
       gap: 5px;
 
-      span {
+      > span {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,19 +72,19 @@ export const Container = styled.div`
         width: 100%;
         height: 32px;
 
-        p {
+        > p {
           border-bottom: 1px solid var(--title-color);
           width: 100%;
         }
 
-        strong {
+        > strong {
           font-weight: 500;
           margin-right: 8px;
           border: none;
           width: 250px;
         }
 
-        button {
+        > button {
           background: transparent;
           border: none;
           margin-left: auto;
@@ -96,7 +96,7 @@ export const Container = styled.div`
           &:hover {
             background: var(--title-color);
 
-            svg {
+            > svg {
               color: var(--header-background-color);
             }
           }
@@ -119,11 +119,11 @@ export const CardParticipantsButton = styled.button`
   transition: 0.5s;
   padding: 5px 32px;
 
-  strong {
+  > strong {
     margin-right: auto;
   }
 
-  strong {
+  > strong {
     margin-left: auto;
   }
 

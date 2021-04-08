@@ -3,12 +3,16 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 4rem;
+  height: 3rem;
   align-items: center;
   flex-direction: center;
   position: relative;
-  margin: 1rem auto;
+  margin: 0.2rem auto;
   text-align: center;
+
+  input {
+    padding-left: 8px;
+  }
 
   > span {
     position: absolute;

@@ -6,8 +6,10 @@ import { useCompanyContact } from '../../../../hooks/companyContacts';
 import { useFunnel } from '../../../../hooks/funnel';
 import { useSignUp } from '../../../../hooks/signUp';
 import { useStageCard } from '../../../../hooks/stageCard';
+import formatHourDateShort from '../../../../utils/formatHourDateShort';
 import CardBudgetsWindow from './CardBudgetsWindow';
 import CardCustomersWindow from './CardCustomersWindow';
+import CardInfoButton from './CardInfoButton';
 import CardParticipantsWindow from './CardParticipantsWindow';
 
 import {
@@ -93,18 +95,11 @@ const CardInfoSection: React.FC = () => {
             </CardParticipantsButton>
             <div>
               <span>
-                <strong>Nome:</strong>
-                <p>{selectedCard.name}</p>
-                <button type="button">
-                  <MdEdit />
-                </button>
-              </span>
-              <span>
                 <strong>Responsável:</strong>
                 <p>{cardOwner.name}</p>
-                <button type="button">
+                {/* <button type="button">
                   <MdEdit />
-                </button>
+                </button> */}
               </span>
               <span>
                 <strong>Due_date:</strong>
@@ -113,19 +108,19 @@ const CardInfoSection: React.FC = () => {
                   <MdEdit />
                 </button>
               </span>
-              <span>
+              {/* <span>
                 <strong>Última atualização:</strong>
                 <p>15/04/20</p>
                 <button type="button">
                   <MdEdit />
                 </button>
-              </span>
+              </span> */}
               <span>
                 <strong>Data de criação:</strong>
-                <p>15/03/20</p>
-                <button type="button">
+                <p>{formatHourDateShort(String(selectedCard.created_at))}</p>
+                {/* <button type="button">
                   <MdEdit />
-                </button>
+                </button> */}
               </span>
             </div>
             <div>
@@ -136,13 +131,10 @@ const CardInfoSection: React.FC = () => {
 
                 if (funnelCardInfo) {
                   return (
-                    <span key={field.id}>
-                      <strong>{field.name}:</strong>
-                      <p>{funnelCardInfo.response}</p>
-                      <button type="button">
-                        <MdEdit />
-                      </button>
-                    </span>
+                    <CardInfoButton
+                      cardInfo={funnelCardInfo}
+                      funnelCardInfoField={field}
+                    />
                   );
                 }
                 return '';
