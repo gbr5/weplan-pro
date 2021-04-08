@@ -20,7 +20,7 @@ const HomeControllerContext = createContext<IHomeControllerContextData>(
 
 const HomeControllerProvider: React.FC = ({ children }) => {
   const history = useHistory();
-  const { selectedFunnel, comercialFunnel } = useFunnel();
+  const { selectedFunnel } = useFunnel();
   const { selectedCard } = useStageCard();
   const [selectedPage, setSelectedPage] = useState(() => {
     const currentPage = localStorage.getItem('@WP-PRO:current-page');
@@ -33,6 +33,7 @@ const HomeControllerProvider: React.FC = ({ children }) => {
 
   const selectPage = useCallback(
     async (page: string) => {
+      console.log(page);
       setSelectedPage(page);
       localStorage.setItem('@WP-PRO:current-page', page);
       const trimmedCardName =
@@ -48,12 +49,12 @@ const HomeControllerProvider: React.FC = ({ children }) => {
         page === 'Comercial' &&
         history.push(`/funnel/comercial`);
       page === 'Settings' && history.push(`/settings`);
-      comercialFunnel &&
-        comercialFunnel.id &&
+      selectedFunnel &&
+        selectedFunnel.id &&
         page === 'ComercialSettings' &&
         history.push(`/settings/comercial`);
     },
-    [history, selectedFunnel, comercialFunnel, selectedCard],
+    [history, selectedFunnel, selectedCard],
   );
 
   useEffect(() => {
