@@ -31,10 +31,15 @@ const HomeControllerProvider: React.FC = ({ children }) => {
     return 'Home';
   });
 
-  const selectPage = useCallback(async (page: string) => {
-    setSelectedPage(page);
-    localStorage.setItem('@WP-PRO:current-page', page);
-  }, []);
+  const selectPage = useCallback(
+    async (page: string) => {
+      setSelectedPage(page);
+      localStorage.setItem('@WP-PRO:current-page', page);
+      page === 'Card' && history.push(`/card/${selectedCard.name}`);
+      page === 'Comercial' && history.push(`/funnel/comercial`);
+    },
+    [history, selectedCard],
+  );
 
   useEffect(() => {
     const currentPage = localStorage.getItem('@WP-PRO:current-page');
@@ -46,7 +51,6 @@ const HomeControllerProvider: React.FC = ({ children }) => {
       selectedCard.id
     ) {
       setSelectedPage(currentPage);
-      // history.push(`/card/${selectedCard.name}`);
     }
   }, [selectedCard, history, selectedFunnel]);
 

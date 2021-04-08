@@ -9,5 +9,15 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--header-background-color);
-  gap: 5px;
+  margin-top: 4rem;
+  position: relative;
+`;
+
+export const BackButton = styled.button`
+  background: transparent;
+  border: none;
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  z-index: 2;
 `;

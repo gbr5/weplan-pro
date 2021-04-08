@@ -34,7 +34,7 @@ export default createGlobalStyle`
     --toast-error-color: ${props => props.theme.colors.toastErrorColor};
     --toast-error-background-color: ${props =>
       props.theme.colors.toastErrorBackgroundColor};
-    --green-background-color: rgba(10, 200, 0)
+    --green-background-color: rgba(10, 200, 0);
     --window-box-shadow: ${props => props.theme.colors.windowBoxShadow};
     --green-icon: ${props => props.theme.colors.green};
     --red-icon: ${props => props.theme.colors.red};

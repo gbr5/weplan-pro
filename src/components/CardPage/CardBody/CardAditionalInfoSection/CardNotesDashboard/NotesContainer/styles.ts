@@ -13,25 +13,20 @@ export const Container = styled.button<IContainerProps>`
   width: 100%;
   padding: 5px;
   text-align: center;
+  border: 1px solid var(--title-color);
+  margin: 1rem 0;
 
-  p {
+  > footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
     width: 100%;
-    min-height: 26px;
-    margin: 0 auto;
-    font-size: 16px;
-  }
 
-  div {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
-    justify-content: stretch;
-
-    strong {
+    > strong {
       width: 100%;
       min-height: 22px;
       margin: 0 auto;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
   }
 
@@ -49,4 +44,21 @@ export const Container = styled.button<IContainerProps>`
         border: 1px solid var(--title-color);
       }
     `}
+`;
+
+export const Note = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  > p {
+    min-height: 26px;
+    font-size: 16px;
+  }
 `;

@@ -14,10 +14,13 @@ import WelcomePage from '../pages/WelcomePage';
 import { useStageCard } from '../hooks/stageCard';
 import CardPage from '../components/CardPage';
 import { useEmployeeAuth } from '../hooks/employeeAuth';
+import { useFunnel } from '../hooks/funnel';
+import KanbanDashboard from '../components/KabanDashboard';
 
 const Routes: React.FC = () => {
   const { employee } = useEmployeeAuth();
   const { selectedCard } = useStageCard();
+  const { selectedFunnel } = useFunnel();
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
@@ -28,6 +31,14 @@ const Routes: React.FC = () => {
       <Route path="/reset-password" exact component={ResetPassword} />
       {employee && employee.id && selectedCard && selectedCard.id && (
         <Route path="/card/:card_name" exact component={CardPage} isPrivate />
+      )}
+      {employee && employee.id && selectedFunnel && selectedFunnel.id && (
+        <Route
+          path="/funnel/:funnel_name"
+          exact
+          component={KanbanDashboard}
+          isPrivate
+        />
       )}
       <Route path="/dashboard" exact component={SupplierDashboard} isPrivate />
     </Switch>

@@ -1,91 +1,54 @@
-import React, { MouseEventHandler, useCallback, useState } from 'react';
-import WindowContainer from '../../../../../WindowContainer';
-import { useToast } from '../../../../../../hooks/toast';
+import React, { useCallback, useRef, useState } from 'react';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import { MdSend } from 'react-icons/md';
 
 import { Container } from './styles';
-import api from '../../../../../../services/api';
-import IStageCardDTO from '../../../../../../dtos/IStageCardDTO';
-import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
+import { useStageCard } from '../../../../../../hooks/stageCard';
+import formatTextArea from '../../../../../../utils/formatTextArea';
 
-interface IProps {
-  card: IStageCardDTO;
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
-  getCardNotes: Function;
+interface IFormParams {
+  note: string;
 }
 
-const CreateNoteForm: React.FC<IProps> = ({
-  card,
-  getCardNotes,
-  onHandleCloseWindow,
-  handleCloseWindow,
-}: IProps) => {
-  const { addToast } = useToast();
-  const { employee } = useEmployeeAuth();
+const CreateNoteForm: React.FC = () => {
+  const { createCardNote } = useStageCard();
+  const formRef = useRef<FormHandles>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [note, setNote] = useState('');
+  const [rows, setRows] = useState(2);
+
+  const handleChange = useCallback(() => {
+    const textArea = textAreaRef.current;
+    if (textArea) {
+      const numberOfRows = formatTextArea({ textArea });
+
+      setRows(numberOfRows);
+    }
+  }, []);
 
   const handleSubmit = useCallback(async () => {
-    try {
-      if (note === '') {
-        return addToast({
-          type: 'error',
-          title: 'Erro ao salvar anotação',
-          description: 'Tente novamente.',
-        });
-      }
-      await api.post(`cards/notes`, {
-        user_id: employee.employeeUser.id,
-        card_unique_name: card.unique_name,
-        note,
-      });
-
-      getCardNotes(card.unique_name);
-      handleCloseWindow();
-      return addToast({
-        type: 'success',
-        title: 'Card criado com sucesso',
-        description: 'Você já pode visualizá-lo no seu dashboard.',
-      });
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao adicionar colaborador',
-        description: 'Erro ao adicionar colaborador, tente novamente.',
-      });
-
-      throw new Error(err);
+    const note = textAreaRef.current?.value;
+    if (note) {
+      createCardNote(note);
     }
-  }, [
-    addToast,
-    handleCloseWindow,
-    employee.employeeUser,
-    card,
-    getCardNotes,
-    note,
-  ]);
+  }, [createCardNote]);
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
-      containerStyle={{
-        zIndex: 15,
-        top: '38%',
-        left: '20%',
-        height: '24%',
-        width: '60%',
-      }}
-    >
+    <Form ref={formRef} onSubmit={handleSubmit}>
       <Container>
-        <input
-          placeholder="Sua anotação ..."
-          onChange={e => setNote(e.target.value)}
+        <textarea
+          name="note"
+          onChange={handleChange}
+          ref={textAreaRef}
+          cols={30}
+          rows={rows}
         />
-        <button type="button" onClick={handleSubmit}>
-          salvar
+        <button type="submit">
+          <MdSend size={24} />
         </button>
       </Container>
-    </WindowContainer>
+    </Form>
   );
 };
 

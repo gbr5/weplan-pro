@@ -30,15 +30,27 @@ const ContactPageContext = createContext<IContactPageContextDTO>(
 const ContactPageProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
   const { addToast } = useToast();
-  const [currentContactPagePost, setCurrentContactPagePost] = useState<
-    IContactPagePostDTO
-  >({} as IContactPagePostDTO);
-  const [currentContactPage, setCurrentContactPage] = useState<IContactPageDTO>(
-    {} as IContactPageDTO,
+  const [currentContactPagePost, setCurrentContactPagePost] = useState(
+    {} as IContactPagePostDTO,
   );
+  const [currentContactPage, setCurrentContactPage] = useState(() => {
+    const findCurrentContactPage = localStorage.getItem('@WP-PRO:e-link');
+
+    if (findCurrentContactPage) {
+      return JSON.parse(findCurrentContactPage);
+    }
+    return {} as IContactPageDTO;
+  });
   const [currentContactPages, setCurrentContactPages] = useState<
     IContactPageDTO[]
-  >([]);
+  >(() => {
+    const findCompanyContactPages = localStorage.getItem('@WP-PRO:e-links');
+
+    if (findCompanyContactPages) {
+      return JSON.parse(findCompanyContactPages);
+    }
+    return [];
+  });
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const getContactPage = useCallback(async (id: string) => {
@@ -46,6 +58,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
       const response = await api.get<IContactPageDTO>(
         `/user-contact-page/show/${id}`,
       );
+      localStorage.setItem('@WP-PRO:e-link', JSON.stringify(response.data));
       setCurrentContactPage(response.data);
       return response.data;
     } catch (err) {
@@ -270,6 +283,7 @@ const ContactPageProvider: React.FC = ({ children }) => {
     (data: IContactPageDTO) => {
       removeCurrentContactPage();
       setCurrentContactPage(data);
+      localStorage.setItem('@WP-PRO:current-e-link-page', JSON.stringify(data));
     },
     [removeCurrentContactPage],
   );

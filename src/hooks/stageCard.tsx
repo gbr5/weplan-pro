@@ -28,6 +28,7 @@ interface IStageCardContextData {
   getCardNotes(): void;
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCard(card: IStageCardDTO): void;
+  createCardNote(note: string): void;
 }
 
 const StageCardContext = createContext<IStageCardContextData>(
@@ -197,9 +198,34 @@ const StageCardProvider: React.FC = ({ children }) => {
     [addToast, selectCard, getFunnels, employee],
   );
 
+  const createCardNote = useCallback(
+    async (note: string) => {
+      try {
+        await api.post(`cards/notes`, {
+          user_id: employee.employeeUser.id,
+          card_unique_name: selectedCard.unique_name,
+          note,
+        });
+        getCardNotes();
+        addToast({
+          type: 'success',
+          title: 'Nota criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar nota',
+        });
+        throw new Error(err);
+      }
+    },
+    [employee, addToast, getCardNotes, selectedCard],
+  );
+
   return (
     <StageCardContext.Provider
       value={{
+        createCardNote,
         selectedCard,
         selectedCheckList,
         selectedNote,

@@ -16,16 +16,22 @@ export const Main = styled.div`
   }
 `;
 
+export const Notes = styled.div`
+  display: block;
+  width: 100%;
+  height: 24rem;
+  background: var(--background-color);
+`;
+
 export const ContainerMenu = styled.div`
   width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
   background: var(--letter-color-3);
 
-  p {
+  > p {
     font-size: 20px;
     border-bottom: 2px solid var(--header-primary);
     background: rgba(0, 0, 0, 0.05);
@@ -35,7 +41,7 @@ export const ContainerMenu = styled.div`
     box-shadow: var(--box-shadow);
   }
 
-  button {
+  > button {
     background: transparent;
     border: none;
     margin-right: auto;
@@ -45,7 +51,7 @@ export const ContainerMenu = styled.div`
     justify-content: center;
     gap: 8px;
 
-    strong {
+    > strong {
       height: 32px;
       padding: 0 16px;
       display: flex;

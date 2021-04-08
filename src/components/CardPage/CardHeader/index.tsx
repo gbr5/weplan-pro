@@ -4,14 +4,14 @@ import { MdEdit } from 'react-icons/md';
 import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
 import Button from '../../Button';
+import InlineFormField from '../../GeneralComponents/InlineFormField';
 import CardFunnelStageMenu from './CardFunnelStageMenu';
-import EditCardTitle from './EditCardTitle';
 
 import { Container, CardTitle, StageButton } from './styles';
 
 const CardHeader: React.FC = () => {
   const iconsize = 24;
-  const { selectedCard } = useStageCard();
+  const { selectedCard, updateCard } = useStageCard();
   const { selectedFunnel } = useFunnel();
   const [updateStage, setUpdateStage] = useState(false);
   const [updateCardName, setUpdateCardName] = useState(false);
@@ -20,7 +20,7 @@ const CardHeader: React.FC = () => {
     setUpdateStage(e);
   }, []);
 
-  const handleUpdateCardName = useCallback((e: boolean) => {
+  const handleUpdateCardNameField = useCallback((e: boolean) => {
     setUpdateCardName(e);
   }, []);
 
@@ -31,18 +31,36 @@ const CardHeader: React.FC = () => {
     return stage[0].name;
   }, [selectedCard, selectedFunnel]);
 
+  const handleUpdateCardName = useCallback(
+    (e: string) => {
+      updateCard({
+        ...selectedCard,
+        name: e,
+      });
+    },
+    [updateCard, selectedCard],
+  );
+
   return (
     <Container>
       <CardTitle>
         <span>Nome do Card</span>
         <button
           type="button"
-          onClick={() => handleUpdateCardName(!updateCardName)}
+          onClick={() => handleUpdateCardNameField(!updateCardName)}
         >
           <MdEdit size={iconsize} />
         </button>
         {updateCardName ? (
-          <EditCardTitle closeComponent={() => handleUpdateCardName(false)} />
+          // <EditCardTitle closeComponent={() => handleUpdateCardNameField(false)} />
+          <h2>
+            <InlineFormField
+              closeComponent={() => handleUpdateCardNameField(false)}
+              defaultValue={selectedCard.name}
+              placeholder={selectedCard.name}
+              handleOnSubmit={(e: string) => handleUpdateCardName(e)}
+            />
+          </h2>
         ) : (
           <h2>{selectedCard.name}</h2>
         )}

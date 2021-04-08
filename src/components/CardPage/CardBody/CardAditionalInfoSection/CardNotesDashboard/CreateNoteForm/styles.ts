@@ -3,43 +3,32 @@ import '../../../../../../styles/global';
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: stretch;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
   padding: 8px;
-  gap: 8px;
 
   background: var(--card-color);
   box-shadow: var(--box-shadow);
 
-  input {
-    height: 64px;
-    padding-left: 8px;
+  textarea {
     border: 0.8px solid var(--letter-color-5);
     border-radius: 4px;
-    color: var(--header-background-color);
     font-weight: 500;
-    font-size: 24px;
+    font-size: 16px;
     transition: 0.5s;
     box-shadow: var(--window-box-shadow);
+    background: var(--letter-color-2);
     ::-webkit-input-placeholder {
-      color: var(--letter-color-3);
-    }
-    &:hover {
-      box-shadow: var(--box-shadow);
-      color: var(--letter-color-1);
-      background: var(--letter-color-2);
-      ::-webkit-input-placeholder {
-        color: var(--title-color);
-      }
+      color: var(--letter-color-5);
     }
   }
 
   button {
-    height: 64px;
-    background: var(--header-primary);
+    height: 2rem;
+    width: 2rem;
+    background: var(--green-icon);
     border: 0.8px solid var(--title-color);
     border-radius: 4px;
     color: var(--header-background-color);
@@ -47,6 +36,11 @@ export const Container = styled.div`
     font-size: 24px;
     box-shadow: var(--box-shadow);
     transition: 0.5s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.4rem;
 
     &:hover {
       color: var(--header-primary);

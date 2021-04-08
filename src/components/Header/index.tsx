@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import { FiSettings } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 import { Container, Menu } from './styles';
 
 import logo from '../../assets/weplan.svg';
@@ -9,6 +10,7 @@ import SettingsWindow from '../SettingsWindow';
 import { useHomeController } from '../../hooks/homeController';
 
 const Header: React.FC = () => {
+  const history = useHistory();
   const { selectPage } = useHomeController();
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
@@ -38,10 +40,15 @@ const Header: React.FC = () => {
     selectPage('Forms');
   }, [closeAllWindows, selectPage]);
 
+  const navigateHome = useCallback(() => {
+    selectPage('Home');
+    history.push('/dashboard');
+  }, [history, selectPage]);
+
   return (
     <>
       <Container>
-        <button type="button" onClick={() => selectPage('Home')}>
+        <button type="button" onClick={navigateHome}>
           <img src={logo} alt="WePlan" />
           <h1>PRO</h1>
         </button>

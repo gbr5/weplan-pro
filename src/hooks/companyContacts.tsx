@@ -42,36 +42,108 @@ const CompanyContactContext = createContext({} as ICompanyContactContextData);
 const CompanyContactContextProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
-  const [selectedContact, setSelectedContact] = useState(
-    {} as ICompanyContactDTO,
-  );
+  const [selectedContact, setSelectedContact] = useState(() => {
+    const findContact = localStorage.getItem('@WP-PRO:selected-contact');
+
+    if (findContact) {
+      return JSON.parse(findContact);
+    }
+    return {} as ICompanyContactDTO;
+  });
   const [companyContacts, setCompanyContacts] = useState<ICompanyContactDTO[]>(
-    [],
+    () => {
+      const findCompanyContacts = localStorage.getItem(
+        '@WP-PRO:company-contacts',
+      );
+
+      if (findCompanyContacts) {
+        return JSON.parse(findCompanyContacts);
+      }
+      return [];
+    },
   );
 
   const [customersContacts, setCustomersContacts] = useState<
     ICompanyContactDTO[]
-  >([]);
+  >(() => {
+    const findCustomersContacts = localStorage.getItem(
+      '@WP-PRO:company-customers-contacts',
+    );
+
+    if (findCustomersContacts) {
+      return JSON.parse(findCustomersContacts);
+    }
+    return [];
+  });
   const [suppliersContacts, setSuppliersContacts] = useState<
     ICompanyContactDTO[]
-  >([]);
+  >(() => {
+    const findSuppliersContacts = localStorage.getItem(
+      '@WP-PRO:company-suppliers-contacts',
+    );
+
+    if (findSuppliersContacts) {
+      return JSON.parse(findSuppliersContacts);
+    }
+    return [];
+  });
   const [outsourcedsContacts, setOutsourcedsContacts] = useState<
     ICompanyContactDTO[]
-  >([]);
+  >(() => {
+    const findOutsourcedsContacts = localStorage.getItem(
+      '@WP-PRO:company-outsourceds-contacts',
+    );
+
+    if (findOutsourcedsContacts) {
+      return JSON.parse(findOutsourcedsContacts);
+    }
+    return [];
+  });
   const [employeesContacts, setEmployeesContacts] = useState<
     ICompanyContactDTO[]
-  >([]);
+  >(() => {
+    const findEmployeesContacts = localStorage.getItem(
+      '@WP-PRO:company-employees-contacts',
+    );
+
+    if (findEmployeesContacts) {
+      return JSON.parse(findEmployeesContacts);
+    }
+    return [];
+  });
   const [othersContacts, setOthersContacts] = useState<ICompanyContactDTO[]>(
-    [],
+    () => {
+      const findOthersContacts = localStorage.getItem(
+        '@WP-PRO:company-others-contacts',
+      );
+
+      if (findOthersContacts) {
+        return JSON.parse(findOthersContacts);
+      }
+      return [];
+    },
   );
   const [weplanUsersContacts, setWeplanUsersContacts] = useState<
     ICompanyContactDTO[]
-  >([]);
+  >(() => {
+    const findWePlanContacts = localStorage.getItem(
+      '@WP-PRO:company-weplan-contacts',
+    );
+
+    if (findWePlanContacts) {
+      return JSON.parse(findWePlanContacts);
+    }
+    return [];
+  });
 
   const getCompanyContacts = useCallback(async () => {
     try {
       const response = await api.get<ICompanyContactDTO[]>(
         `/company/contacts/${employee.company.id}`,
+      );
+      localStorage.setItem(
+        '@WP-PRO:company-contacts',
+        JSON.stringify(response.data),
       );
       setCompanyContacts(
         response.data.sort((a: ICompanyContactDTO, b: ICompanyContactDTO) => {
@@ -84,34 +156,52 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           return 0;
         }),
       );
-      setCustomersContacts(
-        response.data.filter(
-          contact => contact.company_contact_type === 'Customer',
-        ),
+      const sortedCustomers = response.data.filter(
+        contact => contact.company_contact_type === 'Customer',
       );
-      setSuppliersContacts(
-        response.data.filter(
-          contact => contact.company_contact_type === 'Supplier',
-        ),
+      localStorage.setItem(
+        '@WP-PRO:company-customers-contacts',
+        JSON.stringify(sortedCustomers),
       );
-      setEmployeesContacts(
-        response.data.filter(
-          contact => contact.company_contact_type === 'Employee',
-        ),
+      setCustomersContacts(sortedCustomers);
+      const sortedSuppliers = response.data.filter(
+        contact => contact.company_contact_type === 'Supplier',
       );
-      setOutsourcedsContacts(
-        response.data.filter(
-          contact => contact.company_contact_type === 'Outsourced',
-        ),
+      localStorage.setItem(
+        '@WP-PRO:company-suppliers-contacts',
+        JSON.stringify(sortedSuppliers),
       );
-      setOthersContacts(
-        response.data.filter(
-          contact => contact.company_contact_type === 'Other',
-        ),
+      setSuppliersContacts(sortedSuppliers);
+      const sortedEmployees = response.data.filter(
+        contact => contact.company_contact_type === 'Employee',
       );
-      setWeplanUsersContacts(
-        response.data.filter(contact => contact.weplanUser),
+      localStorage.setItem(
+        '@WP-PRO:company-employees-contacts',
+        JSON.stringify(sortedEmployees),
       );
+      setEmployeesContacts(sortedEmployees);
+      const sortedOutsourceds = response.data.filter(
+        contact => contact.company_contact_type === 'Outsourced',
+      );
+      localStorage.setItem(
+        '@WP-PRO:company-outsourceds-contacts',
+        JSON.stringify(sortedOutsourceds),
+      );
+      setOutsourcedsContacts(sortedOutsourceds);
+      const sortedOthers = response.data.filter(
+        contact => contact.company_contact_type === 'Other',
+      );
+      localStorage.setItem(
+        '@WP-PRO:company-others-contacts',
+        JSON.stringify(sortedOthers),
+      );
+      setOthersContacts(sortedOthers);
+      const sortedWePlan = response.data.filter(contact => contact.weplanUser);
+      localStorage.setItem(
+        '@WP-PRO:company-weplan-contacts',
+        JSON.stringify(sortedWePlan),
+      );
+      setWeplanUsersContacts(sortedWePlan);
     } catch (err) {
       throw new Error(err);
     }
@@ -423,8 +513,10 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const selectContact = useCallback(
     (data: ICompanyContactDTO) => {
       if (selectedContact.id === data.id) {
+        localStorage.removeItem('@WP-PRO:selected-contact');
         return setSelectedContact({} as ICompanyContactDTO);
       }
+      localStorage.setItem('@WP-PRO:selected-contact', JSON.stringify(data));
       return setSelectedContact(data);
     },
     [selectedContact],
@@ -448,6 +540,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     { id: 'Outsourceds', label: 'Terceirizados', value: 'Outsourceds' },
     { id: 'Others', label: 'Outros', value: 'Others' },
   ];
+
   return (
     <CompanyContactContext.Provider
       value={{
