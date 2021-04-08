@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 
 import { MdHelp, MdSchedule } from 'react-icons/md';
 import { FiPower } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 import WindowContainer from '../WindowContainer';
 
 import { Container } from './styles';
@@ -23,6 +24,7 @@ const SettingsWindow: React.FC<IProps> = ({
   handleHelpWindow,
   handleOpenFormDashboard,
 }) => {
+  const history = useHistory();
   const { signOut } = useEmployeeAuth();
   // const { themeBoolean, toggleTheme } = useToggleTheme();
   // const { colors } = useContext(ThemeContext);
@@ -30,7 +32,8 @@ const SettingsWindow: React.FC<IProps> = ({
   const handleSignout = useCallback(() => {
     localStorage.clear();
     signOut();
-  }, [signOut]);
+    history.push('/');
+  }, [signOut, history]);
   return (
     <WindowContainer
       onHandleCloseWindow={() => handleCloseWindow()}

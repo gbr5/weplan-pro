@@ -7,6 +7,7 @@ export const Main = styled.div`
   justify-content: center;
   width: 100vw;
   height: 216px;
+  margin: 1.5rem 0 2rem;
 
   gap: 5px;
 

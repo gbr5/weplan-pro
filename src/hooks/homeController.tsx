@@ -33,10 +33,14 @@ const HomeControllerProvider: React.FC = ({ children }) => {
 
   const selectPage = useCallback(
     async (page: string) => {
-      setSelectedPage(page);
+      const trimmedCardName = selectedCard.name
+        .toLowerCase()
+        .replace(/ /g, '-');
       localStorage.setItem('@WP-PRO:current-page', page);
-      page === 'Card' && history.push(`/card/${selectedCard.name}`);
+      page === 'Card' && history.push(`/card/${trimmedCardName}`);
       page === 'Comercial' && history.push(`/funnel/comercial`);
+      page === 'Settings' && history.push(`/settings`);
+      setSelectedPage(page);
     },
     [history, selectedCard],
   );

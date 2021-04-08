@@ -6,6 +6,11 @@ export const Main = styled.div`
   flex-direction: column;
   width: 100%;
   height: 216px;
+  margin: 1.5rem 0;
+
+  > h2 {
+    margin: 0.5rem auto;
+  }
 `;
 
 export const Container = styled.div`
@@ -37,19 +42,19 @@ export const Task = styled.div`
     border: 1px solid var(--header-primary);
     background: var(--card-color);
 
-    div {
-      h2 {
+    > div {
+      > h2 {
         color: var(--title-color);
       }
     }
-    span {
-      p {
+    > span {
+      > p {
         color: var(--letter-color-5);
       }
     }
   }
 
-  div {
+  > div {
     display: flex;
     gap: 5px;
     color: var(--header-primary);
@@ -57,19 +62,19 @@ export const Task = styled.div`
     width: 100%;
   }
 
-  span {
+  > span {
     display: flex;
     width: 100%;
     padding-right: 16px;
 
-    p {
+    > p {
       color: var(--letter-color-2);
 
-      svg {
+      > svg {
         color: var(--red-color);
       }
     }
-    svg {
+    > svg {
       margin-left: auto;
       color: green;
     }

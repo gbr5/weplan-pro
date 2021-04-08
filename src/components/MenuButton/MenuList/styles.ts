@@ -3,21 +3,21 @@ import '../../../styles/global';
 
 export const List = styled.div`
   position: fixed;
-  bottom: 48px;
-  right: 48px;
+  top: 45%;
+  left: 10%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: stretch;
-  width: 184px;
-  height: 220px;
+  align-items: center;
+  justify-content: space-around;
+  width: 80%;
+  height: 15%;
   border-radius: 4px;
   padding: 4px;
   gap: 8px;
   z-index: 2000;
 
-  background: var(--card-color);
-  box-shadow: var(--box-shadow);
+  background: var(--background-color);
+  box-shadow: 0 0 6px 6px rgba(0, 0, 0, 0.4);
 `;
 
 export const Item = styled.button`

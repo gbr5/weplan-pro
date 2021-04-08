@@ -19,12 +19,16 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
   const { employeeModules } = useManagementModule();
   const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
 
-  const handleSelectPage = useCallback(
+  const handleSelectPage = useCallback(() => {
+    selectPage('Card');
+  }, [selectPage]);
+
+  const handleSelectCard = useCallback(
     (e: IStageCardDTO) => {
       selectCard(e);
-      selectPage('Card');
+      setTimeout(handleSelectPage(), 10000);
     },
-    [selectPage, selectCard],
+    [selectCard, handleSelectPage],
   );
 
   useEffect(() => {
@@ -61,7 +65,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
                 <h3>{card.name}</h3>
                 <strong>{card.weplanEvent ? 'WP' : ''}</strong>
               </button>
-              <button type="button" onClick={() => handleSelectPage(card)}>
+              <button type="button" onClick={() => handleSelectCard(card)}>
                 <FiChevronRight size={28} />
               </button>
             </Card>

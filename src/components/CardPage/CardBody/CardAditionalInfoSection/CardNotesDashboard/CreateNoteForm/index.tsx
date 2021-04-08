@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { MdSend } from 'react-icons/md';
@@ -34,6 +34,11 @@ const CreateNoteForm: React.FC = () => {
     }
   }, [createCardNote]);
 
+  const cols = useMemo(() => {
+    const screenWidth = window.screen.width;
+    return screenWidth * 0.08;
+  }, []);
+
   return (
     <Form ref={formRef} onSubmit={handleSubmit}>
       <Container>
@@ -41,7 +46,7 @@ const CreateNoteForm: React.FC = () => {
           name="note"
           onChange={handleChange}
           ref={textAreaRef}
-          cols={30}
+          cols={cols}
           rows={rows}
         />
         <button type="submit">
