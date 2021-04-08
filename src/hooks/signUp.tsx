@@ -26,6 +26,7 @@ interface ISignUpContextData {
   createUser(pass: string): Promise<IUserDTO>;
   getUserByEmail(email: string): Promise<IUserDTO | undefined>;
   getUserByName(name: string): Promise<IUserDTO | undefined>;
+  getUserProfile(id: string): Promise<IUserDTO | undefined>;
   getCompanyInfoByName(name: string): Promise<ICompanyInfoDTO | undefined>;
 }
 
@@ -58,6 +59,20 @@ const SignUpProvider: React.FC = ({ children }) => {
         `/user/name-or-email?email=${email}`,
       );
       if (response.data && response.data.id) {
+        return response.data;
+      }
+      return undefined;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+  const getUserProfile = useCallback(async (id: string) => {
+    try {
+      const response = await api.get<IUserDTO | undefined>(
+        `/profile/external/${id}`,
+      );
+
+      if (response.data) {
         return response.data;
       }
       return undefined;
@@ -155,6 +170,7 @@ const SignUpProvider: React.FC = ({ children }) => {
     <SignUpContext.Provider
       value={{
         companyCreated,
+        getUserProfile,
         selectedEmail,
         selectEmail,
         selectedName,

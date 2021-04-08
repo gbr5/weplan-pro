@@ -1,15 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiTarget } from 'react-icons/fi';
 import { MdEdit, MdGroup, MdNaturePeople } from 'react-icons/md';
-import ICardCustomerDTO from '../../../../dtos/ICardCustomerDTO';
-import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
-import IFunnelCardInfoDTO from '../../../../dtos/IFunnelCardInfoDTO';
-import IFunnelCardInfoFieldDTO from '../../../../dtos/IFunnelCardInfoFieldDTO';
-import IFunnelDTO from '../../../../dtos/IFunnelDTO';
 import IUserDTO from '../../../../dtos/IUserDTO';
+import { useCompanyContact } from '../../../../hooks/companyContacts';
 import { useFunnel } from '../../../../hooks/funnel';
+import { useSignUp } from '../../../../hooks/signUp';
 import { useStageCard } from '../../../../hooks/stageCard';
-import api from '../../../../services/api';
 import CardBudgetsWindow from './CardBudgetsWindow';
 import CardCustomersWindow from './CardCustomersWindow';
 import CardParticipantsWindow from './CardParticipantsWindow';
@@ -22,101 +18,25 @@ import {
 } from './styles';
 
 const CardInfoSection: React.FC = () => {
-  const { funnels, selectedFunnel } = useFunnel();
-  const { selectedCard } = useStageCard();
-
+  const { selectedFunnelCardInfoFields } = useFunnel();
+  const { selectedCard, funnelCardInfos } = useStageCard();
+  const { getUserProfile } = useSignUp();
+  const { customersContacts } = useCompanyContact();
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
   const [cardCustomersWindow, setCardCustomersWindow] = useState(false);
   const [cardBudgetsWindow, setCardBudgetsWindow] = useState(false);
   const [cardOwner, setCardOwner] = useState<IUserDTO>({} as IUserDTO);
-  const [customers, setCustomers] = useState<ICompanyContactDTO[]>([]);
-  const [funnel, setFunnel] = useState<IFunnelDTO>({} as IFunnelDTO);
-  const [
-    selectedFunnelCardInfoField,
-    setSelectedFunnelCardInfoField,
-  ] = useState<IFunnelCardInfoFieldDTO[]>([]);
-  const [selectedFunnelCardInfo, setSelectedFunnelCardInfo] = useState<
-    IFunnelCardInfoDTO[]
-  >([]);
-
-  useEffect(() => {
-    const thisFunnel = funnels.find(
-      xFunnel => xFunnel.name === selectedFunnel.name,
-    );
-
-    if (thisFunnel) {
-      setFunnel(thisFunnel);
-    } else {
-      setFunnel(funnels[0]);
-    }
-  }, [funnels, selectedFunnel]);
 
   const handleCloseAllWindows = useCallback(() => {
     setCardParticipantsWindow(false);
     setCardBudgetsWindow(false);
   }, []);
-  const getFunnelCardInfoField = useCallback(() => {
-    try {
-      api
-        .get(`/funnels/company-funnel-card-info-field/${funnel.id}`)
-        .then(response => {
-          setSelectedFunnelCardInfoField(response.data);
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [funnel]);
-  const getFunnelCardInfo = useCallback(() => {
-    try {
-      api
-        .get(
-          `/funnels/card/company-funnel-card-info/${selectedCard.unique_name}`,
-        )
-        .then(response => {
-          setSelectedFunnelCardInfo(response.data);
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [selectedCard]);
 
-  const getCardOwner = useCallback(() => {
-    try {
-      api.get<IUserDTO>(`/users/${selectedCard.card_owner}`).then(response => {
-        setCardOwner(response.data);
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [selectedCard]);
-  const getCardCustomers = useCallback(() => {
-    try {
-      api
-        .get<ICardCustomerDTO[]>(`/card/customers/${selectedCard.unique_name}`)
-        .then(response => {
-          setCustomers(
-            response.data.map(xCardCustomer => xCardCustomer.customer),
-          );
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [selectedCard]);
-
-  useEffect(() => {
-    getCardCustomers();
-  }, [getCardCustomers]);
-
-  useEffect(() => {
-    if (funnel && funnel.id) {
-      getFunnelCardInfoField();
-    }
-  }, [getFunnelCardInfoField, funnel]);
-
-  useEffect(() => {
-    getFunnelCardInfo();
-  }, [getFunnelCardInfo]);
+  const getCardOwner = useCallback(async () => {
+    const response = await getUserProfile(selectedCard.card_owner);
+    response && setCardOwner(response);
+  }, [selectedCard, getUserProfile]);
 
   useEffect(() => {
     getCardOwner();
@@ -138,7 +58,7 @@ const CardInfoSection: React.FC = () => {
       )}
       {cardBudgetsWindow && (
         <CardBudgetsWindow
-          customers={customers}
+          customers={customersContacts}
           onHandleCloseWindow={() => setCardBudgetsWindow(false)}
         />
       )}
@@ -209,8 +129,8 @@ const CardInfoSection: React.FC = () => {
               </span>
             </div>
             <div>
-              {selectedFunnelCardInfoField.map(field => {
-                const funnelCardInfo = selectedFunnelCardInfo.find(
+              {selectedFunnelCardInfoFields.map(field => {
+                const funnelCardInfo = funnelCardInfos.find(
                   info => info.funnel_card_field_id === field.id,
                 );
 
