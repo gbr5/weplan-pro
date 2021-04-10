@@ -9,7 +9,9 @@ import ContactNote from './ContactNote';
 import ContactDescription from './ContactDescription';
 
 import { Container } from './styles';
-import ContactType from './ContactType';
+import CompanyContactTypeField from './CompanyContactTypeField';
+import CreateContactInfoField from './CreateContactInfoField';
+import CreateContactNote from './CreateContactNote';
 
 interface IProps {
   closeWindow: Function;
@@ -63,18 +65,29 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
       <Container>
         <ContactNameAndFamilyName />
         <ContactDescription />
-        <ContactType />
+        <CompanyContactTypeField />
 
         <h3>Contatos</h3>
-        {selectedContact.contact_infos.map(contactInfo => {
-          return (
-            <ContactInfoField key={contactInfo.id} contactField={contactInfo} />
-          );
-        })}
+        {selectedContact &&
+          selectedContact.contact_infos &&
+          selectedContact.contact_infos.length > 0 &&
+          selectedContact.contact_infos.map(contactInfo => {
+            return (
+              <ContactInfoField
+                key={contactInfo.id}
+                contactField={contactInfo}
+              />
+            );
+          })}
+        <CreateContactInfoField />
         <h3>Notas</h3>
-        {selectedContact.notes.map(note => {
-          return <ContactNote key={note.id} contactNote={note} />;
-        })}
+        {selectedContact &&
+          selectedContact.contact_infos &&
+          selectedContact.contact_infos.length > 0 &&
+          selectedContact.notes.map(note => {
+            return <ContactNote key={note.id} contactNote={note} />;
+          })}
+        <CreateContactNote />
 
         <Button
           type="button"

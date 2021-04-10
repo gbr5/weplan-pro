@@ -14,10 +14,8 @@ const SettingsPage: React.FC = () => {
 
   const handleFunnelSettings = useCallback(
     (e: IFunnelDTO) => {
-      console.log(e);
       selectFunnel(e);
       const funnelPage = `${e.name}Settings`;
-      console.log(funnelPage);
       selectPage(funnelPage);
     },
     [selectFunnel, selectPage],

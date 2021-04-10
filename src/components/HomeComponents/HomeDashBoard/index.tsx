@@ -2,10 +2,12 @@ import React, { useCallback } from 'react';
 import { FiAtSign, FiUserCheck } from 'react-icons/fi';
 import {
   MdFormatListBulleted,
+  MdGroup,
   MdPersonPin,
   MdSettings,
   MdTrackChanges,
 } from 'react-icons/md';
+import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useFunnel } from '../../../hooks/funnel';
 import { useHomeController } from '../../../hooks/homeController';
 
@@ -15,6 +17,7 @@ const HomeDashboard: React.FC = () => {
   const iconsize = 64;
   const { selectPage } = useHomeController();
   const { selectFunnel, funnels } = useFunnel();
+  const { master } = useCompanyEmployee();
 
   const selectComercialKanban = useCallback(async () => {
     if (funnels.length > 0) {
@@ -64,6 +67,14 @@ const HomeDashboard: React.FC = () => {
         </Icon>
         <h2>Configurações</h2>
       </IconContainer>
+      {master && master.id && (
+        <IconContainer type="button" onClick={() => selectPage('Employees')}>
+          <Icon>
+            <MdGroup size={iconsize} />
+          </Icon>
+          <h2>Colaboradores</h2>
+        </IconContainer>
+      )}
     </Container>
   );
 };

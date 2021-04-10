@@ -1,9 +1,4 @@
-import React, {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import WindowContainer from '../WindowContainer';
 import { useToast } from '../../hooks/toast';
 
@@ -19,14 +14,12 @@ import { useFunnel } from '../../hooks/funnel';
 import { useCompanyContact } from '../../hooks/companyContacts';
 
 interface IProps {
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
+  closeWindow: Function;
   chosenFunnel: string;
 }
 
 const AddCardForm: React.FC<IProps> = ({
-  onHandleCloseWindow,
-  handleCloseWindow,
+  closeWindow,
   chosenFunnel,
 }: IProps) => {
   const { addToast } = useToast();
@@ -85,7 +78,7 @@ const AddCardForm: React.FC<IProps> = ({
         description: card_unique_name,
       });
 
-      handleCloseWindow();
+      closeWindow();
       getFunnels(employee.company.id);
       return addToast({
         type: 'success',
@@ -107,7 +100,7 @@ const AddCardForm: React.FC<IProps> = ({
     selectedStage,
     employee,
     selectedCustomer,
-    handleCloseWindow,
+    closeWindow,
     getFunnels,
   ]);
 
@@ -137,21 +130,20 @@ const AddCardForm: React.FC<IProps> = ({
       if (thisFunnel && thisFunnel.stages.length > 0) {
         setStages(thisFunnel.stages);
       } else {
-        handleCloseWindow();
+        closeWindow();
       }
     }
-  }, [funnels, chosenFunnel, handleCloseWindow]);
+  }, [funnels, chosenFunnel, closeWindow]);
 
   return (
     <>
       {createCompanyCustomerFormWindow && (
         <CreateCompanyCustomerForm
-          handleCloseWindow={handleCloseCompanyCustomerFormWindow}
-          onHandleCloseWindow={() => setCreateCompanyCustomerFormWindow(false)}
+          closeWindow={handleCloseCompanyCustomerFormWindow}
         />
       )}
       <WindowContainer
-        onHandleCloseWindow={onHandleCloseWindow}
+        onHandleCloseWindow={() => closeWindow()}
         containerStyle={{
           zIndex: 10,
           top: '38%',
@@ -191,16 +183,15 @@ const AddCardForm: React.FC<IProps> = ({
       </WindowContainer>
       {selectStageWindow && (
         <SelectStageWindow
-          onHandleCloseWindow={() => setSelectStageWindow(false)}
           stages={stages}
-          handleCloseWindow={handleCloseSelectStageWindow}
+          closeWindow={handleCloseSelectStageWindow}
           handleSetSelectedStage={(e: IFunnelStageDTO) => setSelectedStage(e)}
         />
       )}
       {selectCustomerWindow && (
         <SelectCustomerWindow
           customers={customers}
-          onHandleCloseWindow={() => setSelectCustomerWindow(false)}
+          closeWindow={() => setSelectCustomerWindow(false)}
           handleSelectCustomer={handleSelectCustomer}
         />
       )}

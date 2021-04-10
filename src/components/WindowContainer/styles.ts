@@ -31,11 +31,11 @@ export const Container = styled.div`
     overflow-y: scroll;
     display: block;
   }
-  header {
+  > header {
     position: absolute;
     top: 16px;
     right: 16px;
-    button {
+    > button {
       background: transparent;
       border: none;
       border-radius: 10px;
@@ -49,7 +49,7 @@ export const Container = styled.div`
         opacity: 0.8;
         box-shadow: var(--box-shadow);
       }
-      svg {
+      > svg {
         color: red;
         transition: 0.5s;
         &:hover {

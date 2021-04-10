@@ -35,8 +35,7 @@ const MenuButton: React.FC = () => {
       {!!createCardWindow && (
         <AddCardForm
           chosenFunnel={moduleName}
-          onHandleCloseWindow={() => setCreateCardWindow(false)}
-          handleCloseWindow={() => setCreateCardWindow(false)}
+          closeWindow={() => setCreateCardWindow(false)}
         />
       )}
     </>

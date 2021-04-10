@@ -1,3 +1,4 @@
+import ICompanyEmployeeContactDTO from './ICompanyEmployeeContactDTO';
 import { IEmployeeFileDTO } from './IEmployeeFileDTO';
 import IUserConfirmationDTO from './IUserConfirmationDTO';
 import IUserDTO from './IUserDTO';
@@ -10,5 +11,6 @@ export default interface IEmployeeDTO {
   company: IUserDTO;
   files: IEmployeeFileDTO[];
   confirmations: IUserConfirmationDTO[];
+  employeeContact: ICompanyEmployeeContactDTO;
   isActive: boolean;
 }

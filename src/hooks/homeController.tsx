@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useCompanyEmployee } from './companyEmployee';
 import { useFunnel } from './funnel';
 import { useStageCard } from './stageCard';
 
@@ -21,6 +22,7 @@ const HomeControllerContext = createContext<IHomeControllerContextData>(
 const HomeControllerProvider: React.FC = ({ children }) => {
   const history = useHistory();
   const { selectedFunnel } = useFunnel();
+  const { master } = useCompanyEmployee();
   const { selectedCard } = useStageCard();
   const [selectedPage, setSelectedPage] = useState(() => {
     const currentPage = localStorage.getItem('@WP-PRO:current-page');
@@ -33,7 +35,6 @@ const HomeControllerProvider: React.FC = ({ children }) => {
 
   const selectPage = useCallback(
     async (page: string) => {
-      console.log(page);
       setSelectedPage(page);
       localStorage.setItem('@WP-PRO:current-page', page);
       const trimmedCardName =
@@ -53,8 +54,9 @@ const HomeControllerProvider: React.FC = ({ children }) => {
         selectedFunnel.id &&
         page === 'ComercialSettings' &&
         history.push(`/settings/comercial`);
+      master && master.id && page === 'Employees' && history.push('/employees');
     },
-    [history, selectedFunnel, selectedCard],
+    [history, selectedFunnel, selectedCard, master],
   );
 
   useEffect(() => {

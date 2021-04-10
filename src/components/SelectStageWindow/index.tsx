@@ -1,9 +1,4 @@
-import React, {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import { useToast } from '../../hooks/toast';
@@ -15,15 +10,13 @@ interface IProps {
   // eslint-disable-next-line react/require-default-props
   stages: IFunnelStageDTO[];
   handleSetSelectedStage: Function;
-  handleCloseWindow: Function;
-  onHandleCloseWindow: MouseEventHandler;
+  closeWindow: Function;
 }
 
 const SelectStageWindow: React.FC<IProps> = ({
   stages,
   handleSetSelectedStage,
-  handleCloseWindow,
-  onHandleCloseWindow,
+  closeWindow,
 }: IProps) => {
   const { addToast } = useToast();
 
@@ -51,8 +44,8 @@ const SelectStageWindow: React.FC<IProps> = ({
       });
     }
     handleSetSelectedStage(selectedStage);
-    handleCloseWindow();
-  }, [addToast, selectedStage, handleSetSelectedStage, handleCloseWindow]);
+    closeWindow();
+  }, [addToast, selectedStage, handleSetSelectedStage, closeWindow]);
 
   const handleSortStages = useCallback(
     (a: IFunnelStageDTO, b: IFunnelStageDTO) => {
@@ -74,7 +67,7 @@ const SelectStageWindow: React.FC<IProps> = ({
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 14,
         top: '25%',
