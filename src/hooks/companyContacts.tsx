@@ -6,6 +6,7 @@ import ICompanyContactInfoDTO from '../dtos/ICompanyContactInfoDTO';
 import ICompanyContactNoteDTO from '../dtos/ICompanyContactNoteDTO';
 import ICreateCompanyContactDTO from '../dtos/ICreateCompanyContactDTO';
 import api from '../services/api';
+import { useCompanyEmployee } from './companyEmployee';
 import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
 
@@ -22,7 +23,9 @@ interface ICompanyContactContextData {
   companyContacts: ICompanyContactDTO[];
   selectContact(data: ICompanyContactDTO): void;
   deleteCompanyContact(data: ICompanyContactDTO): void;
-  createCompanyContact(data: ICreateCompanyContactDTO): void;
+  createCompanyContact(
+    data: ICreateCompanyContactDTO,
+  ): Promise<ICompanyContactDTO>;
   updateCompanyContactIsNew(data: ICompanyContactDTO): void;
   updateCompanyContactIsCompany(id: string): void;
   updateCompanyContactName(id: string, name: string): void;
@@ -30,6 +33,7 @@ interface ICompanyContactContextData {
   updateCompanyContactDescription(id: string, description: string): void;
   updateCompanyContactType(id: string, company_contact_type: string): void;
   updateCompanyContactWeplanUser(id: string): void;
+  createCompanyEmployeeContact(data: ICreateCompanyContactDTO): void;
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
   createCompanyContactNote(note: string): void;
   updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
@@ -41,6 +45,7 @@ const CompanyContactContext = createContext({} as ICompanyContactContextData);
 
 const CompanyContactContextProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
+  const { selectedCompanyEmployee, getCompanyEmployees } = useCompanyEmployee();
   const { employee } = useEmployeeAuth();
   const [selectedContact, setSelectedContact] = useState(() => {
     const findContact = localStorage.getItem('@WP-PRO:selected-contact');
@@ -246,6 +251,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Contato criado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -256,6 +262,22 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       }
     },
     [getCompanyContacts, employee, addToast],
+  );
+
+  const createCompanyEmployeeContact = useCallback(
+    async (data: ICreateCompanyContactDTO) => {
+      try {
+        const response = await createCompanyContact(data);
+        await api.post('company-employee-contact', {
+          company_contact_id: response.data.id,
+          employee_id: selectedCompanyEmployee.id,
+        });
+        getCompanyEmployees();
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getCompanyEmployees, createCompanyContact, selectedCompanyEmployee],
   );
 
   const updateCompanyContactIsCompany = useCallback(
@@ -536,7 +558,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const contactTypes: ICheckBoxOptionDTO[] = [
     { id: 'Customers', label: 'Clientes', value: 'Customers' },
     { id: 'Suppliers', label: 'Fornecedores', value: 'Suppliers' },
-    { id: 'Employees', label: 'Funcionários', value: 'Employees' },
+    { id: 'Employees', label: 'Colaboradores', value: 'Employees' },
     { id: 'Outsourceds', label: 'Terceirizados', value: 'Outsourceds' },
     { id: 'Others', label: 'Outros', value: 'Others' },
   ];
@@ -558,6 +580,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         getCompanyContacts,
         createCompanyContact,
         deleteCompanyContact,
+        createCompanyEmployeeContact,
         updateCompanyContactName,
         updateCompanyContactFamilyName,
         updateCompanyContactDescription,

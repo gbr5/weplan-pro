@@ -1,26 +1,30 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import ICreateEmployeeDTO from '../dtos/ICreateEmployeeDTO';
 import IEmployeeDTO from '../dtos/IEmployeeDTO';
 import IUserDTO from '../dtos/IUserDTO';
+import ICompanyMasterDTO from '../dtos/ICompanyMasterDTO';
 
 import api from '../services/api';
 import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
 
-interface ICompanyMaster {
-  id: string;
-  user_id: string;
-}
-
 interface ICompanyEmployeeContextData {
   selectedUser: IUserDTO;
   selectedCompanyEmployee: IEmployeeDTO;
   companyEmployees: IEmployeeDTO[];
-  companyMasters: ICompanyMaster[];
+  companyMasters: ICompanyMasterDTO[];
+  master: ICompanyMasterDTO;
   selectCompanyEmployee(employee: IEmployeeDTO): void;
   createCompanyEmployee(data: ICreateEmployeeDTO): void;
   createUserEmployee(data: ICreateEmployeeDTO): void;
   getCompanyMasters(): Promise<void>;
+  getEmployeeAsMaster(): Promise<ICompanyMasterDTO | undefined>;
   getCompanyEmployees(): Promise<void>;
 }
 
@@ -30,14 +34,54 @@ const CompanyEmployeeContext = createContext<ICompanyEmployeeContextData>(
 
 const CompanyEmployeeProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
-  const { addToast } = useToast();
-  const [selectedCompanyEmployee, setSelectedCompanyEmployee] = useState(
-    {} as IEmployeeDTO,
-  );
-  const [selectedUser, setSelectedUser] = useState({} as IUserDTO);
-  const [companyEmployees, setCompanyEmployees] = useState<IEmployeeDTO[]>([]);
-  const [companyMasters, setCompanyMasters] = useState<ICompanyMaster[]>([]);
 
+  const { addToast } = useToast();
+  const [selectedCompanyEmployee, setSelectedCompanyEmployee] = useState(() => {
+    const findSelectedEmployee = localStorage.getItem(
+      '@WP-PRO:selected-employee',
+    );
+
+    if (findSelectedEmployee) {
+      return JSON.parse(findSelectedEmployee);
+    }
+    return {} as IEmployeeDTO;
+  });
+  const [selectedUser, setSelectedUser] = useState(() => {
+    const findSelectedUser = localStorage.getItem('@WP-PRO:selected-user');
+
+    if (findSelectedUser) {
+      return JSON.parse(findSelectedUser);
+    }
+    return {} as IUserDTO;
+  });
+  const [master, setMaster] = useState(() => {
+    const findMaster = localStorage.getItem('@WP-PRO:me-as-master');
+    if (findMaster) {
+      return JSON.parse(findMaster);
+    }
+    return {} as ICompanyMasterDTO;
+  });
+  const [companyEmployees, setCompanyEmployees] = useState<IEmployeeDTO[]>(
+    () => {
+      const findCompanyEmployees = localStorage.getItem(
+        '@WP-PRO:company-employees',
+      );
+      if (findCompanyEmployees) {
+        return JSON.parse(findCompanyEmployees);
+      }
+      return [];
+    },
+  );
+  const [companyMasters, setCompanyMasters] = useState<ICompanyMasterDTO[]>(
+    () => {
+      const findMasters = localStorage.getItem('@WP-PRO:company-masters');
+
+      if (findMasters) {
+        return JSON.parse(findMasters);
+      }
+      return [];
+    },
+  );
   const selectCompanyEmployee = useCallback((data: IEmployeeDTO) => {
     setSelectedCompanyEmployee(data);
   }, []);
@@ -48,6 +92,10 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
         `/company-employees/${employee.company.id}`,
       );
       setCompanyEmployees(response.data);
+      localStorage.setItem(
+        '@WP-PRO:company-employees',
+        JSON.stringify(response.data),
+      );
     } catch (err) {
       throw new Error(err);
     }
@@ -55,13 +103,18 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
 
   const getCompanyMasters = useCallback(async () => {
     try {
-      const response = await api.get<ICompanyMaster[]>(`/`);
-
+      const response = await api.get<ICompanyMasterDTO[]>(
+        `/suppliers/master/users/${employee.company.id}`,
+      );
       setCompanyMasters(response.data);
+      localStorage.setItem(
+        '@WP-PRO:company-masters',
+        JSON.stringify(response.data),
+      );
     } catch (err) {
       throw new Error(err);
     }
-  }, []);
+  }, [employee]);
 
   const createCompanyEmployee = useCallback(
     // Olhar Como é feito no Enterprise !!
@@ -108,15 +161,65 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
     [addToast],
   );
 
+  const getEmployeeAsMaster = useCallback(async () => {
+    try {
+      const response = await api.get<ICompanyMasterDTO>(
+        `/suppliers/show/me-as-master`,
+      );
+      if (response.data && response.data.id) {
+        setMaster(response.data);
+
+        localStorage.setItem(
+          '@WP-PRO:me-as-master',
+          JSON.stringify(response.data),
+        );
+        return response.data;
+      }
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (employee && employee.id) {
+      const findMaster = localStorage.getItem('@WP-PRO:me-as-master');
+
+      if (findMaster) {
+        setMaster(JSON.parse(findMaster));
+      } else {
+        getEmployeeAsMaster();
+      }
+    }
+  }, [getEmployeeAsMaster, employee]);
+  useEffect(() => {
+    if (master && master.id && employee && employee.id) {
+      const findMasters = localStorage.getItem('@WP-PRO:company-masters');
+
+      findMasters && setCompanyMasters(JSON.parse(findMasters));
+      !findMasters && getCompanyMasters();
+    }
+  }, [getCompanyMasters, master, employee]);
+
+  useEffect(() => {
+    if (employee && employee.id) {
+      const findEmployees = localStorage.getItem('@WP-PRO:company-employees');
+
+      findEmployees && setCompanyEmployees(JSON.parse(findEmployees));
+      !findEmployees && getCompanyEmployees();
+    }
+  }, [getCompanyEmployees, employee]);
   return (
     <CompanyEmployeeContext.Provider
       value={{
+        master,
         companyMasters,
         companyEmployees,
         selectedCompanyEmployee,
         selectedUser,
         selectCompanyEmployee,
         getCompanyEmployees,
+        getEmployeeAsMaster,
         getCompanyMasters,
         createCompanyEmployee,
         createUserEmployee,

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import WindowContainer from '../WindowContainer';
@@ -6,7 +6,6 @@ import { useToast } from '../../hooks/toast';
 
 import { ContactTypeButton, Container } from './styles';
 import Input from '../Input';
-import CreateCompanyContactInfoForm from '../CompanyContactComponents/CreateCompanyContactForm/CreateCompanyContactInfoForm';
 import { useCompanyContact } from '../../hooks/companyContacts';
 
 interface IFormDTO {
@@ -16,13 +15,11 @@ interface IFormDTO {
 }
 
 interface IProps {
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
+  closeWindow: Function;
 }
 
 const CreateCompanyCustomerForm: React.FC<IProps> = ({
-  onHandleCloseWindow,
-  handleCloseWindow,
+  closeWindow,
 }: IProps) => {
   const { addToast } = useToast();
   const { createCompanyContact } = useCompanyContact();
@@ -30,7 +27,6 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
 
   const [weplanUser, setWeplanUser] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
-  const [contactInfo, setContactInfo] = useState(false);
 
   const handleSubmit = useCallback(
     async (data: IFormDTO) => {
@@ -44,13 +40,12 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
           isCompany,
         });
 
-        setContactInfo(true);
-
-        return addToast({
+        addToast({
           type: 'success',
           title: 'Cliente criado com sucesso',
           description: 'As Alterações já foram propagadas.',
         });
+        closeWindow();
       } catch (err) {
         addToast({
           type: 'error',
@@ -61,7 +56,7 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [addToast, weplanUser, isCompany, createCompanyContact],
+    [addToast, closeWindow, weplanUser, isCompany, createCompanyContact],
   );
 
   const inputStyle = {
@@ -71,7 +66,7 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 20,
         top: '5%',
@@ -81,73 +76,69 @@ const CreateCompanyCustomerForm: React.FC<IProps> = ({
       }}
     >
       <Container>
-        {!contactInfo ? (
-          <Form ref={formRef} onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <div>
+            <h3>Nome do cliente</h3>
+            <Input
+              name="name"
+              containerStyle={inputStyle}
+              placeholder="Nome completo do cliente"
+            />
+          </div>
+          <div>
+            <h3>Sobrenome do cliente</h3>
+            <Input
+              name="name"
+              containerStyle={inputStyle}
+              placeholder="Nome completo do cliente"
+            />
+          </div>
+          <div>
+            <h3>Descrição</h3>
+            <Input
+              name="description"
+              containerStyle={inputStyle}
+              placeholder="Descrição"
+            />
+          </div>
+          <div>
             <div>
-              <h3>Nome do cliente</h3>
-              <Input
-                name="name"
-                containerStyle={inputStyle}
-                placeholder="Nome completo do cliente"
-              />
+              <strong>É um usuário WePlan?</strong>
+              <ContactTypeButton
+                isActive={weplanUser}
+                onClick={() => setWeplanUser(true)}
+                type="button"
+              >
+                Sim
+              </ContactTypeButton>
+              <ContactTypeButton
+                isActive={!weplanUser}
+                onClick={() => setWeplanUser(false)}
+                type="button"
+              >
+                Não
+              </ContactTypeButton>
             </div>
             <div>
-              <h3>Sobrenome do cliente</h3>
-              <Input
-                name="name"
-                containerStyle={inputStyle}
-                placeholder="Nome completo do cliente"
-              />
+              <strong>É uma empresa?</strong>
+              <ContactTypeButton
+                isActive={isCompany}
+                onClick={() => setIsCompany(true)}
+                type="button"
+              >
+                Sim
+              </ContactTypeButton>
+              <ContactTypeButton
+                isActive={!isCompany}
+                onClick={() => setIsCompany(false)}
+                type="button"
+              >
+                Não
+              </ContactTypeButton>
             </div>
-            <div>
-              <h3>Descrição</h3>
-              <Input
-                name="description"
-                containerStyle={inputStyle}
-                placeholder="Descrição"
-              />
-            </div>
-            <div>
-              <div>
-                <strong>É um usuário WePlan?</strong>
-                <ContactTypeButton
-                  isActive={weplanUser}
-                  onClick={() => setWeplanUser(true)}
-                  type="button"
-                >
-                  Sim
-                </ContactTypeButton>
-                <ContactTypeButton
-                  isActive={!weplanUser}
-                  onClick={() => setWeplanUser(false)}
-                  type="button"
-                >
-                  Não
-                </ContactTypeButton>
-              </div>
-              <div>
-                <strong>É uma empresa?</strong>
-                <ContactTypeButton
-                  isActive={isCompany}
-                  onClick={() => setIsCompany(true)}
-                  type="button"
-                >
-                  Sim
-                </ContactTypeButton>
-                <ContactTypeButton
-                  isActive={!isCompany}
-                  onClick={() => setIsCompany(false)}
-                  type="button"
-                >
-                  Não
-                </ContactTypeButton>
-              </div>
-            </div>
-            <button type="submit">Salvar</button>
-          </Form>
-        ) : (
-          <CreateCompanyContactInfoForm handleCloseWindow={handleCloseWindow} />
-        )}
+          </div>
+          <button type="submit">Salvar</button>
+        </Form>
       </Container>
     </WindowContainer>
   );

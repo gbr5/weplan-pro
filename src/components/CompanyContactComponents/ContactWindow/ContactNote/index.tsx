@@ -10,6 +10,7 @@ import Button from '../../../Button';
 
 import { Container, FieldContainer, EditFieldContainer } from './styles';
 import formatStringToDate from '../../../../utils/formatDateToString';
+import formatTextArea from '../../../../utils/formatTextArea';
 
 interface IProps {
   contactNote: ICompanyContactNoteDTO;
@@ -22,6 +23,7 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
   const { updateCompanyContactNote } = useCompanyContact();
   const formRef = useRef<FormHandles>(null);
   const [editContactField, setEditContactField] = useState(false);
+  const [rows, setRows] = useState(1);
 
   const handleSubmit = useCallback(() => {
     const text = textAreaRef.current?.innerHTML;
@@ -48,6 +50,17 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
   const handleEditField = useCallback((e: boolean) => {
     setEditContactField(e);
   }, []);
+
+  const handleChange = useCallback(() => {
+    const textArea = textAreaRef.current;
+
+    if (textArea) {
+      const numberOfRows = formatTextArea({ textArea });
+
+      setRows(numberOfRows);
+    }
+  }, []);
+
   return (
     <Container>
       <span>
@@ -67,9 +80,10 @@ const ContactNote: React.FC<IProps> = ({ contactNote }) => {
           <EditFieldContainer>
             <section>
               <textarea
+                onChange={handleChange}
                 ref={textAreaRef}
                 cols={22}
-                rows={6}
+                rows={rows}
                 defaultValue={contactNote.note}
                 name="note"
                 placeholder={contactNote.note}

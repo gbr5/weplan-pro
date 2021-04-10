@@ -1,9 +1,4 @@
-import React, {
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import WindowContainer from '../WindowContainer';
 import { useToast } from '../../hooks/toast';
 
@@ -18,16 +13,14 @@ import { useEmployeeAuth } from '../../hooks/employeeAuth';
 import { useFunnel } from '../../hooks/funnel';
 
 interface IProps {
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
+  closeWindow: Function;
   getCustomerServiceOrder: Function;
   handleCloseAllWindow: Function;
   serviceOrder: ICustomerServiceOrderDTO;
 }
 
 const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
-  onHandleCloseWindow,
-  handleCloseWindow,
+  closeWindow,
   getCustomerServiceOrder,
   handleCloseAllWindow,
   serviceOrder,
@@ -140,7 +133,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
           card_unique_name: cardUniqueName,
         });
 
-        handleCloseWindow();
+        closeWindow();
         return addToast({
           type: 'success',
           title: 'Card criado com sucesso',
@@ -153,7 +146,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       getCustomerServiceOrder();
       handleCloseAllWindow();
 
-      handleCloseWindow();
+      closeWindow();
       return addToast({
         type: 'success',
         title: 'Card criado com sucesso',
@@ -173,7 +166,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
     cardName,
     selectedStage,
     getCustomerServiceOrder,
-    handleCloseWindow,
+    closeWindow,
     serviceOrder,
     handleCloseAllWindow,
     employee,
@@ -192,9 +185,9 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
     if (thisFunnel && thisFunnel.stages.length > 0) {
       setStages(thisFunnel.stages);
     } else {
-      handleCloseWindow();
+      closeWindow();
     }
-  }, [funnels, handleCloseWindow]);
+  }, [funnels, closeWindow]);
 
   const handlePersonAsCardOwnerQuestion = useCallback((props: boolean) => {
     if (props) {
@@ -223,7 +216,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
   return (
     <>
       <WindowContainer
-        onHandleCloseWindow={onHandleCloseWindow}
+        onHandleCloseWindow={() => closeWindow()}
         containerStyle={{
           zIndex: 13,
           top: '38%',
@@ -244,15 +237,14 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       </WindowContainer>
       {selectStageWindow && (
         <SelectStageWindow
-          onHandleCloseWindow={() => setSelectStageWindow(false)}
           stages={stages}
-          handleCloseWindow={handleCloseSelectStageWindow}
+          closeWindow={handleCloseSelectStageWindow}
           handleSetSelectedStage={(e: IFunnelStageDTO) => setSelectedStage(e)}
         />
       )}
       {addPersonAsCardOwnerQuestion && (
         <WindowContainer
-          onHandleCloseWindow={onHandleCloseWindow}
+          onHandleCloseWindow={() => closeWindow()}
           containerStyle={{
             zIndex: 200,
             top: '38%',
@@ -280,7 +272,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       )}
       {selectCompanyEmployeeWindow && (
         <WindowContainer
-          onHandleCloseWindow={onHandleCloseWindow}
+          onHandleCloseWindow={() => closeWindow()}
           containerStyle={{
             zIndex: 18,
             top: '38%',
@@ -305,7 +297,7 @@ const AddServiceOrderComercialCardForm: React.FC<IProps> = ({
       )}
       {addPersonAsCardParticipantQuestion && (
         <WindowContainer
-          onHandleCloseWindow={onHandleCloseWindow}
+          onHandleCloseWindow={() => closeWindow()}
           containerStyle={{
             zIndex: 15,
             top: '38%',

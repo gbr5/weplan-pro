@@ -12,29 +12,32 @@ import { FunnelProvider } from './funnel';
 import { SignUpProvider } from './signUp';
 import { HomeControllerProvider } from './homeController';
 import { TaskProvider } from './task';
+import { CompanyEmployeeProvider } from './companyEmployee';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
     <ToastProvider>
       <SignUpProvider>
         <EmployeeAuthProvider>
-          <CompanyContactContextProvider>
-            <FormProvider>
-              <ManagementModuleProvider>
-                <TaskProvider>
-                  <FunnelProvider>
-                    <StageCardProvider>
-                      <ContactPageProvider>
-                        <HomeControllerProvider>
-                          {children}
-                        </HomeControllerProvider>
-                      </ContactPageProvider>
-                    </StageCardProvider>
-                  </FunnelProvider>
-                </TaskProvider>
-              </ManagementModuleProvider>
-            </FormProvider>
-          </CompanyContactContextProvider>
+          <CompanyEmployeeProvider>
+            <CompanyContactContextProvider>
+              <FormProvider>
+                <ManagementModuleProvider>
+                  <TaskProvider>
+                    <FunnelProvider>
+                      <StageCardProvider>
+                        <ContactPageProvider>
+                          <HomeControllerProvider>
+                            {children}
+                          </HomeControllerProvider>
+                        </ContactPageProvider>
+                      </StageCardProvider>
+                    </FunnelProvider>
+                  </TaskProvider>
+                </ManagementModuleProvider>
+              </FormProvider>
+            </CompanyContactContextProvider>
+          </CompanyEmployeeProvider>
         </EmployeeAuthProvider>
       </SignUpProvider>
     </ToastProvider>

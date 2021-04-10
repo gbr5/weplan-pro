@@ -89,7 +89,7 @@ const UserForm: React.FC = () => {
           formResults.push({ name: 'email', value: email });
         }
 
-        await api.post('send-form-results', {
+        await api.post('/send-form-results', {
           form_id: form.id,
           formResults,
         });

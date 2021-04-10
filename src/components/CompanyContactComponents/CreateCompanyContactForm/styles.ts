@@ -9,59 +9,38 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 8px;
-  gap: 8px;
+  padding-top: 3rem;
+  overflow-y: scroll;
 
-  background: var(--card-color);
+  background: var(--background-color);
   box-shadow: var(--box-shadow);
 
-  input {
-    height: 64px;
-    padding-left: 8px;
-    border: 0.8px solid var(--letter-color-5);
-    border-radius: 4px;
-    color: var(--header-background-color);
-    font-weight: 500;
+  > h1 {
     font-size: 24px;
-    transition: 0.5s;
-    box-shadow: var(--window-box-shadow);
-    ::-webkit-input-placeholder {
-      color: var(--letter-color-3);
-    }
-    &:hover {
-      box-shadow: var(--box-shadow);
-      color: var(--letter-color-1);
-      background: var(--letter-color-2);
-      ::-webkit-input-placeholder {
-        color: var(--title-color);
-      }
-    }
-  }
-
-  button {
-    height: 64px;
-    background: var(--header-primary);
-    border: 0.8px solid var(--title-color);
-    border-radius: 4px;
-    color: var(--header-background-color);
-    font-weight: 500;
-    font-size: 24px;
-    box-shadow: var(--box-shadow);
-    transition: 0.5s;
-
-    &:hover {
-      color: var(--header-primary);
-      background: var(--header-background-color);
-      box-shadow: var(--window-box-shadow);
-    }
+    width: 90%;
+    margin: 1rem auto 1.5rem;
+    border-bottom: 1px solid var(--secondary-color);
+    text-align: center;
+    padding-bottom: 0.5rem;
   }
 `;
 
 export const ContactTypeContainer = styled.div`
+  display: block;
   width: 100%;
-  padding: 32px;
 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  > section {
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    > section {
+      display: flex;
+      margin: 1rem auto;
+      width: 100%;
+    }
+  }
 `;
 
 interface IContactTypeButtonProps {
@@ -71,26 +50,31 @@ interface IContactTypeButtonProps {
 export const ContactTypeButton = styled.button<IContactTypeButtonProps>`
   background: var(--header-background-color);
   color: var(--header-primary);
-  box-shadow: var(--box-shadow);
   transition: 0.3s;
+  border: none;
+  border-radius: 4px;
+  height: 40px;
+  width: 100%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  opacity: 0.7;
 
   &:hover {
-    background: var(--header-primary);
-    color: var(--header-background-color);
-    box-shadow: var(--window-box-shadow);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   }
 
   ${props =>
     props.isActive &&
     css`
+      opacity: 1;
       background: var(--header-primary);
-      color: var(--header-background-color);
+      color: var(--letter-color-5);
       box-shadow: var(--window-box-shadow);
+      font-weight: 500;
+      font-size: 20px;
       transition: 0.3s;
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
       &:hover {
-        background: var(--header-background-color);
-        color: var(--header-primary);
-        box-shadow: var(--box-shadow);
+        box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.6);
       }
     `}
 `;

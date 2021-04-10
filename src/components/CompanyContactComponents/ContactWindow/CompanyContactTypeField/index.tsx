@@ -1,22 +1,17 @@
-import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdClose, MdEdit } from 'react-icons/md';
-import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
-import Button from '../../../Button';
-import SelectField from '../../../FormComponents/SelectField';
+import ContactTypeComponent from '../../ContactTypeComponent';
 
-import { Container, FieldContainer, EditFieldContainer } from './styles';
+import { Container, FieldContainer } from './styles';
 
-const ContactType: React.FC = () => {
+const CompanyContactTypeField: React.FC = () => {
   const iconSize = 24;
   const {
     updateCompanyContactType,
     contactTypes,
     selectedContact,
   } = useCompanyContact();
-  const formRef = useRef<FormHandles>(null);
   const [editContactField, setEditContactField] = useState(false);
   const [defaultType, setDefaultType] = useState(contactTypes[0]);
 
@@ -28,8 +23,8 @@ const ContactType: React.FC = () => {
   }, [contactTypes, selectedContact]);
 
   const handleSubmit = useCallback(
-    (data: ICompanyContactDTO) => {
-      updateCompanyContactType(selectedContact.id, data.company_contact_type);
+    (data: string) => {
+      updateCompanyContactType(selectedContact.id, data);
       setEditContactField(false);
     },
     [updateCompanyContactType, selectedContact],
@@ -53,22 +48,10 @@ const ContactType: React.FC = () => {
         </button>
       </span>
       {editContactField ? (
-        <>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <EditFieldContainer>
-              <section>
-                <strong>Categoria</strong>
-                <SelectField
-                  isSearchable={false}
-                  defaultValue={defaultType}
-                  name="company_contact_type"
-                  options={contactTypes}
-                />
-              </section>
-              <Button type="submit">Salvar</Button>
-            </EditFieldContainer>
-          </Form>
-        </>
+        <ContactTypeComponent
+          contactDefaultType={defaultType.value}
+          handleSubmit={(e: string) => handleSubmit(e)}
+        />
       ) : (
         <FieldContainer>
           <strong>Categoria</strong>
@@ -79,4 +62,4 @@ const ContactType: React.FC = () => {
   );
 };
 
-export default ContactType;
+export default CompanyContactTypeField;

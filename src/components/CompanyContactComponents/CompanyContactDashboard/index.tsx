@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { MdPersonAdd } from 'react-icons/md';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useToast } from '../../../hooks/toast';
 import ContactWindow from '../ContactWindow';
+import CreateCompanyContactForm from '../CreateCompanyContactForm';
 import CompanyContactButton from './CompanyContactButton';
 
 import { Container, ContactTypeSection, MenuButton, FirstRow } from './styles';
@@ -26,6 +28,7 @@ const CompanyContactDashboard: React.FC = () => {
     getCompanyContacts();
   }, [getCompanyContacts]);
 
+  const [createContactWindow, setCreateContactWindow] = useState(false);
   const [contactWindow, setContactWindow] = useState(false);
   const [filteredContacts, setFilteredContacts] = useState<
     ICompanyContactDTO[]
@@ -60,11 +63,11 @@ const CompanyContactDashboard: React.FC = () => {
       }
       if (props === 'Employees') {
         employeesContacts.length > 0 && setFilteredContacts(employeesContacts);
-        employeesContacts.length > 0 && setFilterTitle('Funcionários');
+        employeesContacts.length > 0 && setFilterTitle('Colaboradores');
         employeesContacts.length <= 0 &&
           addToast({
             type: 'info',
-            title: 'A categoria "Funcionários" ainda não possui contatos',
+            title: 'A categoria "Colaboradores" ainda não possui contatos',
           });
       }
       if (props === 'Outsourceds') {
@@ -145,13 +148,37 @@ const CompanyContactDashboard: React.FC = () => {
 
   const handleCloseContactWindow = useCallback(() => {
     setContactWindow(false);
+    selectContact({} as ICompanyContactDTO);
     getCompanyContacts();
-  }, [getCompanyContacts]);
+  }, [getCompanyContacts, selectContact]);
+
+  const handleCreateContactWindow = useCallback(
+    (e: boolean) => {
+      if (e) {
+        setCreateContactWindow(true);
+      } else {
+        getCompanyContacts();
+        setCreateContactWindow(false);
+      }
+    },
+    [getCompanyContacts],
+  );
+
+  useEffect(() => {
+    if (selectedContact) {
+      setContactWindow(true);
+    }
+  }, [selectedContact]);
 
   return (
     <>
       {contactWindow && selectedContact && selectedContact.id && (
         <ContactWindow closeWindow={handleCloseContactWindow} />
+      )}
+      {createContactWindow && (
+        <CreateCompanyContactForm
+          handleCloseWindow={() => handleCreateContactWindow(false)}
+        />
       )}
       <Container>
         <h2>Contatos da empresa</h2>
@@ -169,6 +196,13 @@ const CompanyContactDashboard: React.FC = () => {
             onClick={() => handleContactType('WePlan')}
           >
             WePlan
+          </MenuButton>
+          <MenuButton
+            isActive={false}
+            type="button"
+            onClick={() => handleCreateContactWindow(true)}
+          >
+            <MdPersonAdd size={24} />
           </MenuButton>
         </section>
         <input
@@ -191,11 +225,11 @@ const CompanyContactDashboard: React.FC = () => {
             Fornecedores
           </MenuButton>
           <MenuButton
-            isActive={filterTitle === 'Funcionários'}
+            isActive={filterTitle === 'Colaboradores'}
             type="button"
             onClick={() => handleContactType('Employees')}
           >
-            Funcionários
+            Colaboradores
           </MenuButton>
           <MenuButton
             isActive={filterTitle === 'Terceirizados'}

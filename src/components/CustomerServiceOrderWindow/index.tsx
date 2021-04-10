@@ -59,8 +59,7 @@ const CustomerServiceOrderWindow: React.FC<IProps> = ({
         <AddServiceOrderComercialCardForm
           getCustomerServiceOrder={getCustomerServiceOrder}
           handleCloseAllWindow={handleCloseWindow}
-          handleCloseWindow={handleCloseAddServiceOrderComercialCardForm}
-          onHandleCloseWindow={() => setAddServiceOrderComercialCardForm(false)}
+          closeWindow={handleCloseAddServiceOrderComercialCardForm}
           serviceOrder={serviceOrder}
         />
       )}

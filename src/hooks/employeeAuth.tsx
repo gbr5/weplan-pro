@@ -50,7 +50,7 @@ const EmployeeAuthProvider: React.FC = ({ children }) => {
 
   const getEmployee = useCallback(async (id: string) => {
     try {
-      const response = await api.get<IEmployeeDTO>(`supplier-employees/${id}`);
+      const response = await api.get<IEmployeeDTO>(`/company-employees/${id}`);
 
       localStorage.setItem('@WP-PRO:employee', JSON.stringify(response.data));
     } catch (err) {
@@ -67,7 +67,7 @@ const EmployeeAuthProvider: React.FC = ({ children }) => {
     const { token, employee } = response.data;
 
     const findSupplier = await api.get(
-      `/supplier-employees/employee/${employee.employeeUser.id}/${employee.company.id}`,
+      `/company-employees/employee/${employee.employeeUser.id}/${employee.company.id}`,
     );
     const isSupplier = findSupplier.data;
 
@@ -94,7 +94,7 @@ const EmployeeAuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post('employee-pro-sessions', {
+    const response = await api.post('/employee-pro-sessions', {
       email,
       password,
     });
@@ -102,7 +102,7 @@ const EmployeeAuthProvider: React.FC = ({ children }) => {
     const { token, employee } = response.data;
 
     const findSupplier = await api.get(
-      `/supplier-employees/employee/${employee.id}`,
+      `/company-employees/employee/${employee.id}`,
     );
     const isSupplier = findSupplier.data;
 

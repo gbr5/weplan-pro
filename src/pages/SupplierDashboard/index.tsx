@@ -16,10 +16,12 @@ import { useFunnel } from '../../hooks/funnel';
 import MenuButton from '../../components/MenuButton';
 import SettingsPage from '../SettingsPage';
 import ComercialFunnelSettings from '../../components/FunnelSettingsComponents/ComercialFunnelSettings';
+import EmployeesSection from '../../components/EmployeesSection';
 
 const SupplierDashboard: React.FC = () => {
   const { selectedPage } = useHomeController();
   const { selectedFunnel, funnels } = useFunnel();
+  // const
 
   return (
     <Container>
@@ -39,6 +41,7 @@ const SupplierDashboard: React.FC = () => {
         {selectedPage === 'Home' && <HomeDashboard />}
         {selectedPage === 'Settings' && <SettingsPage />}
         {selectedPage === 'ComercialSettings' && <ComercialFunnelSettings />}
+        {selectedPage === 'Employees' && <EmployeesSection />}
         {selectedPage === 'ComercialOrders' && (
           <CustomerServiceOrderDashboard />
         )}
