@@ -5,7 +5,7 @@ import EmployeesList from './EmployeesList';
 import Header from '../Header';
 import MenuButton from '../MenuButton';
 
-import { Container } from './styles';
+import { Container, SubContainer } from './styles';
 import CreateCompanyEmployeeContainer from './CreateCompanyEmployeeContainer';
 
 const EmployeesSection: React.FC = () => {
@@ -24,13 +24,16 @@ const EmployeesSection: React.FC = () => {
       )}
       <Header />
       <MenuButton />
-      <h1>Colaboradores</h1>
-      <span>
-        <button type="button" onClick={() => handleAddEmployee(true)}>
-          <MdPersonAdd size={24} />
-        </button>
-      </span>
-      <EmployeesList />
+      <SubContainer>
+        <span>
+          <h1>Colaboradores</h1>
+
+          <button type="button" onClick={() => handleAddEmployee(true)}>
+            <MdPersonAdd size={24} />
+          </button>
+        </span>
+        <EmployeesList />
+      </SubContainer>
     </Container>
   );
 };

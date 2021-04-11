@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
+import { MdClose } from 'react-icons/md';
 import CollectEmployeeEmail from '../CollectEmployeeEmail';
-import WindowContainer from '../../WindowContainer';
 import CollectEmployeePosition from '../CollectEmployeePosition';
 
 import { Container } from './styles';
@@ -96,56 +96,50 @@ const CreateCompanyEmployeeContainer: React.FC<IProps> = ({ closeWindow }) => {
   ]);
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={() => handleCloseWindow()}
-      containerStyle={{
-        zIndex: 11,
-        top: '20%',
-        left: '5%',
-        height: '60%',
-        width: '90%',
-      }}
-    >
-      <Container>
-        <h1>Novo Colaborador</h1>
-        {positionContainer && (
-          <CollectEmployeePosition
-            nextStep={() => openAccessLevelContainer()}
-            previousStep={() => handleCloseWindow()}
-          />
-        )}
-        {accessLevelContainer && (
-          <CollectEmployeeAccessLevel
-            nextStep={() => openEmailContainer()}
-            previousStep={() => openPositionContainer()}
-          />
-        )}
-        {emailContainer && (
-          <CollectEmployeeEmail
-            nextStep={() => openNameContainer()}
-            previousStep={() => openAccessLevelContainer()}
-          />
-        )}
-        {nameContainer && (
-          <CollectEmployeeName
-            nextStep={() => openFamilyNameContainer()}
-            previousStep={() => openEmailContainer()}
-          />
-        )}
-        {familyNameContainer && (
-          <CollectEmployeeFamilyName
-            nextStep={() => openPassContainer()}
-            previousStep={() => openNameContainer()}
-          />
-        )}
-        {passContainer && (
-          <CollectEmployeePassword
-            nextStep={() => closeWindow()}
-            previousStep={() => openPositionContainer()}
-          />
-        )}
-      </Container>
-    </WindowContainer>
+    <Container>
+      <header>
+        <button type="button" onClick={() => handleCloseWindow()}>
+          <MdClose size={24} />
+        </button>
+      </header>
+      <h1>Novo Colaborador</h1>
+      {positionContainer && (
+        <CollectEmployeePosition
+          nextStep={() => openAccessLevelContainer()}
+          previousStep={() => handleCloseWindow()}
+        />
+      )}
+      {accessLevelContainer && (
+        <CollectEmployeeAccessLevel
+          nextStep={() => openEmailContainer()}
+          previousStep={() => openPositionContainer()}
+        />
+      )}
+      {emailContainer && (
+        <CollectEmployeeEmail
+          nextStep={() => openNameContainer()}
+          previousStep={() => openAccessLevelContainer()}
+        />
+      )}
+      {nameContainer && (
+        <CollectEmployeeName
+          nextStep={() => openFamilyNameContainer()}
+          previousStep={() => openEmailContainer()}
+        />
+      )}
+      {familyNameContainer && (
+        <CollectEmployeeFamilyName
+          nextStep={() => openPassContainer()}
+          previousStep={() => openNameContainer()}
+        />
+      )}
+      {passContainer && (
+        <CollectEmployeePassword
+          nextStep={() => closeWindow()}
+          previousStep={() => openPositionContainer()}
+        />
+      )}
+    </Container>
   );
 };
 
