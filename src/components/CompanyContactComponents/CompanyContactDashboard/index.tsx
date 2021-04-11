@@ -190,13 +190,13 @@ const CompanyContactDashboard: React.FC = () => {
           >
             Todos
           </MenuButton>
-          <MenuButton
+          {/* <MenuButton
             isActive={filterTitle === 'WePlan'}
             type="button"
             onClick={() => handleContactType('WePlan')}
           >
             WePlan
-          </MenuButton>
+          </MenuButton> */}
           <MenuButton
             isActive={false}
             type="button"
