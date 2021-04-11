@@ -13,16 +13,33 @@ import ICompanyMasterDTO from '../dtos/ICompanyMasterDTO';
 import api from '../services/api';
 import { useEmployeeAuth } from './employeeAuth';
 import { useToast } from './toast';
+import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
+
+interface ICreateUserEmployeeDTO extends ICreateEmployeeDTO {
+  name: string;
+  password: string;
+}
 
 interface ICompanyEmployeeContextData {
+  accessLevelTypes: ICheckBoxOptionDTO[];
+  employeeAccessLevel: number;
+  employeeName: string;
+  employeeFamilyName: string;
+  employeePosition: string;
+  employeeEmail: string;
   selectedUser: IUserDTO;
   selectedCompanyEmployee: IEmployeeDTO;
   companyEmployees: IEmployeeDTO[];
   companyMasters: ICompanyMasterDTO[];
   master: ICompanyMasterDTO;
-  selectCompanyEmployee(employee: IEmployeeDTO): void;
-  createCompanyEmployee(data: ICreateEmployeeDTO): void;
-  createUserEmployee(data: ICreateEmployeeDTO): void;
+  selectEmployeeName(name: string): void;
+  selectEmployeeFamilyName(familyName: string): void;
+  selectEmployeeEmail(email: string): void;
+  selectEmployeePosition(position: string): void;
+  selectEmployeeAccessLevel(accessLevel: number): void;
+  selectCompanyEmployee(data: IEmployeeDTO): void;
+  createCompanyEmployee(data: ICreateEmployeeDTO): Promise<IEmployeeDTO>;
+  createUserEmployee(data: Omit<ICreateUserEmployeeDTO, 'user_id'>): void;
   getCompanyMasters(): Promise<void>;
   getEmployeeAsMaster(): Promise<ICompanyMasterDTO | undefined>;
   getCompanyEmployees(): Promise<void>;
@@ -34,8 +51,12 @@ const CompanyEmployeeContext = createContext<ICompanyEmployeeContextData>(
 
 const CompanyEmployeeProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
-
   const { addToast } = useToast();
+  const [employeeName, setEmployeeName] = useState('');
+  const [employeeFamilyName, setEmployeeFamilyName] = useState('');
+  const [employeeEmail, setEmployeeEmail] = useState('');
+  const [employeePosition, setEmployeePosition] = useState('');
+  const [employeeAccessLevel, setEmployeeAccessLevel] = useState(3);
   const [selectedCompanyEmployee, setSelectedCompanyEmployee] = useState(() => {
     const findSelectedEmployee = localStorage.getItem(
       '@WP-PRO:selected-employee',
@@ -85,6 +106,21 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
   const selectCompanyEmployee = useCallback((data: IEmployeeDTO) => {
     setSelectedCompanyEmployee(data);
   }, []);
+  const selectEmployeeAccessLevel = useCallback((accessLevel: number) => {
+    setEmployeeAccessLevel(accessLevel);
+  }, []);
+  const selectEmployeeName = useCallback((name: string) => {
+    setEmployeeName(name);
+  }, []);
+  const selectEmployeeFamilyName = useCallback((familyName: string) => {
+    setEmployeeFamilyName(familyName);
+  }, []);
+  const selectEmployeePosition = useCallback((position: string) => {
+    setEmployeePosition(position);
+  }, []);
+  const selectEmployeeEmail = useCallback((email: string) => {
+    setEmployeeEmail(email);
+  }, []);
 
   const getCompanyEmployees = useCallback(async () => {
     try {
@@ -100,7 +136,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, [employee]);
-
   const getCompanyMasters = useCallback(async () => {
     try {
       const response = await api.get<ICompanyMasterDTO[]>(
@@ -120,45 +155,57 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
     // Olhar Como é feito no Enterprise !!
     async (data: ICreateEmployeeDTO) => {
       try {
-        const response = await api.post('/users', {
-          user_id: data.user_id,
-          email: data.email,
-          position: data.position,
-          isActive: data.isActive,
-        });
+        const response = await api.post(
+          `/company-employees/${employee.company.id}/${data.user_id}`,
+          {
+            email: data.email,
+            access_key: data.password,
+            password: data.password,
+            position: data.position,
+            title: 'Olá! Temos uma novidade para você',
+            message: `A empresa ${employee.company.name} convidou você para acessar o seu sistema na WePlan!`,
+          },
+        );
         addToast({
           type: 'success',
           title: 'Colaborador criado com sucesso!',
         });
         setSelectedCompanyEmployee(response.data);
+        return response.data;
       } catch (err) {
         throw new Error(err);
       }
     },
-    [addToast],
+    [addToast, employee],
   );
-
   const createUserEmployee = useCallback(
     // This function is called in case the e-mail of the employee does not have a user associated with it.
     // This user is a normal the password is the a hash
-    async (data: ICreateEmployeeDTO) => {
+    async (data: Omit<ICreateUserEmployeeDTO, 'user_id'>) => {
       try {
         const response = await api.post('/users', {
-          user_id: data.user_id,
+          name: data.name,
+          email: data.email,
+          password: `${data.name}&${data.email}`,
+          isCompany: false,
+        });
+        const employeeResponse = await api.post('/company-employees', {
+          user_id: response.data.id,
           email: data.email,
           position: data.position,
-          isActive: data.isActive,
+          isActive: true,
         });
         addToast({
           type: 'success',
           title: 'Colaborador criado com sucesso!',
         });
+        selectCompanyEmployee(employeeResponse.data);
         setSelectedUser(response.data);
       } catch (err) {
         throw new Error(err);
       }
     },
-    [addToast],
+    [addToast, selectCompanyEmployee],
   );
 
   const getEmployeeAsMaster = useCallback(async () => {
@@ -209,15 +256,33 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
       !findEmployees && getCompanyEmployees();
     }
   }, [getCompanyEmployees, employee]);
+
+  const accessLevelTypes: ICheckBoxOptionDTO[] = [
+    { id: '1', label: 'Global', value: '1' },
+    { id: '2', label: 'Equipe', value: '2' },
+    { id: '3', label: 'Individual', value: '3' },
+  ];
+
   return (
     <CompanyEmployeeContext.Provider
       value={{
+        accessLevelTypes,
         master,
         companyMasters,
         companyEmployees,
         selectedCompanyEmployee,
         selectedUser,
         selectCompanyEmployee,
+        employeeAccessLevel,
+        employeeEmail,
+        employeeFamilyName,
+        employeeName,
+        employeePosition,
+        selectEmployeeAccessLevel,
+        selectEmployeeEmail,
+        selectEmployeeFamilyName,
+        selectEmployeeName,
+        selectEmployeePosition,
         getCompanyEmployees,
         getEmployeeAsMaster,
         getCompanyMasters,

@@ -13,6 +13,7 @@ import { useEmployeeAuth } from './employeeAuth';
 interface IManagementModuleContextData {
   employeeModules: IManagementModuleDTO[];
   getEmployeeModules(): Promise<void>;
+  createEmployeeModule(data: Omit<IManagementModuleDTO, 'id'>): Promise<void>;
 }
 
 const ManagementModuleContext = createContext<IManagementModuleContextData>(
@@ -39,7 +40,7 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
   const getEmployeeModules = useCallback(async () => {
     try {
       const response = await api.get<IManagementModuleDTO[]>(
-        `employee-management-modules/${employee.id}`,
+        `/employee-management-modules/${employee.id}`,
       );
       setEmployeeModules(response.data);
       localStorage.setItem(
@@ -50,6 +51,21 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, [employee]);
+  const createEmployeeModule = useCallback(
+    async (data: Omit<IManagementModuleDTO, 'id'>) => {
+      try {
+        await api.post(`/user-management-modules`, {
+          user_id: data.user_id,
+          management_module: data.management_module,
+          access_level: data.access_level,
+        });
+        getEmployeeModules();
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getEmployeeModules],
+  );
 
   useEffect(() => {
     if (employee && employee.id) {
@@ -70,6 +86,7 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
       value={{
         employeeModules,
         getEmployeeModules,
+        createEmployeeModule,
       }}
     >
       {children}

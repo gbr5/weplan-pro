@@ -7,6 +7,7 @@ export const Container = styled.div`
   display: block;
   padding: 5px;
   margin: 2rem auto;
+  align-items: center;
   /* box-sizing: border-box; */
 
   > input {
