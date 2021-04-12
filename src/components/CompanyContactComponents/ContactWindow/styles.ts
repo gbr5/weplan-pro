@@ -11,6 +11,7 @@ export const Container = styled.div`
   border-radius: 8px;
   overflow-x: scroll;
   padding-bottom: 2rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
 
   > h1 {
     width: 100%;

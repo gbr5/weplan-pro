@@ -50,6 +50,9 @@ const SignUpProvider: React.FC = ({ children }) => {
   }, []);
 
   const selectUser = useCallback((user: IUserDTO) => {
+    if (user && !user.id) {
+      setSelectedUser({} as IUserDTO);
+    }
     setSelectedUser(user);
   }, []);
 

@@ -1,19 +1,30 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
+import IEmployeeDTO from '../../../dtos/IEmployeeDTO';
+import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import WindowContainer from '../../WindowContainer';
+import CompanyEmployeeContactName from './CompanyEmployeeContactName';
 
-import { Container, EmployeeHeader } from './styles';
+import { Container, EmployeeHeader, SubContainer } from './styles';
 
 interface IProps {
   closeWindow: Function;
 }
 
 const EmployeeWindow: React.FC<IProps> = ({ closeWindow }) => {
-  const { selectedCompanyEmployee } = useCompanyEmployee();
+  const { selectCompanyEmployee } = useCompanyEmployee();
+  const { selectContact, selectedContact } = useCompanyContact();
+
+  const handleCloseWindow = useCallback(() => {
+    selectCompanyEmployee({} as IEmployeeDTO);
+    selectContact({} as ICompanyContactDTO);
+    closeWindow();
+  }, [selectCompanyEmployee, closeWindow, selectContact]);
 
   return (
     <WindowContainer
-      onHandleCloseWindow={() => closeWindow()}
+      onHandleCloseWindow={() => handleCloseWindow()}
       containerStyle={{
         zIndex: 11,
         top: '5%',
@@ -24,9 +35,24 @@ const EmployeeWindow: React.FC<IProps> = ({ closeWindow }) => {
     >
       <Container>
         <EmployeeHeader>
-          <p>Perfil do</p>
-          <h2>{selectedCompanyEmployee.employeeUser.name}</h2>
+          <h2>Perfil do Colaborador</h2>
         </EmployeeHeader>
+        <SubContainer>
+          <section>
+            <strong>Nome</strong>
+            {selectedContact && selectedContact.id && (
+              <CompanyEmployeeContactName />
+            )}
+          </section>
+          <section>
+            <strong>Sobrenome</strong>
+            <p>
+              {selectedContact &&
+                selectedContact.id &&
+                selectedContact.family_name}
+            </p>
+          </section>
+        </SubContainer>
       </Container>
     </WindowContainer>
   );

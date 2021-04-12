@@ -25,7 +25,8 @@ interface IEmployeeContactConectionDTO {
 interface ICompanyContactContextData {
   contactTypes: ICheckBoxOptionDTO[];
   contactInfoTypes: ICheckBoxOptionDTO[];
-  employeeContact: ICompanyContactDTO;
+  contactEmployee: IEmployeeDTO;
+  myEmployeeContact: ICompanyContactDTO;
   selectedContact: ICompanyContactDTO;
   customersContacts: ICompanyContactDTO[];
   suppliersContacts: ICompanyContactDTO[];
@@ -39,13 +40,21 @@ interface ICompanyContactContextData {
   createCompanyContact(
     data: ICreateCompanyContactDTO,
   ): Promise<ICompanyContactDTO>;
-  updateCompanyContactIsNew(data: ICompanyContactDTO): void;
-  updateCompanyContactIsCompany(id: string): void;
-  updateCompanyContactName(id: string, name: string): void;
-  updateCompanyContactFamilyName(id: string, family_name: string): void;
-  updateCompanyContactDescription(id: string, description: string): void;
-  updateCompanyContactType(id: string, company_contact_type: string): void;
-  updateCompanyContactWeplanUser(id: string): void;
+  updateCompanyContactIsNew(
+    data: ICompanyContactDTO,
+  ): Promise<ICompanyContactDTO>;
+  updateCompanyContactIsCompany(id: string): Promise<ICompanyContactDTO>;
+  updateCompanyContactName(name: string): Promise<ICompanyContactDTO>;
+  updateCompanyContactFamilyName(
+    family_name: string,
+  ): Promise<ICompanyContactDTO>;
+  updateCompanyContactDescription(
+    description: string,
+  ): Promise<ICompanyContactDTO>;
+  updateCompanyContactType(
+    company_contact_type: string,
+  ): Promise<ICompanyContactDTO>;
+  updateCompanyContactWeplanUser(id: string): Promise<ICompanyContactDTO>;
   createCompanyEmployeeContactConection(
     data: IEmployeeContactConectionDTO,
   ): void;
@@ -55,8 +64,12 @@ interface ICompanyContactContextData {
   updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
   updateCompanyContactNote(data: ICompanyContactNoteDTO): void;
   getCompanyContacts(): void;
-  getEmployeeContact(employee_id: string): Promise<ICompanyContactDTO>;
-  getCompanyEmployeeContact(company_contact_id: string): Promise<IEmployeeDTO>;
+  getEmployeeContact(
+    employee_id: string,
+  ): Promise<ICompanyContactDTO | undefined>;
+  getCompanyEmployeeContact(
+    company_contact_id: string,
+  ): Promise<IEmployeeDTO | undefined>;
 }
 
 const CompanyContactContext = createContext({} as ICompanyContactContextData);
@@ -65,9 +78,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
   const { selectedCompanyEmployee, getCompanyEmployees } = useCompanyEmployee();
   const { employee } = useEmployeeAuth();
-  const [employeeContact, setEmployeeContact] = useState(() => {
+  const [myEmployeeContact, setMyEmployeeContact] = useState(() => {
     const findEmployeeContact = localStorage.getItem(
-      '@WP-PRO:employee-contact',
+      '@WP-PRO:my-employee-contact',
     );
 
     if (findEmployeeContact) {
@@ -169,6 +182,61 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     return [];
   });
 
+  const [contactEmployee, setContactEmployee] = useState(() => {
+    const findContactEmployee = localStorage.getItem(
+      '@WP-PRO:contact-employee',
+    );
+    if (findContactEmployee) {
+      return JSON.parse(findContactEmployee);
+    }
+    return {} as IEmployeeDTO;
+  });
+
+  const getEmployeeContact = useCallback(async (employee_id: string) => {
+    try {
+      const response = await api.get<ICompanyContactDTO | undefined>(
+        `/company-employee-contact/employee/${employee_id}`,
+      );
+
+      setSelectedContact(response.data);
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
+  // const getContact = useCallback(async (id: string) => {
+  //   try {
+  //     const response = await api.get<ICompanyContactDTO>(
+  //       `/company/contacts/show/${id}`,
+  //     );
+  //     localStorage.setItem(
+  //       '@WP-PRO:selected-contact',
+  //       JSON.stringify(response.data),
+  //     );
+  //     return response.data;
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // }, []);
+
+  // Apenas Para o employee que estiver utilizando o sistema
+  const getMyEmployeeContact = useCallback(async () => {
+    try {
+      const response = await api.get<ICompanyContactDTO>(
+        `/company-employee-contact/employee/${employee.id}`,
+      );
+      localStorage.setItem(
+        '@WP-PRO:my-employee-contact',
+        JSON.stringify(response.data),
+      );
+      setMyEmployeeContact(response.data);
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [employee]);
+
   const getCompanyContacts = useCallback(async () => {
     try {
       const response = await api.get<ICompanyContactDTO[]>(
@@ -240,35 +308,21 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     }
   }, [employee]);
 
-  const getEmployeeContact = useCallback(async (employee_id: string) => {
+  const getCompanyEmployeeContact = useCallback(async () => {
     try {
-      const response = await api.get<ICompanyContactDTO>(
-        `/company-employee-contact/employee/${employee_id}`,
+      const response = await api.get<IEmployeeDTO | undefined>(
+        `/company-employee-contact/${selectedContact.id}`,
       );
       localStorage.setItem(
-        '@WP-PRO:employee-contact',
+        '@WP-PRO:contact-employee',
         JSON.stringify(response.data),
       );
-      setEmployeeContact(response.data);
+      setContactEmployee(response.data);
       return response.data;
     } catch (err) {
       throw new Error(err);
     }
-  }, []);
-
-  const getCompanyEmployeeContact = useCallback(
-    async (company_contact_id: string) => {
-      try {
-        const response = await api.get<IEmployeeDTO>(
-          `/company-employee-contact/${company_contact_id}`,
-        );
-        return response.data;
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [],
-  );
+  }, [selectedContact]);
 
   const deleteCompanyContact = useCallback(
     async (data: ICompanyContactDTO) => {
@@ -357,12 +411,18 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const updateCompanyContactIsCompany = useCallback(
     async (id: string) => {
       try {
-        await api.put(`company/contacts/is-company/${id}`);
+        const response = await api.put(`company/contacts/is-company/${id}`);
         getCompanyContacts();
+        // getContact(response.data.id);
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -378,12 +438,17 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const updateCompanyContactWeplanUser = useCallback(
     async (id: string) => {
       try {
-        await api.put(`company/contacts/weplan-user/${id}`);
+        const response = await api.put(`company/contacts/weplan-user/${id}`);
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -397,16 +462,24 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   );
 
   const updateCompanyContactType = useCallback(
-    async (id: string, company_contact_type: string) => {
+    async (company_contact_type: string) => {
       try {
-        await api.put(`company/contacts/type/${id}`, {
-          company_contact_type,
-        });
+        const response = await api.put(
+          `company/contacts/type/${selectedContact.id}`,
+          {
+            company_contact_type,
+          },
+        );
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -416,20 +489,28 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, selectedContact.id],
   );
 
   const updateCompanyContactDescription = useCallback(
-    async (id: string, description: string) => {
+    async (description: string) => {
       try {
-        await api.put(`company/contacts/description/${id}`, {
-          description,
-        });
+        const response = await api.put(
+          `company/contacts/description/${selectedContact.id}`,
+          {
+            description,
+          },
+        );
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -439,20 +520,28 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, selectedContact],
   );
 
   const updateCompanyContactFamilyName = useCallback(
-    async (id: string, family_name: string) => {
+    async (family_name: string) => {
       try {
-        await api.put(`company/contacts/family-name/${id}`, {
-          family_name,
-        });
+        const response = await api.put(
+          `company/contacts/family-name/${selectedContact.id}`,
+          {
+            family_name,
+          },
+        );
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -462,20 +551,28 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, selectedContact],
   );
 
   const updateCompanyContactName = useCallback(
-    async (id: string, name: string) => {
+    async (name: string) => {
       try {
-        await api.put(`company/contacts/name/${id}`, {
-          name,
-        });
+        const response = await api.put(
+          `company/contacts/name/${selectedContact.id}`,
+          {
+            name,
+          },
+        );
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -485,18 +582,23 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, selectedContact],
   );
 
   const updateCompanyContactIsNew = useCallback(
     async (data: ICompanyContactDTO) => {
       try {
-        await api.put(`company/contacts/is-new/${data.id}`);
+        const response = await api.put(`company/contacts/is-new/${data.id}`);
         getCompanyContacts();
+        localStorage.setItem(
+          '@WP-PRO:selected-contact',
+          JSON.stringify(response.data),
+        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -608,7 +710,15 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
 
   const selectContact = useCallback(
     (data: ICompanyContactDTO) => {
+      if (data && !data.id) {
+        localStorage.removeItem('@WP-PRO:contact-employee');
+        localStorage.removeItem('@WP-PRO:selected-contact');
+        setContactEmployee({} as IEmployeeDTO);
+        return setSelectedContact({} as ICompanyContactDTO);
+      }
       if (selectedContact.id === data.id) {
+        localStorage.removeItem('@WP-PRO:contact-employee');
+        setContactEmployee({} as IEmployeeDTO);
         localStorage.removeItem('@WP-PRO:selected-contact');
         return setSelectedContact({} as ICompanyContactDTO);
       }
@@ -638,19 +748,42 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   ];
 
   useEffect(() => {
-    if (employee && employee.id && employeeContact && !employeeContact.id) {
-      getEmployeeContact(employee.id);
+    if (selectedContact && selectedContact.id) {
+      const findContactEmployee = localStorage.getItem(
+        '@WP-PRO:contact-employee',
+      );
+      if (findContactEmployee) {
+        const parsedEmployee = JSON.parse(findContactEmployee);
+        setContactEmployee(parsedEmployee);
+      } else {
+        getCompanyEmployeeContact();
+      }
     }
-  }, [getEmployeeContact, employeeContact, employee]);
+  }, [getCompanyEmployeeContact, selectedContact]);
+
+  useEffect(() => {
+    if (employee && employee.id && myEmployeeContact && !myEmployeeContact.id) {
+      const findContactEmployee = localStorage.getItem(
+        '@WP-PRO:my-employee-contact',
+      );
+      if (findContactEmployee) {
+        const parsedContact = JSON.parse(findContactEmployee);
+        setMyEmployeeContact(parsedContact);
+      } else {
+        getMyEmployeeContact();
+      }
+    }
+  }, [getMyEmployeeContact, myEmployeeContact, employee]);
 
   return (
     <CompanyContactContext.Provider
       value={{
         contactInfoTypes,
+        myEmployeeContact,
+        contactEmployee,
         contactTypes,
         getEmployeeContact,
         getCompanyEmployeeContact,
-        employeeContact,
         selectContact,
         customersContacts,
         suppliersContacts,

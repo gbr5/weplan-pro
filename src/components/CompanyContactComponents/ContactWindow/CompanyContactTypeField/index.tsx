@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdClose, MdEdit } from 'react-icons/md';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
+import { useCompanyEmployee } from '../../../../hooks/companyEmployee';
 import ContactTypeComponent from '../../ContactTypeComponent';
 
 import { Container, FieldContainer } from './styles';
@@ -11,23 +12,27 @@ const CompanyContactTypeField: React.FC = () => {
     updateCompanyContactType,
     contactTypes,
     selectedContact,
+    contactEmployee,
   } = useCompanyContact();
+  const { master } = useCompanyEmployee();
   const [editContactField, setEditContactField] = useState(false);
   const [defaultType, setDefaultType] = useState(contactTypes[0]);
+  const [contact, setContact] = useState(selectedContact);
 
   useEffect(() => {
     const response = contactTypes.find(
-      field => field.value === selectedContact.company_contact_type,
+      field => field.value === contact.company_contact_type,
     );
     response && setDefaultType(response);
-  }, [contactTypes, selectedContact]);
+  }, [contactTypes, contact]);
 
   const handleSubmit = useCallback(
-    (data: string) => {
-      updateCompanyContactType(selectedContact.id, data);
+    async (data: string) => {
+      const response = await updateCompanyContactType(data);
+      setContact(response);
       setEditContactField(false);
     },
-    [updateCompanyContactType, selectedContact],
+    [updateCompanyContactType],
   );
 
   const handleEditField = useCallback((e: boolean) => {
@@ -35,18 +40,36 @@ const CompanyContactTypeField: React.FC = () => {
   }, []);
   return (
     <Container>
-      <span>
-        <button
-          type="button"
-          onClick={() => handleEditField(!editContactField)}
-        >
-          {editContactField ? (
-            <MdClose size={iconSize} />
-          ) : (
-            <MdEdit size={iconSize} />
-          )}
-        </button>
-      </span>
+      {!contactEmployee ? (
+        <span>
+          <button
+            type="button"
+            onClick={() => handleEditField(!editContactField)}
+          >
+            {editContactField ? (
+              <MdClose size={iconSize} />
+            ) : (
+              <MdEdit size={iconSize} />
+            )}
+          </button>
+        </span>
+      ) : (
+        master &&
+        master.id && (
+          <span>
+            <button
+              type="button"
+              onClick={() => handleEditField(!editContactField)}
+            >
+              {editContactField ? (
+                <MdClose size={iconSize} />
+              ) : (
+                <MdEdit size={iconSize} />
+              )}
+            </button>
+          </span>
+        )
+      )}
       {editContactField ? (
         <ContactTypeComponent
           contactDefaultType={defaultType.value}

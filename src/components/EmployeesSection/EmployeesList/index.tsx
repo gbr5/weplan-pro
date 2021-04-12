@@ -1,10 +1,10 @@
 import React from 'react';
-import { MdClose, MdDone } from 'react-icons/md';
+
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
+import EmployeeButton from './EmployeeButton';
 import { Container, Employee } from './styles';
 
 const EmployeesList: React.FC = () => {
-  const iconsize = 20;
   const { companyEmployees } = useCompanyEmployee();
 
   return (
@@ -17,16 +17,9 @@ const EmployeesList: React.FC = () => {
               employeeIndex => employeeIndex.id === employee.id,
             ) + 1;
           return (
-            <Employee isNotActive={!employee.isActive} key={employee.id}>
+            <Employee key={employee.id}>
               <p>{index}</p>
-              <button type="button">
-                <strong>{employee.employeeUser.name}</strong>
-                {employee.isActive ? (
-                  <MdDone color="green" size={iconsize} />
-                ) : (
-                  <MdClose color="red" size={iconsize} />
-                )}
-              </button>
+              <EmployeeButton employee={employee} />
             </Employee>
           );
         })}

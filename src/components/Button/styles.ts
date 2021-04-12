@@ -18,8 +18,10 @@ export const Container = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   &:hover {
     background-color: ${shade(0.2, '#ff9000')};
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
   }
 `;

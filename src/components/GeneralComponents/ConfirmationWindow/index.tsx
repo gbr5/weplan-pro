@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '../../Button';
 import WindowContainer from '../../WindowContainer';
 
-import { Container, ButtonContainer } from './styles';
+import { Container, SubContainer, ButtonContainer } from './styles';
 
 interface IProps {
   message: string;
@@ -28,23 +28,25 @@ const ConfirmationWindow: React.FC<IProps> = ({
       onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex,
-        top: '5%',
+        top: '25%',
         left: '5%',
-        height: '90%',
+        height: '50%',
         width: '90%',
       }}
     >
       <Container>
-        <strong>{message}</strong>
+        <SubContainer>
+          <strong>{message}</strong>
 
-        <ButtonContainer>
-          <Button type="button" onClick={() => firstButtonFunction()}>
-            {firstButtonLabel}
-          </Button>
-          <Button type="button" onClick={() => secondButtonFunction()}>
-            {secondButtonLabel}
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button type="button" onClick={() => firstButtonFunction()}>
+              {firstButtonLabel}
+            </Button>
+            <Button type="button" onClick={() => secondButtonFunction()}>
+              {secondButtonLabel}
+            </Button>
+          </ButtonContainer>
+        </SubContainer>
       </Container>
     </WindowContainer>
   );
