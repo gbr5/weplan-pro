@@ -2,12 +2,15 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useCallback, useRef, useState } from 'react';
 import { MdClose, MdEdit } from 'react-icons/md';
-import ICompanyContactDTO from '../../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
+import { useCompanyEmployee } from '../../../../hooks/companyEmployee';
 import formatTextArea from '../../../../utils/formatTextArea';
 import Button from '../../../Button';
-
 import { Container, FieldContainer, EditFieldContainer } from './styles';
+
+interface IFormParams {
+  description: string;
+}
 
 const ContactDescription: React.FC = () => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -16,9 +19,12 @@ const ContactDescription: React.FC = () => {
   const {
     updateCompanyContactDescription,
     selectedContact,
+    contactEmployee,
   } = useCompanyContact();
+  const { master } = useCompanyEmployee();
   const formRef = useRef<FormHandles>(null);
   const [editContactField, setEditContactField] = useState(false);
+  const [contact, setContact] = useState(selectedContact);
 
   const [rows, setRows] = useState(2);
 
@@ -33,11 +39,18 @@ const ContactDescription: React.FC = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    (data: ICompanyContactDTO) => {
-      updateCompanyContactDescription(selectedContact.id, data.description);
-      setEditContactField(false);
+    async (data: IFormParams) => {
+      // Não retirar por enquanto
+      console.log(data);
+      const textArea = textAreaRef.current;
+
+      if (textArea) {
+        const response = await updateCompanyContactDescription(textArea.value);
+        setContact(response);
+        setEditContactField(false);
+      }
     },
-    [updateCompanyContactDescription, selectedContact],
+    [updateCompanyContactDescription],
   );
 
   const handleEditField = useCallback((e: boolean) => {
@@ -46,18 +59,36 @@ const ContactDescription: React.FC = () => {
 
   return (
     <Container>
-      <span>
-        <button
-          type="button"
-          onClick={() => handleEditField(!editContactField)}
-        >
-          {editContactField ? (
-            <MdClose size={iconSize} />
-          ) : (
-            <MdEdit size={iconSize} />
-          )}
-        </button>
-      </span>
+      {!contactEmployee ? (
+        <span>
+          <button
+            type="button"
+            onClick={() => handleEditField(!editContactField)}
+          >
+            {editContactField ? (
+              <MdClose size={iconSize} />
+            ) : (
+              <MdEdit size={iconSize} />
+            )}
+          </button>
+        </span>
+      ) : (
+        master &&
+        master.id && (
+          <span>
+            <button
+              type="button"
+              onClick={() => handleEditField(!editContactField)}
+            >
+              {editContactField ? (
+                <MdClose size={iconSize} />
+              ) : (
+                <MdEdit size={iconSize} />
+              )}
+            </button>
+          </span>
+        )
+      )}
       {editContactField ? (
         <>
           <Form ref={formRef} onSubmit={handleSubmit}>
@@ -68,9 +99,9 @@ const ContactDescription: React.FC = () => {
                   ref={textAreaRef}
                   cols={22}
                   rows={rows}
-                  defaultValue={selectedContact.description}
+                  defaultValue={contact.description}
                   onChange={handleChange}
-                  placeholder={selectedContact.description}
+                  placeholder={contact.description}
                   name="description"
                 />
               </section>
@@ -81,7 +112,7 @@ const ContactDescription: React.FC = () => {
       ) : (
         <FieldContainer>
           <strong>Descrição</strong>
-          <p>{selectedContact.description}</p>
+          <p>{contact.description}</p>
         </FieldContainer>
       )}
     </Container>

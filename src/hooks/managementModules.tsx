@@ -27,7 +27,7 @@ const ManagementModuleProvider: React.FC = ({ children }) => {
   >(() => {
     if (employee && employee.id) {
       const findModules = localStorage.getItem(
-        `@WP-PRO:${employee.id}|employee-modules`,
+        `@WP-PRO:${employee.employeeUser.id}|employee-modules`,
       );
       if (findModules) {
         return JSON.parse(findModules);

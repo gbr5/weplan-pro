@@ -144,10 +144,7 @@ const StageCardProvider: React.FC = ({ children }) => {
         return filteredCards;
       }
       if (access_level === 1) {
-        const filteredCards = response.data
-          .filter(card => card.card_owner === employee.employeeUser.id)
-          .filter(card => card.isActive);
-        return filteredCards;
+        return response.data;
       }
       return undefined;
     },

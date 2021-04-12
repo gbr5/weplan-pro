@@ -64,16 +64,16 @@ const CollectEmployeePassword: React.FC<IProps> = ({
 
         if (!selectedUser || (selectedUser && !selectedUser.id)) {
           const newUser = await createUser(data.password);
-          createEmployeeModule({
-            access_level: employeeAccessLevel,
-            management_module: 'Comercial',
-            user_id: newUser.id,
-          });
           const newEmployee = await createCompanyEmployee({
             email: employeeEmail,
             password: data.password,
             position: employeePosition,
             user_id: newUser.id,
+          });
+          createEmployeeModule({
+            access_level: employeeAccessLevel,
+            management_module: 'Comercial',
+            user_id: newEmployee.id,
           });
           const findContact = companyContacts.find(contact => {
             const findByEmail = contact.contact_infos.find(
@@ -106,16 +106,16 @@ const CollectEmployeePassword: React.FC<IProps> = ({
           }
         }
         if (selectedUser && selectedUser.id) {
-          createEmployeeModule({
-            access_level: employeeAccessLevel,
-            management_module: 'Comercial',
-            user_id: selectedUser.id,
-          });
           const newEmployee = await createCompanyEmployee({
             email: employeeEmail,
             password: data.password,
             position: employeePosition,
             user_id: selectedUser.id,
+          });
+          createEmployeeModule({
+            access_level: employeeAccessLevel,
+            management_module: 'Comercial',
+            user_id: newEmployee.id,
           });
           const findContact = companyContacts.find(contact => {
             const findByEmail = contact.contact_infos.find(

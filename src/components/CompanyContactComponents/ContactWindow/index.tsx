@@ -12,6 +12,7 @@ import { Container } from './styles';
 import CompanyContactTypeField from './CompanyContactTypeField';
 import CreateContactInfoField from './CreateContactInfoField';
 import CreateContactNote from './CreateContactNote';
+import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 
 interface IProps {
   closeWindow: Function;
@@ -22,10 +23,13 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
     selectedContact,
     updateCompanyContactIsNew,
     deleteCompanyContact,
+    contactEmployee,
   } = useCompanyContact();
+  const { master } = useCompanyEmployee();
   const [deleteContactConfirmation, setDeleteContactConfirmation] = useState(
     false,
   );
+
   useEffect(() => {
     if (selectedContact.isNew) {
       updateCompanyContactIsNew(selectedContact);
@@ -40,6 +44,7 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
   const handleDeleteContactConfirmation = useCallback((e: boolean) => {
     setDeleteContactConfirmation(e);
   }, []);
+
   return (
     <WindowContainer
       onHandleCloseWindow={() => closeWindow()}
@@ -51,10 +56,22 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
         width: '90%',
       }}
     >
-      {deleteContactConfirmation && (
+      {deleteContactConfirmation &&
+        ((contactEmployee && !contactEmployee.id) || !contactEmployee) && (
+          <ConfirmationWindow
+            closeWindow={() => handleDeleteContactConfirmation(false)}
+            message="Deletar contato permanentemente"
+            firstButtonFunction={handleDeleteCompanyContact}
+            firstButtonLabel="Deletar"
+            secondButtonFunction={() => handleDeleteContactConfirmation(false)}
+            secondButtonLabel="Não Deletar"
+            zIndex={15}
+          />
+        )}
+      {deleteContactConfirmation && contactEmployee && contactEmployee.id && (
         <ConfirmationWindow
           closeWindow={() => handleDeleteContactConfirmation(false)}
-          message="Deletar contato permanentemente"
+          message="Ao deletar o contato você também irá deletar o colaborador. Deseja realmente deletar o contato?"
           firstButtonFunction={handleDeleteCompanyContact}
           firstButtonLabel="Deletar"
           secondButtonFunction={() => handleDeleteContactConfirmation(false)}
@@ -79,6 +96,7 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
               />
             );
           })}
+
         <CreateContactInfoField />
         <h3>Notas</h3>
         {selectedContact &&
@@ -88,13 +106,14 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
             return <ContactNote key={note.id} contactNote={note} />;
           })}
         <CreateContactNote />
-
-        <Button
-          type="button"
-          onClick={() => handleDeleteContactConfirmation(true)}
-        >
-          Deletar Contato
-        </Button>
+        {master && master.id && (
+          <Button
+            type="button"
+            onClick={() => handleDeleteContactConfirmation(true)}
+          >
+            Deletar Contato
+          </Button>
+        )}
       </Container>
     </WindowContainer>
   );
