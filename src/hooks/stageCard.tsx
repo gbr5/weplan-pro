@@ -20,14 +20,14 @@ interface ICardFilterParams {
 interface IStageCardContextData {
   selectedCard: IStageCardDTO;
   selectedNote: ICardNotesDTO;
-  selectedCheckList: ICardCheckListDTO;
+  selectedCardCheckList: ICardCheckListDTO;
   cardCheckLists: ICardCheckListDTO[];
   cardNotes: ICardNotesDTO[];
   cardCustomers: ICardCustomerDTO[];
   funnelCardInfos: IFunnelCardInfoDTO[];
   selectCard(data: IStageCardDTO): void;
   selectNote(data: ICardNotesDTO): void;
-  selectCheckList(data: ICardCheckListDTO): void;
+  selectCardCheckList(data: ICardCheckListDTO): void;
   getCards(data: ICardFilterParams): Promise<IStageCardDTO[] | undefined>;
   getCardCheckLists(): void;
   getFunnelCardInfos(): void;
@@ -56,9 +56,9 @@ const StageCardProvider: React.FC = ({ children }) => {
     return {} as IStageCardDTO;
   });
   const [cardCheckLists, setCardCheckLists] = useState<ICardCheckListDTO[]>([]);
-  const [selectedCheckList, setSelectedCheckList] = useState<ICardCheckListDTO>(
-    {} as ICardCheckListDTO,
-  );
+  const [selectedCardCheckList, setSelectedCardCheckList] = useState<
+    ICardCheckListDTO
+  >({} as ICardCheckListDTO);
   const [selectedNote, setSelectedNote] = useState<ICardNotesDTO>(
     {} as ICardNotesDTO,
   );
@@ -103,7 +103,7 @@ const StageCardProvider: React.FC = ({ children }) => {
           const mainCheckList = response.data.find(
             mainCL => mainCL.card_id === selectedCard.id,
           );
-          mainCheckList && setSelectedCheckList(mainCheckList);
+          mainCheckList && setSelectedCardCheckList(mainCheckList);
         });
     } catch (err) {
       throw new Error(err);
@@ -114,8 +114,8 @@ const StageCardProvider: React.FC = ({ children }) => {
     setSelectedNote(data);
   }, []);
 
-  const selectCheckList = useCallback((data: ICardCheckListDTO) => {
-    setSelectedCheckList(data);
+  const selectCardCheckList = useCallback((data: ICardCheckListDTO) => {
+    setSelectedCardCheckList(data);
   }, []);
 
   const getCards = useCallback(
@@ -319,10 +319,10 @@ const StageCardProvider: React.FC = ({ children }) => {
       value={{
         createCardNote,
         selectedCard,
-        selectedCheckList,
+        selectedCardCheckList,
         selectedNote,
         selectCard,
-        selectCheckList,
+        selectCardCheckList,
         selectNote,
         cardCheckLists,
         cardNotes,

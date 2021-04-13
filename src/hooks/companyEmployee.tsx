@@ -156,7 +156,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
   }, [employee]);
 
   const createCompanyEmployee = useCallback(
-    // Olhar Como é feito no Enterprise !!
     async (data: ICreateEmployeeDTO) => {
       try {
         const response = await api.post(
