@@ -3,11 +3,18 @@ import { MdPersonAdd } from 'react-icons/md';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useToast } from '../../../hooks/toast';
+import Header from '../../Header';
+import MenuButton from '../../MenuButton';
 import ContactWindow from '../ContactWindow';
 import CreateCompanyContactForm from '../CreateCompanyContactForm';
 import CompanyContactButton from './CompanyContactButton';
 
-import { Container, ContactTypeSection, MenuButton, FirstRow } from './styles';
+import {
+  Container,
+  ContactTypeSection,
+  ContactMenuButton,
+  FirstRow,
+} from './styles';
 
 const CompanyContactDashboard: React.FC = () => {
   const { addToast } = useToast();
@@ -180,16 +187,18 @@ const CompanyContactDashboard: React.FC = () => {
           handleCloseWindow={() => handleCreateContactWindow(false)}
         />
       )}
+      <Header />
+      <MenuButton />
       <Container>
         <h2>Contatos da empresa</h2>
         <section>
-          <MenuButton
+          <ContactMenuButton
             isActive={filterTitle === 'Todos'}
             type="button"
             onClick={() => handleContactType('All')}
           >
             Todos
-          </MenuButton>
+          </ContactMenuButton>
           {/* <MenuButton
             isActive={filterTitle === 'WePlan'}
             type="button"
@@ -197,54 +206,54 @@ const CompanyContactDashboard: React.FC = () => {
           >
             WePlan
           </MenuButton> */}
-          <MenuButton
+          <ContactMenuButton
             isActive={false}
             type="button"
             onClick={() => handleCreateContactWindow(true)}
           >
             <MdPersonAdd size={24} />
-          </MenuButton>
+          </ContactMenuButton>
         </section>
         <input
           onChange={e => handleFilterContacts(e.target.value)}
           placeholder="Pesquisar"
         />
         <ContactTypeSection>
-          <MenuButton
+          <ContactMenuButton
             isActive={filterTitle === 'Clientes'}
             type="button"
             onClick={() => handleContactType('Customers')}
           >
             Clientes
-          </MenuButton>
-          <MenuButton
+          </ContactMenuButton>
+          <ContactMenuButton
             isActive={filterTitle === 'Fornecedores'}
             type="button"
             onClick={() => handleContactType('Suppliers')}
           >
             Fornecedores
-          </MenuButton>
-          <MenuButton
+          </ContactMenuButton>
+          <ContactMenuButton
             isActive={filterTitle === 'Colaboradores'}
             type="button"
             onClick={() => handleContactType('Employees')}
           >
             Colaboradores
-          </MenuButton>
-          <MenuButton
+          </ContactMenuButton>
+          <ContactMenuButton
             isActive={filterTitle === 'Terceirizados'}
             type="button"
             onClick={() => handleContactType('Outsourceds')}
           >
             Terceirizados
-          </MenuButton>
-          <MenuButton
+          </ContactMenuButton>
+          <ContactMenuButton
             isActive={filterTitle === 'Outros'}
             type="button"
             onClick={() => handleContactType('Others')}
           >
             Outros
-          </MenuButton>
+          </ContactMenuButton>
         </ContactTypeSection>
 
         <FirstRow>

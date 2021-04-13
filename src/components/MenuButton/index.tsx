@@ -24,7 +24,7 @@ const MenuButton: React.FC = () => {
   return (
     <>
       <Button type="button" onClick={handleMenuList}>
-        <MdMenu size={24} />
+        <MdMenu size={32} />
       </Button>
       {!!menuList && (
         <>

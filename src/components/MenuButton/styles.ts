@@ -11,15 +11,16 @@ export const Button = styled.button`
   width: 32px;
   height: 32px;
   border-radius: 4px;
+  border: none;
 
   z-index: 1999;
 
   background: var(--secondary-color);
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
   transition: 0.25s;
 
   &:hover {
     opacity: 0.8;
-    box-shadow: 1px 1px 10px 1px var(--title-color);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
   }
 `;

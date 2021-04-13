@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { Container, Content } from './styles';
+import { Container } from './styles';
 
-import Header from '../../components/Header';
 import KanbanDashboard from '../../components/KabanDashboard';
 import TaskDashboard from '../../components/TaskDashboard';
 import CardPage from '../../components/CardPage';
@@ -13,7 +12,6 @@ import CompanyContactDashboard from '../../components/CompanyContactComponents/C
 import CustomerServiceOrderDashboard from '../../components/CustomerServiceOrderDashboard';
 import { useHomeController } from '../../hooks/homeController';
 import { useFunnel } from '../../hooks/funnel';
-import MenuButton from '../../components/MenuButton';
 import SettingsPage from '../SettingsPage';
 import ComercialFunnelSettings from '../../components/FunnelSettingsComponents/ComercialFunnelSettings';
 import EmployeesSection from '../../components/EmployeesSection';
@@ -25,27 +23,21 @@ const SupplierDashboard: React.FC = () => {
 
   return (
     <Container>
-      <MenuButton />
-      <Header />
-      <Content>
-        {selectedPage === 'Tasks' && <TaskDashboard />}
-        {selectedPage === 'E-Links' && <ContactPageDashboard />}
-        {selectedPage === 'Forms' && <FormDashboard />}
-        {funnels.length > 0 &&
-          selectedFunnel &&
-          selectedFunnel.id &&
-          selectedPage === 'Comercial' && <KanbanDashboard />}
-        {selectedPage === 'Card' && <CardPage />}
-        {selectedPage === 'Contacts' && <CompanyContactDashboard />}
+      {selectedPage === 'Tasks' && <TaskDashboard />}
+      {selectedPage === 'E-Links' && <ContactPageDashboard />}
+      {selectedPage === 'Forms' && <FormDashboard />}
+      {funnels.length > 0 &&
+        selectedFunnel &&
+        selectedFunnel.id &&
+        selectedPage === 'Comercial' && <KanbanDashboard />}
+      {selectedPage === 'Card' && <CardPage />}
+      {selectedPage === 'Contacts' && <CompanyContactDashboard />}
 
-        {selectedPage === 'Home' && <HomeDashboard />}
-        {selectedPage === 'Settings' && <SettingsPage />}
-        {selectedPage === 'ComercialSettings' && <ComercialFunnelSettings />}
-        {selectedPage === 'Employees' && <EmployeesSection />}
-        {selectedPage === 'ComercialOrders' && (
-          <CustomerServiceOrderDashboard />
-        )}
-      </Content>
+      {selectedPage === 'Home' && <HomeDashboard />}
+      {selectedPage === 'Settings' && <SettingsPage />}
+      {selectedPage === 'ComercialSettings' && <ComercialFunnelSettings />}
+      {selectedPage === 'Employees' && <EmployeesSection />}
+      {selectedPage === 'ComercialOrders' && <CustomerServiceOrderDashboard />}
     </Container>
   );
 };

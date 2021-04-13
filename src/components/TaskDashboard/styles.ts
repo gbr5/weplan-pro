@@ -23,6 +23,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  padding-top: 3rem;
 
   margin: 2rem 0 2rem;
 
