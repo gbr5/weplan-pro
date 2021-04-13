@@ -68,7 +68,6 @@ export const CheckListHeader = styled.div`
 
 export const StatusMenuButtonContainer = styled.strong`
   max-width: 100vw;
-  height: 100%;
   margin: 0.5rem 0;
 
   display: flex;
