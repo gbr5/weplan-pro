@@ -8,24 +8,27 @@ import SelectCardCheckListWindow from './SelectCardCheckListWindow';
 import CreateCheckListForm from './CreateCheckListForm';
 import ICardCheckListDTO from '../../../../../dtos/ICardCheckListDTO';
 import { useStageCard } from '../../../../../hooks/stageCard';
+import { useCheckList } from '../../../../../hooks/checkList';
 
 const CardTaskDashboard: React.FC = () => {
   const {
     cardCheckLists,
     selectedCard,
-    selectedCheckList,
+    selectedCardCheckList,
     getCardCheckLists,
-    selectCheckList,
+    selectCardCheckList,
   } = useStageCard();
+  const { selectCheckList } = useCheckList();
   const [selectCheckListWindow, setSelectCheckListWindow] = useState(false);
   const [createCheckListForm, setCreateCheckListForm] = useState(false);
 
   const handleSetSelectedCheckList = useCallback(
     (props: ICardCheckListDTO) => {
       setSelectCheckListWindow(false);
-      selectCheckList(props);
+      selectCardCheckList(props);
+      selectCheckList(props.check_list);
     },
-    [selectCheckList],
+    [selectCardCheckList, selectCheckList],
   );
 
   const handleCloseCheckListForm = useCallback(() => {
@@ -54,7 +57,7 @@ const CardTaskDashboard: React.FC = () => {
         />
       )}
       <Main>
-        {selectedCheckList.check_list && (
+        {selectedCardCheckList.check_list && (
           <>
             {/* <ContainerMenu> */}
             {/* <button
@@ -63,7 +66,7 @@ const CardTaskDashboard: React.FC = () => {
               >
                 <p>Selecionar Check List</p>
                 <strong>
-                  {selectedCheckList.check_list.name}
+                  {selectedCardCheckList.check_list.name}
                   <FiChevronDown size={24} />
                 </strong>
               </button> */}
@@ -78,7 +81,7 @@ const CardTaskDashboard: React.FC = () => {
               </button> */}
             {/* </ContainerMenu> */}
             <CardCheckListContainer
-              checkList={selectedCheckList}
+              checkList={selectedCardCheckList}
               getCardCheckLists={getCardCheckLists}
             />
           </>

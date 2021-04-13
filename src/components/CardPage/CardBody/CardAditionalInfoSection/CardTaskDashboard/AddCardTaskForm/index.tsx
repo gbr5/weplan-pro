@@ -2,10 +2,12 @@ import React, { MouseEventHandler, useCallback, useState } from 'react';
 import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
-import { Container } from './styles';
-import api from '../../../../../../services/api';
+import CreateTaskName from './CreateTaskName';
+import { useCheckList } from '../../../../../../hooks/checkList';
+import CreateTaskPriority from './CreateTaskPriority';
+import CreateTaskStatus from './CreateTaskStatus';
+import CreateTaskDueDate from './CreateTaskDueDate';
 import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
-import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 
 interface IProps {
   onHandleCloseWindow: MouseEventHandler;
@@ -21,83 +23,87 @@ const AddCardTaskForm: React.FC<IProps> = ({
   cardCheckList,
 }: IProps) => {
   const { addToast } = useToast();
-  const { employee } = useEmployeeAuth();
+  const { createTask } = useCheckList();
 
-  const [taskName, setTaskName] = useState('');
+  const [taskNameField, setTaskNameField] = useState(true);
+  const [taskPriorityField, setTaskPriorityField] = useState(false);
+  const [taskStatusField, setTaskStatusField] = useState(false);
+  const [taskDueDateField, setTaskDueDateField] = useState(false);
 
-  const now = new Date();
-  const day = now.getDate() + 3;
-  const month = now.getMonth() + 1;
-  const year = now.getFullYear();
+  const handleCloseAllFields = useCallback(() => {
+    setTaskNameField(false);
+    setTaskPriorityField(false);
+    setTaskStatusField(false);
+    setTaskDueDateField(false);
+  }, []);
 
-  const handleSubmit = useCallback(async () => {
-    try {
-      if (taskName === '') {
-        return addToast({
-          type: 'error',
-          title: 'Erro ao adicionar CARD',
-          description: 'O nome do CARD deve ser preenchido, tente novamente.',
+  const handleTaskPriority = useCallback(() => {
+    handleCloseAllFields();
+    setTaskPriorityField(true);
+  }, [handleCloseAllFields]);
+  const handleTaskStatus = useCallback(() => {
+    handleCloseAllFields();
+    setTaskStatusField(true);
+  }, [handleCloseAllFields]);
+  const handleTaskDueDate = useCallback(() => {
+    handleCloseAllFields();
+    setTaskDueDateField(true);
+  }, [handleCloseAllFields]);
+
+  const handleSubmit = useCallback(
+    async (due_date: string) => {
+      try {
+        createTask({
+          check_list_id: cardCheckList.check_list_id,
+          due_date,
         });
-      }
-      await api.post(`check-lists/tasks/${cardCheckList.check_list.id}`, {
-        owner_id: employee.employeeUser.id,
-        task: taskName,
-        color: 'rgb(179, 182, 178)',
-        isActive: true,
-        priority: 'neutral',
-        status: '1',
-        due_date: `${day}/${month}/${year}`,
-      });
-      getCardCheckLists();
-      handleCloseWindow();
-      return addToast({
-        type: 'success',
-        title: 'Card criado com sucesso',
-        description: 'Você já pode visualizá-lo no seu dashboard.',
-      });
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao adicionar colaborador',
-        description: 'Erro ao adicionar colaborador, tente novamente.',
-      });
+        getCardCheckLists();
+        handleCloseWindow();
+        return addToast({
+          type: 'success',
+          title: 'Tarefa criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar tarefa!',
+          description: 'Tente novamente',
+        });
 
-      throw new Error(err);
-    }
-  }, [
-    addToast,
-    getCardCheckLists,
-    taskName,
-    handleCloseWindow,
-    cardCheckList,
-    day,
-    month,
-    year,
-    employee,
-  ]);
+        throw new Error(err);
+      }
+    },
+    [addToast, getCardCheckLists, handleCloseWindow, createTask, cardCheckList],
+  );
 
   return (
     <WindowContainer
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
         zIndex: 10,
-        top: '38%',
-        left: '20%',
-        height: '24%',
-        width: '60%',
+        top: '25%',
+        left: '2.5%',
+        height: '50%',
+        width: '95%',
       }}
     >
-      {/* <Form> */}
-      <Container>
-        <input
-          placeholder="Nome da tarefa"
-          onChange={e => setTaskName(e.target.value)}
+      {taskNameField && (
+        <CreateTaskName
+          closeWindow={handleCloseWindow}
+          nextStep={() => handleTaskPriority()}
         />
-        <button type="button" onClick={handleSubmit}>
-          Criar card
-        </button>
-      </Container>
-      {/* </Form> */}
+      )}
+      {taskPriorityField && (
+        <CreateTaskPriority nextStep={() => handleTaskStatus()} />
+      )}
+      {taskStatusField && (
+        <CreateTaskStatus nextStep={() => handleTaskDueDate()} />
+      )}
+      {taskDueDateField && (
+        <CreateTaskDueDate
+          nextStep={(due_date: string) => handleSubmit(due_date)}
+        />
+      )}
     </WindowContainer>
   );
 };

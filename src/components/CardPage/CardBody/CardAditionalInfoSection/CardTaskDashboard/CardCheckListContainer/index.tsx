@@ -84,10 +84,10 @@ const CardCheckListContainer: React.FC<IProps> = ({
     <>
       {createCheckListTaskForm && (
         <AddCardTaskForm
+          cardCheckList={checkList}
           handleCloseWindow={handleCloseCreateCheckListTaskForm}
           onHandleCloseWindow={() => setCreateCheckListTaskForm(false)}
           getCardCheckLists={getCardCheckLists}
-          cardCheckList={checkList}
         />
       )}
       <Main>
@@ -153,22 +153,22 @@ const CardCheckListContainer: React.FC<IProps> = ({
                           type="button"
                           onClick={() => handlePriorityWindow(task)}
                         >
-                          <h3>Prioridade:</h3>
+                          {/* <h3>Prioridade:</h3> */}
                           {task.priority === 'low' && (
                             <>
-                              <p>Não prioritária</p>
+                              {/* <p>Não prioritária</p> */}
                               <MdFlag size={40} style={{ color: 'green' }} />
                             </>
                           )}
                           {task.priority === 'neutral' && (
                             <>
-                              <p>Neutra</p>
+                              {/* <p>Neutra</p> */}
                               <MdFlag size={40} style={{ color: 'yellow' }} />
                             </>
                           )}
                           {task.priority === 'high' && (
                             <>
-                              <p>Urgente</p>
+                              {/* <p>Urgente</p> */}
                               <MdFlag size={40} style={{ color: 'red' }} />
                             </>
                           )}

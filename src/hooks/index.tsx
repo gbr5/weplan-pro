@@ -13,6 +13,7 @@ import { SignUpProvider } from './signUp';
 import { HomeControllerProvider } from './homeController';
 import { TaskProvider } from './task';
 import { CompanyEmployeeProvider } from './companyEmployee';
+import { CheckListProvider } from './checkList';
 
 const AppProvider: React.FC = ({ children }) => (
   <ThemeModeProvider>
@@ -27,9 +28,11 @@ const AppProvider: React.FC = ({ children }) => (
                     <FunnelProvider>
                       <StageCardProvider>
                         <ContactPageProvider>
-                          <HomeControllerProvider>
-                            {children}
-                          </HomeControllerProvider>
+                          <CheckListProvider>
+                            <HomeControllerProvider>
+                              {children}
+                            </HomeControllerProvider>
+                          </CheckListProvider>
                         </ContactPageProvider>
                       </StageCardProvider>
                     </FunnelProvider>
