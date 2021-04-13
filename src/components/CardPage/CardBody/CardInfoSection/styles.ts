@@ -138,7 +138,7 @@ export const CardParticipantsButton = styled.button`
 export const ButtonArrowMenu = styled.button`
   position: absolute;
   left: 8px;
-  top: -3rem;
+  top: -1.5rem;
 
   display: flex;
   align-items: center;
@@ -149,12 +149,10 @@ export const ButtonArrowMenu = styled.button`
   border: 1px solid var(--header-primary);
   border-radius: 8px;
   transition: 0.5s;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5);
 
   &:hover {
-    color: var(--header-background-color);
-    background-color: var(--header-primary);
-    border: 1px solid var(--header-background-color);
-    border-radius: 50%;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.6);
   }
 `;
 

@@ -6,7 +6,7 @@ export const Main = styled.div`
   flex-direction: column;
   height: 100%;
   /* box-sizing: border-box; */
-  width: 98vw;
+  max-width: 100vw;
   text-align: center;
   overflow-y: scroll;
 
@@ -29,10 +29,10 @@ export const ContainerMenu = styled.div`
     overflow-x: scroll;
   }
 
-  p {
+  > p {
     font-size: 20px;
-    border-bottom: 2px solid var(--header-primary);
-    background: rgba(0, 0, 0, 0.05);
+    /* border-bottom: 2px solid var(--header-primary); */
+    /* background: rgba(0, 0, 0, 0.05); */
     padding: 5px;
     height: 100%;
     border-radius: 8px;

@@ -17,7 +17,11 @@ export const BackButton = styled.button`
   background: transparent;
   border: none;
   position: absolute;
-  top: 2rem;
+  top: 5.7rem;
   left: 0;
   z-index: 2;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

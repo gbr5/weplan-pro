@@ -21,7 +21,7 @@ export const CardTitle = styled.div`
   max-width: 400px;
   align-items: center;
   justify-content: center;
-  margin: 0.4rem 1rem;
+  margin: 1rem 1rem 2rem;
 
   > h2 {
     margin: 2rem 1rem 1rem;
@@ -59,7 +59,7 @@ export const StageButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-
+  margin-bottom: 1.5rem;
   &:hover {
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
   }
