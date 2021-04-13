@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { MdAdd, MdFlag } from 'react-icons/md';
+import { MdAdd, MdCloudDone, MdFlag, MdLightbulbOutline } from 'react-icons/md';
 
+import { FiRss } from 'react-icons/fi';
 import sleepyTask from '../../../../../../assets/sleepyTask1.svg';
 import runningTask from '../../../../../../assets/runningTask1.svg';
 import doneTask from '../../../../../../assets/doneTask1.svg';
@@ -32,6 +33,7 @@ const CardCheckListContainer: React.FC<IProps> = ({
   checkList,
   getCardCheckLists,
 }: IProps) => {
+  const iconsize = 32;
   const [createCheckListTaskForm, setCreateCheckListTaskForm] = useState(false);
   const [selectedTask, setSelectedTask] = useState<ITaskDTO>({} as ITaskDTO);
   const [statusWindow, setStatusWindow] = useState(false);
@@ -96,7 +98,7 @@ const CardCheckListContainer: React.FC<IProps> = ({
               type="button"
               onClick={() => setCreateCheckListTaskForm(true)}
             >
-              <MdAdd size={24} />
+              <MdAdd size={iconsize} />
             </button>
           </CheckListHeader>
           <StatusMenuButtonContainer>
@@ -105,21 +107,21 @@ const CardCheckListContainer: React.FC<IProps> = ({
               type="button"
               onClick={handleNotStartedTasksSection}
             >
-              Não iniciadas
+              <MdLightbulbOutline size={iconsize} />
             </StatusMenuButton>
             <StatusMenuButton
               isActive={statusSection === '2'}
               type="button"
               onClick={handleInProgressTasksSection}
             >
-              Em execução
+              <FiRss size={iconsize} />
             </StatusMenuButton>
             <StatusMenuButton
               isActive={statusSection === '3'}
               type="button"
               onClick={handleFinishedTasksSection}
             >
-              Finalizadas
+              <MdCloudDone size={iconsize} />
             </StatusMenuButton>
           </StatusMenuButtonContainer>
           <Container>

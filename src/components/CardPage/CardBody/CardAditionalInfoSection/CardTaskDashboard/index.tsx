@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { MdAdd } from 'react-icons/md';
-import { FiChevronDown } from 'react-icons/fi';
+// import { MdAdd } from 'react-icons/md';
+// import { FiChevronDown } from 'react-icons/fi';
 
-import { Main, ContainerMenu } from './styles';
+import { Main } from './styles';
 import CardCheckListContainer from './CardCheckListContainer';
 import SelectCardCheckListWindow from './SelectCardCheckListWindow';
 import CreateCheckListForm from './CreateCheckListForm';
@@ -56,8 +56,8 @@ const CardTaskDashboard: React.FC = () => {
       <Main>
         {selectedCheckList.check_list && (
           <>
-            <ContainerMenu>
-              <button
+            {/* <ContainerMenu> */}
+            {/* <button
                 type="button"
                 onClick={() => setSelectCheckListWindow(true)}
               >
@@ -66,17 +66,17 @@ const CardTaskDashboard: React.FC = () => {
                   {selectedCheckList.check_list.name}
                   <FiChevronDown size={24} />
                 </strong>
-              </button>
-              <button
+              </button> */}
+            {/* <button
                 type="button"
                 onClick={() => setCreateCheckListForm(true)}
               >
-                <p>Adicionar Check List</p>
+                <p>Adicionar Tarefa</p>
                 <strong>
                   <MdAdd size={30} />
                 </strong>
-              </button>
-            </ContainerMenu>
+              </button> */}
+            {/* </ContainerMenu> */}
             <CardCheckListContainer
               checkList={selectedCheckList}
               getCardCheckLists={getCardCheckLists}

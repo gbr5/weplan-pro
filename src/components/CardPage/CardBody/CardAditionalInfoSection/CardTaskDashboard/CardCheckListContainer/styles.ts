@@ -5,7 +5,6 @@ export const Main = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-sizing: border-box;
   width: 100%;
   padding: 5px;
   text-align: center;
@@ -22,7 +21,7 @@ export const CheckListContainer = styled.div`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  padding: 0 48px;
+  padding: 0 0.5rem;
   text-align: center;
 `;
 
@@ -33,6 +32,7 @@ export const CheckListHeader = styled.div`
   width: 100%;
   text-align: center;
   position: relative;
+  margin: 1rem 0;
 
   h2 {
     width: 100%;
@@ -43,7 +43,7 @@ export const CheckListHeader = styled.div`
   button {
     position: absolute;
     top: 0;
-    right: 8px;
+    right: 0;
 
     padding: 5px;
     display: flex;
@@ -51,32 +51,28 @@ export const CheckListHeader = styled.div`
     justify-content: center;
 
     background: var(--header-primary);
-    color: var(--header-background-color);
+    color: var(--letter-color-5);
     border-radius: 50%;
-    border: 1px solid var(--header-background-color);
-    box-shadow: var(--box-shadow);
+    border: none;
+    /* border: 1px solid var(--letter-color-5); */
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
 
     transition: 0.5s;
 
     &:hover {
-      background: var(--header-background-color);
-      color: var(--header-primary);
-      border-radius: 8px;
-      border: 1px solid var(--header-primary);
-      box-shadow: var(--window-box-shadow);
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.6);
     }
   }
 `;
 
 export const StatusMenuButtonContainer = styled.strong`
-  width: 100%;
+  max-width: 100vw;
   height: 100%;
-  text-align: left;
+  margin: 0.5rem 0;
 
-  box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: stretch;
 `;
 
 interface IStatusButtonProps {
@@ -84,15 +80,17 @@ interface IStatusButtonProps {
 }
 
 export const StatusMenuButton = styled.button<IStatusButtonProps>`
-  margin: 5px auto;
   background: var(--title-color);
   border-radius: 5px;
   border: none;
-  opacity: 0.6;
   transition: 0.3s;
   padding: 5px;
   font-size: 24px;
   color: var(--letter-color-4);
+  height: 3rem;
+  width: 6rem;
+  margin: 0 0.5rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   &:hover {
     opacity: 1;
@@ -109,7 +107,6 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
       border: 1px solid var(--header-background-color);
 
       &:hover {
-        opacity: 0.5;
         border: 1px solid var(--title-color);
       }
     `}
@@ -118,6 +115,7 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
 export const Container = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 20rem;
   text-align: left;
 
   box-sizing: border-box;
@@ -127,9 +125,7 @@ export const Container = styled.div`
   justify-content: stretch;
   background: var(--header-background-color);
   border-radius: 8px;
-  padding: 8px;
-  /* margin-left: 80px; */
-  gap: 5px;
+  padding: 0.5rem;
   overflow-y: scroll;
 `;
 

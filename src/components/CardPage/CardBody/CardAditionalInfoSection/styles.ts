@@ -3,9 +3,10 @@ import '../../../../styles/global';
 
 export const MenuHeader = styled.div`
   display: flex;
-  height: 50px;
+  height: 5rem;
   max-width: 100vw;
   border-bottom: 1px solid var(--letter-color-4);
+  padding: 0.8rem;
 
   @media (max-width: 1100px) {
     overflow-x: scroll;
