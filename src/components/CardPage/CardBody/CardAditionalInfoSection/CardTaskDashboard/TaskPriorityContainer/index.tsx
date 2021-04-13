@@ -1,6 +1,7 @@
-import React, { MouseEventHandler, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { MdFlag } from 'react-icons/md';
-import ITasks from '../../../../../../dtos/ITaskDTO';
+import { useCheckList } from '../../../../../../hooks/checkList';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 import { useToast } from '../../../../../../hooks/toast';
 import api from '../../../../../../services/api';
 import WindowContainer from '../../../../../WindowContainer';
@@ -8,81 +9,70 @@ import WindowContainer from '../../../../../WindowContainer';
 import { Container, PriorityButton } from './styles';
 
 interface IProps {
-  task: ITasks;
-  getEmployeeTasks: Function;
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
+  closeWindow: Function;
 }
 
-const TaskPriorityContainer: React.FC<IProps> = ({
-  task,
-  getEmployeeTasks,
-  onHandleCloseWindow,
-  handleCloseWindow,
-}: IProps) => {
+const TaskPriorityContainer: React.FC<IProps> = ({ closeWindow }: IProps) => {
+  const iconsize = 32;
   const { addToast } = useToast();
+  const { selectedTask } = useCheckList();
+  const { getCardCheckLists } = useStageCard();
 
   const updateEmployeeTaskPriority = useCallback(
     async priority => {
       try {
-        await api.put(`check-lists/tasks/edit/priority/${task.id}`, {
+        await api.put(`check-lists/tasks/edit/priority/${selectedTask.id}`, {
           priority,
         });
-        getEmployeeTasks();
-        handleCloseWindow();
+        getCardCheckLists();
+        closeWindow();
         addToast({
           type: 'success',
           title: 'Tarefa atualizada com sucesso',
-          description:
-            'Você já pode visualizar as alterações no seu dashboard.',
         });
       } catch (err) {
         throw new Error(err);
       }
     },
-    [getEmployeeTasks, addToast, task, handleCloseWindow],
+    [getCardCheckLists, addToast, selectedTask, closeWindow],
   );
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 15,
-        top: '30%',
-        left: '10%',
-        width: '80%',
-        height: '20%',
+        top: '25%',
+        left: '5%',
+        width: '90%',
+        height: '50%',
       }}
     >
       <Container>
         <h2>Prioridade da tarefa</h2>
-        <div>
+        <span>
           <PriorityButton
             onClick={() => updateEmployeeTaskPriority('low')}
             type="button"
           >
             Baixa
-            <MdFlag style={{ color: 'green' }} />
+            <MdFlag size={iconsize} style={{ color: 'green' }} />
           </PriorityButton>
-        </div>
-        <div>
           <PriorityButton
             onClick={() => updateEmployeeTaskPriority('neutral')}
             type="button"
           >
             Moderada
-            <MdFlag style={{ color: 'yellow' }} />
+            <MdFlag size={iconsize} style={{ color: 'yellow' }} />
           </PriorityButton>
-        </div>
-        <div>
           <PriorityButton
             onClick={() => updateEmployeeTaskPriority('high')}
             type="button"
           >
             Alta
-            <MdFlag style={{ color: 'red' }} />
+            <MdFlag size={iconsize} style={{ color: 'red' }} />
           </PriorityButton>
-        </div>
+        </span>
       </Container>
     </WindowContainer>
   );
