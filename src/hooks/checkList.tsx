@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 import ICheckListDTO from '../dtos/ICheckListDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
+
 // import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ITaskDTO from '../dtos/ITaskDTO';
 import api from '../services/api';
@@ -16,6 +17,7 @@ interface ICheckListContextData {
   taskDueDate: string;
   taskPriorityTypes: ICheckBoxOptionDTO[];
   taskStatusTypes: ICheckBoxOptionDTO[];
+  taskStatusIconTypes: ICheckBoxOptionDTO[];
   selectedCheckList: ICheckListDTO;
   selectedTask: ITaskDTO;
   selectTaskName(task: string): void;
@@ -145,10 +147,16 @@ const CheckListProvider: React.FC = ({ children }) => {
     { id: '2', value: '2', label: 'Em Progresso' },
     { id: '3', value: '3', label: 'Concluída' },
   ];
+  const taskStatusIconTypes: ICheckBoxOptionDTO[] = [
+    { id: '1', value: '1', label: 'sleepyTask' },
+    { id: '2', value: '2', label: 'runningTask' },
+    { id: '3', value: '3', label: 'doneTask' },
+  ];
 
   return (
     <CheckListContext.Provider
       value={{
+        taskStatusIconTypes,
         taskName,
         selectTaskName,
         taskPriority,

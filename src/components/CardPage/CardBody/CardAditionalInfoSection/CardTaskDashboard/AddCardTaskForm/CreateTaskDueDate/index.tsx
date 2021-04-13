@@ -7,6 +7,7 @@ import { useCheckList } from '../../../../../../../hooks/checkList';
 import Input from '../../../../../../Input';
 import formatOnlyDate from '../../../../../../../utils/formatOnlyDate';
 import Button from '../../../../../../Button';
+import transformBRLDateToDate from '../../../../../../../utils/transformBRLDateToDate';
 
 interface IFormParams {
   due_date: string;
@@ -21,8 +22,9 @@ const CreateTaskDueDate: React.FC<IProps> = ({ nextStep }: IProps) => {
   const { selectTaskDueDate } = useCheckList();
   const handleSubmit = useCallback(
     (e: IFormParams) => {
-      selectTaskDueDate(e.due_date);
-      nextStep(e.due_date);
+      const tryDate = String(transformBRLDateToDate(`04:05T${e.due_date}`));
+      selectTaskDueDate(tryDate);
+      nextStep(tryDate);
     },
     [nextStep, selectTaskDueDate],
   );

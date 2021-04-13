@@ -1,5 +1,4 @@
-import React, { MouseEventHandler, useCallback } from 'react';
-import ITasks from '../../../../../../dtos/ITaskDTO';
+import React, { useCallback } from 'react';
 import { useToast } from '../../../../../../hooks/toast';
 import api from '../../../../../../services/api';
 import WindowContainer from '../../../../../WindowContainer';
@@ -9,57 +8,51 @@ import runningTask from '../../../../../../assets/runningTask1.svg';
 import doneTask from '../../../../../../assets/doneTask1.svg';
 
 import { Container, StatusButton } from './styles';
+import { useCheckList } from '../../../../../../hooks/checkList';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 
 interface IProps {
-  task: ITasks;
-  getEmployeeTasks: Function;
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
+  closeWindow: Function;
 }
 
-const TaskStatusContainer: React.FC<IProps> = ({
-  task,
-  getEmployeeTasks,
-  onHandleCloseWindow,
-  handleCloseWindow,
-}: IProps) => {
+const TaskStatusContainer: React.FC<IProps> = ({ closeWindow }: IProps) => {
   const { addToast } = useToast();
+  const { selectedTask } = useCheckList();
+  const { getCardCheckLists } = useStageCard();
 
   const updateEmployeeTaskStatus = useCallback(
     async status => {
       try {
-        await api.put(`check-lists/tasks/edit/status/${task.id}`, {
+        await api.put(`check-lists/tasks/edit/status/${selectedTask.id}`, {
           status,
         });
-        getEmployeeTasks();
-        handleCloseWindow();
+        getCardCheckLists();
+        closeWindow();
         addToast({
           type: 'success',
           title: 'Tarefa atualizada com sucesso',
-          description:
-            'Você já pode visualizar as alterações no seu dashboard.',
         });
       } catch (err) {
         throw new Error(err);
       }
     },
-    [getEmployeeTasks, addToast, task, handleCloseWindow],
+    [getCardCheckLists, addToast, selectedTask, closeWindow],
   );
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 15,
-        top: '30%',
-        left: '10%',
-        width: '80%',
-        height: '20%',
+        top: '25%',
+        left: '5%',
+        width: '90%',
+        height: '50%',
       }}
     >
       <Container>
         <h2>Status da Tarefa</h2>
-        <div>
+        <span>
           <StatusButton
             onClick={() => updateEmployeeTaskStatus('1')}
             type="button"
@@ -67,8 +60,6 @@ const TaskStatusContainer: React.FC<IProps> = ({
             Não iniciada
             <img src={sleepyTask} alt="Sleepy Task - We Plan" />
           </StatusButton>
-        </div>
-        <div>
           <StatusButton
             onClick={() => updateEmployeeTaskStatus('2')}
             type="button"
@@ -76,8 +67,6 @@ const TaskStatusContainer: React.FC<IProps> = ({
             Em execução
             <img src={runningTask} alt="Running Task - We Plan" />
           </StatusButton>
-        </div>
-        <div>
           <StatusButton
             onClick={() => updateEmployeeTaskStatus('3')}
             type="button"
@@ -85,7 +74,7 @@ const TaskStatusContainer: React.FC<IProps> = ({
             Finalizada
             <img src={doneTask} alt="Done Task - We Plan" />
           </StatusButton>
-        </div>
+        </span>
       </Container>
     </WindowContainer>
   );
