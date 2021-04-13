@@ -56,7 +56,7 @@ const NotesContainer: React.FC<IProps> = ({
       <footer>
         <strong>{formatHourDateShort(String(cardNote.created_at))}</strong>
         {cardNote.user_id !== employee.employeeUser.id ? (
-          <strong>{author}</strong>
+          <strong>{author.name}</strong>
         ) : (
           <strong>Você enviou</strong>
         )}

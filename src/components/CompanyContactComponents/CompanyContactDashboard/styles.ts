@@ -5,8 +5,7 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   display: block;
-  padding: 5px;
-  margin: 2rem auto;
+  padding: 5rem 0.5rem 2rem;
   align-items: center;
   /* box-sizing: border-box; */
 
@@ -29,7 +28,7 @@ interface IButtonProps {
   isActive: boolean;
 }
 
-export const MenuButton = styled.button<IButtonProps>`
+export const ContactMenuButton = styled.button<IButtonProps>`
   height: 2.5rem;
   min-width: 8rem;
   margin: 0.5rem;

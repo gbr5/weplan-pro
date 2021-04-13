@@ -11,6 +11,7 @@ export const Container = styled.header`
   display: flex;
   align-items: center;
   min-height: 4rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   > h1 {
     margin-right: 20px;

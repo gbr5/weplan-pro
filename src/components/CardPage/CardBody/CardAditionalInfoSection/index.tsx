@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
 
-import { Container, MenuHeader, MenuLine, MenuBooleanButton } from './styles';
+import { Container, MenuHeader, MenuBooleanButton } from './styles';
 
 const CardAditionalInfoSection: React.FC = () => {
   const [taskSection, setTaskSection] = useState(false);
@@ -54,7 +54,6 @@ const CardAditionalInfoSection: React.FC = () => {
           >
             Tarefas
           </MenuBooleanButton>
-          <MenuLine />
           <MenuBooleanButton
             type="button"
             isActive={!!notesSection}
@@ -62,7 +61,6 @@ const CardAditionalInfoSection: React.FC = () => {
           >
             Anotações
           </MenuBooleanButton>
-          <MenuLine />
           <MenuBooleanButton
             type="button"
             isActive={!!historySection}
@@ -70,7 +68,6 @@ const CardAditionalInfoSection: React.FC = () => {
           >
             Histórico
           </MenuBooleanButton>
-          <MenuLine />
           <MenuBooleanButton
             type="button"
             isActive={!!appointmentsSection}
@@ -78,7 +75,6 @@ const CardAditionalInfoSection: React.FC = () => {
           >
             Reuniões
           </MenuBooleanButton>
-          <MenuLine />
           <MenuBooleanButton
             type="button"
             isActive={!!filesSection}

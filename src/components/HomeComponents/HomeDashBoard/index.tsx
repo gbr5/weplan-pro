@@ -10,6 +10,8 @@ import {
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useFunnel } from '../../../hooks/funnel';
 import { useHomeController } from '../../../hooks/homeController';
+import Header from '../../Header';
+import MenuButton from '../../MenuButton';
 
 import { Container, IconContainer, Icon } from './styles';
 
@@ -31,6 +33,8 @@ const HomeDashboard: React.FC = () => {
 
   return (
     <Container>
+      <Header />
+      <MenuButton />
       <IconContainer type="button" onClick={selectComercialKanban}>
         <Icon>
           <FiUserCheck size={iconsize} />

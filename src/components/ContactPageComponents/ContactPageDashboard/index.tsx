@@ -2,6 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import IContactPageDTO from '../../../dtos/IContactPageDTO';
 import { useContactPage } from '../../../hooks/contactPages';
+import Header from '../../Header';
+import MenuButton from '../../MenuButton';
 import AddContactPage from '../AddContactPage';
 import ContactPage from '../ContactPage';
 import UpdatePageImage from '../UpdatePageImage';
@@ -44,43 +46,50 @@ const ContactPageDashboard: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      {uploadontactPageMainImage && (
-        <UpdatePageImage closeWindow={closeUploadContactPageMainImage} />
-      )}
-      {contactPageWindow && (
-        <ContactPage closeWindow={closeContactPageWindow} />
-      )}
-      {addContactPageWindow && (
-        <AddContactPage
-          handleUploadContactPageMainImage={(e: IContactPageDTO) =>
-            handleUploadContactPageMainImage(e)
-          }
-          closeWindow={() => handleAddContactPageWindow(false)}
-        />
-      )}
-      <span>
-        <h1>Páginas de Contato</h1>
-        <button type="button" onClick={() => handleAddContactPageWindow(true)}>
-          <MdAdd size={28} />
-        </button>
-      </span>
+    <>
+      <Header />
+      <MenuButton />
+      <Container>
+        {uploadontactPageMainImage && (
+          <UpdatePageImage closeWindow={closeUploadContactPageMainImage} />
+        )}
+        {contactPageWindow && (
+          <ContactPage closeWindow={closeContactPageWindow} />
+        )}
+        {addContactPageWindow && (
+          <AddContactPage
+            handleUploadContactPageMainImage={(e: IContactPageDTO) =>
+              handleUploadContactPageMainImage(e)
+            }
+            closeWindow={() => handleAddContactPageWindow(false)}
+          />
+        )}
+        <span>
+          <h1>Páginas de Contato</h1>
+          <button
+            type="button"
+            onClick={() => handleAddContactPageWindow(true)}
+          >
+            <MdAdd size={28} />
+          </button>
+        </span>
 
-      <ListContainer>
-        {currentContactPages.map(page => {
-          return (
-            <PageSection
-              onClick={() => handleContactPageWindow(page)}
-              type="button"
-              key={page.id}
-            >
-              <img src={page.main_image_url} alt={page.title} />
-              <strong>{page.title}</strong>
-            </PageSection>
-          );
-        })}
-      </ListContainer>
-    </Container>
+        <ListContainer>
+          {currentContactPages.map(page => {
+            return (
+              <PageSection
+                onClick={() => handleContactPageWindow(page)}
+                type="button"
+                key={page.id}
+              >
+                <img src={page.main_image_url} alt={page.title} />
+                <strong>{page.title}</strong>
+              </PageSection>
+            );
+          })}
+        </ListContainer>
+      </Container>
+    </>
   );
 };
 

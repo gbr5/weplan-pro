@@ -8,8 +8,7 @@ export const Container = styled.div`
   align-items: center;
 
   gap: 1rem;
-  margin-top: 1rem;
-  padding: 0 1rem;
+  padding: 5rem 1rem 0;
 
   span {
     display: flex;

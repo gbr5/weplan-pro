@@ -4,6 +4,7 @@ import IEmployeeDTO from '../../../dtos/IEmployeeDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import WindowContainer from '../../WindowContainer';
+import CompanyEmployeeContactFamilyName from './CompanyEmployeeContactFamilyName';
 import CompanyEmployeeContactName from './CompanyEmployeeContactName';
 
 import { Container, EmployeeHeader, SubContainer } from './styles';
@@ -46,11 +47,9 @@ const EmployeeWindow: React.FC<IProps> = ({ closeWindow }) => {
           </section>
           <section>
             <strong>Sobrenome</strong>
-            <p>
-              {selectedContact &&
-                selectedContact.id &&
-                selectedContact.family_name}
-            </p>
+            {selectedContact && selectedContact.id && (
+              <CompanyEmployeeContactFamilyName />
+            )}
           </section>
         </SubContainer>
       </Container>

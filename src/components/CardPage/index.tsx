@@ -22,15 +22,17 @@ const CardPage: React.FC = () => {
   }, [history, selectedFunnel, selectPage]);
 
   return (
-    <Container>
+    <>
       <Header />
-      <BackButton type="button" onClick={navigateBack}>
-        <FiChevronLeft size={55} />
-      </BackButton>
-      <CardHeader />
-      <CardBody />
       <MenuButton />
-    </Container>
+      <Container>
+        <BackButton type="button" onClick={navigateBack}>
+          <FiChevronLeft size={55} />
+        </BackButton>
+        <CardHeader />
+        <CardBody />
+      </Container>
+    </>
   );
 };
 

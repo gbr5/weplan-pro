@@ -71,11 +71,7 @@ const CardHeader: React.FC = () => {
           <FiChevronRight size={iconsize} />
         </StageButton>
       ) : (
-        <>
-          <CardFunnelStageMenu
-            closeComponent={() => handleUpdateStage(false)}
-          />
-        </>
+        <CardFunnelStageMenu closeComponent={() => handleUpdateStage(false)} />
       )}
     </Container>
   );

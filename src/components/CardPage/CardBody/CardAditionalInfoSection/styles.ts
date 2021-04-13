@@ -3,8 +3,8 @@ import '../../../../styles/global';
 
 export const MenuHeader = styled.div`
   display: flex;
-  width: 98vw;
   height: 50px;
+  max-width: 100vw;
   border-bottom: 1px solid var(--letter-color-4);
 
   @media (max-width: 1100px) {
@@ -12,21 +12,18 @@ export const MenuHeader = styled.div`
   }
 `;
 
-export const MenuLine = styled.span`
-  width: 1px;
-  margin: 0 auto;
-  background: var(--letter-color-4);
-`;
-
 interface IButtonProps {
   isActive: boolean;
 }
 
 export const MenuBooleanButton = styled.button<IButtonProps>`
-  background: transparent;
+  background: var(--letter-color-4);
+  color: var(--letter-color-1);
   border: none;
   height: 100%;
-  width: 100%;
+  min-width: 8rem;
+  border-radius: 8px;
+  margin: 0 0.5rem;
 
   &:hover {
     opacity: 0.8;

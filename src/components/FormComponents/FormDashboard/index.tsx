@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import IFormDTO from '../../../dtos/IFormDTO';
 import { useForm } from '../../../hooks/form';
+import Header from '../../Header';
+import MenuButton from '../../MenuButton';
 import AddCompanyForm from '../AddCompanyForm';
 import FormWindow from '../FormWindow';
 
@@ -58,6 +60,8 @@ const FormDashboard: React.FC = () => {
         <AddCompanyForm handleCloseWindow={() => handleAddForm(false)} />
       )}
       <Container>
+        <Header />
+        <MenuButton />
         <span>
           <h2>Formulários de contato</h2>
           <button type="button" onClick={() => handleAddForm(true)}>

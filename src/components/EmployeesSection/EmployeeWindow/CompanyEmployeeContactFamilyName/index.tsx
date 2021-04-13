@@ -3,11 +3,14 @@ import { MdEdit } from 'react-icons/md';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
 import InlineFormField from '../../../GeneralComponents/InlineFormField';
 
-import { Container } from './styles';
+import { Container, FieldContainer } from './styles';
 
-const CompanyEmployeeContactName: React.FC = () => {
+const CompanyEmployeeContactFamilyName: React.FC = () => {
   const [editField, setEditField] = useState(false);
-  const { updateCompanyContactName, selectedContact } = useCompanyContact();
+  const {
+    updateCompanyContactFamilyName,
+    selectedContact,
+  } = useCompanyContact();
   const handleEditField = useCallback((e: boolean) => {
     setEditField(e);
   }, []);
@@ -15,10 +18,10 @@ const CompanyEmployeeContactName: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (e: string) => {
-      const response = await updateCompanyContactName(e);
+      const response = await updateCompanyContactFamilyName(e);
       setContact(response);
     },
-    [updateCompanyContactName],
+    [updateCompanyContactFamilyName],
   );
 
   return (
@@ -28,20 +31,20 @@ const CompanyEmployeeContactName: React.FC = () => {
         (editField ? (
           <InlineFormField
             closeComponent={() => handleEditField(false)}
-            defaultValue={contact.name}
+            defaultValue={contact.family_name}
             handleOnSubmit={(e: string) => handleSubmit(e)}
-            placeholder={contact.name}
+            placeholder={contact.family_name}
           />
         ) : (
-          <>
+          <FieldContainer>
             <button type="button" onClick={() => handleEditField(true)}>
               <MdEdit size={20} />
             </button>
-            <p>{contact.name}</p>
-          </>
+            <p>{contact.family_name}</p>
+          </FieldContainer>
         ))}
     </Container>
   );
 };
 
-export default CompanyEmployeeContactName;
+export default CompanyEmployeeContactFamilyName;

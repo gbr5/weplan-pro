@@ -21,5 +21,13 @@ export const SubContainer = styled.div`
   padding: 1rem;
 
   > section {
+    display: block;
+    width: 100%;
+    margin: 1rem 0;
+
+    > strong {
+      line-height: 2rem;
+      font-size: 1.2rem;
+    }
   }
 `;
