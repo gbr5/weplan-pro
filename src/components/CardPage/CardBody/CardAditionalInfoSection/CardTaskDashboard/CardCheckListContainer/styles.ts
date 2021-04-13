@@ -8,6 +8,7 @@ export const Main = styled.div`
   width: 100%;
   padding: 5px;
   text-align: center;
+  margin-bottom: 2rem;
 
   h2 {
     width: 100%;
@@ -104,7 +105,6 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
       background-color: var(--header-primary);
       opacity: 1;
       transition: 0.25s;
-      border: 1px solid var(--header-background-color);
 
       &:hover {
         border: 1px solid var(--title-color);

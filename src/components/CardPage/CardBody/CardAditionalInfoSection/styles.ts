@@ -7,6 +7,7 @@ export const MenuHeader = styled.div`
   max-width: 100vw;
   border-bottom: 1px solid var(--letter-color-4);
   padding: 0.8rem;
+  margin-top: 0.7rem;
 
   @media (max-width: 1100px) {
     overflow-x: scroll;
@@ -25,11 +26,11 @@ export const MenuBooleanButton = styled.button<IButtonProps>`
   min-width: 8rem;
   border-radius: 8px;
   margin: 0 0.5rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: 1.2rem;
 
   &:hover {
-    opacity: 0.8;
-    font-weight: 500;
-    background: var(--title-color);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.35);
   }
 
   ${props =>

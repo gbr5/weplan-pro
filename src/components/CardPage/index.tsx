@@ -27,7 +27,7 @@ const CardPage: React.FC = () => {
       <MenuButton />
       <Container>
         <BackButton type="button" onClick={navigateBack}>
-          <FiChevronLeft size={55} />
+          <FiChevronLeft size={55} /> Voltar
         </BackButton>
         <CardHeader />
         <CardBody />
