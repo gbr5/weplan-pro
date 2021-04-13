@@ -3,6 +3,7 @@ import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
+import { useFunnel } from '../../hooks/funnel';
 import { useHomeController } from '../../hooks/homeController';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
@@ -17,6 +18,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
   const { selectedCard, selectCard, getCards } = useStageCard();
   const { selectPage } = useHomeController();
   const { employeeModules } = useManagementModule();
+  const { selectedFunnel } = useFunnel();
   const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
 
   const handleSelectPage = useCallback(() => {
@@ -33,7 +35,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
 
   useEffect(() => {
     const moduleAccessLevel = employeeModules.find(
-      module => module.management_module === stage.name,
+      module => module.management_module === selectedFunnel.name,
     );
 
     getCards({
@@ -44,7 +46,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
         setStageCards(response);
       }
     });
-  }, [getCards, stage, employeeModules]);
+  }, [getCards, stage, selectedFunnel, employeeModules]);
 
   return (
     <Container>
