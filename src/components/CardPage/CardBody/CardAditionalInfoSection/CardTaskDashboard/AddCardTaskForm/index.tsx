@@ -81,9 +81,9 @@ const AddCardTaskForm: React.FC<IProps> = ({
       onHandleCloseWindow={onHandleCloseWindow}
       containerStyle={{
         zIndex: 10,
-        top: '25%',
+        top: '15%',
         left: '2.5%',
-        height: '50%',
+        height: '70%',
         width: '95%',
       }}
     >
