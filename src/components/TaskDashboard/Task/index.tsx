@@ -22,9 +22,10 @@ import TaskSettings from '../../CardPage/CardBody/CardAditionalInfoSection/CardT
 interface IProps {
   backgroundColor: string;
   task: ITaskDTO;
+  update: Function;
 }
 
-const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
+const Task: React.FC<IProps> = ({ task, backgroundColor, update }) => {
   const iconsize = 40;
   const { selectTask, selectedTask } = useCheckList();
   const [statusIcon, setStatusIcon] = useState(sleepyTask);
@@ -69,13 +70,22 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
   return (
     <>
       {settingsWindow && selectedTask && (
-        <TaskSettings closeWindow={() => handleCloseWindows()} />
+        <TaskSettings
+          update={update}
+          closeWindow={() => handleCloseWindows()}
+        />
       )}
       {priorityWindow && selectedTask && (
-        <TaskPriorityContainer closeWindow={() => handleCloseWindows()} />
+        <TaskPriorityContainer
+          update={update}
+          closeWindow={() => handleCloseWindows()}
+        />
       )}
       {statusWindow && selectedTask && (
-        <TaskStatusContainer closeWindow={() => handleCloseWindows()} />
+        <TaskStatusContainer
+          update={update}
+          closeWindow={() => handleCloseWindows()}
+        />
       )}
       <Container style={{ background: backgroundColor }}>
         <h3>{task.task}</h3>

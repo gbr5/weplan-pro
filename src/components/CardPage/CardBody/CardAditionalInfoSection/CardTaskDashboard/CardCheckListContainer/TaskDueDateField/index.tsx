@@ -6,7 +6,11 @@ import CreateTaskDueDate from '../../AddCardTaskForm/CreateTaskDueDate';
 
 import { Container } from './styles';
 
-const TaskDueDateField: React.FC = () => {
+interface IProps {
+  update: Function;
+}
+
+const TaskDueDateField: React.FC<IProps> = ({ update }) => {
   const { selectedTask, updateTask } = useCheckList();
 
   const [editField, setEditField] = useState(false);
@@ -21,8 +25,9 @@ const TaskDueDateField: React.FC = () => {
         ...selectedTask,
         due_date,
       });
+      update();
     },
-    [updateTask, selectedTask],
+    [updateTask, update, selectedTask],
   );
   return (
     <Container>

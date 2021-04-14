@@ -1,55 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import api from '../../../services/api';
 import Task from '../Task';
 
 import { Container, Main } from './styles';
-import { useEmployeeAuth } from '../../../hooks/employeeAuth';
-import ITaskDTO from '../../../dtos/ITaskDTO';
 import TaskStatusMenu from '../TaskStatusMenu';
+import { useCheckList } from '../../../hooks/checkList';
 
 const AllTasksSection: React.FC = () => {
-  const { employee } = useEmployeeAuth();
-
-  const [employeeNotStartedTasks, setEmployeeNotStartedTasks] = useState<
-    ITaskDTO[]
-  >([]);
-  const [employeeInProgressTasks, setEmployeeInProgressTasks] = useState<
-    ITaskDTO[]
-  >([]);
-  const [employeeFinishedTasks, setEmployeeFinishedTasks] = useState<
-    ITaskDTO[]
-  >([]);
-  const [statusSection, setStatusSection] = useState('2');
-
-  const getEmployeeTasks = useCallback(() => {
-    try {
-      employee &&
-        employee.company &&
-        employee.employeeUser &&
-        api
-          .get<ITaskDTO[]>(
-            `check-lists/tasks/${employee.company.id}/${employee.employeeUser.id}`,
-          )
-          .then(response => {
-            const activeTasks = response.data.filter(task => task.isActive);
-            setEmployeeNotStartedTasks(
-              activeTasks.filter(task => task.status === '1'),
-            );
-            setEmployeeInProgressTasks(
-              activeTasks.filter(task => task.status === '2'),
-            );
-            setEmployeeFinishedTasks(
-              activeTasks.filter(task => task.status === '3'),
-            );
-          });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [employee]);
+  const {
+    getEmployeeTasks,
+    employeeFinishedTasks,
+    employeeInProgressTasks,
+    employeeNotStartedTasks,
+  } = useCheckList();
 
   useEffect(() => {
     getEmployeeTasks();
   }, [getEmployeeTasks]);
+  const [statusSection, setStatusSection] = useState('2');
 
   const handleTaskStatusSection = useCallback((e: string) => {
     setStatusSection(e);
@@ -89,15 +56,32 @@ const AllTasksSection: React.FC = () => {
       <Container>
         {statusSection === '1' &&
           employeeNotStartedTasks.map(task => {
-            return <Task key={task.id} backgroundColor="#ebf8ff" task={task} />;
+            return (
+              <Task
+                update={getEmployeeTasks}
+                key={task.id}
+                backgroundColor="#ebf8ff"
+                task={task}
+              />
+            );
           })}
         {statusSection === '2' &&
           employeeInProgressTasks.map(task => (
-            <Task key={task.id} backgroundColor="#fddede" task={task} />
+            <Task
+              update={getEmployeeTasks}
+              key={task.id}
+              backgroundColor="#fddede"
+              task={task}
+            />
           ))}
         {statusSection === '3' &&
           employeeFinishedTasks.map(task => (
-            <Task key={task.id} backgroundColor="#e6fffa" task={task} />
+            <Task
+              update={getEmployeeTasks}
+              key={task.id}
+              backgroundColor="#e6fffa"
+              task={task}
+            />
           ))}
       </Container>
     </Main>

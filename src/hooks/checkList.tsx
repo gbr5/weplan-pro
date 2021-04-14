@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 import ICheckListDTO from '../dtos/ICheckListDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
@@ -6,11 +12,13 @@ import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 // import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ITaskDTO from '../dtos/ITaskDTO';
 import api from '../services/api';
+import formatHourDateShort from '../utils/formatHourDateShort';
 import { useEmployeeAuth } from './employeeAuth';
-import { useStageCard } from './stageCard';
 import { useToast } from './toast';
 
 interface ICheckListContextData {
+  selectedDate: Date;
+  dayTasks: ITaskDTO[];
   taskName: string;
   taskPriority: string;
   taskStatus: string;
@@ -20,6 +28,12 @@ interface ICheckListContextData {
   taskStatusIconTypes: ICheckBoxOptionDTO[];
   selectedCheckList: ICheckListDTO;
   selectedTask: ITaskDTO;
+  employeeNotStartedTasks: ITaskDTO[];
+  employeeInProgressTasks: ITaskDTO[];
+  employeeFinishedTasks: ITaskDTO[];
+  updateEmployeeTaskIsActive(data: ITaskDTO): void;
+  selectTaskDate(date: Date): void;
+  getEmployeeTasksByDate(): void;
   selectTaskName(task: string): void;
   selectTaskPriority(data: string): void;
   selectTaskStatus(data: string): void;
@@ -28,9 +42,8 @@ interface ICheckListContextData {
   updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
   selectTask(data: ITaskDTO): void;
-  getCheckList(id: string): void;
-  getTask(id: string): void;
   deleteTask(id: string): void;
+  getEmployeeTasks(): void;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -39,7 +52,6 @@ const CheckListContext = createContext<ICheckListContextData>(
 
 const CheckListProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
-  const { getCardCheckLists } = useStageCard();
   const { addToast } = useToast();
   const [selectedCheckList, setSelectedCheckList] = useState(
     {} as ICheckListDTO,
@@ -49,6 +61,95 @@ const CheckListProvider: React.FC = ({ children }) => {
   const [taskPriority, setTaskPriority] = useState('');
   const [taskStatus, setTaskStatus] = useState('');
   const [taskDueDate, setTaskDueDate] = useState('');
+  const [dayTasks, setDayTasks] = useState<ITaskDTO[]>([]);
+  const [employeeNotStartedTasks, setEmployeeNotStartedTasks] = useState<
+    ITaskDTO[]
+  >([]);
+  const [employeeInProgressTasks, setEmployeeInProgressTasks] = useState<
+    ITaskDTO[]
+  >([]);
+  const [employeeFinishedTasks, setEmployeeFinishedTasks] = useState<
+    ITaskDTO[]
+  >([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const getEmployeeTasks = useCallback(() => {
+    try {
+      employee &&
+        employee.company &&
+        employee.employeeUser &&
+        api
+          .get<ITaskDTO[]>(
+            `check-lists/tasks/${employee.company.id}/${employee.employeeUser.id}`,
+          )
+          .then(response => {
+            const activeTasks = response.data.filter(task => task.isActive);
+            setEmployeeNotStartedTasks(
+              activeTasks.filter(task => task.status === '1'),
+            );
+            setEmployeeInProgressTasks(
+              activeTasks.filter(task => task.status === '2'),
+            );
+            setEmployeeFinishedTasks(
+              activeTasks.filter(task => task.status === '3'),
+            );
+          });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [employee]);
+
+  const getEmployeeTasksByDate = useCallback(() => {
+    employee &&
+      employee.company &&
+      employee.employeeUser &&
+      api
+        .get<ITaskDTO[]>(
+          `/check-lists/tasks/${employee.company.id}/${employee.employeeUser.id}`,
+          {
+            params: {
+              year: selectedDate.getFullYear(),
+              month: selectedDate.getMonth() + 1,
+              day: selectedDate.getDate(),
+            },
+          },
+        )
+        .then(response => {
+          console.log(response.data);
+          setDayTasks(response.data);
+        });
+  }, [selectedDate, employee]);
+
+  const selectTaskDate = useCallback((date: Date) => {
+    setSelectedDate(date);
+  }, []);
+
+  const updateEmployeeTaskIsActive = useCallback(
+    async (task: ITaskDTO) => {
+      try {
+        await api.put(`check-lists/tasks/edit/${task.id}`, {
+          task: task.task,
+          color: task.color,
+          isActive: !task.isActive,
+          priority: task.priority,
+          status: task.status,
+          due_date: task.due_date,
+        });
+        getEmployeeTasksByDate();
+        getEmployeeTasks();
+        addToast({
+          type: 'success',
+          title: 'Tarefa atualizada com sucesso',
+          description:
+            'Você já pode visualizar as alterações no seu dashboard.',
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getEmployeeTasksByDate, getEmployeeTasks, addToast],
+  );
+
   const selectTask = useCallback((data: ITaskDTO) => {
     setSelectedTask(data);
   }, []);
@@ -67,22 +168,6 @@ const CheckListProvider: React.FC = ({ children }) => {
   const selectCheckList = useCallback((data: ICheckListDTO) => {
     setSelectedCheckList(data);
   }, []);
-  const getCheckList = useCallback(async (id: string) => {
-    try {
-      const response = await api.get<ICheckListDTO>(`/ /${id}`);
-      setSelectedCheckList(response.data);
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, []);
-  const getTask = useCallback(async (id: string) => {
-    try {
-      const response = await api.get<ITaskDTO>(`/ /${id}`);
-      setSelectedTask(response.data);
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, []);
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
       try {
@@ -94,9 +179,8 @@ const CheckListProvider: React.FC = ({ children }) => {
           priority: data.priority,
           due_date: data.due_date,
         });
-        getTask(data.id);
-        getCheckList(data.check_list_id);
         setSelectedTask(response.data);
+        getEmployeeTasks();
         addToast({
           type: 'success',
           title: 'Tarefa adicionada com sucesso!',
@@ -111,14 +195,13 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCheckList, getTask, addToast],
+    [addToast, getEmployeeTasks],
   );
   const deleteTask = useCallback(
     async (id: string) => {
       try {
-        console.log({ id });
         await api.put(`/check-lists/tasks/edit/is-active/${id}`);
-        getCheckList(selectedCheckList.id);
+        getEmployeeTasks();
         addToast({
           type: 'success',
           title: 'Tarefa deletada com sucesso!',
@@ -132,7 +215,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCheckList, selectedCheckList, addToast],
+    [addToast, getEmployeeTasks],
   );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
@@ -149,7 +232,7 @@ const CheckListProvider: React.FC = ({ children }) => {
             due_date: data.due_date,
           },
         );
-        getCardCheckLists();
+        getEmployeeTasks();
         setSelectedTask(response.data);
         addToast({
           type: 'success',
@@ -164,7 +247,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [employee, addToast, taskName, taskPriority, taskStatus, getCardCheckLists],
+    [employee, getEmployeeTasks, addToast, taskName, taskPriority, taskStatus],
   );
 
   const taskPriorityTypes: ICheckBoxOptionDTO[] = [
@@ -183,9 +266,31 @@ const CheckListProvider: React.FC = ({ children }) => {
     { id: '3', value: '3', label: 'doneTask' },
   ];
 
+  useEffect(() => {
+    if (employee && employee.id) {
+      const findTaskByDate = localStorage.getItem(
+        `@WP-PRO:tasks${formatHourDateShort(String(selectedDate))}`,
+      );
+      if (findTaskByDate) {
+        setDayTasks(JSON.parse(findTaskByDate));
+      } else {
+        getEmployeeTasksByDate();
+      }
+    }
+  }, [getEmployeeTasksByDate, employee, selectedDate]);
+
   return (
     <CheckListContext.Provider
       value={{
+        dayTasks,
+        getEmployeeTasksByDate,
+        employeeFinishedTasks,
+        employeeInProgressTasks,
+        employeeNotStartedTasks,
+        selectTaskDate,
+        getEmployeeTasks,
+        selectedDate,
+        updateEmployeeTaskIsActive,
         taskStatusIconTypes,
         deleteTask,
         taskName,
@@ -198,10 +303,8 @@ const CheckListProvider: React.FC = ({ children }) => {
         selectTaskDueDate,
         selectTask,
         selectCheckList,
-        getTask,
         createTask,
         selectedCheckList,
-        getCheckList,
         selectedTask,
         updateTask,
         taskPriorityTypes,

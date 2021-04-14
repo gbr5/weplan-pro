@@ -100,6 +100,7 @@ const StageCardProvider: React.FC = ({ children }) => {
         .get<ICardCheckListDTO[]>(`card/check-lists/${selectedCard.id}`)
         .then(response => {
           setCardCheckLists(response.data);
+          console.log(response.data);
           const mainCheckList = response.data.find(
             mainCL => mainCL.card_id === selectedCard.id,
           );

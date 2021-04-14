@@ -59,7 +59,12 @@ const CardCheckListContainer: React.FC<IProps> = ({
                 .filter(task => task.status === '1')
                 .map(task => {
                   return (
-                    <Task key={task.id} backgroundColor="#ebf8ff" task={task} />
+                    <Task
+                      update={getCardCheckLists}
+                      key={task.id}
+                      backgroundColor="#ebf8ff"
+                      task={task}
+                    />
                   );
                 })}
             {statusSection === '2' &&
@@ -67,7 +72,12 @@ const CardCheckListContainer: React.FC<IProps> = ({
                 .filter(task => task.status === '2')
                 .map(task => {
                   return (
-                    <Task key={task.id} backgroundColor="#fddede" task={task} />
+                    <Task
+                      update={getCardCheckLists}
+                      key={task.id}
+                      backgroundColor="#fddede"
+                      task={task}
+                    />
                   );
                 })}
             {statusSection === '3' &&
@@ -75,7 +85,12 @@ const CardCheckListContainer: React.FC<IProps> = ({
                 .filter(task => task.status === '3')
                 .map(task => {
                   return (
-                    <Task key={task.id} backgroundColor="#e6fffa" task={task} />
+                    <Task
+                      update={getCardCheckLists}
+                      key={task.id}
+                      backgroundColor="#e6fffa"
+                      task={task}
+                    />
                   );
                 })}
           </Container>

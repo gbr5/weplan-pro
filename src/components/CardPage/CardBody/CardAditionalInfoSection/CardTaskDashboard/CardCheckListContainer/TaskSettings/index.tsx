@@ -10,9 +10,10 @@ import { Container } from './styles';
 
 interface IProps {
   closeWindow: Function;
+  update: Function;
 }
 
-const TaskSettings: React.FC<IProps> = ({ closeWindow }) => {
+const TaskSettings: React.FC<IProps> = ({ closeWindow, update }) => {
   const { selectedTask, deleteTask } = useCheckList();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
@@ -20,7 +21,8 @@ const TaskSettings: React.FC<IProps> = ({ closeWindow }) => {
     console.log(selectedTask);
     deleteTask(selectedTask.id);
     setDeleteConfirmation(false);
-  }, [deleteTask, selectedTask]);
+    update();
+  }, [deleteTask, update, selectedTask]);
 
   const handleDeleteConfirmation = useCallback(async (e: boolean) => {
     return setDeleteConfirmation(e);
@@ -51,8 +53,8 @@ const TaskSettings: React.FC<IProps> = ({ closeWindow }) => {
       >
         <Container>
           <h2>Configurações</h2>
-          <TaskField />
-          <TaskDueDateField />
+          <TaskField update={update} />
+          <TaskDueDateField update={update} />
           <Button
             style={{ background: 'red', color: '#c9c9c9', fontSize: '1.3rem' }}
             type="button"

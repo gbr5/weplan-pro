@@ -11,7 +11,7 @@ export const Container = styled.div`
   margin: 0.5rem auto;
   width: 100%;
   max-width: 90vw;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.2);
 
   &:hover {
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
