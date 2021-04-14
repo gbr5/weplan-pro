@@ -116,6 +116,7 @@ const CheckListProvider: React.FC = ({ children }) => {
   const deleteTask = useCallback(
     async (id: string) => {
       try {
+        console.log({ id });
         await api.put(`/check-lists/tasks/edit/is-active/${id}`);
         getCheckList(selectedCheckList.id);
         addToast({

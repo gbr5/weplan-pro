@@ -1,19 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { MdAdd, MdCloudDone, MdLightbulbOutline } from 'react-icons/md';
+import { MdAdd } from 'react-icons/md';
 
-import { FiRss } from 'react-icons/fi';
-
-import {
-  Container,
-  Main,
-  StatusMenuButtonContainer,
-  StatusMenuButton,
-  CheckListContainer,
-  CheckListHeader,
-} from './styles';
+import { Container, Main, CheckListContainer, CheckListHeader } from './styles';
 import AddCardTaskForm from '../AddCardTaskForm';
 import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
-import Task from './Task';
+import Task from '../../../../../TaskDashboard/Task';
+import TaskStatusMenu from '../../../../../TaskDashboard/TaskStatusMenu';
 
 interface IProps {
   checkList: ICardCheckListDTO;
@@ -28,14 +20,8 @@ const CardCheckListContainer: React.FC<IProps> = ({
   const [createCheckListTaskForm, setCreateCheckListTaskForm] = useState(false);
   const [statusSection, setStatusSection] = useState('2');
 
-  const handleNotStartedTasksSection = useCallback(() => {
-    setStatusSection('1');
-  }, []);
-  const handleInProgressTasksSection = useCallback(() => {
-    setStatusSection('2');
-  }, []);
-  const handleFinishedTasksSection = useCallback(() => {
-    setStatusSection('3');
+  const handleTaskStatusSection = useCallback((e: string) => {
+    setStatusSection(e);
   }, []);
 
   const handleCloseCreateCheckListTaskForm = useCallback(() => {
@@ -63,29 +49,10 @@ const CardCheckListContainer: React.FC<IProps> = ({
               <MdAdd size={iconsize} />
             </button>
           </CheckListHeader>
-          <StatusMenuButtonContainer>
-            <StatusMenuButton
-              isActive={statusSection === '1'}
-              type="button"
-              onClick={handleNotStartedTasksSection}
-            >
-              <MdLightbulbOutline size={iconsize} />
-            </StatusMenuButton>
-            <StatusMenuButton
-              isActive={statusSection === '2'}
-              type="button"
-              onClick={handleInProgressTasksSection}
-            >
-              <FiRss size={iconsize} />
-            </StatusMenuButton>
-            <StatusMenuButton
-              isActive={statusSection === '3'}
-              type="button"
-              onClick={handleFinishedTasksSection}
-            >
-              <MdCloudDone size={iconsize} />
-            </StatusMenuButton>
-          </StatusMenuButtonContainer>
+          <TaskStatusMenu
+            currentSection={statusSection}
+            handleSection={handleTaskStatusSection}
+          />
           <Container>
             {statusSection === '1' &&
               checkList.check_list.tasks

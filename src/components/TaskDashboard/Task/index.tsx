@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdFlag, MdSchedule } from 'react-icons/md';
 import { FiRefreshCcw } from 'react-icons/fi';
-import ITaskDTO from '../../../../../../../dtos/ITaskDTO';
-import sleepyTask from '../../../../../../../assets/sleepyTask1.svg';
-import runningTask from '../../../../../../../assets/runningTask1.svg';
-import doneTask from '../../../../../../../assets/doneTask1.svg';
+import ITaskDTO from '../../../dtos/ITaskDTO';
+import sleepyTask from '../../../assets/sleepyTask1.svg';
+import runningTask from '../../../assets/runningTask1.svg';
+import doneTask from '../../../assets/doneTask1.svg';
 import {
   Container,
   SettingsButton,
@@ -12,12 +12,12 @@ import {
   Priority,
   Status,
 } from './styles';
-import { useCheckList } from '../../../../../../../hooks/checkList';
+import { useCheckList } from '../../../hooks/checkList';
 
-import TaskStatusContainer from '../../TaskStatusContainer';
-import TaskPriorityContainer from '../../TaskPriorityContainer';
-import formatHourDateShort from '../../../../../../../utils/formatHourDateShort';
-import TaskSettings from '../TaskSettings';
+import TaskStatusContainer from '../TaskStatusContainer';
+import TaskPriorityContainer from '../TaskPriorityContainer';
+import formatHourDateShort from '../../../utils/formatHourDateShort';
+import TaskSettings from '../../CardPage/CardBody/CardAditionalInfoSection/CardTaskDashboard/CardCheckListContainer/TaskSettings';
 
 interface IProps {
   backgroundColor: string;

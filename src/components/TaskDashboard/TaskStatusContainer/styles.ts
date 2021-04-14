@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import '../../../../../../styles/global';
+import '../../../styles/global';
 
 export const Container = styled.div`
   width: 100%;
@@ -28,7 +28,7 @@ export const Container = styled.div`
   }
 `;
 
-export const PriorityButton = styled.button`
+export const StatusButton = styled.button`
   background: transparent;
   border: none;
   display: flex;
@@ -39,13 +39,11 @@ export const PriorityButton = styled.button`
 
   margin: 0.5rem;
 
-  > svg {
+  > img {
     margin-left: auto;
     height: 64px;
     width: 64px;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    background: #aaa;
 
     &:hover {
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
