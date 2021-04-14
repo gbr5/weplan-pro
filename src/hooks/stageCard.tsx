@@ -100,11 +100,11 @@ const StageCardProvider: React.FC = ({ children }) => {
         .get<ICardCheckListDTO[]>(`card/check-lists/${selectedCard.id}`)
         .then(response => {
           setCardCheckLists(response.data);
-          console.log(response.data);
-          const mainCheckList = response.data.find(
-            mainCL => mainCL.card_id === selectedCard.id,
+          setSelectedCardCheckList(response.data[0]);
+          localStorage.setItem(
+            '@WP-PRO:selected-check-list',
+            JSON.stringify(response.data[0]),
           );
-          mainCheckList && setSelectedCardCheckList(mainCheckList);
         });
     } catch (err) {
       throw new Error(err);

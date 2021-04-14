@@ -14,6 +14,7 @@ import ITaskDTO from '../dtos/ITaskDTO';
 import api from '../services/api';
 import formatHourDateShort from '../utils/formatHourDateShort';
 import { useEmployeeAuth } from './employeeAuth';
+import { useStageCard } from './stageCard';
 import { useToast } from './toast';
 
 interface ICheckListContextData {
@@ -42,7 +43,7 @@ interface ICheckListContextData {
   updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
   selectTask(data: ITaskDTO): void;
-  deleteTask(id: string): void;
+  deleteTask(id: string): Promise<void>;
   getEmployeeTasks(): void;
 }
 
@@ -52,10 +53,15 @@ const CheckListContext = createContext<ICheckListContextData>(
 
 const CheckListProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
+  const { selectedCardCheckList } = useStageCard();
   const { addToast } = useToast();
-  const [selectedCheckList, setSelectedCheckList] = useState(
-    {} as ICheckListDTO,
-  );
+  const [selectedCheckList, setSelectedCheckList] = useState(() => {
+    const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
+    if (findCheckList) {
+      return JSON.parse(findCheckList);
+    }
+    return {} as ICheckListDTO;
+  });
   const [selectedTask, setSelectedTask] = useState({} as ITaskDTO);
   const [taskName, setTaskName] = useState('');
   const [taskPriority, setTaskPriority] = useState('');
@@ -115,7 +121,6 @@ const CheckListProvider: React.FC = ({ children }) => {
           },
         )
         .then(response => {
-          console.log(response.data);
           setDayTasks(response.data);
         });
   }, [selectedDate, employee]);
@@ -167,6 +172,7 @@ const CheckListProvider: React.FC = ({ children }) => {
   }, []);
   const selectCheckList = useCallback((data: ICheckListDTO) => {
     setSelectedCheckList(data);
+    localStorage.setItem('@WP-PRO:selected-check-list', JSON.stringify(data));
   }, []);
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
@@ -278,6 +284,12 @@ const CheckListProvider: React.FC = ({ children }) => {
       }
     }
   }, [getEmployeeTasksByDate, employee, selectedDate]);
+
+  useEffect(() => {
+    if (selectedCardCheckList && selectedCardCheckList.id) {
+      setSelectedCheckList(selectedCardCheckList.check_list);
+    }
+  }, [selectedCardCheckList]);
 
   return (
     <CheckListContext.Provider

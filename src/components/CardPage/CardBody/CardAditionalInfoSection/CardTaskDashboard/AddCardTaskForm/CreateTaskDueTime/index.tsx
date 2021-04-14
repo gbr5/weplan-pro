@@ -5,41 +5,45 @@ import { FormHandles } from '@unform/core';
 import { Container } from './styles';
 import { useCheckList } from '../../../../../../../hooks/checkList';
 import Input from '../../../../../../Input';
-import formatOnlyDate from '../../../../../../../utils/formatOnlyDate';
 import Button from '../../../../../../Button';
-import transformBRLDateToDate from '../../../../../../../utils/transformBRLDateToDate';
 
 interface IFormParams {
-  due_date: string;
+  time: string;
 }
 
 interface IProps {
   nextStep: (e: string) => void;
 }
 
-const CreateTaskDueDate: React.FC<IProps> = ({ nextStep }: IProps) => {
+const CreateTaskDueTime: React.FC<IProps> = ({ nextStep }: IProps) => {
   const formRef = useRef<FormHandles>(null);
-  const { selectTaskDueDate } = useCheckList();
+  const { selectTaskDueDate, taskDueDate } = useCheckList();
   const handleSubmit = useCallback(
-    (e: IFormParams) => {
-      const tryDate = String(transformBRLDateToDate(`08:00T${e.due_date}`));
+    ({ time }: IFormParams) => {
+      const newDate = new Date(taskDueDate);
+      newDate.setHours(Number(time));
+      const tryDate = String(newDate);
       selectTaskDueDate(tryDate);
       nextStep(tryDate);
     },
-    [nextStep, selectTaskDueDate],
+    [nextStep, taskDueDate, selectTaskDueDate],
   );
-
-  const today = new Date().setDate(new Date().getDate() + 3);
-  const defaultDate = formatOnlyDate(String(new Date(today)));
 
   return (
     <Container>
-      <strong>Data de entrega</strong>
+      <strong>Horário de entrega</strong>
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Input
-          name="due_date"
-          mask="brlDateFormat"
-          defaultValue={defaultDate}
+          name="time"
+          containerStyle={{
+            maxWidth: '4rem',
+            fontSize: '1.2rem',
+            margin: '1rem auto',
+            padding: '0 auto',
+          }}
+          mask="hour"
+          defaultValue="10"
+          pattern="\d*"
         />
         <Button type="submit">Próximo</Button>
       </Form>
@@ -47,4 +51,4 @@ const CreateTaskDueDate: React.FC<IProps> = ({ nextStep }: IProps) => {
   );
 };
 
-export default CreateTaskDueDate;
+export default CreateTaskDueTime;

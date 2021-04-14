@@ -11,14 +11,8 @@ import { useStageCard } from '../../../../../hooks/stageCard';
 import { useCheckList } from '../../../../../hooks/checkList';
 
 const CardTaskDashboard: React.FC = () => {
-  const {
-    cardCheckLists,
-    selectedCard,
-    selectedCardCheckList,
-    getCardCheckLists,
-    selectCardCheckList,
-  } = useStageCard();
-  const { selectCheckList } = useCheckList();
+  const { selectCardCheckList, getCardCheckLists } = useStageCard();
+  const { selectCheckList, selectedCheckList } = useCheckList();
   const [selectCheckListWindow, setSelectCheckListWindow] = useState(false);
   const [createCheckListForm, setCreateCheckListForm] = useState(false);
 
@@ -31,6 +25,10 @@ const CardTaskDashboard: React.FC = () => {
     [selectCardCheckList, selectCheckList],
   );
 
+  const handleCloseCheckListWindow = useCallback(() => {
+    setSelectCheckListWindow(false);
+  }, []);
+
   const handleCloseCheckListForm = useCallback(() => {
     setCreateCheckListForm(false);
   }, []);
@@ -39,25 +37,25 @@ const CardTaskDashboard: React.FC = () => {
     getCardCheckLists();
   }, [getCardCheckLists]);
 
+  // useEffect(() => {
+  //   if (selectedCardCheckList && selectedCardCheckList.id) {
+  //     selectCheckList(selectedCardCheckList.check_list);
+  //   }
+  // }, [selectedCardCheckList, selectCheckList]);
+
   return (
     <>
       {selectCheckListWindow && (
         <SelectCardCheckListWindow
-          onHandleCloseWindow={() => setSelectCheckListWindow(false)}
-          cardCheckLists={cardCheckLists}
+          closeWindow={() => handleCloseCheckListWindow()}
           handleSetSelectedCheckList={handleSetSelectedCheckList}
         />
       )}
       {createCheckListForm && (
-        <CreateCheckListForm
-          onHandleCloseWindow={() => setCreateCheckListForm(false)}
-          handleCloseWindow={handleCloseCheckListForm}
-          getCardCheckList={getCardCheckLists}
-          card={selectedCard}
-        />
+        <CreateCheckListForm closeWindow={handleCloseCheckListForm} />
       )}
       <Main>
-        {selectedCardCheckList.check_list && (
+        {selectedCheckList && selectedCheckList.id && (
           <>
             {/* <ContainerMenu> */}
             {/* <button
@@ -80,10 +78,7 @@ const CardTaskDashboard: React.FC = () => {
                 </strong>
               </button> */}
             {/* </ContainerMenu> */}
-            <CardCheckListContainer
-              checkList={selectedCardCheckList}
-              getCardCheckLists={getCardCheckLists}
-            />
+            <CardCheckListContainer />
           </>
         )}
       </Main>

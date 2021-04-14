@@ -1,24 +1,23 @@
-import React, { MouseEventHandler } from 'react';
+import React from 'react';
 import { MdAdd } from 'react-icons/md';
-import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 import WindowContainer from '../../../../../WindowContainer';
 
 import { List, Item } from './styles';
 
 interface IProps {
-  cardCheckLists: ICardCheckListDTO[];
   handleSetSelectedCheckList: Function;
-  onHandleCloseWindow: MouseEventHandler;
+  closeWindow: Function;
 }
 
 const SelectCardCheckListWindow: React.FC<IProps> = ({
-  cardCheckLists,
   handleSetSelectedCheckList,
-  onHandleCloseWindow,
+  closeWindow,
 }: IProps) => {
+  const { cardCheckLists } = useStageCard();
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 12,
         top: '25%',
