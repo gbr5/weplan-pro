@@ -14,15 +14,18 @@ interface IProps {
 }
 
 const TaskSettings: React.FC<IProps> = ({ closeWindow, update }) => {
-  const { selectedTask, deleteTask } = useCheckList();
+  const { selectedTask, updateTask } = useCheckList();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const handleDeleteTask = useCallback(async () => {
-    console.log(selectedTask);
-    deleteTask(selectedTask.id);
+    await updateTask({
+      ...selectedTask,
+      isActive: false,
+    });
     setDeleteConfirmation(false);
     update();
-  }, [deleteTask, update, selectedTask]);
+    closeWindow();
+  }, [updateTask, update, closeWindow, selectedTask]);
 
   const handleDeleteConfirmation = useCallback(async (e: boolean) => {
     return setDeleteConfirmation(e);

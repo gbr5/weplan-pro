@@ -1,27 +1,20 @@
-import React, { MouseEventHandler, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
 import { Container } from './styles';
 import api from '../../../../../../services/api';
-import IStageCardDTO from '../../../../../../dtos/IStageCardDTO';
 import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 
 interface IProps {
-  card: IStageCardDTO;
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
-  getCardCheckList: Function;
+  closeWindow: Function;
 }
 
-const CreateCheckListForm: React.FC<IProps> = ({
-  card,
-  getCardCheckList,
-  onHandleCloseWindow,
-  handleCloseWindow,
-}: IProps) => {
+const CreateCheckListForm: React.FC<IProps> = ({ closeWindow }: IProps) => {
   const { addToast } = useToast();
   const { employee } = useEmployeeAuth();
+  const { selectedCard, getCardCheckLists } = useStageCard();
 
   const now = new Date();
   const day = now.getDate() + 3;
@@ -55,13 +48,13 @@ const CreateCheckListForm: React.FC<IProps> = ({
       });
 
       await api.post(`card/check-lists`, {
-        card_id: card.id,
+        card_id: selectedCard.id,
         check_list_id: response.data.id,
-        card_unique_name: card.unique_name,
+        card_unique_name: selectedCard.unique_name,
       });
 
-      getCardCheckList();
-      handleCloseWindow();
+      getCardCheckLists();
+      closeWindow();
       return addToast({
         type: 'success',
         title: 'Card criado com sucesso',
@@ -79,18 +72,18 @@ const CreateCheckListForm: React.FC<IProps> = ({
   }, [
     addToast,
     checkListName,
-    handleCloseWindow,
+    closeWindow,
     employee,
-    card,
+    selectedCard,
     day,
     month,
     year,
-    getCardCheckList,
+    getCardCheckLists,
   ]);
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 15,
         top: '38%',

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import WindowContainer from '../../../../../WindowContainer';
 import { useToast } from '../../../../../../hooks/toast';
 
@@ -7,34 +7,30 @@ import { useCheckList } from '../../../../../../hooks/checkList';
 import CreateTaskPriority from './CreateTaskPriority';
 import CreateTaskStatus from './CreateTaskStatus';
 import CreateTaskDueDate from './CreateTaskDueDate';
-import ICardCheckListDTO from '../../../../../../dtos/ICardCheckListDTO';
+import CreateTaskDueTime from './CreateTaskDueTime';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 
 interface IProps {
-  onHandleCloseWindow: MouseEventHandler;
-  handleCloseWindow: Function;
-  getCardCheckLists: Function;
-  cardCheckList: ICardCheckListDTO;
+  closeWindow: Function;
 }
 
-const AddCardTaskForm: React.FC<IProps> = ({
-  onHandleCloseWindow,
-  handleCloseWindow,
-  getCardCheckLists,
-  cardCheckList,
-}: IProps) => {
+const AddCardTaskForm: React.FC<IProps> = ({ closeWindow }: IProps) => {
   const { addToast } = useToast();
-  const { createTask } = useCheckList();
+  const { createTask, selectedCheckList } = useCheckList();
+  const { getCardCheckLists } = useStageCard();
 
   const [taskNameField, setTaskNameField] = useState(true);
   const [taskPriorityField, setTaskPriorityField] = useState(false);
   const [taskStatusField, setTaskStatusField] = useState(false);
   const [taskDueDateField, setTaskDueDateField] = useState(false);
+  const [taskDueTimeField, setTaskDueTimeField] = useState(false);
 
   const handleCloseAllFields = useCallback(() => {
     setTaskNameField(false);
     setTaskPriorityField(false);
     setTaskStatusField(false);
     setTaskDueDateField(false);
+    setTaskDueTimeField(false);
   }, []);
 
   const handleTaskPriority = useCallback(() => {
@@ -49,16 +45,20 @@ const AddCardTaskForm: React.FC<IProps> = ({
     handleCloseAllFields();
     setTaskDueDateField(true);
   }, [handleCloseAllFields]);
+  const handleTaskDueTime = useCallback(() => {
+    handleCloseAllFields();
+    setTaskDueTimeField(true);
+  }, [handleCloseAllFields]);
 
   const handleSubmit = useCallback(
     async (due_date: string) => {
       try {
         createTask({
-          check_list_id: cardCheckList.check_list_id,
+          check_list_id: selectedCheckList.id,
           due_date,
         });
         getCardCheckLists();
-        handleCloseWindow();
+        closeWindow();
         return addToast({
           type: 'success',
           title: 'Tarefa criada com sucesso',
@@ -73,12 +73,12 @@ const AddCardTaskForm: React.FC<IProps> = ({
         throw new Error(err);
       }
     },
-    [addToast, getCardCheckLists, handleCloseWindow, createTask, cardCheckList],
+    [addToast, getCardCheckLists, closeWindow, createTask, selectedCheckList],
   );
 
   return (
     <WindowContainer
-      onHandleCloseWindow={onHandleCloseWindow}
+      onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 10,
         top: '15%',
@@ -89,7 +89,7 @@ const AddCardTaskForm: React.FC<IProps> = ({
     >
       {taskNameField && (
         <CreateTaskName
-          closeWindow={handleCloseWindow}
+          closeWindow={closeWindow}
           nextStep={() => handleTaskPriority()}
         />
       )}
@@ -100,7 +100,10 @@ const AddCardTaskForm: React.FC<IProps> = ({
         <CreateTaskStatus nextStep={() => handleTaskDueDate()} />
       )}
       {taskDueDateField && (
-        <CreateTaskDueDate
+        <CreateTaskDueDate nextStep={() => handleTaskDueTime()} />
+      )}
+      {taskDueTimeField && (
+        <CreateTaskDueTime
           nextStep={(due_date: string) => handleSubmit(due_date)}
         />
       )}

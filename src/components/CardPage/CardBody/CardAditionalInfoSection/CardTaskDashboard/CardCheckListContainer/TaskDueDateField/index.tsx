@@ -3,6 +3,7 @@ import { MdClose } from 'react-icons/md';
 import { useCheckList } from '../../../../../../../hooks/checkList';
 import formatHourDateShort from '../../../../../../../utils/formatHourDateShort';
 import CreateTaskDueDate from '../../AddCardTaskForm/CreateTaskDueDate';
+import CreateTaskDueTime from '../../AddCardTaskForm/CreateTaskDueTime';
 
 import { Container } from './styles';
 
@@ -14,17 +15,26 @@ const TaskDueDateField: React.FC<IProps> = ({ update }) => {
   const { selectedTask, updateTask } = useCheckList();
 
   const [editField, setEditField] = useState(false);
+  const [dueDateField, setDueDateField] = useState(true);
 
   const handleEditField = useCallback((e: boolean) => {
     setEditField(e);
   }, []);
 
+  const handleDueDateField = useCallback((e: string) => {
+    // Deixar aqui por enquanto !!
+    console.log(e);
+    setDueDateField(false);
+  }, []);
+
   const handleEditDueDate = useCallback(
-    async (due_date: string) => {
+    async (e: string) => {
+      const due_date = String(new Date(e));
       await updateTask({
         ...selectedTask,
         due_date,
       });
+      setEditField(false);
       update();
     },
     [updateTask, update, selectedTask],
@@ -38,7 +48,13 @@ const TaskDueDateField: React.FC<IProps> = ({ update }) => {
               <MdClose size={32} color="red" />
             </button>
           </span>
-          <CreateTaskDueDate nextStep={(e: string) => handleEditDueDate(e)} />
+          {dueDateField ? (
+            <CreateTaskDueDate
+              nextStep={(e: string) => handleDueDateField(e)}
+            />
+          ) : (
+            <CreateTaskDueTime nextStep={(e: string) => handleEditDueDate(e)} />
+          )}
         </>
       ) : (
         <>
