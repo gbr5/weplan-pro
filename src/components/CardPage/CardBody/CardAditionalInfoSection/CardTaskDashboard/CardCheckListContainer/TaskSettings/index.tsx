@@ -17,6 +17,7 @@ const TaskSettings: React.FC<IProps> = ({ closeWindow }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const handleDeleteTask = useCallback(async () => {
+    console.log(selectedTask);
     deleteTask(selectedTask.id);
     setDeleteConfirmation(false);
   }, [deleteTask, selectedTask]);

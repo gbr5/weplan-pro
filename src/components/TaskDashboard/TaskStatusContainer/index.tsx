@@ -1,15 +1,15 @@
 import React, { useCallback } from 'react';
-import { useToast } from '../../../../../../hooks/toast';
-import api from '../../../../../../services/api';
-import WindowContainer from '../../../../../WindowContainer';
+import { useToast } from '../../../hooks/toast';
+import api from '../../../services/api';
+import WindowContainer from '../../WindowContainer';
 
-import sleepyTask from '../../../../../../assets/sleepyTask1.svg';
-import runningTask from '../../../../../../assets/runningTask1.svg';
-import doneTask from '../../../../../../assets/doneTask1.svg';
+import sleepyTask from '../../../assets/sleepyTask1.svg';
+import runningTask from '../../../assets/runningTask1.svg';
+import doneTask from '../../../assets/doneTask1.svg';
 
 import { Container, StatusButton } from './styles';
-import { useCheckList } from '../../../../../../hooks/checkList';
-import { useStageCard } from '../../../../../../hooks/stageCard';
+import { useCheckList } from '../../../hooks/checkList';
+import { useStageCard } from '../../../hooks/stageCard';
 
 interface IProps {
   closeWindow: Function;

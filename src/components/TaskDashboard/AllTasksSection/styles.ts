@@ -8,6 +8,7 @@ export const Main = styled.div`
   box-sizing: border-box;
   width: 100%;
   text-align: center;
+  margin: 1rem 0 2rem;
 
   > h2 {
     width: 100%;
@@ -66,101 +67,18 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
 `;
 
 export const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  text-align: left;
-  min-height: 20rem;
-
-  box-sizing: border-box;
+  width: 95%;
+  height: 35rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  background: var(--header-background-color);
+  background: var(--background-color);
   border-radius: 8px;
-  padding: 8px;
-  /* margin-left: 80px; */
-  gap: 5px;
+  padding: 0.2rem;
   overflow-y: scroll;
-`;
-
-export const Task = styled.div`
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  /* height: 40px; */
-  /* width: 100%; */
-  align-items: stretch;
-  justify-content: stretch;
-  border: 1px solid var(--title-color);
-  padding: 5px;
-  border-radius: 5px;
-  transition: 0.3s;
-
-  &:hover {
-    opacity: 0.8;
-    > div {
-      background: transparent;
-      border: none;
-      > span {
-        > p {
-          color: var(--letter-color-5);
-          &:nth-child(2) {
-            color: var(--letter-color-5);
-          }
-        }
-      }
-    }
-    > button {
-      background: transparent;
-      border: none;
-      > svg {
-        color: var(--letter-color-5);
-      }
-    }
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    color: var(--header-primary);
-    box-sizing: border-box;
-
-    width: 100%;
-
-    > span {
-      display: flex;
-      width: 100%;
-      padding-right: 16px;
-
-      > p {
-        margin: 0 auto;
-        color: var(--letter-color-2);
-      }
-    }
-  }
-
-  > button {
-    background: transparent;
-    border: none;
-    width: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-
-    > svg {
-      color: var(--header-primary);
-    }
-
-    &:hover {
-      > svg {
-        color: var(--title-color);
-      }
-    }
-  }
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  margin: 0.5rem auto;
 `;
 
 export const ButtonContainer = styled.strong`

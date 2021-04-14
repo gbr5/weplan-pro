@@ -8,9 +8,14 @@ export const Container = styled.div`
   border: 1px solid var(--title-color);
   padding: 5px;
   border-radius: 5px;
-  margin: 0.5rem 0;
+  margin: 0.5rem auto;
   width: 100%;
-  max-width: 94vw;
+  max-width: 90vw;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  }
 
   > h3 {
     font-size: 1.2rem;
@@ -44,6 +49,8 @@ export const ButtonContainer = styled.strong`
     max-height: 2rem;
     margin: 0.5rem;
     border-radius: 5px;
+    border: none;
+    transition: 0.3s;
   }
 `;
 
@@ -51,6 +58,11 @@ export const Status = styled.button`
   margin: 0 auto;
   padding: 0;
   background: transparent;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+  }
 
   > img,
   svg {
@@ -66,7 +78,11 @@ export const Priority = styled.button`
   margin: 0 auto;
   padding: 0;
   background: var(--letter-color-4);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
+  &:hover {
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+  }
   > svg,
   img {
     max-height: 2rem;
@@ -79,7 +95,6 @@ export const Priority = styled.button`
 
 export const SettingsButton = styled.button`
   background: transparent;
-  border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
