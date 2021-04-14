@@ -24,10 +24,16 @@ const CardHeader: React.FC = () => {
   }, []);
 
   const stageName = useMemo(() => {
-    const stage = selectedFunnel.stages.filter(
-      thisStage => thisStage.id === selectedCard.stage_id,
-    );
-    return stage[0].name;
+    const stage =
+      selectedFunnel &&
+      selectedFunnel.stages &&
+      selectedFunnel.stages.filter(
+        thisStage => thisStage.id === selectedCard.stage_id,
+      );
+    if (stage) {
+      return stage[0].name;
+    }
+    return '';
   }, [selectedCard, selectedFunnel]);
 
   const handleUpdateCardName = useCallback(

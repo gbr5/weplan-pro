@@ -1,15 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { MdFlag } from 'react-icons/md';
+import { MdFlag, MdSchedule } from 'react-icons/md';
+import { FiRefreshCcw } from 'react-icons/fi';
 import ITaskDTO from '../../../../../../../dtos/ITaskDTO';
 import sleepyTask from '../../../../../../../assets/sleepyTask1.svg';
 import runningTask from '../../../../../../../assets/runningTask1.svg';
 import doneTask from '../../../../../../../assets/doneTask1.svg';
-import { Container, ButtonContainer, Priority, Status } from './styles';
+import {
+  Container,
+  SettingsButton,
+  ButtonContainer,
+  Priority,
+  Status,
+} from './styles';
 import { useCheckList } from '../../../../../../../hooks/checkList';
 
 import TaskStatusContainer from '../../TaskStatusContainer';
 import TaskPriorityContainer from '../../TaskPriorityContainer';
 import formatHourDateShort from '../../../../../../../utils/formatHourDateShort';
+import TaskSettings from '../TaskSettings';
 
 interface IProps {
   backgroundColor: string;
@@ -22,11 +30,13 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
   const [statusIcon, setStatusIcon] = useState(sleepyTask);
   const [priorityWindow, setPriorityWindow] = useState(false);
   const [statusWindow, setStatusWindow] = useState(false);
+  const [settingsWindow, setSettingsWindow] = useState(false);
 
   const handleCloseWindows = useCallback(() => {
     selectTask({} as ITaskDTO);
     setPriorityWindow(false);
     setStatusWindow(false);
+    setSettingsWindow(false);
   }, [selectTask]);
 
   const handlePriorityWindow = useCallback(() => {
@@ -38,6 +48,11 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
     selectTask(task);
     setStatusWindow(true);
   }, [selectTask, task]);
+
+  const handleTaskSettings = useCallback(() => {
+    selectTask(task);
+    setSettingsWindow(true);
+  }, [task, selectTask]);
 
   useEffect(() => {
     if (task.status === '1') {
@@ -53,6 +68,9 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
 
   return (
     <>
+      {settingsWindow && selectedTask && (
+        <TaskSettings closeWindow={() => handleCloseWindows()} />
+      )}
       {priorityWindow && selectedTask && (
         <TaskPriorityContainer closeWindow={() => handleCloseWindows()} />
       )}
@@ -60,8 +78,26 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
         <TaskStatusContainer closeWindow={() => handleCloseWindows()} />
       )}
       <Container style={{ background: backgroundColor }}>
+        <h3>{task.task}</h3>
         <div>
-          <h2>{task.task}</h2>
+          <span>
+            <p>
+              <MdSchedule size={20} />{' '}
+              {formatHourDateShort(String(task.due_date))}
+            </p>
+            {task.created_at === task.updated_at ? (
+              <p>
+                <FiRefreshCcw size={20} />{' '}
+                {formatHourDateShort(String(task.created_at))}
+              </p>
+            ) : (
+              <p>
+                <FiRefreshCcw size={20} />{' '}
+                {formatHourDateShort(String(task.updated_at))}
+              </p>
+            )}
+          </span>
+
           <ButtonContainer>
             <Priority type="button" onClick={() => handlePriorityWindow()}>
               {task.priority === 'low' && (
@@ -77,16 +113,13 @@ const Task: React.FC<IProps> = ({ task, backgroundColor }) => {
             <Status type="button" onClick={() => handleStatusWindow()}>
               <img src={statusIcon} alt="Task Status Icon - We Plan" />
             </Status>
+            <SettingsButton type="button" onClick={handleTaskSettings}>
+              <div />
+              <div />
+              <div />
+            </SettingsButton>
           </ButtonContainer>
         </div>
-        <span>
-          <p>Data de entrega: {formatHourDateShort(String(task.due_date))}</p>
-          {task.created_at === task.updated_at ? (
-            <p>Criado: {formatHourDateShort(String(task.created_at))}</p>
-          ) : (
-            <p>Atualizado: {formatHourDateShort(String(task.updated_at))}</p>
-          )}
-        </span>
       </Container>
     </>
   );

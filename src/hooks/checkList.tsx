@@ -25,11 +25,12 @@ interface ICheckListContextData {
   selectTaskStatus(data: string): void;
   selectTaskDueDate(data: string): void;
   createTask(data: ICreateTaskDTO): void;
-  updateTask(data: ITaskDTO): void;
+  updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
   selectTask(data: ITaskDTO): void;
   getCheckList(id: string): void;
   getTask(id: string): void;
+  deleteTask(id: string): void;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -85,7 +86,14 @@ const CheckListProvider: React.FC = ({ children }) => {
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
       try {
-        const response = await api.put(`/ /${data.id}`);
+        const response = await api.put(`/check-lists/tasks/edit/${data.id}`, {
+          task: data.task,
+          status: data.status,
+          color: data.color,
+          isActive: data.isActive,
+          priority: data.priority,
+          due_date: data.due_date,
+        });
         getTask(data.id);
         getCheckList(data.check_list_id);
         setSelectedTask(response.data);
@@ -93,6 +101,7 @@ const CheckListProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Tarefa adicionada com sucesso!',
         });
+        return response.data;
       } catch (err) {
         addToast({
           type: 'error',
@@ -103,6 +112,26 @@ const CheckListProvider: React.FC = ({ children }) => {
       }
     },
     [getCheckList, getTask, addToast],
+  );
+  const deleteTask = useCallback(
+    async (id: string) => {
+      try {
+        await api.put(`/check-lists/tasks/edit/is-active/${id}`);
+        getCheckList(selectedCheckList.id);
+        addToast({
+          type: 'success',
+          title: 'Tarefa deletada com sucesso!',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar tarefa!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCheckList, selectedCheckList, addToast],
   );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
@@ -157,6 +186,7 @@ const CheckListProvider: React.FC = ({ children }) => {
     <CheckListContext.Provider
       value={{
         taskStatusIconTypes,
+        deleteTask,
         taskName,
         selectTaskName,
         taskPriority,
