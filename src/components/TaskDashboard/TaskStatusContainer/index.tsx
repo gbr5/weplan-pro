@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react';
-import { useToast } from '../../../hooks/toast';
-import api from '../../../services/api';
 import WindowContainer from '../../WindowContainer';
 
 import sleepyTask from '../../../assets/sleepyTask1.svg';
@@ -9,34 +7,28 @@ import doneTask from '../../../assets/doneTask1.svg';
 
 import { Container, StatusButton } from './styles';
 import { useCheckList } from '../../../hooks/checkList';
-import { useStageCard } from '../../../hooks/stageCard';
 
 interface IProps {
   closeWindow: Function;
+  update: Function;
 }
 
-const TaskStatusContainer: React.FC<IProps> = ({ closeWindow }: IProps) => {
-  const { addToast } = useToast();
-  const { selectedTask } = useCheckList();
-  const { getCardCheckLists } = useStageCard();
+const TaskStatusContainer: React.FC<IProps> = ({
+  closeWindow,
+  update,
+}: IProps) => {
+  const { selectedTask, updateTask } = useCheckList();
 
   const updateEmployeeTaskStatus = useCallback(
     async status => {
-      try {
-        await api.put(`check-lists/tasks/edit/status/${selectedTask.id}`, {
-          status,
-        });
-        getCardCheckLists();
-        closeWindow();
-        addToast({
-          type: 'success',
-          title: 'Tarefa atualizada com sucesso',
-        });
-      } catch (err) {
-        throw new Error(err);
-      }
+      await updateTask({
+        ...selectedTask,
+        status,
+      });
+      update();
+      closeWindow();
     },
-    [getCardCheckLists, addToast, selectedTask, closeWindow],
+    [selectedTask, update, updateTask, closeWindow],
   );
 
   return (

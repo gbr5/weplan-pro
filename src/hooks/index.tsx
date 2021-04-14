@@ -11,7 +11,6 @@ import { StageCardProvider } from './stageCard';
 import { FunnelProvider } from './funnel';
 import { SignUpProvider } from './signUp';
 import { HomeControllerProvider } from './homeController';
-import { TaskProvider } from './task';
 import { CompanyEmployeeProvider } from './companyEmployee';
 import { CheckListProvider } from './checkList';
 
@@ -24,19 +23,17 @@ const AppProvider: React.FC = ({ children }) => (
             <CompanyContactContextProvider>
               <FormProvider>
                 <ManagementModuleProvider>
-                  <TaskProvider>
-                    <FunnelProvider>
-                      <StageCardProvider>
-                        <ContactPageProvider>
-                          <CheckListProvider>
-                            <HomeControllerProvider>
-                              {children}
-                            </HomeControllerProvider>
-                          </CheckListProvider>
-                        </ContactPageProvider>
-                      </StageCardProvider>
-                    </FunnelProvider>
-                  </TaskProvider>
+                  <FunnelProvider>
+                    <StageCardProvider>
+                      <ContactPageProvider>
+                        <CheckListProvider>
+                          <HomeControllerProvider>
+                            {children}
+                          </HomeControllerProvider>
+                        </CheckListProvider>
+                      </ContactPageProvider>
+                    </StageCardProvider>
+                  </FunnelProvider>
                 </ManagementModuleProvider>
               </FormProvider>
             </CompanyContactContextProvider>

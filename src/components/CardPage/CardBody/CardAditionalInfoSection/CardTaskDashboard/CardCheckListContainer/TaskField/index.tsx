@@ -4,7 +4,11 @@ import InlineFormField from '../../../../../../GeneralComponents/InlineFormField
 
 import { Container } from './styles';
 
-const TaskField: React.FC = () => {
+interface IProps {
+  update: Function;
+}
+
+const TaskField: React.FC<IProps> = ({ update }) => {
   const { selectedTask, updateTask } = useCheckList();
 
   const [editField, setEditField] = useState(false);
@@ -19,9 +23,10 @@ const TaskField: React.FC = () => {
         ...selectedTask,
         task,
       });
+      update();
       setEditField(false);
     },
-    [updateTask, selectedTask],
+    [updateTask, update, selectedTask],
   );
 
   return (

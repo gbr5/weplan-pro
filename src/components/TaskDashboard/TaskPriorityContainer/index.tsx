@@ -1,40 +1,32 @@
 import React, { useCallback } from 'react';
 import { MdFlag } from 'react-icons/md';
 import { useCheckList } from '../../../hooks/checkList';
-import { useStageCard } from '../../../hooks/stageCard';
-import { useToast } from '../../../hooks/toast';
-import api from '../../../services/api';
 import WindowContainer from '../../WindowContainer';
 
 import { Container, PriorityButton } from './styles';
 
 interface IProps {
   closeWindow: Function;
+  update: Function;
 }
 
-const TaskPriorityContainer: React.FC<IProps> = ({ closeWindow }: IProps) => {
+const TaskPriorityContainer: React.FC<IProps> = ({
+  closeWindow,
+  update,
+}: IProps) => {
   const iconsize = 32;
-  const { addToast } = useToast();
-  const { selectedTask } = useCheckList();
-  const { getCardCheckLists } = useStageCard();
+  const { selectedTask, updateTask } = useCheckList();
 
   const updateEmployeeTaskPriority = useCallback(
     async priority => {
-      try {
-        await api.put(`check-lists/tasks/edit/priority/${selectedTask.id}`, {
-          priority,
-        });
-        getCardCheckLists();
-        closeWindow();
-        addToast({
-          type: 'success',
-          title: 'Tarefa atualizada com sucesso',
-        });
-      } catch (err) {
-        throw new Error(err);
-      }
+      await updateTask({
+        ...selectedTask,
+        priority,
+      });
+      update();
+      closeWindow();
     },
-    [getCardCheckLists, addToast, selectedTask, closeWindow],
+    [update, selectedTask, updateTask, closeWindow],
   );
 
   return (

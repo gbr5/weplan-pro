@@ -3,11 +3,11 @@ import React, { useCallback } from 'react';
 // import ptBR from 'date-fns/locale/pt-BR';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-import { useTask } from '../../hooks/task';
+import { useCheckList } from '../../hooks/checkList';
 import { Calendar } from './styles';
 
 const DashboardCalendar: React.FC = () => {
-  const { selectTaskDate, selectedDate } = useTask();
+  const { selectTaskDate, selectedDate } = useCheckList();
 
   const handleDateChange = useCallback(
     (day: Date, modifiers: DayModifiers) => {
