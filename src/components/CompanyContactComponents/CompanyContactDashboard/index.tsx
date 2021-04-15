@@ -4,7 +4,6 @@ import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useToast } from '../../../hooks/toast';
 import Header from '../../Header';
-import MenuButton from '../../MenuButton';
 import ContactWindow from '../ContactWindow';
 import CreateCompanyContactForm from '../CreateCompanyContactForm';
 import CompanyContactButton from './CompanyContactButton';
@@ -188,7 +187,6 @@ const CompanyContactDashboard: React.FC = () => {
         />
       )}
       <Header />
-      <MenuButton />
       <Container>
         <h2>Contatos da empresa</h2>
         <section>
@@ -199,13 +197,6 @@ const CompanyContactDashboard: React.FC = () => {
           >
             Todos
           </ContactMenuButton>
-          {/* <MenuButton
-            isActive={filterTitle === 'WePlan'}
-            type="button"
-            onClick={() => handleContactType('WePlan')}
-          >
-            WePlan
-          </MenuButton> */}
           <ContactMenuButton
             isActive={false}
             type="button"

@@ -3,7 +3,6 @@ import { useFunnel } from '../../hooks/funnel';
 import ComercialBottomSection from '../ComercialBottomSection';
 import Header from '../Header';
 import KanbanFunnel from '../KanbanFunnel';
-import MenuButton from '../MenuButton';
 
 import { Container, BottomLine, UpperLine, FunnelTitle } from './styles';
 
@@ -17,7 +16,6 @@ const KanbanDashboard: React.FC = () => {
       <Container>{selectedFunnel && <KanbanFunnel />}</Container>
       <BottomLine />
       <ComercialBottomSection />
-      <MenuButton />
     </>
   );
 };

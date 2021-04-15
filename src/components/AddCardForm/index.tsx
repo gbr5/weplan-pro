@@ -79,7 +79,7 @@ const AddCardForm: React.FC<IProps> = ({
       });
 
       closeWindow();
-      getFunnels(employee.company.id);
+      getFunnels();
       return addToast({
         type: 'success',
         title: 'Card criado com sucesso',

@@ -38,66 +38,64 @@ const CardAditionalInfoSection: React.FC = () => {
   }, [closeAllSections]);
 
   return (
-    <>
-      <Container>
-        <MenuHeader>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!notesSection}
-            onClick={handleNotesSection}
-          >
-            Notas
-          </MenuBooleanButton>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!taskSection}
-            onClick={handleTaskSection}
-          >
-            Tarefas
-          </MenuBooleanButton>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!appointmentsSection}
-            onClick={handleAppointmentsSection}
-          >
-            Reuniões
-          </MenuBooleanButton>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!filesSection}
-            onClick={handleFilesSection}
-          >
-            Arquivos
-          </MenuBooleanButton>
-        </MenuHeader>
-        {!!taskSection && <CardTaskDashboard />}
-        {!!notesSection && <CardNotesDashboard />}
-        {!!participantsSection && (
-          <>
-            <h1>ParticipantsSection</h1>
-            <h1>ParticipantsSection</h1>
-            <h1>ParticipantsSection</h1>
-            <h1>ParticipantsSection</h1>
-          </>
-        )}
-        {!!appointmentsSection && (
-          <>
-            <h1>AppointmentsSection</h1>
-            <h1>AppointmentsSection</h1>
-            <h1>AppointmentsSection</h1>
-            <h1>AppointmentsSection</h1>
-          </>
-        )}
-        {!!filesSection && (
-          <>
-            <h1>FilesSection</h1>
-            <h1>FilesSection</h1>
-            <h1>FilesSection</h1>
-            <h1>FilesSection</h1>
-          </>
-        )}
-      </Container>
-    </>
+    <Container>
+      <MenuHeader>
+        <MenuBooleanButton
+          type="button"
+          isActive={!!notesSection}
+          onClick={handleNotesSection}
+        >
+          Notas
+        </MenuBooleanButton>
+        <MenuBooleanButton
+          type="button"
+          isActive={!!taskSection}
+          onClick={handleTaskSection}
+        >
+          Tarefas
+        </MenuBooleanButton>
+        <MenuBooleanButton
+          type="button"
+          isActive={!!appointmentsSection}
+          onClick={handleAppointmentsSection}
+        >
+          Reuniões
+        </MenuBooleanButton>
+        <MenuBooleanButton
+          type="button"
+          isActive={!!filesSection}
+          onClick={handleFilesSection}
+        >
+          Arquivos
+        </MenuBooleanButton>
+      </MenuHeader>
+      {!!taskSection && <CardTaskDashboard />}
+      {!!notesSection && <CardNotesDashboard />}
+      {!!participantsSection && (
+        <>
+          <h1>ParticipantsSection</h1>
+          <h1>ParticipantsSection</h1>
+          <h1>ParticipantsSection</h1>
+          <h1>ParticipantsSection</h1>
+        </>
+      )}
+      {!!appointmentsSection && (
+        <>
+          <h1>AppointmentsSection</h1>
+          <h1>AppointmentsSection</h1>
+          <h1>AppointmentsSection</h1>
+          <h1>AppointmentsSection</h1>
+        </>
+      )}
+      {!!filesSection && (
+        <>
+          <h1>FilesSection</h1>
+          <h1>FilesSection</h1>
+          <h1>FilesSection</h1>
+          <h1>FilesSection</h1>
+        </>
+      )}
+    </Container>
   );
 };
 

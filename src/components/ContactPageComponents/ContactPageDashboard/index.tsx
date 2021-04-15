@@ -3,7 +3,6 @@ import { MdAdd } from 'react-icons/md';
 import IContactPageDTO from '../../../dtos/IContactPageDTO';
 import { useContactPage } from '../../../hooks/contactPages';
 import Header from '../../Header';
-import MenuButton from '../../MenuButton';
 import AddContactPage from '../AddContactPage';
 import ContactPage from '../ContactPage';
 import UpdatePageImage from '../UpdatePageImage';
@@ -48,7 +47,6 @@ const ContactPageDashboard: React.FC = () => {
   return (
     <>
       <Header />
-      <MenuButton />
       <Container>
         {uploadontactPageMainImage && (
           <UpdatePageImage closeWindow={closeUploadContactPageMainImage} />
