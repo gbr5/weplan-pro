@@ -6,13 +6,12 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
   padding: 8px;
 
   background: var(--card-color);
   box-shadow: var(--box-shadow);
 
-  textarea {
+  > textarea {
     border: 0.8px solid var(--letter-color-5);
     border-radius: 4px;
     font-weight: 500;
@@ -26,7 +25,7 @@ export const Container = styled.div`
     padding: 0.4rem;
   }
 
-  button {
+  > button {
     height: 2rem;
     width: 2rem;
     background: var(--green-icon);

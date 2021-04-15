@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Container, Note } from './styles';
+import { Container, Note, HistoryNote } from './styles';
 
 import ICardNotesDTO from '../../../../../../dtos/ICardNotesDTO';
 import IUserDTO from '../../../../../../dtos/IUserDTO';
@@ -23,6 +23,8 @@ const NotesContainer: React.FC<IProps> = ({
   const { getUserProfile } = useSignUp();
 
   const [author, setAuthor] = useState<IUserDTO>({} as IUserDTO);
+  const [noteTitle, setNoteTitle] = useState('');
+  const [note, setNote] = useState(cardNote.note);
 
   const getAuthor = useCallback(async () => {
     try {
@@ -34,10 +36,18 @@ const NotesContainer: React.FC<IProps> = ({
   }, [cardNote, getUserProfile]);
 
   useEffect(() => {
-    if (cardNote.user_id === employee.employeeUser.id) {
+    if (cardNote.user_id !== employee.employeeUser.id) {
       getAuthor();
     }
   }, [getAuthor, cardNote, employee]);
+
+  useEffect(() => {
+    if (cardNote.user_id === employee.company.id) {
+      const noteSplit = cardNote.note.split('|');
+      setNoteTitle(noteSplit[0]);
+      setNote(noteSplit[1]);
+    }
+  }, [cardNote, employee]);
 
   let phraseIndex = 0;
 
@@ -46,26 +56,45 @@ const NotesContainer: React.FC<IProps> = ({
       onClick={() => handleSetSelectedNote(cardNote)}
       isActive={isSelected}
     >
-      <Note>
-        {cardNote.note.split('\n').map(phrase => {
-          phraseIndex += 1;
-          return <p key={phraseIndex}>{phrase}</p>;
-        })}
-      </Note>
+      {cardNote.user_id !== employee.company.id ? (
+        <>
+          <Note>
+            {cardNote.note.split('\n').map(phrase => {
+              phraseIndex += 1;
+              return <p key={phraseIndex}>{phrase}</p>;
+            })}
+          </Note>
 
-      <footer>
-        <strong>{formatHourDateShort(String(cardNote.created_at))}</strong>
-        {cardNote.user_id !== employee.employeeUser.id ? (
-          <strong>{author.name}</strong>
-        ) : (
-          <strong>Você enviou</strong>
-        )}
-        {cardNote.created_at !== cardNote.updated_at && (
-          <strong>
-            Atualizado: {formatHourDateShort(String(cardNote.updated_at))}
-          </strong>
-        )}
-      </footer>
+          <footer>
+            <strong>{formatHourDateShort(String(cardNote.created_at))}</strong>
+            {cardNote.user_id !== employee.company.id &&
+              (cardNote.user_id !== employee.employeeUser.id ? (
+                <strong>{author.name}</strong>
+              ) : (
+                <strong>Você enviou</strong>
+              ))}
+            {cardNote.created_at !== cardNote.updated_at && (
+              <strong>
+                Atualizado: {formatHourDateShort(String(cardNote.updated_at))}
+              </strong>
+            )}
+          </footer>
+        </>
+      ) : (
+        <HistoryNote>
+          <h3>{noteTitle}</h3>
+          <Note>
+            {note.includes('\n') ? (
+              note.split('\n').map(paragraph => {
+                phraseIndex += 1;
+                return <strong key={phraseIndex}>{paragraph}</strong>;
+              })
+            ) : (
+              <strong>{note}</strong>
+            )}
+          </Note>
+        </HistoryNote>
+      )}
     </Container>
   );
 };

@@ -10,11 +10,22 @@ export const Container = styled.button<IContainerProps>`
   flex-direction: column;
   min-height: 40px;
   box-sizing: border-box;
-  width: 100%;
+
+  width: 96vw;
   padding: 5px;
   text-align: center;
-  border: 1px solid var(--title-color);
-  margin: 1rem 0;
+  margin: 0.8rem auto;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+
+  > textarea {
+    font-size: 18px;
+    line-height: 32px;
+    width: 100%;
+    height: 100%;
+    padding: 0.8rem;
+    text-align: left;
+  }
 
   > footer {
     display: flex;
@@ -26,7 +37,7 @@ export const Container = styled.button<IContainerProps>`
       width: 100%;
       min-height: 22px;
       margin: 0 auto;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
     }
   }
 
@@ -34,10 +45,11 @@ export const Container = styled.button<IContainerProps>`
     props.isActive &&
     css`
       color: var(--letter-color-5);
-      background-color: var(--header-primary);
+      background-color: rgba(255, 240, 220);
       opacity: 1;
       transition: 0.25s;
       border: 1px solid var(--header-background-color);
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
 
       &:hover {
         opacity: 0.5;
@@ -59,6 +71,25 @@ export const Note = styled.div`
 
   > p {
     min-height: 26px;
-    font-size: 16px;
+    font-size: 18px;
+  }
+
+  > strong {
+    width: 100%;
+    text-align: center;
+  }
+`;
+
+export const HistoryNote = styled.div`
+  display: block;
+  width: 100%;
+
+  > h3 {
+    width: 100%;
+    color: var(--letter-color-5);
+    border-bottom: 2px solid var(--secondary-color);
+    margin: 0rem auto 0.4rem;
+    padding: 0.4rem;
+    text-align: center;
   }
 `;
