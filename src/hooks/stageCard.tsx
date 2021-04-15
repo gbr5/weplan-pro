@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns';
 import React, { createContext, useCallback, useState, useContext } from 'react';
 import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
 import ICardCustomerDTO from '../dtos/ICardCustomerDTO';
@@ -161,7 +162,33 @@ const StageCardProvider: React.FC = ({ children }) => {
       api
         .get<ICardNotesDTO[]>(`cards/notes/${selectedCard.unique_name}`)
         .then(response => {
-          setCardNotes(response.data);
+          setCardNotes(
+            response.data.sort((a, b) => {
+              console.log(
+                differenceInDays(
+                  new Date(a.created_at),
+                  new Date(b.created_at),
+                ),
+              );
+              if (
+                differenceInDays(
+                  new Date(a.created_at),
+                  new Date(b.created_at),
+                ) > 0
+              ) {
+                return -1;
+              }
+              if (
+                differenceInDays(
+                  new Date(a.created_at),
+                  new Date(b.created_at),
+                ) < 0
+              ) {
+                return 1;
+              }
+              return 0;
+            }),
+          );
         });
     } catch (err) {
       throw new Error(err);

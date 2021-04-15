@@ -10,7 +10,7 @@ export const Main = styled.div`
 
 export const Notes = styled.div`
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   /* justify-content: stretch; */
   background: var(--background-color);
   /* height: 20rem; */
