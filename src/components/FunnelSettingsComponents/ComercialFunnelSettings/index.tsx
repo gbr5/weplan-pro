@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useFunnel } from '../../../hooks/funnel';
 import Header from '../../Header';
-import MenuButton from '../../MenuButton';
 import AddFunnelCardInfoField from '../AddFunnelCardInfoField';
 import FunnelCardInfoFieldButton from '../FunnelCardInfoFieldButton';
 
@@ -18,7 +17,6 @@ const ComercialFunnelSettings: React.FC = () => {
   return (
     <Container>
       <Header />
-      <MenuButton />
 
       <h1>Configurações Comercial</h1>
 

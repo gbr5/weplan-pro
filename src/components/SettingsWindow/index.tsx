@@ -15,6 +15,7 @@ interface IProps {
   handleAppointmentsWindow: Function;
   handleHelpWindow: Function;
   handleOpenFormDashboard: Function;
+  handleCreateComercialCard: () => void;
 }
 
 const SettingsWindow: React.FC<IProps> = ({
@@ -23,6 +24,7 @@ const SettingsWindow: React.FC<IProps> = ({
   handleAppointmentsWindow,
   handleHelpWindow,
   handleOpenFormDashboard,
+  handleCreateComercialCard,
 }) => {
   const history = useHistory();
   const { signOut } = useEmployeeAuth();
@@ -34,6 +36,7 @@ const SettingsWindow: React.FC<IProps> = ({
     signOut();
     history.push('/');
   }, [signOut, history]);
+
   return (
     <WindowContainer
       onHandleCloseWindow={() => handleCloseWindow()}
@@ -47,21 +50,24 @@ const SettingsWindow: React.FC<IProps> = ({
     >
       <Container>
         {/* <ToggleButton>
-          <h3>Tema {themeBoolean ? 'Escuro' : 'Claro'}</h3>
-          <Swicth
-            onChange={toggleTheme}
-            checked={themeBoolean}
-            checkedIcon={false}
-            uncheckedIcon={false}
-            height={10}
-            width={40}
-            handleDiameter={20}
-            offColor={colors.secondary}
-            onColor={colors.primary}
-          />
-        </ToggleButton> */}
+            <h3>Tema {themeBoolean ? 'Escuro' : 'Claro'}</h3>
+            <Swicth
+              onChange={toggleTheme}
+              checked={themeBoolean}
+              checkedIcon={false}
+              uncheckedIcon={false}
+              height={10}
+              width={40}
+              handleDiameter={20}
+              offColor={colors.secondary}
+              onColor={colors.primary}
+            />
+          </ToggleButton> */}
+        <button type="button" onClick={() => handleCreateComercialCard()}>
+          Novo Negócio
+        </button>
         <button type="button" onClick={() => handleContactPageDashboard()}>
-          Página de contato
+          e-Links
         </button>
         <button type="button" onClick={() => handleOpenFormDashboard()}>
           Formulários

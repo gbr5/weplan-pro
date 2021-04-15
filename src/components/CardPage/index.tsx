@@ -9,7 +9,6 @@ import { useHomeController } from '../../hooks/homeController';
 import { useFunnel } from '../../hooks/funnel';
 
 import { Container, BackButton } from './styles';
-import MenuButton from '../MenuButton';
 
 const CardPage: React.FC = () => {
   const history = useHistory();
@@ -24,7 +23,6 @@ const CardPage: React.FC = () => {
   return (
     <>
       <Header />
-      <MenuButton />
       <Container>
         <BackButton type="button" onClick={navigateBack}>
           <FiChevronLeft size={55} /> Voltar

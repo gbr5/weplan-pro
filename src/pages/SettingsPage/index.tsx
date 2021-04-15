@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
-import MenuButton from '../../components/MenuButton';
 import IFunnelDTO from '../../dtos/IFunnelDTO';
 import { useFunnel } from '../../hooks/funnel';
 import { useHomeController } from '../../hooks/homeController';
@@ -24,7 +23,6 @@ const SettingsPage: React.FC = () => {
   return (
     <Container>
       <Header />
-      <MenuButton />
 
       <Body>
         <h1>Configurações</h1>

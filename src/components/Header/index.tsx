@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { FiSettings } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { Container, Menu } from './styles';
+import CreateComercialCard from '../CardComponents/CreateComercialCard';
 
 import logo from '../../assets/weplan.svg';
 
@@ -14,7 +15,9 @@ const Header: React.FC = () => {
   const { selectPage } = useHomeController();
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
-
+  const [createComercialCardWindow, setCreateComercialCardWindow] = useState(
+    false,
+  );
   const closeAllWindows = useCallback(() => {
     setHelpWindow(false);
     setSettingsWindow(false);
@@ -45,6 +48,13 @@ const Header: React.FC = () => {
     history.push('/dashboard');
   }, [history, selectPage]);
 
+  const handleCreateComercialCard = useCallback(
+    (e: boolean) => {
+      closeAllWindows();
+      setCreateComercialCardWindow(e);
+    },
+    [closeAllWindows],
+  );
   return (
     <>
       <Container>
@@ -61,11 +71,17 @@ const Header: React.FC = () => {
       </Container>
       {!!settingsWindow && (
         <SettingsWindow
+          handleCreateComercialCard={() => handleCreateComercialCard(true)}
           handleAppointmentsWindow={handleAppointmentsWindow}
           handleHelpWindow={() => selectPage('Home')}
           handleCloseWindow={handleSettingsWindow}
           handleContactPageDashboard={handleOpenContactPageDashboard}
           handleOpenFormDashboard={handleOpenFormDashboard}
+        />
+      )}
+      {createComercialCardWindow && (
+        <CreateComercialCard
+          closeWindow={() => handleCreateComercialCard(false)}
         />
       )}
     </>

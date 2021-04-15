@@ -24,7 +24,7 @@ interface IFunnelContextData {
   createFunnelCardInfoField(note: ICreateFunnelCardInfoFieldDTO): void;
   updateFunnelCardInfoField(note: IFunnelCardInfoFieldDTO): void;
   deleteFunnelCardInfoField(id: string): void;
-  getFunnels(company_id: string): Promise<IFunnelDTO[]>;
+  getFunnels(): Promise<IFunnelDTO[]>;
   getFunnelCardInfoFields(funnel_id: string): void;
 }
 
@@ -111,37 +111,36 @@ const FunnelProvider: React.FC = ({ children }) => {
     [getFunnelCardInfoFields],
   );
 
-  const getFunnels = useCallback(
-    async (company_id: string) => {
-      try {
-        const response = await api.get<IFunnelDTO[]>(`funnels/${company_id}`);
-        const findComercialFunnel = response.data.find(
-          funnel => funnel.name === 'Comercial',
+  const getFunnels = useCallback(async () => {
+    try {
+      const response = await api.get<IFunnelDTO[]>(
+        `funnels/${employee.company.id}`,
+      );
+      const findComercialFunnel = response.data.find(
+        funnel => funnel.name === 'Comercial',
+      );
+      findComercialFunnel && setComercialFunnel(findComercialFunnel);
+      findComercialFunnel &&
+        localStorage.setItem(
+          '@WP-PRO:comercial-funnels',
+          JSON.stringify(response.data),
         );
-        findComercialFunnel && setComercialFunnel(findComercialFunnel);
-        findComercialFunnel &&
+      localStorage.setItem('@WP-PRO:funnels', JSON.stringify(response.data));
+      if (response.data.length >= 1) {
+        if (selectedFunnel && !selectedFunnel.id) {
+          findComercialFunnel && setSelectedFunnel(findComercialFunnel);
+          !findComercialFunnel && setSelectedFunnel(response.data[0]);
           localStorage.setItem(
-            '@WP-PRO:comercial-funnels',
-            JSON.stringify(response.data),
+            '@WP-PRO:selected-funnel',
+            JSON.stringify(response.data[0]),
           );
-        localStorage.setItem('@WP-PRO:funnels', JSON.stringify(response.data));
-        if (response.data.length >= 1) {
-          if (selectedFunnel && !selectedFunnel.id) {
-            findComercialFunnel && setSelectedFunnel(findComercialFunnel);
-            !findComercialFunnel && setSelectedFunnel(response.data[0]);
-            localStorage.setItem(
-              '@WP-PRO:selected-funnel',
-              JSON.stringify(response.data[0]),
-            );
-          }
         }
-        return response.data;
-      } catch (err) {
-        throw new Error(err);
       }
-    },
-    [selectedFunnel],
-  );
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [selectedFunnel, employee]);
 
   const createFunnelCardInfoField = useCallback(
     async (data: ICreateFunnelCardInfoFieldDTO) => {
@@ -227,7 +226,7 @@ const FunnelProvider: React.FC = ({ children }) => {
       if (findFunnels) {
         setFunnels(JSON.parse(findFunnels));
       } else {
-        getFunnels(employee.company.id);
+        getFunnels();
       }
     }
   }, [getFunnels, employee]);

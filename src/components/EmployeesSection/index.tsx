@@ -3,7 +3,6 @@ import { MdPersonAdd } from 'react-icons/md';
 import EmployeesList from './EmployeesList';
 
 import Header from '../Header';
-import MenuButton from '../MenuButton';
 
 import { Container, SubContainer } from './styles';
 import CreateCompanyEmployeeContainer from './CreateCompanyEmployeeContainer';
@@ -23,7 +22,6 @@ const EmployeesSection: React.FC = () => {
         />
       )}
       <Header />
-      <MenuButton />
       <SubContainer>
         <span>
           <h1>Colaboradores</h1>
