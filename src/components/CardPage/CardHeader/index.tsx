@@ -10,17 +10,17 @@ import { Container, CardTitle, StageButton } from './styles';
 
 const CardHeader: React.FC = () => {
   const iconsize = 24;
-  const { selectedCard, updateCard } = useStageCard();
+  const { selectedCard, updateCardName } = useStageCard();
   const { selectedFunnel } = useFunnel();
   const [updateStage, setUpdateStage] = useState(false);
-  const [updateCardName, setUpdateCardName] = useState(false);
+  const [updateCardNameField, setUpdateCardNameField] = useState(false);
 
   const handleUpdateStage = useCallback((e: boolean) => {
     setUpdateStage(e);
   }, []);
 
   const handleUpdateCardNameField = useCallback((e: boolean) => {
-    setUpdateCardName(e);
+    setUpdateCardNameField(e);
   }, []);
 
   const stageName = useMemo(() => {
@@ -38,12 +38,12 @@ const CardHeader: React.FC = () => {
 
   const handleUpdateCardName = useCallback(
     (e: string) => {
-      updateCard({
+      updateCardName({
         ...selectedCard,
         name: e,
       });
     },
-    [updateCard, selectedCard],
+    [updateCardName, selectedCard],
   );
 
   return (
@@ -52,11 +52,11 @@ const CardHeader: React.FC = () => {
         <span>Nome do Card</span>
         <button
           type="button"
-          onClick={() => handleUpdateCardNameField(!updateCardName)}
+          onClick={() => handleUpdateCardNameField(!updateCardNameField)}
         >
           <MdEdit size={iconsize} />
         </button>
-        {updateCardName ? (
+        {updateCardNameField ? (
           // <EditCardTitle closeComponent={() => handleUpdateCardNameField(false)} />
           <h2>
             <InlineFormField

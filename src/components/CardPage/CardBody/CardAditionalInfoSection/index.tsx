@@ -5,8 +5,8 @@ import CardTaskDashboard from './CardTaskDashboard';
 import { Container, MenuHeader, MenuBooleanButton } from './styles';
 
 const CardAditionalInfoSection: React.FC = () => {
-  const [taskSection, setTaskSection] = useState(true);
-  const [notesSection, setNotesSection] = useState(false);
+  const [taskSection, setTaskSection] = useState(false);
+  const [notesSection, setNotesSection] = useState(true);
   const [historySection, setHistorySection] = useState(false);
   const [participantsSection, setParticipantsSection] = useState(false);
   const [appointmentsSection, setAppointmentsSection] = useState(false);
