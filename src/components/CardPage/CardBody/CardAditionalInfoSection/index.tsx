@@ -7,14 +7,12 @@ import { Container, MenuHeader, MenuBooleanButton } from './styles';
 const CardAditionalInfoSection: React.FC = () => {
   const [taskSection, setTaskSection] = useState(false);
   const [notesSection, setNotesSection] = useState(true);
-  const [historySection, setHistorySection] = useState(false);
   const [participantsSection, setParticipantsSection] = useState(false);
   const [appointmentsSection, setAppointmentsSection] = useState(false);
   const [filesSection, setFilesSection] = useState(false);
 
   const closeAllSections = useCallback(() => {
     setTaskSection(false);
-    setHistorySection(false);
     setParticipantsSection(false);
     setAppointmentsSection(false);
     setFilesSection(false);
@@ -29,10 +27,6 @@ const CardAditionalInfoSection: React.FC = () => {
   const handleNotesSection = useCallback(() => {
     closeAllSections();
     setNotesSection(true);
-  }, [closeAllSections]);
-  const handleHistorySection = useCallback(() => {
-    closeAllSections();
-    setHistorySection(true);
   }, [closeAllSections]);
   const handleAppointmentsSection = useCallback(() => {
     closeAllSections();
@@ -49,24 +43,17 @@ const CardAditionalInfoSection: React.FC = () => {
         <MenuHeader>
           <MenuBooleanButton
             type="button"
+            isActive={!!notesSection}
+            onClick={handleNotesSection}
+          >
+            Notas
+          </MenuBooleanButton>
+          <MenuBooleanButton
+            type="button"
             isActive={!!taskSection}
             onClick={handleTaskSection}
           >
             Tarefas
-          </MenuBooleanButton>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!notesSection}
-            onClick={handleNotesSection}
-          >
-            Anotações
-          </MenuBooleanButton>
-          <MenuBooleanButton
-            type="button"
-            isActive={!!historySection}
-            onClick={handleHistorySection}
-          >
-            Histórico
           </MenuBooleanButton>
           <MenuBooleanButton
             type="button"

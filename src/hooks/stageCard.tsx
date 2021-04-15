@@ -164,12 +164,6 @@ const StageCardProvider: React.FC = ({ children }) => {
         .then(response => {
           setCardNotes(
             response.data.sort((a, b) => {
-              console.log(
-                differenceInDays(
-                  new Date(a.created_at),
-                  new Date(b.created_at),
-                ),
-              );
               if (
                 differenceInDays(
                   new Date(a.created_at),

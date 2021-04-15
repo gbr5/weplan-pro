@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
 
-import { Main, ContainerMenu, Notes } from './styles';
+import { Main, Notes } from './styles';
 import NotesContainer from './NotesContainer';
 import ICardNotesDTO from '../../../../../dtos/ICardNotesDTO';
 import CreateNoteForm from './CreateNoteForm';
@@ -23,15 +22,6 @@ const CardNotesDashboard: React.FC = () => {
 
   return (
     <Main>
-      <ContainerMenu>
-        <button type="button">
-          <p>Selecionar autor</p>
-          <strong>
-            pessoasCard
-            <FiChevronDown size={24} />
-          </strong>
-        </button>
-      </ContainerMenu>
       <CreateNoteForm />
       <Notes>
         {cardNotes.length > 0 &&
