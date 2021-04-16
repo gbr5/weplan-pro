@@ -92,7 +92,7 @@ const CollectEmployeePassword: React.FC<IProps> = ({
             });
           } else {
             const response = await createCompanyContact({
-              company_contact_type: 'Customer',
+              company_contact_type: 'Employee',
               description: 'Colaborador',
               family_name: employeeFamilyName,
               isCompany: false,
@@ -135,7 +135,7 @@ const CollectEmployeePassword: React.FC<IProps> = ({
             });
           } else {
             const response = await createCompanyContact({
-              company_contact_type: 'Customers',
+              company_contact_type: 'Employee',
               description: 'Colaborador',
               family_name: employeeFamilyName,
               isCompany: false,

@@ -8,6 +8,7 @@ export const Container = styled.div`
   background: var(--background-color);
   border-radius: 8px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
 
   > h2 {
     width: 90%;
@@ -29,9 +30,10 @@ export const Container = styled.div`
 export const ContactsContainer = styled.div`
   display: block;
   width: 100%;
-  height: 50vh;
+  height: 45vh;
   overflow-y: scroll;
   padding: 0.5rem;
+  padding-bottom: 2rem;
 `;
 
 interface IButtonProps {

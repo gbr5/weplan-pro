@@ -318,21 +318,24 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     }
   }, [employee]);
 
-  const getCompanyEmployeeContact = useCallback(async () => {
-    try {
-      const response = await api.get<IEmployeeDTO | undefined>(
-        `/company-employee-contact/${selectedContact.id}`,
-      );
-      localStorage.setItem(
-        '@WP-PRO:contact-employee',
-        JSON.stringify(response.data),
-      );
-      setContactEmployee(response.data);
-      return response.data;
-    } catch (err) {
-      throw new Error(err);
-    }
-  }, [selectedContact]);
+  const getCompanyEmployeeContact = useCallback(
+    async (company_contact_id: string) => {
+      try {
+        const response = await api.get<IEmployeeDTO | undefined>(
+          `/company-employee-contact/${company_contact_id}`,
+        );
+        localStorage.setItem(
+          '@WP-PRO:contact-employee',
+          JSON.stringify(response.data),
+        );
+        setContactEmployee(response.data);
+        return response.data;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [],
+  );
 
   const deleteCompanyContact = useCallback(
     async (data: ICompanyContactDTO) => {
@@ -718,25 +721,16 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     [getCompanyContacts, addToast],
   );
 
-  const selectContact = useCallback(
-    (data: ICompanyContactDTO) => {
-      if (data && !data.id) {
-        localStorage.removeItem('@WP-PRO:contact-employee');
-        localStorage.removeItem('@WP-PRO:selected-contact');
-        setContactEmployee({} as IEmployeeDTO);
-        return setSelectedContact({} as ICompanyContactDTO);
-      }
-      if (selectedContact.id === data.id) {
-        localStorage.removeItem('@WP-PRO:contact-employee');
-        setContactEmployee({} as IEmployeeDTO);
-        localStorage.removeItem('@WP-PRO:selected-contact');
-        return setSelectedContact({} as ICompanyContactDTO);
-      }
-      localStorage.setItem('@WP-PRO:selected-contact', JSON.stringify(data));
-      return setSelectedContact(data);
-    },
-    [selectedContact],
-  );
+  const selectContact = useCallback((data: ICompanyContactDTO) => {
+    if (data && !data.id) {
+      localStorage.removeItem('@WP-PRO:contact-employee');
+      localStorage.removeItem('@WP-PRO:selected-contact');
+      setContactEmployee({} as IEmployeeDTO);
+      return setSelectedContact({} as ICompanyContactDTO);
+    }
+    localStorage.setItem('@WP-PRO:selected-contact', JSON.stringify(data));
+    return setSelectedContact(data);
+  }, []);
 
   const contactInfoTypes: ICheckBoxOptionDTO[] = [
     { id: 'Phone', label: 'Telefone', value: 'Phone' },
@@ -750,26 +744,26 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   ];
 
   const contactTypes: ICheckBoxOptionDTO[] = [
-    { id: 'Customers', label: 'Clientes', value: 'Customers' },
-    { id: 'Suppliers', label: 'Fornecedores', value: 'Suppliers' },
-    { id: 'Employees', label: 'Colaboradores', value: 'Employees' },
-    { id: 'Outsourceds', label: 'Terceirizados', value: 'Outsourceds' },
-    { id: 'Others', label: 'Outros', value: 'Others' },
+    { id: 'Customer', label: 'Clientes', value: 'Customer' },
+    { id: 'Supplier', label: 'Fornecedores', value: 'Supplier' },
+    { id: 'Employee', label: 'Colaboradores', value: 'Employee' },
+    { id: 'Outsourced', label: 'Terceirizados', value: 'Outsourced' },
+    { id: 'Other', label: 'Outros', value: 'Other' },
   ];
 
-  useEffect(() => {
-    if (selectedContact && selectedContact.id) {
-      const findContactEmployee = localStorage.getItem(
-        '@WP-PRO:contact-employee',
-      );
-      if (findContactEmployee) {
-        const parsedEmployee = JSON.parse(findContactEmployee);
-        setContactEmployee(parsedEmployee);
-      } else {
-        getCompanyEmployeeContact();
-      }
-    }
-  }, [getCompanyEmployeeContact, selectedContact]);
+  // useEffect(() => {
+  //   if (selectedContact && selectedContact.id) {
+  //     const findContactEmployee = localStorage.getItem(
+  //       '@WP-PRO:contact-employee',
+  //     );
+  //     if (findContactEmployee) {
+  //       const parsedEmployee = JSON.parse(findContactEmployee);
+  //       setContactEmployee(parsedEmployee);
+  //     } else {
+  //       getCompanyEmployeeContact(selected);
+  //     }
+  //   }
+  // }, [getCompanyEmployeeContact, selectedContact]);
 
   useEffect(() => {
     if (employee && employee.id && myEmployeeContact && !myEmployeeContact.id) {

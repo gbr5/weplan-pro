@@ -108,6 +108,7 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
       localStorage.removeItem('@WP-PRO:selected-employee');
       setSelectedCompanyEmployee({} as IEmployeeDTO);
     }
+    localStorage.setItem('@WP-PRO:selected-employee', JSON.stringify(data));
     setSelectedCompanyEmployee(data);
   }, []);
   const selectEmployeeAccessLevel = useCallback((accessLevel: number) => {

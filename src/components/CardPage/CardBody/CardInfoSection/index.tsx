@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiTarget } from 'react-icons/fi';
-import { MdGroup, MdNaturePeople } from 'react-icons/md';
+import { MdGroup } from 'react-icons/md';
 import IUserDTO from '../../../../dtos/IUserDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
 import { useFunnel } from '../../../../hooks/funnel';
 import { useSignUp } from '../../../../hooks/signUp';
 import { useStageCard } from '../../../../hooks/stageCard';
 import formatHourDateShort from '../../../../utils/formatHourDateShort';
-import SelectCustomer from '../../../GeneralComponents/SelectCustomer';
 import CardBudgetsWindow from './CardBudgetsWindow';
 import CardInfoButton from './CardInfoButton';
 import CardParticipantsWindow from './CardParticipantsWindow';
@@ -26,7 +25,6 @@ const CardInfoSection: React.FC = () => {
     selectedCard,
     funnelCardInfos,
     getCardCheckLists,
-    getCardCustomers,
     getFunnelCardInfos,
   } = useStageCard();
   const { getUserProfile } = useSignUp();
@@ -34,14 +32,12 @@ const CardInfoSection: React.FC = () => {
   const { getFunnelCardInfoFields, selectedFunnel } = useFunnel();
   const [cardInfo, setCardInfo] = useState(false);
   const [cardParticipantsWindow, setCardParticipantsWindow] = useState(false);
-  const [cardCustomersWindow, setCardCustomersWindow] = useState(false);
   const [cardBudgetsWindow, setCardBudgetsWindow] = useState(false);
   const [cardOwner, setCardOwner] = useState<IUserDTO>({} as IUserDTO);
 
   const handleCloseAllWindows = useCallback(() => {
     setCardParticipantsWindow(false);
     setCardBudgetsWindow(false);
-    setCardCustomersWindow(false);
   }, []);
 
   const getCardOwner = useCallback(async () => {
@@ -55,9 +51,6 @@ const CardInfoSection: React.FC = () => {
   useEffect(() => {
     getCardCheckLists();
   }, [getCardCheckLists]);
-  useEffect(() => {
-    getCardCustomers();
-  }, [getCardCustomers]);
   useEffect(() => {
     getFunnelCardInfos();
   }, [getFunnelCardInfos]);
@@ -74,9 +67,6 @@ const CardInfoSection: React.FC = () => {
           handleCloseWindow={handleCloseAllWindows}
           onHandleCloseWindow={() => setCardParticipantsWindow(false)}
         />
-      )}
-      {cardCustomersWindow && (
-        <SelectCustomer closeWindow={handleCloseAllWindows} />
       )}
       {cardBudgetsWindow && (
         <CardBudgetsWindow
@@ -105,13 +95,6 @@ const CardInfoSection: React.FC = () => {
             >
               <strong>Participantes da empresa</strong>
               <MdGroup size={32} />
-            </CardParticipantsButton>
-            <CardParticipantsButton
-              type="button"
-              onClick={() => setCardCustomersWindow(true)}
-            >
-              <strong>Clientes</strong>
-              <MdNaturePeople size={32} />
             </CardParticipantsButton>
             <div>
               <span>

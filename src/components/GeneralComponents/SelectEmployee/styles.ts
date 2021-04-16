@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: block;
@@ -37,7 +37,7 @@ interface IButtonProps {
   isActive: boolean;
 }
 
-export const ContactMenuButton = styled.button<IButtonProps>`
+export const ContactMenuButton = styled.button`
   height: 2.5rem;
   width: 8rem;
   margin: 0.5rem;
@@ -47,14 +47,6 @@ export const ContactMenuButton = styled.button<IButtonProps>`
   border-radius: 5px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   transition: 0.3s;
-
-  ${props =>
-    props.isActive &&
-    css`
-      color: var(--letter-color-5);
-      background: var(--secondary-color);
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
-    `}
 `;
 
 export const ContactButton = styled.button`
