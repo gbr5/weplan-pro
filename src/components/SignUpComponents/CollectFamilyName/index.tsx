@@ -3,7 +3,6 @@ import { Form } from '@unform/web';
 import React, { useCallback, useRef } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useSignUp } from '../../../hooks/signUp';
-import { useToast } from '../../../hooks/toast';
 import Button from '../../Button';
 import Input from '../../Input';
 
@@ -19,38 +18,20 @@ interface IFormParams {
   name: string;
 }
 
-const CollectName: React.FC<IProps> = ({
+const CollectFamilyName: React.FC<IProps> = ({
   closeWindow,
   previousComponent,
   componentText,
 }) => {
-  const { addToast } = useToast();
-  const {
-    getUserByName,
-    getCompanyInfoByName,
-    selectName,
-    selectedName,
-  } = useSignUp();
+  const { selectFamilyName, selectedName } = useSignUp();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
     async (data: IFormParams) => {
-      const findName = await getUserByName(data.name);
-      const findCompanyName = await getCompanyInfoByName(data.name);
-      if (
-        (findName && findName.id) ||
-        (findCompanyName && findCompanyName.id)
-      ) {
-        addToast({
-          type: 'error',
-          title: 'Este nome já está cadastrado',
-          description: 'Tente novamente!',
-        });
-      }
-      selectName(data.name);
+      selectFamilyName(data.name);
       closeWindow(data.name);
     },
-    [addToast, getUserByName, getCompanyInfoByName, selectName, closeWindow],
+    [selectFamilyName, closeWindow],
   );
 
   return (
@@ -73,4 +54,4 @@ const CollectName: React.FC<IProps> = ({
   );
 };
 
-export default CollectName;
+export default CollectFamilyName;

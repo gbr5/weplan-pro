@@ -3,6 +3,7 @@ import ICompanyInfoDTO from '../dtos/ICompanyInfoDTO';
 import IUserDTO from '../dtos/IUserDTO';
 
 import api from '../services/api';
+import formatHourDateShort from '../utils/formatHourDateShort';
 import { useToast } from './toast';
 
 interface IEmailProps {
@@ -18,9 +19,11 @@ interface ISignUpContextData {
   masterCreated: boolean;
   selectedEmail: string;
   selectedName: string;
+  selectedFamilyName: string;
   selectedUser: IUserDTO;
   selectEmail(email: string): void;
   selectName(name: string): void;
+  selectFamilyName(name: string): void;
   selectUser(user: IUserDTO): void;
   createCompany(pass: string): void;
   createUser(pass: string): Promise<IUserDTO>;
@@ -37,6 +40,7 @@ const SignUpContext = createContext<ISignUpContextData>(
 const SignUpProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
   const [selectedName, setSelectedName] = useState('');
+  const [selectedFamilyName, setSelectedFamilyName] = useState('');
   const [selectedEmail, setSelectedEmail] = useState('');
   const [companyCreated, setCompanyCreated] = useState(false);
   const [masterCreated, setMasterCreated] = useState(false);
@@ -47,6 +51,9 @@ const SignUpProvider: React.FC = ({ children }) => {
   }, []);
   const selectName = useCallback((name: string) => {
     setSelectedName(name);
+  }, []);
+  const selectFamilyName = useCallback((name: string) => {
+    setSelectedFamilyName(name);
   }, []);
 
   const selectUser = useCallback((user: IUserDTO) => {
@@ -146,8 +153,9 @@ const SignUpProvider: React.FC = ({ children }) => {
   const createUser = useCallback(
     async (pass: string) => {
       try {
+        const now = formatHourDateShort(String(new Date()));
         const response = await api.post('/users', {
-          name: selectedName,
+          name: `${selectedName}${selectedFamilyName}|${now}`,
           email: selectedEmail,
           password: pass,
           isCompany: false,
@@ -166,13 +174,15 @@ const SignUpProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, selectedName, selectedEmail],
+    [addToast, selectedName, selectedFamilyName, selectedEmail],
   );
 
   return (
     <SignUpContext.Provider
       value={{
         companyCreated,
+        selectFamilyName,
+        selectedFamilyName,
         getUserProfile,
         selectedEmail,
         selectEmail,
