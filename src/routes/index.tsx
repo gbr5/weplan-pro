@@ -29,7 +29,7 @@ const Routes: React.FC = () => {
       <Route path="/" exact component={SignIn} />
       <Route path="/form/:id" exact component={UserForm} />
       <Route path="/success-message/:id" exact component={SuccessPage} />
-      <Route path="/wellcome" exact component={WelcomePage} />
+      <Route path="/welcome" exact component={WelcomePage} />
       <Route path="/forgot-password" exact component={ForgotPassword} />
       <Route path="/reset-password" exact component={ResetPassword} />
       {employee && employee.id && selectedCard && selectedCard.id && (

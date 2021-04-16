@@ -12,7 +12,7 @@ import { Container } from './styles';
 
 interface IProps {
   closeWindow: () => void;
-  createEmployee: () => void;
+  createEmployee: (e: string) => void;
 }
 
 interface IFormData {
@@ -60,7 +60,7 @@ const CollectEmployeeEmail: React.FC<IProps> = ({
           <>
             <strong>Deseja selecionar este usuário?</strong>
             <h3>{selectedUser.name}</h3>
-            <Button type="button" onClick={() => createEmployee()}>
+            <Button type="button" onClick={() => createEmployee('')}>
               Sim
             </Button>
             <Button type="button" onClick={unSelectUser}>

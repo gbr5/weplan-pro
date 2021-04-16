@@ -14,8 +14,10 @@ import Input from '../../Input';
 import { Container } from './styles';
 
 interface IProps {
+  name: string;
+  familyName: string;
   companyEmail: string;
-  previousComponent: () => void;
+  previousComponent: (e: string) => void;
 }
 
 interface IFormData {
@@ -26,6 +28,8 @@ interface IFormData {
 const CreateFirstEmployee: React.FC<IProps> = ({
   previousComponent,
   companyEmail,
+  name,
+  familyName,
 }) => {
   const history = useHistory();
   const { addToast } = useToast();
@@ -57,6 +61,8 @@ const CreateFirstEmployee: React.FC<IProps> = ({
             user_id: response.id,
             password: data.password,
             email: response.email,
+            name,
+            family_name: familyName,
           });
           history.push('/');
         }
@@ -66,6 +72,8 @@ const CreateFirstEmployee: React.FC<IProps> = ({
           user_id: selectedUser.id,
           password: data.password,
           email: selectedUser.email,
+          name,
+          family_name: familyName,
         });
         history.push('/');
       } catch (err) {
@@ -82,14 +90,22 @@ const CreateFirstEmployee: React.FC<IProps> = ({
         });
       }
     },
-    [addToast, createUser, companyEmail, history, selectedUser],
+    [
+      addToast,
+      createUser,
+      companyEmail,
+      history,
+      selectedUser,
+      name,
+      familyName,
+    ],
   );
 
   return (
     <Form ref={formRef} onSubmit={handleSubmit}>
       <Container>
         <span>
-          <button type="button" onClick={() => previousComponent()}>
+          <button type="button" onClick={() => previousComponent('')}>
             <FiArrowLeft size={24} />
           </button>
         </span>
