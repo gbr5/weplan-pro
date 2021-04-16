@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import ICreateEmployeeDTO from '../dtos/ICreateEmployeeDTO';
 import IEmployeeDTO from '../dtos/IEmployeeDTO';
-import IUserDTO from '../dtos/IUserDTO';
 import ICompanyMasterDTO from '../dtos/ICompanyMasterDTO';
 
 import api from '../services/api';
@@ -27,7 +26,6 @@ interface ICompanyEmployeeContextData {
   employeeFamilyName: string;
   employeePosition: string;
   employeeEmail: string;
-  selectedUser: IUserDTO;
   selectedCompanyEmployee: IEmployeeDTO;
   companyEmployees: IEmployeeDTO[];
   companyMasters: ICompanyMasterDTO[];
@@ -39,7 +37,6 @@ interface ICompanyEmployeeContextData {
   selectEmployeeAccessLevel(accessLevel: number): void;
   selectCompanyEmployee(data: IEmployeeDTO): void;
   createCompanyEmployee(data: ICreateEmployeeDTO): Promise<IEmployeeDTO>;
-  createUserEmployee(data: Omit<ICreateUserEmployeeDTO, 'user_id'>): void;
   getCompanyMasters(): Promise<void>;
   getEmployeeAsMaster(): Promise<ICompanyMasterDTO | undefined>;
   getCompanyEmployees(): Promise<void>;
@@ -66,14 +63,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
       return JSON.parse(findSelectedEmployee);
     }
     return {} as IEmployeeDTO;
-  });
-  const [selectedUser, setSelectedUser] = useState(() => {
-    const findSelectedUser = localStorage.getItem('@WP-PRO:selected-user');
-
-    if (findSelectedUser) {
-      return JSON.parse(findSelectedUser);
-    }
-    return {} as IUserDTO;
   });
   const [master, setMaster] = useState(() => {
     const findMaster = localStorage.getItem('@WP-PRO:me-as-master');
@@ -159,6 +148,14 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
   const createCompanyEmployee = useCallback(
     async (data: ICreateEmployeeDTO) => {
       try {
+        console.log({
+          email: data.email,
+          access_key: data.password,
+          password: data.password,
+          position: data.position,
+          title: 'Olá! Temos uma novidade para você',
+          message: `A empresa ${employee.company.name} convidou você para acessar o seu sistema na WePlan!`,
+        });
         const response = await api.post(
           `/company-employees/${employee.company.id}/${data.user_id}`,
           {
@@ -181,35 +178,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, employee, selectCompanyEmployee],
-  );
-  const createUserEmployee = useCallback(
-    // This function is called in case the e-mail of the employee does not have a user associated with it.
-    // This user is a normal the password is the a hash
-    async (data: Omit<ICreateUserEmployeeDTO, 'user_id'>) => {
-      try {
-        const response = await api.post('/users', {
-          name: data.name,
-          email: data.email,
-          password: `${data.name}&${data.email}`,
-          isCompany: false,
-        });
-        const employeeResponse = await api.post('/company-employees', {
-          user_id: response.data.id,
-          email: data.email,
-          position: data.position,
-          isActive: true,
-        });
-        addToast({
-          type: 'success',
-          title: 'Colaborador criado com sucesso!',
-        });
-        selectCompanyEmployee(employeeResponse.data);
-        setSelectedUser(response.data);
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    [addToast, selectCompanyEmployee],
   );
 
   const getEmployeeAsMaster = useCallback(async () => {
@@ -275,7 +243,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
         companyMasters,
         companyEmployees,
         selectedCompanyEmployee,
-        selectedUser,
         selectCompanyEmployee,
         employeeAccessLevel,
         employeeEmail,
@@ -291,7 +258,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
         getEmployeeAsMaster,
         getCompanyMasters,
         createCompanyEmployee,
-        createUserEmployee,
       }}
     >
       {children}

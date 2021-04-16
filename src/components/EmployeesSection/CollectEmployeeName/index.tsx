@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
-import { useEmployeeAuth } from '../../../hooks/employeeAuth';
 import { useSignUp } from '../../../hooks/signUp';
 import CreateInlineFormField from '../../GeneralComponents/CreateInlineFormField';
 
@@ -12,8 +11,7 @@ interface IProps {
 }
 
 const CollectEmployeeName: React.FC<IProps> = ({ nextStep, previousStep }) => {
-  const { employee } = useEmployeeAuth();
-  const { getUserByName, selectedUser, selectName } = useSignUp();
+  const { selectedUser, selectName } = useSignUp();
   const { selectEmployeeName } = useCompanyEmployee();
 
   const placeholder = useMemo(() => {
@@ -46,31 +44,11 @@ const CollectEmployeeName: React.FC<IProps> = ({ nextStep, previousStep }) => {
 
   const handleSubmit = useCallback(
     async (e: string) => {
-      const findByName = await getUserByName(e);
-
-      if (
-        (findByName && selectedUser && !selectedUser.id) ||
-        (findByName &&
-          selectedUser &&
-          selectedUser.id &&
-          selectedUser.id !== findByName.id)
-      ) {
-        selectEmployeeName(`${e} ${employee.company.name}`);
-        selectName(`${e} ${employee.company.name}`);
-        return nextStep();
-      }
       selectEmployeeName(e);
       selectName(e);
       return nextStep();
     },
-    [
-      nextStep,
-      selectName,
-      selectedUser,
-      selectEmployeeName,
-      getUserByName,
-      employee,
-    ],
+    [nextStep, selectName, selectEmployeeName],
   );
 
   return (

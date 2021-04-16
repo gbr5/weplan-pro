@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useToast } from '../../hooks/toast';
 
 import weplanLogo from '../../assets/WePlanLogo.svg';
-import CreateEmployeeContainer from '../../components/CreateEmployeeComponents/CreateEmployeeContainer';
+import CreateEmployeeContainer from '../../components/EmployeesSection/CreateFirstEmployeeContainer';
 import api from '../../services/api';
 
 import {

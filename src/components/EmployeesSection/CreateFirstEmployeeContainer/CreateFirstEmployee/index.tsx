@@ -4,18 +4,17 @@ import React, { useCallback, useRef } from 'react';
 import { FiArrowLeft, FiLock } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
-import { useSignUp } from '../../../hooks/signUp';
-import { useToast } from '../../../hooks/toast';
-import api from '../../../services/api';
-import getValidationErrors from '../../../utils/getValidationErros';
-import Button from '../../Button';
-import Input from '../../Input';
+import { useCompanyEmployee } from '../../../../hooks/companyEmployee';
+import { useSignUp } from '../../../../hooks/signUp';
+import { useToast } from '../../../../hooks/toast';
+import api from '../../../../services/api';
+import getValidationErrors from '../../../../utils/getValidationErros';
+import Button from '../../../Button';
+import Input from '../../../Input';
 
 import { Container } from './styles';
 
 interface IProps {
-  name: string;
-  familyName: string;
   companyEmail: string;
   previousComponent: (e: string) => void;
 }
@@ -28,13 +27,12 @@ interface IFormData {
 const CreateFirstEmployee: React.FC<IProps> = ({
   previousComponent,
   companyEmail,
-  name,
-  familyName,
 }) => {
   const history = useHistory();
   const { addToast } = useToast();
   const formRef = useRef<FormHandles>(null);
   const { createUser, selectedUser } = useSignUp();
+  const { employeeName, employeeFamilyName } = useCompanyEmployee();
 
   const handleSubmit = useCallback(
     async (data: IFormData) => {
@@ -61,20 +59,19 @@ const CreateFirstEmployee: React.FC<IProps> = ({
             user_id: response.id,
             password: data.password,
             email: response.email,
-            name,
-            family_name: familyName,
+            name: employeeName,
+            family_name: employeeFamilyName,
           });
-          history.push('/');
+        } else {
+          await api.post(`/first-master`, {
+            companyEmail,
+            user_id: selectedUser.id,
+            password: data.password,
+            email: selectedUser.email,
+            name: employeeName,
+            family_name: employeeFamilyName,
+          });
         }
-
-        await api.post(`/first-master`, {
-          companyEmail,
-          user_id: selectedUser.id,
-          password: data.password,
-          email: selectedUser.email,
-          name,
-          family_name: familyName,
-        });
         history.push('/');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -96,8 +93,8 @@ const CreateFirstEmployee: React.FC<IProps> = ({
       companyEmail,
       history,
       selectedUser,
-      name,
-      familyName,
+      employeeName,
+      employeeFamilyName,
     ],
   );
 
@@ -110,7 +107,7 @@ const CreateFirstEmployee: React.FC<IProps> = ({
           </button>
         </span>
 
-        <strong>Defina a senha da empresa</strong>
+        <strong>Defina a senha</strong>
         <Input name="password" type="password" icon={FiLock} />
         <strong>Confirme a senha</strong>
         <Input
