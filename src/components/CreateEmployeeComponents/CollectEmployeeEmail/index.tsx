@@ -60,12 +60,14 @@ const CollectEmployeeEmail: React.FC<IProps> = ({
           <>
             <strong>Deseja selecionar este usuário?</strong>
             <h3>{selectedUser.name}</h3>
-            <Button type="button" onClick={() => createEmployee('')}>
-              Sim
-            </Button>
-            <Button type="button" onClick={unSelectUser}>
-              Não
-            </Button>
+            <section>
+              <Button type="button" onClick={() => createEmployee('')}>
+                Sim
+              </Button>
+              <Button type="button" onClick={unSelectUser}>
+                Não
+              </Button>
+            </section>
           </>
         )}
         {!selectedUser ||
