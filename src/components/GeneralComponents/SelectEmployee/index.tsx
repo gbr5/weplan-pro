@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { MdPersonAdd } from 'react-icons/md';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useToast } from '../../../hooks/toast';
+import CreateCompanyEmployeeContainer from '../../EmployeesSection/CreateCompanyEmployeeContainer';
 import WindowContainer from '../../WindowContainer';
 
 import { Container, ContactsContainer, ContactButton } from './styles';
@@ -13,6 +15,7 @@ interface IProps {
 
 const SelectEmployee: React.FC<IProps> = ({ closeWindow }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { master } = useCompanyEmployee();
   const { addToast } = useToast();
   const {
     employeesContacts,
@@ -23,9 +26,13 @@ const SelectEmployee: React.FC<IProps> = ({ closeWindow }) => {
   const { selectCompanyEmployee } = useCompanyEmployee();
 
   const [filteredContacts, setFilteredContacts] = useState(employeesContacts);
+  const [addEmployee, setAddEmployee] = useState(false);
 
   const handleFilterContacts = useCallback(
     (props: string) => {
+      if (props === '') {
+        return setFilteredContacts(employeesContacts);
+      }
       const searchfilter = props.toLowerCase();
       const filteredResults = filteredContacts.filter(contact => {
         const contactName = contact.name.toLowerCase();
@@ -40,9 +47,9 @@ const SelectEmployee: React.FC<IProps> = ({ closeWindow }) => {
         inputRef.current &&
         inputRef.current.setRangeText('');
 
-      setFilteredContacts(filteredResults);
+      return setFilteredContacts(filteredResults);
     },
-    [filteredContacts, addToast],
+    [filteredContacts, employeesContacts, addToast],
   );
 
   const handleSelectContact = useCallback(
@@ -61,47 +68,65 @@ const SelectEmployee: React.FC<IProps> = ({ closeWindow }) => {
     [addToast, selectCompanyEmployee, getCompanyEmployeeContact, selectContact],
   );
 
+  const handleAddEmployee = useCallback((e: boolean) => {
+    setAddEmployee(e);
+  }, []);
+
   useEffect(() => {
     getCompanyContacts();
   }, [getCompanyContacts]);
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={() => closeWindow()}
-      containerStyle={{
-        zIndex: 16,
-        top: '5%',
-        left: '5%',
-        height: '90%',
-        width: '90%',
-      }}
-    >
-      <Container>
-        <h2>Selecione o Colaborador</h2>
-
-        <input
-          name="filter"
-          autoComplete="off"
-          ref={inputRef}
-          onChange={e => handleFilterContacts(e.target.value)}
-          placeholder="Pesquisar"
+    <>
+      {addEmployee && (
+        <CreateCompanyEmployeeContainer
+          closeWindow={() => handleAddEmployee(false)}
         />
-        <ContactsContainer>
-          {filteredContacts.length > 0 &&
-            filteredContacts.map(contact => {
-              return (
-                <ContactButton
-                  key={contact.id}
-                  type="button"
-                  onClick={() => handleSelectContact(contact)}
-                >
-                  {contact.name} {contact.family_name}
-                </ContactButton>
-              );
-            })}
-        </ContactsContainer>
-      </Container>
-    </WindowContainer>
+      )}
+      <WindowContainer
+        onHandleCloseWindow={() => closeWindow()}
+        containerStyle={{
+          zIndex: 10,
+          top: '5%',
+          left: '5%',
+          height: '90%',
+          width: '90%',
+        }}
+      >
+        <Container>
+          <span>
+            <h2>Selecione o Colaborador</h2>
+            {master && (
+              <button type="button" onClick={() => handleAddEmployee(true)}>
+                <MdPersonAdd size={20} />
+              </button>
+            )}
+          </span>
+
+          <input
+            name="filter"
+            autoComplete="off"
+            ref={inputRef}
+            onChange={e => handleFilterContacts(e.target.value)}
+            placeholder="Pesquisar"
+          />
+          <ContactsContainer>
+            {filteredContacts.length > 0 &&
+              filteredContacts.map(contact => {
+                return (
+                  <ContactButton
+                    key={contact.id}
+                    type="button"
+                    onClick={() => handleSelectContact(contact)}
+                  >
+                    {contact.name} {contact.family_name}
+                  </ContactButton>
+                );
+              })}
+          </ContactsContainer>
+        </Container>
+      </WindowContainer>
+    </>
   );
 };
 

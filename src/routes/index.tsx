@@ -35,6 +35,14 @@ const Routes: React.FC = () => {
       {employee && employee.id && selectedCard && selectedCard.id && (
         <Route path="/card/:card_name" exact component={CardPage} isPrivate />
       )}
+      {employee && employee.id && selectedCard && selectedCard.id && (
+        <Route
+          path="/card/new/:card_name/"
+          exact
+          component={CardPage}
+          isPrivate
+        />
+      )}
       {employee && employee.id && selectedFunnel && selectedFunnel.id && (
         <Route
           path="/funnel/:funnel_name"

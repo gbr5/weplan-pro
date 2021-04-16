@@ -1,6 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { MdAdd } from 'react-icons/md';
+
 import { useStageCard } from '../../../../../hooks/stageCard';
 import { useCompanyContact } from '../../../../../hooks/companyContacts';
 import ICompanyContactDTO from '../../../../../dtos/ICompanyContactDTO';
@@ -14,9 +16,16 @@ import {
   CustomerButton,
 } from './styles';
 
-const CardCustomersDashboard: React.FC = () => {
+interface IProps {
+  openNotesSection: Function;
+}
+
+const CardCustomersDashboard: React.FC<IProps> = ({ openNotesSection }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   const iconsize = 40;
-  const { cardCustomers } = useStageCard();
+  const { cardCustomers, selectedCard, getCardCustomers } = useStageCard();
   const { selectContact, selectedContact } = useCompanyContact();
   const [contactWindow, setContactWindow] = useState(false);
   const [addCustomerToCardWindow, setAddCustomerToCardWindow] = useState(false);
@@ -34,13 +43,43 @@ const CardCustomersDashboard: React.FC = () => {
   const handleCloseContactWindow = useCallback(() => {
     setContactWindow(false);
     selectContact({} as ICompanyContactDTO);
-  }, [selectContact]);
+    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
+    history.push(`/card/${trimmedCardName}`);
+    openNotesSection();
+  }, [selectContact, selectedCard, openNotesSection, history]);
   const handleCloseAddContactToCardWindow = useCallback(() => {
     setAddCustomerToCardWindow(false);
     if (selectedContact && selectedContact.id) {
       setContactWindow(true);
+    } else {
+      openNotesSection();
+      const trimmedCardName = selectedCard.name
+        .toLowerCase()
+        .replace(/ /g, '-');
+      history.push(`/card/${trimmedCardName}`);
     }
-  }, [selectedContact]);
+  }, [selectedContact, openNotesSection, selectedCard, history]);
+
+  const handleNewCard = useCallback(() => {
+    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
+    const params = location.pathname.includes(`/card/new/${trimmedCardName}`);
+    if (params && cardCustomers.length <= 0) {
+      handleOpenAddCustomerToCardWindow();
+    }
+  }, [
+    location,
+    cardCustomers,
+    handleOpenAddCustomerToCardWindow,
+    selectedCard,
+  ]);
+
+  useEffect(() => {
+    getCardCustomers();
+  }, [getCardCustomers]);
+
+  useEffect(() => {
+    handleNewCard();
+  }, [handleNewCard]);
 
   return (
     <>

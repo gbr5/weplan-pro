@@ -49,7 +49,7 @@ const ContactWindow: React.FC<IProps> = ({ closeWindow }) => {
     <WindowContainer
       onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
-        zIndex: 10,
+        zIndex: 16,
         top: '5%',
         left: '5%',
         height: '90%',

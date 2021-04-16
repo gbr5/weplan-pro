@@ -55,7 +55,7 @@ const CreateComercialCard: React.FC<IProps> = ({ closeWindow }) => {
       getFunnels();
       closeWindow();
       selectPage('Card');
-      history.push(`/card/${trimmedCardName}`);
+      history.push(`/card/new/${trimmedCardName}`);
     },
     [
       getFunnels,
