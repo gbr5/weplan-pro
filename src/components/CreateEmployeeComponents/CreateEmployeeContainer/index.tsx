@@ -21,6 +21,7 @@ const CreateEmployeeContainer: React.FC<IProps> = ({ email }) => {
   const closeAllComponents = useCallback(() => {
     setEmailContainer(false);
     setNameContainer(false);
+    setFamilyNameContainer(false);
     setPassContainer(false);
   }, []);
 
