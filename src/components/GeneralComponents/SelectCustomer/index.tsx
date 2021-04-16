@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { MdPersonAdd } from 'react-icons/md';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useStageCard } from '../../../hooks/stageCard';
 import { useToast } from '../../../hooks/toast';
 import { sortContactsByNameAndFamilyName } from '../../../utils/sortContactsByNameAndFamilyName';
 import Button from '../../Button';
+import ContactWindow from '../../CompanyContactComponents/ContactWindow';
+import CreateCompanyContactForm from '../../CompanyContactComponents/CreateCompanyContactForm';
 import WindowContainer from '../../WindowContainer';
 
 import {
@@ -28,6 +31,12 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
     getCompanyContacts,
   } = useCompanyContact();
   const { getCardCustomers, createCardCustomer } = useStageCard();
+
+  const [filter, setFilter] = useState('Customers');
+  const [mainFilter, setMainFilter] = useState('');
+  const [filteredContacts, setFilteredContacts] = useState(customersContacts);
+  const [addCustomerContact, setAddCustomerContact] = useState(false);
+  const [customerContactWindow, setCustomerContactWindow] = useState(false);
 
   const handleSubmit = useCallback(async () => {
     try {
@@ -55,11 +64,6 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
     selectedContact,
     createCardCustomer,
   ]);
-  const [filter, setFilter] = useState('Customers');
-  const [mainFilter, setMainFilter] = useState('');
-
-  const [filteredContacts, setFilteredContacts] = useState(customersContacts);
-
   const handleSetContacts = useCallback(
     (data: string) => {
       setFilter(data);
@@ -110,67 +114,99 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
     closeWindow();
   }, [closeWindow, selectContact]);
 
+  const handleAddCustomerContactWindow = useCallback(
+    (e: boolean) => {
+      if (!e) {
+        getCompanyContacts();
+        setCustomerContactWindow(true);
+      }
+      setAddCustomerContact(e);
+    },
+    [getCompanyContacts],
+  );
+
+  const handleCloseContactWindow = useCallback(() => {
+    setCustomerContactWindow(false);
+  }, []);
+
   useEffect(() => {
     getCompanyContacts();
   }, [getCompanyContacts]);
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={() => handleCloseWindow()}
-      containerStyle={{
-        zIndex: 16,
-        top: '5%',
-        left: '5%',
-        height: '90%',
-        width: '90%',
-      }}
-    >
-      <Container>
-        <h2>Selecione o Cliente</h2>
-
-        <span>
-          <ContactMenuButton
-            isActive={filter === 'Customers'}
-            type="button"
-            onClick={() => handleSetContacts('Customers')}
-          >
-            Clientes
-          </ContactMenuButton>
-          <ContactMenuButton
-            isActive={filter === 'CompanyContacts'}
-            type="button"
-            onClick={() => handleSetContacts('CompanyContacts')}
-          >
-            Outros Contatos
-          </ContactMenuButton>
-        </span>
-
-        <input
-          onChange={e => handleFilterContacts(e.target.value)}
-          placeholder="Pesquisar"
+    <>
+      {addCustomerContact && (
+        <CreateCompanyContactForm
+          handleCloseWindow={() => handleAddCustomerContactWindow(false)}
         />
-        <ContactsContainer>
-          {filteredContacts.length > 0 &&
-            filteredContacts.map(contact => {
-              return (
-                <ContactButton
-                  isActive={selectedContact.id === contact.id}
-                  key={contact.id}
-                  type="button"
-                  onClick={() => handleSelectCustomer(contact)}
-                >
-                  {contact.name} {contact.family_name}
-                </ContactButton>
-              );
-            })}
-        </ContactsContainer>
-        {selectedContact && selectedContact.id && (
-          <Button type="button" onClick={handleSubmit}>
-            Adicionar
-          </Button>
-        )}
-      </Container>
-    </WindowContainer>
+      )}
+      {customerContactWindow && selectedContact && selectedContact.id && (
+        <ContactWindow closeWindow={handleCloseContactWindow} />
+      )}
+      <WindowContainer
+        onHandleCloseWindow={() => handleCloseWindow()}
+        containerStyle={{
+          zIndex: 10,
+          top: '5%',
+          left: '5%',
+          height: '90%',
+          width: '90%',
+        }}
+      >
+        <Container>
+          <section>
+            <h2>Selecione o Cliente</h2>
+            <button
+              type="button"
+              onClick={() => handleAddCustomerContactWindow(true)}
+            >
+              <MdPersonAdd size={20} />
+            </button>
+          </section>
+          <span>
+            <ContactMenuButton
+              isActive={filter === 'Customers'}
+              type="button"
+              onClick={() => handleSetContacts('Customers')}
+            >
+              Clientes
+            </ContactMenuButton>
+            <ContactMenuButton
+              isActive={filter === 'CompanyContacts'}
+              type="button"
+              onClick={() => handleSetContacts('CompanyContacts')}
+            >
+              Outros Contatos
+            </ContactMenuButton>
+          </span>
+
+          <input
+            onChange={e => handleFilterContacts(e.target.value)}
+            placeholder="Pesquisar"
+          />
+          <ContactsContainer>
+            {filteredContacts.length > 0 &&
+              filteredContacts.map(contact => {
+                return (
+                  <ContactButton
+                    isActive={selectedContact.id === contact.id}
+                    key={contact.id}
+                    type="button"
+                    onClick={() => handleSelectCustomer(contact)}
+                  >
+                    {contact.name} {contact.family_name}
+                  </ContactButton>
+                );
+              })}
+          </ContactsContainer>
+          {selectedContact && selectedContact.id && (
+            <Button type="button" onClick={handleSubmit}>
+              Adicionar
+            </Button>
+          )}
+        </Container>
+      </WindowContainer>
+    </>
   );
 };
 

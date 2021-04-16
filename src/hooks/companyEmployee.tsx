@@ -174,13 +174,13 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
           type: 'success',
           title: 'Colaborador criado com sucesso!',
         });
-        setSelectedCompanyEmployee(response.data);
+        selectCompanyEmployee(response.data);
         return response.data;
       } catch (err) {
         throw new Error(err);
       }
     },
-    [addToast, employee],
+    [addToast, employee, selectCompanyEmployee],
   );
   const createUserEmployee = useCallback(
     // This function is called in case the e-mail of the employee does not have a user associated with it.

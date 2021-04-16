@@ -10,17 +10,30 @@ export const Container = styled.div`
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   margin-bottom: 2rem;
 
-  > h2 {
-    width: 90%;
-    text-align: center;
-    margin: 0.4rem auto 0.4rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--secondary-color);
+  > section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+    > h2 {
+      margin-right: 1rem;
+    }
+
+    > button {
+      margin-left: 1rem;
+      border: none;
+      background: var(--secondary-color);
+      padding: 0.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+    }
   }
 
   > input {
     padding: 0.5rem;
-    width: 16rem;
+    width: 100%;
     border-radius: 8px;
     color: #010101;
     margin: 1rem 0;

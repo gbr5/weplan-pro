@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useStageCard } from '../../../../hooks/stageCard';
 import CardCustomersDashboard from './CardCustomersDashboard';
 import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
@@ -6,6 +8,10 @@ import CardTaskDashboard from './CardTaskDashboard';
 import { Container, MenuHeader, MenuBooleanButton } from './styles';
 
 const CardAditionalInfoSection: React.FC = () => {
+  const location = useLocation();
+
+  const { selectedCard } = useStageCard();
+
   const [taskSection, setTaskSection] = useState(false);
   const [notesSection, setNotesSection] = useState(true);
   const [participantsSection, setParticipantsSection] = useState(false);
@@ -43,6 +49,18 @@ const CardAditionalInfoSection: React.FC = () => {
     closeAllSections();
     setFilesSection(true);
   }, [closeAllSections]);
+
+  const handleNewCard = useCallback(() => {
+    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
+    const params = location.pathname.includes(`/card/new/${trimmedCardName}`);
+    if (params) {
+      handleCustomersSection();
+    }
+  }, [location, handleCustomersSection, selectedCard]);
+
+  useEffect(() => {
+    handleNewCard();
+  }, [handleNewCard]);
 
   return (
     <Container>
@@ -84,7 +102,9 @@ const CardAditionalInfoSection: React.FC = () => {
         </MenuBooleanButton>
       </MenuHeader>
       {!!taskSection && <CardTaskDashboard />}
-      {!!customersSection && <CardCustomersDashboard />}
+      {!!customersSection && (
+        <CardCustomersDashboard openNotesSection={handleNotesSection} />
+      )}
       {!!notesSection && <CardNotesDashboard />}
       {!!participantsSection && (
         <>
