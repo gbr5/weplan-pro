@@ -11,7 +11,7 @@ import { Container } from './styles';
 
 interface IProps {
   componentText: string;
-  closeWindow: (e: string) => void;
+  closeWindow: () => void;
   previousComponent: () => void;
 }
 
@@ -48,7 +48,7 @@ const CollectName: React.FC<IProps> = ({
         });
       }
       selectName(data.name);
-      closeWindow(data.name);
+      closeWindow();
     },
     [addToast, getUserByName, getCompanyInfoByName, selectName, closeWindow],
   );
