@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import CardCustomersDashboard from './CardCustomersDashboard';
 import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
 
@@ -10,6 +11,7 @@ const CardAditionalInfoSection: React.FC = () => {
   const [participantsSection, setParticipantsSection] = useState(false);
   const [appointmentsSection, setAppointmentsSection] = useState(false);
   const [filesSection, setFilesSection] = useState(false);
+  const [customersSection, setCustomersSection] = useState(false);
 
   const closeAllSections = useCallback(() => {
     setTaskSection(false);
@@ -17,11 +19,16 @@ const CardAditionalInfoSection: React.FC = () => {
     setAppointmentsSection(false);
     setFilesSection(false);
     setNotesSection(false);
+    setCustomersSection(false);
   }, []);
 
   const handleTaskSection = useCallback(() => {
     closeAllSections();
     setTaskSection(true);
+  }, [closeAllSections]);
+  const handleCustomersSection = useCallback(() => {
+    closeAllSections();
+    setCustomersSection(true);
   }, [closeAllSections]);
 
   const handleNotesSection = useCallback(() => {
@@ -49,6 +56,13 @@ const CardAditionalInfoSection: React.FC = () => {
         </MenuBooleanButton>
         <MenuBooleanButton
           type="button"
+          isActive={!!customersSection}
+          onClick={handleCustomersSection}
+        >
+          Clientes
+        </MenuBooleanButton>
+        <MenuBooleanButton
+          type="button"
           isActive={!!taskSection}
           onClick={handleTaskSection}
         >
@@ -70,6 +84,7 @@ const CardAditionalInfoSection: React.FC = () => {
         </MenuBooleanButton>
       </MenuHeader>
       {!!taskSection && <CardTaskDashboard />}
+      {!!customersSection && <CardCustomersDashboard />}
       {!!notesSection && <CardNotesDashboard />}
       {!!participantsSection && (
         <>

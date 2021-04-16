@@ -43,9 +43,16 @@ const NotesContainer: React.FC<IProps> = ({
 
   useEffect(() => {
     if (cardNote.user_id === employee.company.id) {
-      const noteSplit = cardNote.note.split('|');
-      setNoteTitle(noteSplit[0]);
-      setNote(noteSplit[1]);
+      const noteSplit =
+        cardNote.note.includes('|||') && cardNote.note.split('|||');
+      const oldNoteSplit =
+        !cardNote.note.includes('|||') &&
+        cardNote.note.includes('|') &&
+        cardNote.note.split('|');
+      noteSplit && setNoteTitle(noteSplit[0]);
+      noteSplit && setNote(noteSplit[1]);
+      oldNoteSplit && setNoteTitle(oldNoteSplit[0]);
+      oldNoteSplit && setNote(oldNoteSplit[1]);
     }
   }, [cardNote, employee]);
 

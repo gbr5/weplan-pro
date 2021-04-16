@@ -7,6 +7,7 @@
     "@unform/web": "^2.1.3",
     "axios": "^0.19.2",
     "date-fns": "^2.15.0",
+    "date-fns-tz": "^1.1.4",
     "polished": "^3.6.5",
     "react": "^16.13.1",
     "react-color": "^2.19.3",

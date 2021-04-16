@@ -7,8 +7,8 @@ import { useFunnel } from '../../../../hooks/funnel';
 import { useSignUp } from '../../../../hooks/signUp';
 import { useStageCard } from '../../../../hooks/stageCard';
 import formatHourDateShort from '../../../../utils/formatHourDateShort';
+import SelectCustomer from '../../../GeneralComponents/SelectCustomer';
 import CardBudgetsWindow from './CardBudgetsWindow';
-import CardCustomersWindow from './CardCustomersWindow';
 import CardInfoButton from './CardInfoButton';
 import CardParticipantsWindow from './CardParticipantsWindow';
 
@@ -41,6 +41,7 @@ const CardInfoSection: React.FC = () => {
   const handleCloseAllWindows = useCallback(() => {
     setCardParticipantsWindow(false);
     setCardBudgetsWindow(false);
+    setCardCustomersWindow(false);
   }, []);
 
   const getCardOwner = useCallback(async () => {
@@ -75,10 +76,7 @@ const CardInfoSection: React.FC = () => {
         />
       )}
       {cardCustomersWindow && (
-        <CardCustomersWindow
-          handleCloseWindow={handleCloseAllWindows}
-          onHandleCloseWindow={() => setCardCustomersWindow(false)}
-        />
+        <SelectCustomer closeWindow={handleCloseAllWindows} />
       )}
       {cardBudgetsWindow && (
         <CardBudgetsWindow
@@ -123,19 +121,9 @@ const CardInfoSection: React.FC = () => {
                   <MdEdit />
                 </button> */}
               </span>
-              {/* <span>
-                <strong>Última atualização:</strong>
-                <p>15/04/20</p>
-                <button type="button">
-                  <MdEdit />
-                </button>
-              </span> */}
               <span>
                 <strong>Data de criação:</strong>
                 <p>{formatHourDateShort(String(selectedCard.created_at))}</p>
-                {/* <button type="button">
-                  <MdEdit />
-                </button> */}
               </span>
             </div>
             <InfoSection>
