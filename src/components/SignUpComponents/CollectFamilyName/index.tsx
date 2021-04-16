@@ -23,7 +23,7 @@ const CollectFamilyName: React.FC<IProps> = ({
   previousComponent,
   componentText,
 }) => {
-  const { selectFamilyName, selectedName } = useSignUp();
+  const { selectFamilyName, selectedFamilyName } = useSignUp();
   const formRef = useRef<FormHandles>(null);
 
   const handleSubmit = useCallback(
@@ -45,8 +45,8 @@ const CollectFamilyName: React.FC<IProps> = ({
         <strong>{componentText}</strong>
         <Input
           name="name"
-          defaultValue={selectedName}
-          placeholder={selectedName}
+          defaultValue={selectedFamilyName}
+          placeholder={selectedFamilyName}
         />
         <Button type="submit">Próximo</Button>
       </Container>
