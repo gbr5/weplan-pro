@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-// import { MdAdd } from 'react-icons/md';
-// import { FiChevronDown } from 'react-icons/fi';
 
 import { Main } from './styles';
 import CardCheckListContainer from './CardCheckListContainer';
@@ -37,12 +35,6 @@ const CardTaskDashboard: React.FC = () => {
     getCardCheckLists();
   }, [getCardCheckLists]);
 
-  // useEffect(() => {
-  //   if (selectedCardCheckList && selectedCardCheckList.id) {
-  //     selectCheckList(selectedCardCheckList.check_list);
-  //   }
-  // }, [selectedCardCheckList, selectCheckList]);
-
   return (
     <>
       {selectCheckListWindow && (
@@ -56,30 +48,7 @@ const CardTaskDashboard: React.FC = () => {
       )}
       <Main>
         {selectedCheckList && selectedCheckList.id && (
-          <>
-            {/* <ContainerMenu> */}
-            {/* <button
-                type="button"
-                onClick={() => setSelectCheckListWindow(true)}
-              >
-                <p>Selecionar Check List</p>
-                <strong>
-                  {selectedCardCheckList.check_list.name}
-                  <FiChevronDown size={24} />
-                </strong>
-              </button> */}
-            {/* <button
-                type="button"
-                onClick={() => setCreateCheckListForm(true)}
-              >
-                <p>Adicionar Tarefa</p>
-                <strong>
-                  <MdAdd size={30} />
-                </strong>
-              </button> */}
-            {/* </ContainerMenu> */}
-            <CardCheckListContainer />
-          </>
+          <CardCheckListContainer />
         )}
       </Main>
     </>
