@@ -3,6 +3,7 @@ import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useStageCard } from '../../../hooks/stageCard';
 import { useToast } from '../../../hooks/toast';
+import { sortContactsByNameAndFamilyName } from '../../../utils/sortContactsByNameAndFamilyName';
 import Button from '../../Button';
 import WindowContainer from '../../WindowContainer';
 
@@ -24,6 +25,7 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
     companyContacts,
     selectContact,
     selectedContact,
+    getCompanyContacts,
   } = useCompanyContact();
   const { getCardCustomers, createCardCustomer } = useStageCard();
 
@@ -58,41 +60,24 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
 
   const [filteredContacts, setFilteredContacts] = useState(customersContacts);
 
-  const handleSetCompanyContacts = useCallback(() => {
-    setFilteredContacts(
-      companyContacts.filter(contact => {
-        const findName = contact.name.includes(mainFilter);
-        const findFamilyName =
-          contact.family_name && contact.family_name.includes(mainFilter);
-        if (findFamilyName === '') {
-          return false;
-        }
-        if (findName || findFamilyName) {
-          return true;
-        }
-        return false;
-      }),
-    );
-    setFilter('CompanyContacts');
-  }, [companyContacts, mainFilter]);
-
-  const handleSetCustomersContacts = useCallback(() => {
-    setFilteredContacts(
-      customersContacts.filter(contact => {
-        const findName = contact.name.includes(mainFilter);
-        const findFamilyName =
-          contact.family_name && contact.family_name.includes(mainFilter);
-        if (findFamilyName === '') {
-          return false;
-        }
-        if (findName || findFamilyName) {
-          return true;
-        }
-        return false;
-      }),
-    );
-    setFilter('Customers');
-  }, [customersContacts, mainFilter]);
+  const handleSetContacts = useCallback(
+    (data: string) => {
+      setFilter(data);
+      if (data === 'Customers') {
+        const sorted = sortContactsByNameAndFamilyName({
+          contacts: customersContacts,
+          filter: mainFilter,
+        });
+        return setFilteredContacts(sorted);
+      }
+      const sorted = sortContactsByNameAndFamilyName({
+        contacts: companyContacts,
+        filter: mainFilter,
+      });
+      return setFilteredContacts(sorted);
+    },
+    [companyContacts, customersContacts, mainFilter],
+  );
 
   const handleFilterContacts = useCallback(
     (props: string) => {
@@ -114,7 +99,6 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
 
   const handleSelectCustomer = useCallback(
     (e: ICompanyContactDTO) => {
-      console.log(e);
       selectedContact.id === e.id && selectContact({} as ICompanyContactDTO);
       selectedContact.id !== e.id && selectContact(e);
     },
@@ -127,8 +111,8 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
   }, [closeWindow, selectContact]);
 
   useEffect(() => {
-    console.log(selectedContact);
-  }, [selectedContact]);
+    getCompanyContacts();
+  }, [getCompanyContacts]);
 
   return (
     <WindowContainer
@@ -148,14 +132,14 @@ const SelectCustomer: React.FC<IProps> = ({ closeWindow }) => {
           <ContactMenuButton
             isActive={filter === 'Customers'}
             type="button"
-            onClick={handleSetCustomersContacts}
+            onClick={() => handleSetContacts('Customers')}
           >
             Clientes
           </ContactMenuButton>
           <ContactMenuButton
             isActive={filter === 'CompanyContacts'}
             type="button"
-            onClick={handleSetCompanyContacts}
+            onClick={() => handleSetContacts('CompanyContacts')}
           >
             Outros Contatos
           </ContactMenuButton>

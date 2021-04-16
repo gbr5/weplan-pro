@@ -1,70 +1,32 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
+import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useToast } from '../../../hooks/toast';
 import WindowContainer from '../../WindowContainer';
 
-import {
-  Container,
-  ContactsContainer,
-  ContactButton,
-  ContactMenuButton,
-} from './styles';
+import { Container, ContactsContainer, ContactButton } from './styles';
 
 interface IProps {
-  selectContact: (e: ICompanyContactDTO) => void;
   closeWindow: Function;
 }
 
-const SelectCustomer: React.FC<IProps> = ({ selectContact, closeWindow }) => {
+const SelectEmployee: React.FC<IProps> = ({ closeWindow }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const { addToast } = useToast();
-  const { customersContacts, companyContacts } = useCompanyContact();
+  const {
+    employeesContacts,
+    selectContact,
+    getCompanyEmployeeContact,
+    getCompanyContacts,
+  } = useCompanyContact();
+  const { selectCompanyEmployee } = useCompanyEmployee();
 
-  const [filter, setFilter] = useState('Customers');
-  const [mainFilter, setMainFilter] = useState('');
-
-  const [filteredContacts, setFilteredContacts] = useState(customersContacts);
-
-  const handleSetCompanyContacts = useCallback(() => {
-    setFilteredContacts(
-      companyContacts.filter(contact => {
-        const findName = contact.name.includes(mainFilter);
-        const findFamilyName =
-          contact.family_name && contact.family_name.includes(mainFilter);
-        if (findFamilyName === '') {
-          return false;
-        }
-        if (findName || findFamilyName) {
-          return true;
-        }
-        return false;
-      }),
-    );
-    setFilter('CompanyContacts');
-  }, [companyContacts, mainFilter]);
-
-  const handleSetCustomersContacts = useCallback(() => {
-    setFilteredContacts(
-      customersContacts.filter(contact => {
-        const findName = contact.name.includes(mainFilter);
-        const findFamilyName =
-          contact.family_name && contact.family_name.includes(mainFilter);
-        if (findFamilyName === '') {
-          return false;
-        }
-        if (findName || findFamilyName) {
-          return true;
-        }
-        return false;
-      }),
-    );
-    setFilter('Customers');
-  }, [customersContacts, mainFilter]);
+  const [filteredContacts, setFilteredContacts] = useState(employeesContacts);
 
   const handleFilterContacts = useCallback(
     (props: string) => {
       const searchfilter = props.toLowerCase();
-      setMainFilter(searchfilter);
       const filteredResults = filteredContacts.filter(contact => {
         const contactName = contact.name.toLowerCase();
         return contactName.includes(searchfilter);
@@ -74,18 +36,34 @@ const SelectCustomer: React.FC<IProps> = ({ selectContact, closeWindow }) => {
           type: 'info',
           title: 'Nenhum contato foi encontrado',
         });
+      filteredResults.length <= 0 &&
+        inputRef.current &&
+        inputRef.current.setRangeText('');
+
       setFilteredContacts(filteredResults);
     },
     [filteredContacts, addToast],
   );
 
   const handleSelectContact = useCallback(
-    (e: ICompanyContactDTO) => {
-      selectContact(e);
-      closeWindow();
+    async (e: ICompanyContactDTO) => {
+      const findEmployee = await getCompanyEmployeeContact(e.id);
+      if (findEmployee) {
+        selectCompanyEmployee(findEmployee);
+        selectContact(e);
+      } else {
+        addToast({
+          type: 'error',
+          title: 'Este contato não está associado a nenhum colaborador!',
+        });
+      }
     },
-    [closeWindow, selectContact],
+    [addToast, selectCompanyEmployee, getCompanyEmployeeContact, selectContact],
   );
+
+  useEffect(() => {
+    getCompanyContacts();
+  }, [getCompanyContacts]);
 
   return (
     <WindowContainer
@@ -99,26 +77,12 @@ const SelectCustomer: React.FC<IProps> = ({ selectContact, closeWindow }) => {
       }}
     >
       <Container>
-        <h2>Selecione o Cliente</h2>
-
-        <span>
-          <ContactMenuButton
-            isActive={filter === 'Customers'}
-            type="button"
-            onClick={handleSetCustomersContacts}
-          >
-            Clientes
-          </ContactMenuButton>
-          <ContactMenuButton
-            isActive={filter === 'CompanyContacts'}
-            type="button"
-            onClick={handleSetCompanyContacts}
-          >
-            Outros Contatos
-          </ContactMenuButton>
-        </span>
+        <h2>Selecione o Colaborador</h2>
 
         <input
+          name="filter"
+          autoComplete="off"
+          ref={inputRef}
           onChange={e => handleFilterContacts(e.target.value)}
           placeholder="Pesquisar"
         />
@@ -141,4 +105,4 @@ const SelectCustomer: React.FC<IProps> = ({ selectContact, closeWindow }) => {
   );
 };
 
-export default SelectCustomer;
+export default SelectEmployee;

@@ -4,15 +4,30 @@ import { FiSettings } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { Container, Menu } from './styles';
 import CreateComercialCard from '../CardComponents/CreateComercialCard';
+import SelectEmployee from '../GeneralComponents/SelectEmployee';
 
 import logo from '../../assets/weplan.svg';
 
 import SettingsWindow from '../SettingsWindow';
 import { useHomeController } from '../../hooks/homeController';
+import { useCompanyEmployee } from '../../hooks/companyEmployee';
+import { useCompanyContact } from '../../hooks/companyContacts';
+import IEmployeeDTO from '../../dtos/IEmployeeDTO';
+import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 
 const Header: React.FC = () => {
   const history = useHistory();
+  const {
+    getCompanyContacts,
+    selectContact,
+    selectedContact,
+  } = useCompanyContact();
+  const {
+    selectedCompanyEmployee,
+    selectCompanyEmployee,
+  } = useCompanyEmployee();
   const { selectPage } = useHomeController();
+
   const [helpWindow, setHelpWindow] = useState(false);
   const [settingsWindow, setSettingsWindow] = useState(false);
   const [createComercialCardWindow, setCreateComercialCardWindow] = useState(
@@ -50,10 +65,16 @@ const Header: React.FC = () => {
 
   const handleCreateComercialCard = useCallback(
     (e: boolean) => {
-      closeAllWindows();
+      if (e) {
+        getCompanyContacts();
+        closeAllWindows();
+      } else {
+        selectCompanyEmployee({} as IEmployeeDTO);
+        selectContact({} as ICompanyContactDTO);
+      }
       setCreateComercialCardWindow(e);
     },
-    [closeAllWindows],
+    [closeAllWindows, selectCompanyEmployee, selectContact, getCompanyContacts],
   );
   return (
     <>
@@ -79,11 +100,19 @@ const Header: React.FC = () => {
           handleOpenFormDashboard={handleOpenFormDashboard}
         />
       )}
-      {createComercialCardWindow && (
-        <CreateComercialCard
-          closeWindow={() => handleCreateComercialCard(false)}
-        />
-      )}
+      {createComercialCardWindow &&
+        (selectedCompanyEmployee &&
+        selectedCompanyEmployee.id &&
+        selectedContact &&
+        selectedContact.id ? (
+          <CreateComercialCard
+            closeWindow={() => handleCreateComercialCard(false)}
+          />
+        ) : (
+          <SelectEmployee
+            closeWindow={() => handleCreateComercialCard(false)}
+          />
+        ))}
     </>
   );
 };

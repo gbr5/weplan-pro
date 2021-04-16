@@ -40,7 +40,7 @@ interface IStageCardContextData {
   getCardNotes(): void;
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCardName(card: IStageCardDTO): void;
-  createCard(data: ICreateCardDTO): Promise<void>;
+  createCard(data: ICreateCardDTO): Promise<IStageCardDTO>;
   createCardCustomer(customer: ICompanyContactDTO): Promise<void>;
   createCardNote(note: string): Promise<void>;
   createCardHistoryNote(note: string, card_unique_name: string): Promise<void>;
@@ -206,7 +206,6 @@ const StageCardProvider: React.FC = ({ children }) => {
 
   const createCardHistoryNote = useCallback(
     async (note: string, card_unique_name: string) => {
-      console.log({ note, card_unique_name });
       try {
         await api.post(`cards/notes`, {
           user_id: employee.company.id,
@@ -296,9 +295,7 @@ const StageCardProvider: React.FC = ({ children }) => {
           myEmployeeContact && myEmployeeContact.id
             ? `${myEmployeeContact.name} ${myEmployeeContact.family_name}`
             : employee.employeeUser.name;
-        console.log({ name });
         const historyNote = `Nome do Card Alterado|||Nome antigo: ${previousName}\nNome novo: ${card.name}\n. . . . .\n${now} | ${name}`;
-        console.log({ historyNote, selectedCard });
         await createCardHistoryNote(historyNote, selectedCard.unique_name);
         selectCard(response.data);
         getFunnels();
@@ -356,6 +353,7 @@ ${now}  |  WePlan
 `;
         await createCardHistoryNote(historyNote, response.data.unique_name);
         selectCard(response.data);
+        return response.data;
       } catch (err) {
         throw new Error(err);
       }

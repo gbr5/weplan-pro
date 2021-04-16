@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useCompanyContact } from '../../../hooks/companyContacts';
-import { useEmployeeAuth } from '../../../hooks/employeeAuth';
+import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useFunnel } from '../../../hooks/funnel';
+import { useHomeController } from '../../../hooks/homeController';
 import { useStageCard } from '../../../hooks/stageCard';
 import CreateInlineFormField from '../../GeneralComponents/CreateInlineFormField';
 import WindowContainer from '../../WindowContainer';
@@ -13,10 +15,12 @@ interface IProps {
 }
 
 const CreateComercialCard: React.FC<IProps> = ({ closeWindow }) => {
-  const { employee } = useEmployeeAuth();
+  const history = useHistory();
+  const { selectPage } = useHomeController();
   const { selectedFunnel, getFunnels, selectFunnel, funnels } = useFunnel();
   const { createCard } = useStageCard();
-  const { myEmployeeContact } = useCompanyContact();
+  const { selectedContact } = useCompanyContact();
+  const { selectedCompanyEmployee } = useCompanyEmployee();
 
   useCallback(() => {
     if (
@@ -36,27 +40,32 @@ const CreateComercialCard: React.FC<IProps> = ({ closeWindow }) => {
       const stage = selectedFunnel.stages.filter(
         thisstage => thisstage.funnel_order === '1',
       )[0];
-      createCard({
-        card_owner: employee.employeeUser.id,
+      const trimmedCardName = name.toLowerCase().replace(/ /g, '-');
+      await createCard({
+        card_owner: selectedCompanyEmployee.employeeUser.id,
         name,
         ownerName:
-          myEmployeeContact && myEmployeeContact.id
-            ? `${myEmployeeContact.name} ${myEmployeeContact.family_name}`
-            : employee.employeeUser.name,
+          selectedContact && selectedContact.id
+            ? `${selectedContact.name} ${selectedContact.family_name}`
+            : selectedCompanyEmployee.employeeUser.name,
         stage_id: stage.id,
         stageName: stage.name,
         weplanEvent: false,
       });
       getFunnels();
       closeWindow();
+      selectPage('Card');
+      history.push(`/card/${trimmedCardName}`);
     },
     [
       getFunnels,
+      history,
       closeWindow,
       selectedFunnel,
-      myEmployeeContact,
       createCard,
-      employee,
+      selectedCompanyEmployee,
+      selectedContact,
+      selectPage,
     ],
   );
 
