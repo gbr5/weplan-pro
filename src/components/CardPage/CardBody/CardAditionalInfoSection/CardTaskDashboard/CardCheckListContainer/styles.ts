@@ -6,14 +6,8 @@ export const Main = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: 5px;
   text-align: center;
   margin-bottom: 2rem;
-
-  h2 {
-    width: 100%;
-    margin: 0 auto;
-  }
 `;
 
 export const CheckListContainer = styled.div`
@@ -22,7 +16,6 @@ export const CheckListContainer = styled.div`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  padding: 0 0.5rem;
   text-align: center;
 `;
 
@@ -30,18 +23,18 @@ export const CheckListHeader = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: 100%;
+  width: 90%;
   text-align: center;
   position: relative;
-  margin: 1rem 0;
+  margin: 1rem auto;
 
-  h2 {
+  > h2 {
     width: 100%;
     margin: 0 auto;
     border-bottom: 2px solid var(--header-primary);
   }
 
-  button {
+  > button {
     position: absolute;
     top: 0;
     right: 0;
