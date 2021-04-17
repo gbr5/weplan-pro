@@ -22,7 +22,7 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
 
-  & + div {
+  > & + div {
     margin-top: 8px;
   }
 
@@ -44,7 +44,7 @@ export const Container = styled.div<ContainerProps>`
       color: var(--primary-color);
     `}
 
-  input {
+  > input {
     flex: 1;
     width: 100%;
     background: transparent;
@@ -56,7 +56,7 @@ export const Container = styled.div<ContainerProps>`
     }
   }
 
-  svg {
+  > svg {
     margin-right: 16px;
   }
 `;
@@ -76,11 +76,11 @@ export const Error = styled(Tooltip)`
   > strong {
     font-weight: 500;
   }
-  svg {
+  > svg {
     margin: 0;
   }
 
-  span {
+  > span {
     background: var(--red-color);
     color: var(--letter-color-1);
 

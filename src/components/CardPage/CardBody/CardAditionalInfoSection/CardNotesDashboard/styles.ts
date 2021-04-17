@@ -4,19 +4,23 @@ import '../../../../../styles/global';
 export const Main = styled.div`
   display: block;
   width: 100%;
+  height: 100%;
   text-align: center;
   margin: 0;
 `;
 
 export const Notes = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: block;
+  /* flex-direction: column; */
   /* justify-content: stretch; */
   background: var(--background-color);
-  /* height: 20rem; */
-  width: 100%;
+  height: 28rem;
+  width: 95%;
   overflow-y: scroll;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin: 1rem auto;
+  padding: 0.5rem;
 `;
 
 export const ContainerMenu = styled.div`

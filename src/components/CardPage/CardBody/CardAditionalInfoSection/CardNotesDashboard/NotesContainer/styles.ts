@@ -10,8 +10,9 @@ export const Container = styled.button<IContainerProps>`
   flex-direction: column;
   min-height: 40px;
   box-sizing: border-box;
+  border: none;
 
-  width: 96vw;
+  width: 100%;
   padding: 5px;
   text-align: center;
   margin: 0.8rem auto;

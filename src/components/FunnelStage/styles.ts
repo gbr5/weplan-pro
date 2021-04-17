@@ -15,7 +15,7 @@ export const Container = styled.div`
     min-width: 350px;
   }
 
-  h1 {
+  > h1 {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,7 +24,7 @@ export const Container = styled.div`
     border-bottom: 0.2px solid var(--letter-color-4);
     width: 100%;
     margin: 0.2rem auto;
-    strong {
+    > strong {
       color: var(--letter-color-4);
       display: flex;
       align-items: center;
@@ -66,7 +66,7 @@ export const Card = styled.div<ICardProps>`
   width: 100%;
   height: 48px;
 
-  button {
+  > button {
     display: flex;
     margin-left: auto;
     padding: 0;
@@ -82,17 +82,17 @@ export const Card = styled.div<ICardProps>`
       text-align: center;
       min-width: 2rem;
     }
-    h3 {
+    > h3 {
       color: var(--letter-color-5);
       font-size: 1.2rem;
       margin-right: auto;
     }
 
-    p {
+    > p {
       font-size: 11px;
       color: var(--letter-color-5);
     }
-    strong {
+    > strong {
       font-weight: 500;
       font-size: 1.2rem;
       color: var(--secondary-color);
@@ -107,8 +107,8 @@ export const Card = styled.div<ICardProps>`
       color: var(--header-background-color);
       border: 1px solid var(--letter-color-5);
 
-      button {
-        strong {
+      > button {
+        > strong {
           color: var(--primary-color);
         }
       }

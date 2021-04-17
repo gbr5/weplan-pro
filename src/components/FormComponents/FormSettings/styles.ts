@@ -15,18 +15,18 @@ export const Container = styled.div`
 
   overflow-y: scroll;
 
-  aside {
+  > aside {
     display: flex;
     flex-direction: column;
     position: relative;
     margin-bottom: 1rem;
     flex: 1;
 
-    h3 {
+    > h3 {
       color: var(--title-color);
       margin-bottom: 1rem;
     }
-    h2 {
+    > h2 {
       /* font-size:  */
       border-bottom: 1px solid var(--title-color);
       text-transform: capitalize;
@@ -45,7 +45,7 @@ export const Container = styled.div`
     }
   }
 
-  section {
+  > section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -54,7 +54,7 @@ export const Container = styled.div`
     text-align: center;
     margin: 1rem 0 1rem;
 
-    h2 {
+    > h2 {
       width: 100%;
       text-align: center;
       padding-bottom: 0.5rem;
@@ -65,17 +65,17 @@ export const Container = styled.div`
       font-size: 1.1rem;
     }
   }
-  section:last-child {
+  > section:last-child {
     border-bottom: none;
   }
-  span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: stretch;
     gap: 1rem;
     width: 100%;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       width: 10rem;
