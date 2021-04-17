@@ -25,7 +25,7 @@ export const PageHeader = styled.div`
   width: 100%;
   padding: 16px;
 
-  span {
+  > span {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     align-items: center;
@@ -33,27 +33,27 @@ export const PageHeader = styled.div`
     width: 100%;
     height: 104px;
 
-    img {
+    > img {
       border-radius: 8px;
       height: 80px;
       width: 80px;
     }
 
-    h3 {
+    > h3 {
       font-size: 24px;
       text-align: center;
       color: var(--letter-color-5);
       border-bottom: 1px solid var(--header-primary);
     }
 
-    p {
+    > p {
       font-size: 16px;
       color: var(--letter-color-5);
       text-align: right;
     }
   }
 
-  div {
+  > div {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -73,7 +73,7 @@ export const Body = styled.div`
   width: 100%;
   height: 100%;
 
-  div {
+  > div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,25 +93,25 @@ export const Footer = styled.div`
   width: 100%;
   padding: 16px;
 
-  div {
+  > div {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
 
-    a {
+    > a {
       margin: auto;
       font-size: 16px;
       text-decoration: none;
       color: var(--header-background-color);
 
-      strong {
+      > strong {
         font-weight: 500;
         color: var(--header-primary);
       }
     }
 
-    h4 {
+    > h4 {
       margin: auto;
       font-size: 12px;
       color: var(--letter-color-3);
@@ -123,7 +123,7 @@ export const PrintButtonContainer = styled.div`
   display: flex;
   width: 100%;
 
-  button {
+  > button {
     width: 100%;
     height: 40px;
     background-color: var(--header-primary);

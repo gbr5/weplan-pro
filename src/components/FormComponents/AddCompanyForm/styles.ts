@@ -10,12 +10,12 @@ export const Container = styled.div`
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   padding: 1rem;
 
-  section {
+  > section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       color: var(--secondary-color);
@@ -26,13 +26,13 @@ export const Container = styled.div`
     }
   }
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       color: var(--secondary-color);

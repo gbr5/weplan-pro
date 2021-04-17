@@ -5,12 +5,12 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
 
-  section {
+  > section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       color: var(--secondary-color);
@@ -21,13 +21,13 @@ export const Container = styled.div`
     }
   }
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       color: var(--secondary-color);

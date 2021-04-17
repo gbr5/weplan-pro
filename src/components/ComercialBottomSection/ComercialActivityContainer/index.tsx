@@ -1,54 +1,45 @@
-import React from 'react';
-import { FiCheck } from 'react-icons/fi';
-import { MdArrowForward } from 'react-icons/md';
+import React, { useCallback, useEffect } from 'react';
+import ICardNotesDTO from '../../../dtos/ICardNotesDTO';
+import { useStageCard } from '../../../hooks/stageCard';
+import NotesContainer from '../../CardPage/CardBody/CardAditionalInfoSection/CardNotesDashboard/NotesContainer';
 
-import { Container, Task, Main } from './styles';
+import { Notes, Main } from './styles';
 
 const ComercialActivityContainer: React.FC = () => {
+  const {
+    selectedNote,
+    selectNote,
+    cardNotes,
+    selectedCard,
+    getCardNotes,
+  } = useStageCard();
+
+  const handleSetSelectedNote = useCallback(
+    (props: ICardNotesDTO) => {
+      selectNote(props);
+    },
+    [selectNote],
+  );
+
+  useEffect(() => {
+    getCardNotes();
+  }, [getCardNotes]);
   return (
     <Main>
-      <h2>Histórico</h2>
-      <Container>
-        <Task>
-          <div>
-            <p>16:34 - 19/10/20</p>
-            <h3>| Arquivo enviado</h3>
-          </div>
-
-          <span>
-            <p>Far_East-Orçamento-19.10.20.pdf</p>
-            <FiCheck />
-          </span>
-        </Task>
-        <Task>
-          <div>
-            <p>16:47 - 19/10/20</p>
-            <h3>| Mensagem</h3>
-          </div>
-
-          <span>
-            <p>Confirmo o Recebimento. Muito obrigado Corinta ...</p>
-            <FiCheck />
-          </span>
-        </Task>
-        <Task>
-          <div>
-            <p>16:47 - 19/10/20</p>
-            <h3>| Etapa do Funil</h3>
-          </div>
-
-          <span>
-            <p>
-              1° Contato{' '}
-              <strong>
-                <MdArrowForward />
-              </strong>{' '}
-              Orçamento Enviado
-            </p>
-            <FiCheck />
-          </span>
-        </Task>
-      </Container>
+      <h2>Últimas atividades</h2>
+      <Notes>
+        {selectedCard &&
+          selectedCard.id &&
+          cardNotes.length > 0 &&
+          cardNotes.map(xCard => (
+            <NotesContainer
+              key={xCard.id}
+              handleSetSelectedNote={handleSetSelectedNote}
+              cardNote={xCard}
+              isSelected={xCard.id === selectedNote.id}
+            />
+          ))}
+      </Notes>
     </Main>
   );
 };

@@ -66,7 +66,7 @@ export const UrlContainer = styled.div`
   max-width: 600px;
   margin: 1rem auto;
 
-  strong {
+  > strong {
     border-bottom: 1px solid var(--secondary-color);
     width: 5rem;
     font-size: 1.3rem;

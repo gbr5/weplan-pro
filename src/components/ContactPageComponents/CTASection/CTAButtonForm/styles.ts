@@ -13,7 +13,7 @@ export const Container = styled.div`
   border-radius: 8px;
   background: #c9c9c9;
 
-  span {
+  > span {
     position: absolute;
     top: 0.2rem;
     right: 0.2rem;
@@ -24,7 +24,7 @@ export const Container = styled.div`
     }
   }
 
-  h2 {
+  > h2 {
     margin: 1.5rem auto 1rem;
   }
 `;

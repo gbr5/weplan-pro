@@ -36,12 +36,12 @@ export const Task = styled.div`
     border: 1px solid var(--header-primary);
     background: var(--card-color);
 
-    div {
-      h2 {
+    > div {
+      > h2 {
         color: var(--title-color);
       }
-      span {
-        p {
+      > span {
+        > p {
           color: var(--letter-color-5);
           &:nth-child(2) {
             color: var(--letter-color-5);
@@ -49,17 +49,17 @@ export const Task = styled.div`
         }
       }
     }
-    button {
+    > button {
       border: 1px solid var(--header-primary);
       background: var(--background-color);
 
-      svg {
+      > svg {
         color: var(--letter-color-5);
       }
     }
   }
 
-  div {
+  > div {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -67,12 +67,12 @@ export const Task = styled.div`
 
     width: 100%;
 
-    span {
+    > span {
       display: flex;
       width: 100%;
       padding-right: 16px;
 
-      p {
+      > p {
         color: var(--letter-color-2);
         &:nth-child(2) {
           margin-left: auto;
@@ -82,7 +82,7 @@ export const Task = styled.div`
     }
   }
 
-  button {
+  > button {
     background: transparent;
     border: none;
     width: 60px;
@@ -92,7 +92,7 @@ export const Task = styled.div`
     justify-content: center;
     transition: 0.3s;
 
-    svg {
+    > svg {
       color: var(--header-primary);
     }
 
@@ -100,7 +100,7 @@ export const Task = styled.div`
       border: 1px solid var(--title-primary);
       background: var(--header-background-color);
 
-      svg {
+      > svg {
         color: var(--title-color);
       }
     }

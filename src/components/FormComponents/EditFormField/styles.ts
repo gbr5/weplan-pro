@@ -11,7 +11,7 @@ export const Container = styled.div`
   height: 100%;
   padding: 1rem;
 
-  aside {
+  > aside {
     position: relative;
 
     > button {
@@ -25,20 +25,20 @@ export const Container = styled.div`
     }
   }
 
-  section {
+  > section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: stretch;
     gap: 1rem;
     width: 100%;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       width: 10rem;

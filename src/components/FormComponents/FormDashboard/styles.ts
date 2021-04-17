@@ -10,13 +10,13 @@ export const Container = styled.div`
   gap: 1rem;
   padding: 5rem 1rem 0;
 
-  span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 2rem;
 
-    button {
+    > button {
       background: var(--secondary-color);
       border: 1px solid var(--primary-color);
       display: flex;

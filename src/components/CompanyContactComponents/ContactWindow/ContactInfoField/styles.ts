@@ -10,7 +10,7 @@ export const Container = styled.div`
     top: 0.2rem;
     right: 0.2rem;
 
-    button {
+    > button {
       background: transparent;
       border: none;
       display: flex;
@@ -35,7 +35,7 @@ export const FieldContainer = styled.div`
   display: flex;
   margin: 1rem auto;
 
-  strong {
+  > strong {
     font-size: 1.2rem;
     border-bottom: 1px solid var(--letter-color-5);
     min-width: 6rem;
