@@ -37,6 +37,7 @@ interface ICompanyContactContextData {
   companyContacts: ICompanyContactDTO[];
   selectContact(data: ICompanyContactDTO): void;
   deleteCompanyContact(data: ICompanyContactDTO): void;
+  deleteCompanyContactInfo(id: string): void;
   createCompanyContact(
     data: ICreateCompanyContactDTO,
   ): Promise<ICompanyContactDTO>;
@@ -62,6 +63,7 @@ interface ICompanyContactContextData {
   createCompanyContactInfo(data: Omit<ICompanyContactInfoDTO, 'id'>): void;
   createCompanyContactNote(note: string): void;
   updateCompanyContactInfo(data: ICompanyContactInfoDTO): void;
+  getCompanyContact(): Promise<ICompanyContactDTO | undefined>;
   updateCompanyContactNote(data: ICompanyContactNoteDTO): void;
   getCompanyContacts(): void;
   getEmployeeContact(
@@ -204,6 +206,32 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, []);
+
+  const selectContact = useCallback((data: ICompanyContactDTO) => {
+    if (data && !data.id) {
+      localStorage.removeItem('@WP-PRO:contact-employee');
+      localStorage.removeItem('@WP-PRO:selected-contact');
+      setContactEmployee({} as IEmployeeDTO);
+      return setSelectedContact({} as ICompanyContactDTO);
+    }
+    localStorage.setItem('@WP-PRO:selected-contact', JSON.stringify(data));
+    return setSelectedContact(data);
+  }, []);
+
+  const getCompanyContact = useCallback(async () => {
+    if (selectedContact && selectedContact.id) {
+      try {
+        const response = await api.get<ICompanyContactDTO | undefined>(
+          `/company/contacts/show/${selectedContact.id}`,
+        );
+        response.data && selectContact(response.data);
+        return response.data;
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
+    return undefined;
+  }, [selectContact, selectedContact]);
 
   // const getContact = useCallback(async (id: string) => {
   //   try {
@@ -425,12 +453,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     async (id: string) => {
       try {
         const response = await api.put(`company/contacts/is-company/${id}`);
+        selectContact(response.data);
         getCompanyContacts();
         // getContact(response.data.id);
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -445,7 +470,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, selectContact, addToast],
   );
 
   const updateCompanyContactWeplanUser = useCallback(
@@ -453,10 +478,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       try {
         const response = await api.put(`company/contacts/weplan-user/${id}`);
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -471,7 +493,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, selectContact],
   );
 
   const updateCompanyContactType = useCallback(
@@ -484,10 +506,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           },
         );
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -502,7 +521,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast, selectedContact.id],
+    [getCompanyContacts, selectContact, addToast, selectedContact.id],
   );
 
   const updateCompanyContactDescription = useCallback(
@@ -515,10 +534,8 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           },
         );
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
+
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -533,7 +550,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast, selectedContact],
+    [getCompanyContacts, addToast, selectContact, selectedContact],
   );
 
   const updateCompanyContactFamilyName = useCallback(
@@ -546,10 +563,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           },
         );
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -564,7 +578,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast, selectedContact],
+    [getCompanyContacts, addToast, selectContact, selectedContact],
   );
 
   const updateCompanyContactName = useCallback(
@@ -577,10 +591,8 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           },
         );
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
+
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -595,7 +607,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast, selectedContact],
+    [getCompanyContacts, selectContact, addToast, selectedContact],
   );
 
   const updateCompanyContactIsNew = useCallback(
@@ -603,10 +615,8 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
       try {
         const response = await api.put(`company/contacts/is-new/${data.id}`);
         getCompanyContacts();
-        localStorage.setItem(
-          '@WP-PRO:selected-contact',
-          JSON.stringify(response.data),
-        );
+        selectContact(response.data);
+
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -621,7 +631,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, selectContact, addToast],
   );
 
   const createCompanyContactNote = useCallback(
@@ -632,6 +642,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           note,
         });
         getCompanyContacts();
+        getCompanyContact();
         addToast({
           type: 'success',
           title: 'Nota criada com sucesso',
@@ -645,7 +656,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, selectedContact, addToast],
+    [getCompanyContacts, getCompanyContact, selectedContact, addToast],
   );
 
   const createCompanyContactInfo = useCallback(
@@ -662,6 +673,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
             info: data.info,
           });
           getCompanyContacts();
+          getCompanyContact();
           addToast({
             type: 'success',
             title: 'Contato criado com sucesso',
@@ -676,7 +688,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         }
       }
     },
-    [getCompanyContacts, selectedContact, addToast],
+    [getCompanyContact, getCompanyContacts, selectedContact, addToast],
   );
 
   const updateCompanyContactNote = useCallback(
@@ -687,6 +699,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           note: data.note,
         });
         getCompanyContacts();
+        getCompanyContact();
         addToast({
           type: 'success',
           title: 'Nota atualizado com sucesso',
@@ -700,7 +713,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, getCompanyContact, addToast],
   );
 
   const updateCompanyContactInfo = useCallback(
@@ -711,6 +724,7 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
           info: data.info,
         });
         getCompanyContacts();
+        getCompanyContact();
         addToast({
           type: 'success',
           title: 'Contato atualizado com sucesso',
@@ -724,19 +738,30 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [getCompanyContacts, addToast],
+    [getCompanyContacts, addToast, getCompanyContact],
   );
 
-  const selectContact = useCallback((data: ICompanyContactDTO) => {
-    if (data && !data.id) {
-      localStorage.removeItem('@WP-PRO:contact-employee');
-      localStorage.removeItem('@WP-PRO:selected-contact');
-      setContactEmployee({} as IEmployeeDTO);
-      return setSelectedContact({} as ICompanyContactDTO);
-    }
-    localStorage.setItem('@WP-PRO:selected-contact', JSON.stringify(data));
-    return setSelectedContact(data);
-  }, []);
+  const deleteCompanyContactInfo = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`company/contacts/info/${id}`);
+        getCompanyContacts();
+        getCompanyContact();
+        addToast({
+          type: 'success',
+          title: 'Contato deletado com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao deletar contato',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [getCompanyContacts, getCompanyContact, addToast],
+  );
 
   const contactInfoTypes: ICheckBoxOptionDTO[] = [
     { id: 'Phone', label: 'Telefone', value: 'Phone' },
@@ -789,7 +814,9 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
     <CompanyContactContext.Provider
       value={{
         contactInfoTypes,
+        getCompanyContact,
         myEmployeeContact,
+        deleteCompanyContactInfo,
         contactEmployee,
         contactTypes,
         getEmployeeContact,
