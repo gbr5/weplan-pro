@@ -21,7 +21,8 @@ export const Container = styled.div`
   }
 
   > h3 {
-    margin: 1rem auto 0.8rem;
+    width: 100%;
+    margin: 2.5rem auto 0.8rem;
     border-bottom: 1px solid var(--secondary-color);
     text-align: center;
   }
@@ -30,8 +31,10 @@ export const Container = styled.div`
 export const ContactContainer = styled.div`
   display: flex;
   margin: 1rem auto;
+  width: 100%;
 
   > p {
+    width: 100%;
     font-size: 1.2rem;
 
     &:first-child {
