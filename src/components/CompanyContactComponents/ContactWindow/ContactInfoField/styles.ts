@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: block;
   position: relative;
+  margin: 1rem auto;
 
   > span {
     position: absolute;
@@ -41,7 +42,8 @@ export const FieldContainer = styled.div`
     margin-right: 1rem;
   }
 
-  > a {
+  > a,
+  > p {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,6 +51,7 @@ export const FieldContainer = styled.div`
     width: 100%;
     text-decoration: none;
     padding: 1rem auto;
+    margin: 1rem auto;
     border-radius: 5px;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
     background: rgba(255, 250, 240, 0.3);

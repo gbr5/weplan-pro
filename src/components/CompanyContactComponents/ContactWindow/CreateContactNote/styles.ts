@@ -99,7 +99,7 @@ export const AddButton = styled.button`
 
   transition: 0.3s;
 
-  margin: 2rem auto;
+  margin: 1rem auto 3rem;
 
   &:hover {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
