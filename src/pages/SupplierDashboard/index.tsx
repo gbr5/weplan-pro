@@ -15,10 +15,12 @@ import { useFunnel } from '../../hooks/funnel';
 import SettingsPage from '../SettingsPage';
 import ComercialFunnelSettings from '../../components/FunnelSettingsComponents/ComercialFunnelSettings';
 import EmployeesSection from '../../components/EmployeesSection';
+import { useStageCard } from '../../hooks/stageCard';
 
 const SupplierDashboard: React.FC = () => {
   const { selectedPage } = useHomeController();
   const { selectedFunnel, funnels } = useFunnel();
+  const { selectedCard } = useStageCard();
   // const
 
   return (
@@ -30,7 +32,9 @@ const SupplierDashboard: React.FC = () => {
         selectedFunnel &&
         selectedFunnel.id &&
         selectedPage === 'Comercial' && <KanbanDashboard />}
-      {selectedPage === 'Card' && <CardPage />}
+      {selectedPage === 'Card' && selectedCard && selectedCard.id && (
+        <CardPage />
+      )}
       {selectedPage === 'Contacts' && <CompanyContactDashboard />}
 
       {selectedPage === 'Home' && <HomeDashboard />}
