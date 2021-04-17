@@ -1,6 +1,6 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '../../Button';
 import Input from '../../Input';
 
@@ -13,20 +13,41 @@ interface IFormParams {
 }
 
 interface IProps {
-  handleSubmit: (phone: number) => void;
+  handleSubmit: (phone: string) => void;
+  defaultNumber?: string;
 }
 
-const PhoneForm: React.FC<IProps> = ({ handleSubmit }) => {
+const PhoneForm: React.FC<IProps> = ({ handleSubmit, defaultNumber }) => {
   const height = '2.5rem';
   const formRef = useRef<FormHandles>(null);
+  const [countryCode, setCountryCode] = useState('55');
+  const [localCode, setLocalCode] = useState('31');
+  const [number, setNumber] = useState('');
 
   const onSubmit = useCallback(
-    ({ countryCode, localCode, phoneNumber }: IFormParams) => {
-      const phone = Number(`${countryCode}${localCode}${phoneNumber}`);
+    (data: IFormParams) => {
+      const phone = `${data.countryCode} ${data.localCode} ${data.phoneNumber}`;
       handleSubmit(phone);
     },
     [handleSubmit],
   );
+
+  useEffect(() => {
+    if (defaultNumber) {
+      if (defaultNumber.includes(' ')) {
+        const numberArray = defaultNumber.split(' ');
+        setCountryCode(
+          numberArray[2] && numberArray[1] ? numberArray[0] : '55',
+        );
+        setLocalCode(numberArray[2] && numberArray[1] ? numberArray[1] : '31');
+        setNumber(
+          numberArray[2] && numberArray[1] ? numberArray[2] : numberArray[0],
+        );
+      } else {
+        setNumber(defaultNumber);
+      }
+    }
+  }, [defaultNumber]);
 
   return (
     <Form ref={formRef} onSubmit={onSubmit}>
@@ -39,7 +60,7 @@ const PhoneForm: React.FC<IProps> = ({ handleSubmit }) => {
               padding: 'auto 0',
             }}
             name="countryCode"
-            defaultValue={55}
+            defaultValue={countryCode}
             type="number"
             pattern="\d*"
           />
@@ -50,7 +71,7 @@ const PhoneForm: React.FC<IProps> = ({ handleSubmit }) => {
               padding: 'auto 0',
             }}
             name="localCode"
-            defaultValue={11}
+            defaultValue={localCode}
             type="number"
             pattern="\d*"
           />
@@ -60,7 +81,7 @@ const PhoneForm: React.FC<IProps> = ({ handleSubmit }) => {
               height,
             }}
             name="phoneNumber"
-            defaultValue={11}
+            defaultValue={number}
             type="number"
             pattern="\d*"
           />

@@ -650,30 +650,30 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
 
   const createCompanyContactInfo = useCallback(
     async (data: Omit<ICompanyContactInfoDTO, 'id'>) => {
-      try {
-        console.log({
-          company_contact_id: selectedContact.id,
-          info_type: data.info_type,
-          info: data.info,
-        });
-        await api.post(`company/contacts/info`, {
-          company_contact_id: selectedContact.id,
-          info_type: data.info_type,
-          info: data.info,
-        });
-        console.log('Passei o POST');
-        getCompanyContacts();
-        addToast({
-          type: 'success',
-          title: 'Contato criado com sucesso',
-        });
-      } catch (err) {
-        addToast({
-          type: 'error',
-          title: 'Erro ao criar contato',
-          description: 'Tente novamente',
-        });
-        throw new Error(err);
+      if (
+        data !== undefined &&
+        data.info !== undefined &&
+        data.info_type !== undefined
+      ) {
+        try {
+          await api.post(`company/contacts/info`, {
+            company_contact_id: selectedContact.id,
+            info_type: data.info_type,
+            info: data.info,
+          });
+          getCompanyContacts();
+          addToast({
+            type: 'success',
+            title: 'Contato criado com sucesso',
+          });
+        } catch (err) {
+          addToast({
+            type: 'error',
+            title: 'Erro ao criar contato',
+            description: 'Tente novamente',
+          });
+          throw new Error(err);
+        }
       }
     },
     [getCompanyContacts, selectedContact, addToast],
