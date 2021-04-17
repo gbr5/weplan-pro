@@ -13,6 +13,7 @@ import { useCompanyContact } from '../../../../hooks/companyContacts';
 import formatTextArea from '../../../../utils/formatTextArea';
 import Button from '../../../Button';
 import SelectField from '../../../FormComponents/SelectField';
+import ConfirmationWindow from '../../../GeneralComponents/ConfirmationWindow';
 import PhoneForm from '../../../GeneralComponents/PhoneForm';
 import Input from '../../../Input';
 
@@ -26,9 +27,16 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
   const iconSize = 24;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { updateCompanyContactInfo, contactInfoTypes } = useCompanyContact();
+  const {
+    updateCompanyContactInfo,
+    contactInfoTypes,
+    deleteCompanyContactInfo,
+  } = useCompanyContact();
   const formRef = useRef<FormHandles>(null);
   const [editContactField, setEditContactField] = useState(false);
+  const [deleteContactConfirmation, setDeleteContactConfirmation] = useState(
+    false,
+  );
   const [defaultInfoType, setDefaultInfoType] = useState(contactInfoTypes[0]);
   const [fieldType, setFieldType] = useState(contactField.info_type);
   const [rows, setRows] = useState(2);
@@ -104,6 +112,16 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
   const handleChangeFieldType = useCallback((data: any) => {
     data && data.id && setFieldType(data.value);
   }, []);
+
+  const handleDeleteContactConfirmation = useCallback((e: boolean) => {
+    setDeleteContactConfirmation(e);
+  }, []);
+
+  const handleDeleteContact = useCallback(() => {
+    setEditContactField(false);
+    setDeleteContactConfirmation(false);
+    deleteCompanyContactInfo(contactField.id);
+  }, [deleteCompanyContactInfo, contactField]);
 
   const cols = useMemo(() => {
     const screenWidth = window.screen.width;
@@ -184,6 +202,13 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
             {fieldType !== 'Phone' && fieldType !== 'Whatsapp' && (
               <Button type="submit">Salvar</Button>
             )}
+            <Button
+              style={{ background: 'red', color: '#c9c9c9' }}
+              type="button"
+              onClick={() => handleDeleteContactConfirmation(true)}
+            >
+              Deletar Contato
+            </Button>
           </EditFieldContainer>
         </Form>
       ) : (
@@ -232,6 +257,17 @@ const ContactInfoField: React.FC<IProps> = ({ contactField }) => {
               </a>
             )}
         </FieldContainer>
+      )}
+      {deleteContactConfirmation && (
+        <ConfirmationWindow
+          message="Deseja realmente deletar o contato?"
+          firstButtonLabel="Deletar"
+          firstButtonFunction={handleDeleteContact}
+          secondButtonLabel="Não Deletar"
+          secondButtonFunction={() => handleDeleteContactConfirmation(false)}
+          closeWindow={() => handleDeleteContactConfirmation(false)}
+          zIndex={20}
+        />
       )}
     </Container>
   );
