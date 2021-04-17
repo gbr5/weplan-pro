@@ -28,7 +28,6 @@ const CreateContactInfoField: React.FC = () => {
   const handleChange = useCallback(() => {
     const textArea = textAreaRef.current;
     if (textArea) {
-      console.log(textArea.value);
       setAddress(textArea.value);
       const numberOfRows = formatTextArea({ textArea });
 
@@ -38,7 +37,6 @@ const CreateContactInfoField: React.FC = () => {
 
   const handleSubmit = useCallback(
     (data: Omit<ICompanyContactInfoDTO, 'id'>) => {
-      console.log(data);
       fieldType === 'Address' &&
         createCompanyContactInfo({
           info: address,
@@ -59,18 +57,31 @@ const CreateContactInfoField: React.FC = () => {
   }, []);
 
   const handlePhoneComponent = useCallback(
-    (phone: number) => {
-      handleSubmit({
-        info: String(phone),
-        info_type: 'Phone',
-      });
+    (phone: string) => {
+      if (phone !== undefined) {
+        handleSubmit({
+          info: phone,
+          info_type: 'Phone',
+        });
+      }
+    },
+    [handleSubmit],
+  );
+
+  const handleWhatsappComponent = useCallback(
+    (phone: string) => {
+      if (phone !== undefined) {
+        handleSubmit({
+          info: phone,
+          info_type: 'Whatsapp',
+        });
+      }
     },
     [handleSubmit],
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeFieldType = useCallback((data: any) => {
-    console.log(data);
     data && data.id && setFieldType(data.value);
   }, []);
 
@@ -101,6 +112,9 @@ const CreateContactInfoField: React.FC = () => {
             </section>
             <section>
               <strong>Contato</strong>
+              {fieldType === 'Whatsapp' && (
+                <PhoneForm handleSubmit={handleWhatsappComponent} />
+              )}
               {fieldType === 'Phone' && (
                 <PhoneForm handleSubmit={handlePhoneComponent} />
               )}
@@ -115,10 +129,13 @@ const CreateContactInfoField: React.FC = () => {
                 />
               )}
               {fieldType !== 'Phone' &&
+                fieldType !== 'Whatsapp' &&
                 fieldType !== 'Address' &&
                 fieldType !== 'Email' && <Input name="info" />}
             </section>
-            {fieldType !== 'Phone' && <Button type="submit">Salvar</Button>}
+            {fieldType !== 'Phone' && fieldType !== 'Whatsapp' && (
+              <Button type="submit">Salvar</Button>
+            )}
           </EditFieldContainer>
         </Form>
       ) : (

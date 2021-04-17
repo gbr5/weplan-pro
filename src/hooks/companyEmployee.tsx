@@ -148,14 +148,6 @@ const CompanyEmployeeProvider: React.FC = ({ children }) => {
   const createCompanyEmployee = useCallback(
     async (data: ICreateEmployeeDTO) => {
       try {
-        console.log({
-          email: data.email,
-          access_key: data.password,
-          password: data.password,
-          position: data.position,
-          title: 'Olá! Temos uma novidade para você',
-          message: `A empresa ${employee.company.name} convidou você para acessar o seu sistema na WePlan!`,
-        });
         const response = await api.post(
           `/company-employees/${employee.company.id}/${data.user_id}`,
           {

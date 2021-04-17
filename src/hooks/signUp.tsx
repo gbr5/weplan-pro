@@ -124,12 +124,7 @@ const SignUpProvider: React.FC = ({ children }) => {
       try {
         const hash = Math.random() * 1000000;
         const now = new Date();
-        console.log({
-          name: selectedName,
-          email: selectedEmail,
-          password: pass,
-          isCompany: true,
-        });
+
         const response = await api.post('/users', {
           name: selectedName,
           email: selectedEmail,
@@ -160,12 +155,6 @@ const SignUpProvider: React.FC = ({ children }) => {
     async (pass: string) => {
       try {
         const now = formatHourDateShort(String(new Date()));
-        console.log({
-          name: `${selectedName}${selectedFamilyName}|${now}`,
-          email: selectedEmail,
-          password: pass,
-          isCompany: false,
-        });
         const response = await api.post('/users', {
           name: `${selectedName}${selectedFamilyName}|${now}`,
           email: selectedEmail,
