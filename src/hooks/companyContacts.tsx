@@ -651,11 +651,17 @@ const CompanyContactContextProvider: React.FC = ({ children }) => {
   const createCompanyContactInfo = useCallback(
     async (data: Omit<ICompanyContactInfoDTO, 'id'>) => {
       try {
+        console.log({
+          company_contact_id: selectedContact.id,
+          info_type: data.info_type,
+          info: data.info,
+        });
         await api.post(`company/contacts/info`, {
           company_contact_id: selectedContact.id,
           info_type: data.info_type,
           info: data.info,
         });
+        console.log('Passei o POST');
         getCompanyContacts();
         addToast({
           type: 'success',

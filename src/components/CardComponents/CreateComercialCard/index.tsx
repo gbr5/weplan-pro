@@ -5,6 +5,7 @@ import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useFunnel } from '../../../hooks/funnel';
 import { useHomeController } from '../../../hooks/homeController';
 import { useStageCard } from '../../../hooks/stageCard';
+import { trimCardName } from '../../../utils/trimCardName';
 import CreateInlineFormField from '../../GeneralComponents/CreateInlineFormField';
 import WindowContainer from '../../WindowContainer';
 
@@ -40,7 +41,6 @@ const CreateComercialCard: React.FC<IProps> = ({ closeWindow }) => {
       const stage = selectedFunnel.stages.filter(
         thisstage => thisstage.funnel_order === '1',
       )[0];
-      const trimmedCardName = name.toLowerCase().replace(/ /g, '-');
       await createCard({
         card_owner: selectedCompanyEmployee.employeeUser.id,
         name,
@@ -55,7 +55,7 @@ const CreateComercialCard: React.FC<IProps> = ({ closeWindow }) => {
       getFunnels();
       closeWindow();
       selectPage('Card');
-      history.push(`/card/new/${trimmedCardName}`);
+      history.push(`/card/new/${trimCardName(name)}`);
     },
     [
       getFunnels,

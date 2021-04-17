@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
+import { useHistory } from 'react-router-dom';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useFunnel } from '../../hooks/funnel';
 import { useHomeController } from '../../hooks/homeController';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
+import { trimCardName } from '../../utils/trimCardName';
 
 import { Container, Card, CardContainer } from './styles';
 
@@ -15,6 +17,7 @@ interface IProps {
 }
 
 const FunnelStage: React.FC<IProps> = ({ stage }) => {
+  const history = useHistory();
   const { selectedCard, selectCard, getCards } = useStageCard();
   const { selectPage } = useHomeController();
   const { employeeModules } = useManagementModule();
@@ -29,8 +32,9 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
     (e: IStageCardDTO) => {
       selectCard(e);
       setTimeout(handleSelectPage(), 10000);
+      history.push(`/card/${trimCardName(e.name)}`);
     },
-    [selectCard, handleSelectPage],
+    [selectCard, history, handleSelectPage],
   );
 
   useEffect(() => {

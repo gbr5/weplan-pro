@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStageCard } from '../../../../hooks/stageCard';
+import { trimCardName } from '../../../../utils/trimCardName';
 import CardCustomersDashboard from './CardCustomersDashboard';
 import CardNotesDashboard from './CardNotesDashboard';
 import CardTaskDashboard from './CardTaskDashboard';
@@ -51,8 +52,9 @@ const CardAditionalInfoSection: React.FC = () => {
   }, [closeAllSections]);
 
   const handleNewCard = useCallback(() => {
-    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
-    const params = location.pathname.includes(`/card/new/${trimmedCardName}`);
+    const params = location.pathname.includes(
+      `/card/new/${trimCardName(selectedCard.name)}`,
+    );
     if (params) {
       handleCustomersSection();
     }

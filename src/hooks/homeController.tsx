@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { useHistory } from 'react-router-dom';
+import { trimCardName } from '../utils/trimCardName';
 import { useCompanyEmployee } from './companyEmployee';
 import { useFunnel } from './funnel';
 import { useStageCard } from './stageCard';
@@ -37,14 +38,10 @@ const HomeControllerProvider: React.FC = ({ children }) => {
     async (page: string) => {
       setSelectedPage(page);
       localStorage.setItem('@WP-PRO:current-page', page);
-      const trimmedCardName =
-        selectedCard &&
-        selectedCard.id &&
-        selectedCard.name.toLowerCase().replace(/ /g, '-');
       selectedCard &&
         selectedCard.id &&
         page === 'Card' &&
-        history.push(`/card/${trimmedCardName}`);
+        history.push(`/card/${trimCardName(selectedCard.name)}`);
       selectedFunnel &&
         selectedFunnel.id &&
         page === 'Comercial' &&

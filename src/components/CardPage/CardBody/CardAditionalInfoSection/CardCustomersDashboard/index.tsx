@@ -15,6 +15,7 @@ import {
   ContainerHeader,
   CustomerButton,
 } from './styles';
+import { trimCardName } from '../../../../../utils/trimCardName';
 
 interface IProps {
   openNotesSection: Function;
@@ -43,8 +44,7 @@ const CardCustomersDashboard: React.FC<IProps> = ({ openNotesSection }) => {
   const handleCloseContactWindow = useCallback(() => {
     setContactWindow(false);
     selectContact({} as ICompanyContactDTO);
-    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
-    history.push(`/card/${trimmedCardName}`);
+    history.push(`/card/${trimCardName(selectedCard.name)}`);
     openNotesSection();
   }, [selectContact, selectedCard, openNotesSection, history]);
   const handleCloseAddContactToCardWindow = useCallback(() => {
@@ -53,16 +53,14 @@ const CardCustomersDashboard: React.FC<IProps> = ({ openNotesSection }) => {
       setContactWindow(true);
     } else {
       openNotesSection();
-      const trimmedCardName = selectedCard.name
-        .toLowerCase()
-        .replace(/ /g, '-');
-      history.push(`/card/${trimmedCardName}`);
+      history.push(`/card/${trimCardName(selectedCard.name)}`);
     }
   }, [selectedContact, openNotesSection, selectedCard, history]);
 
   const handleNewCard = useCallback(() => {
-    const trimmedCardName = selectedCard.name.toLowerCase().replace(/ /g, '-');
-    const params = location.pathname.includes(`/card/new/${trimmedCardName}`);
+    const params = location.pathname.includes(
+      `/card/new/${trimCardName(selectedCard.name)}`,
+    );
     if (params && cardCustomers.length <= 0) {
       handleOpenAddCustomerToCardWindow();
     }
