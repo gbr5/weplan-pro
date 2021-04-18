@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import ICardNotesDTO from '../../../dtos/ICardNotesDTO';
 import { useStageCard } from '../../../hooks/stageCard';
-import NotesContainer from '../../CardPage/CardBody/CardAditionalInfoSection/CardNotesDashboard/NotesContainer';
+import CardNote from '../../CardPage/CardBody/CardAditionalInfoSection/CardNotesDashboard/CardNote';
 
 import { Notes, Main } from './styles';
 
@@ -32,7 +32,7 @@ const ComercialActivityContainer: React.FC = () => {
           selectedCard.id &&
           cardNotes.length > 0 &&
           cardNotes.map(xCard => (
-            <NotesContainer
+            <CardNote
               key={xCard.id}
               handleSetSelectedNote={handleSetSelectedNote}
               cardNote={xCard}

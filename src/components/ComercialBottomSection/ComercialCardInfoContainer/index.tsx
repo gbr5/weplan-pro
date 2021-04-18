@@ -88,10 +88,20 @@ const ComercialCardInfoContainer: React.FC = () => {
   const lastNoteDate = useMemo(() => {
     if (cardNotes.length > 0) {
       const lastNote = cardNotes.sort((a, b) => {
-        if (differenceInMilliseconds(a.updated_at, b.updated_at) < 0) {
+        if (
+          differenceInMilliseconds(
+            new Date(a.updated_at),
+            new Date(b.updated_at),
+          ) < 0
+        ) {
           return -1;
         }
-        if (differenceInMilliseconds(a.updated_at, b.updated_at) > 0) {
+        if (
+          differenceInMilliseconds(
+            new Date(a.updated_at),
+            new Date(b.updated_at),
+          ) > 0
+        ) {
           return 1;
         }
         return 0;

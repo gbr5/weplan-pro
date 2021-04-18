@@ -1,72 +1,60 @@
 import React, { useCallback } from 'react';
 import { MdFlag } from 'react-icons/md';
+import ITaskDTO from '../../../dtos/ITaskDTO';
 import { useCheckList } from '../../../hooks/checkList';
-import WindowContainer from '../../WindowContainer';
 
 import { Container, PriorityButton } from './styles';
 
 interface IProps {
   closeWindow: Function;
   update: Function;
+  task: ITaskDTO;
 }
 
 const TaskPriorityContainer: React.FC<IProps> = ({
   closeWindow,
   update,
+  task,
 }: IProps) => {
   const iconsize = 32;
-  const { selectedTask, updateTask } = useCheckList();
+  const { updateTask } = useCheckList();
 
   const updateEmployeeTaskPriority = useCallback(
     async priority => {
       await updateTask({
-        ...selectedTask,
+        ...task,
         priority,
       });
       update();
       closeWindow();
     },
-    [update, selectedTask, updateTask, closeWindow],
+    [update, task, updateTask, closeWindow],
   );
 
   return (
-    <WindowContainer
-      onHandleCloseWindow={() => closeWindow()}
-      containerStyle={{
-        zIndex: 15,
-        top: '25%',
-        left: '5%',
-        width: '90%',
-        height: '50%',
-      }}
-    >
-      <Container>
-        <h2>Prioridade da tarefa</h2>
-        <span>
-          <PriorityButton
-            onClick={() => updateEmployeeTaskPriority('low')}
-            type="button"
-          >
-            Baixa
-            <MdFlag size={iconsize} style={{ color: 'green' }} />
-          </PriorityButton>
-          <PriorityButton
-            onClick={() => updateEmployeeTaskPriority('neutral')}
-            type="button"
-          >
-            Moderada
-            <MdFlag size={iconsize} style={{ color: 'yellow' }} />
-          </PriorityButton>
-          <PriorityButton
-            onClick={() => updateEmployeeTaskPriority('high')}
-            type="button"
-          >
-            Alta
-            <MdFlag size={iconsize} style={{ color: 'red' }} />
-          </PriorityButton>
-        </span>
-      </Container>
-    </WindowContainer>
+    <Container>
+      <p>Prioridade da tarefa</p>
+      <span>
+        <PriorityButton
+          onClick={() => updateEmployeeTaskPriority('low')}
+          type="button"
+        >
+          <MdFlag size={iconsize} style={{ color: 'green' }} />
+        </PriorityButton>
+        <PriorityButton
+          onClick={() => updateEmployeeTaskPriority('neutral')}
+          type="button"
+        >
+          <MdFlag size={iconsize} style={{ color: 'yellow' }} />
+        </PriorityButton>
+        <PriorityButton
+          onClick={() => updateEmployeeTaskPriority('high')}
+          type="button"
+        >
+          <MdFlag size={iconsize} style={{ color: 'red' }} />
+        </PriorityButton>
+      </span>
+    </Container>
   );
 };
 

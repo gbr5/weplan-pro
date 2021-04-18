@@ -13,12 +13,7 @@ const MainTaskContainer: React.FC = () => {
       <Container>
         {dayTasks.map(task => {
           return (
-            <Task
-              update={getEmployeeTasksByDate}
-              key={task.id}
-              backgroundColor="#fddede"
-              task={task}
-            />
+            <Task update={getEmployeeTasksByDate} key={task.id} task={task} />
           );
         })}
       </Container>

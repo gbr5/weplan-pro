@@ -14,7 +14,7 @@ interface IProps {
   handleSetSelectedNote: Function;
 }
 
-const NotesContainer: React.FC<IProps> = ({
+const CardNote: React.FC<IProps> = ({
   cardNote,
   isSelected,
   handleSetSelectedNote,
@@ -106,4 +106,4 @@ const NotesContainer: React.FC<IProps> = ({
   );
 };
 
-export default NotesContainer;
+export default CardNote;
