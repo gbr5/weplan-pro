@@ -2,20 +2,34 @@ import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-  margin-top: 1rem;
+  display: block;
+  margin-top: 5rem;
+  height: 100%;
+  width: 100%;
+  padding: 0 1rem;
 
   > span {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+
+    > h1 {
+      width: 100%;
+      margin: 1rem auto 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--secondary-color);
+      font-size: 1.5rem;
+    }
 
     > button {
+      position: absolute;
+      top: 1rem;
+      right: 0rem;
+      z-index: 2;
       background: var(--secondary-color);
       border: 1px solid var(--primary-color);
       display: flex;
@@ -41,7 +55,11 @@ export const ListContainer = styled.div`
   margin: 1rem auto;
 
   overflow-y: scroll;
-  height: 75vh;
+  height: 68vh;
+  padding: 0.5rem;
+  width: 100%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 `;
 
 export const PageSection = styled.button`
@@ -50,15 +68,16 @@ export const PageSection = styled.button`
   justify-content: flex-start;
   background: #ff9900;
   border: none;
-  width: 20rem;
+  width: 100%;
   padding: 0.5rem;
   border-radius: 4px;
   font-size: 1.4rem;
   transition: 0.3s;
   text-transform: capitalize;
   margin-top: 1rem;
+  border-radius: 8px;
 
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
 
   &:hover {
     background-color: ${shade(0.3, '#ff9900')};

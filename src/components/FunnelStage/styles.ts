@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   display: block;
@@ -48,69 +48,4 @@ export const CardContainer = styled.div`
   height: 240px;
   width: 100%;
   overflow-y: scroll;
-`;
-
-interface ICardProps {
-  isActive: boolean;
-}
-
-export const Card = styled.div<ICardProps>`
-  display: flex;
-  align-items: center;
-  justify-content: stretch;
-  padding: auto;
-  padding: 0.5rem;
-  background: var(--card-color);
-  border-radius: 2px;
-  margin-top: 0.2rem;
-  width: 100%;
-  height: 48px;
-
-  > button {
-    display: flex;
-    margin-left: auto;
-    padding: 0;
-    background: transparent;
-    border: none;
-    text-align: left;
-
-    &:first-child {
-      width: 100%;
-    }
-
-    &:last-child {
-      text-align: center;
-      min-width: 2rem;
-    }
-    > h3 {
-      color: var(--letter-color-5);
-      font-size: 1.2rem;
-      margin-right: auto;
-    }
-
-    > p {
-      font-size: 11px;
-      color: var(--letter-color-5);
-    }
-    > strong {
-      font-weight: 500;
-      font-size: 1.2rem;
-      color: var(--secondary-color);
-      margin-left: auto;
-    }
-  }
-
-  ${props =>
-    props.isActive &&
-    css`
-      background: var(--header-primary);
-      color: var(--header-background-color);
-      border: 1px solid var(--letter-color-5);
-
-      > button {
-        > strong {
-          color: var(--primary-color);
-        }
-      }
-    `}
 `;

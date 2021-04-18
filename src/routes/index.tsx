@@ -19,6 +19,7 @@ import KanbanDashboard from '../components/KabanDashboard';
 import SettingsPage from '../pages/SettingsPage';
 import ComercialFunnelSettings from '../components/FunnelSettingsComponents/ComercialFunnelSettings';
 import EmployeesSection from '../components/EmployeesSection';
+import ContactPageDashboard from '../components/ContactPageComponents/ContactPageDashboard';
 
 const Routes: React.FC = () => {
   const { employee } = useEmployeeAuth();
@@ -51,6 +52,7 @@ const Routes: React.FC = () => {
           isPrivate
         />
       )}
+      <Route path="/e-links" exact component={ContactPageDashboard} isPrivate />
       <Route path="/settings" exact component={SettingsPage} isPrivate />
       <Route path="/employees" exact component={EmployeesSection} isPrivate />
       <Route
