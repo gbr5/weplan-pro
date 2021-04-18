@@ -11,7 +11,7 @@ export const Container = styled.div<IProps>`
   padding: auto;
   padding: 0.5rem;
   background: var(--letter-color-4);
-  border-radius: 2px;
+  border-radius: 4px;
   margin-top: 0.2rem;
   width: 95%;
   height: 48px;
