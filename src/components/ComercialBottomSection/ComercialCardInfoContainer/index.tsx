@@ -1,12 +1,14 @@
 import { differenceInMilliseconds } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
-import IUserDTO from '../../../dtos/IUserDTO';
+import { useCompanyContact } from '../../../hooks/companyContacts';
+import { useCompanyEmployee } from '../../../hooks/companyEmployee';
 import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
 import api from '../../../services/api';
 import formatHourDateShort from '../../../utils/formatHourDateShort';
 import CardInfoButton from '../../CardPage/CardBody/CardInfoSection/CardInfoButton';
+import ContactWindow from '../../CompanyContactComponents/ContactWindow';
 
 import {
   Container,
@@ -24,19 +26,30 @@ interface ICardCustomer {
 
 const ComercialCardInfoContainer: React.FC = () => {
   const { selectedFunnelCardInfoFields } = useFunnel();
+  const { companyEmployees } = useCompanyEmployee();
+  const {
+    getEmployeeContact,
+    selectContact,
+    selectedContact,
+  } = useCompanyContact();
   const { selectedCard, cardNotes, funnelCardInfos } = useStageCard();
-  const [cardOwner, setCardOwner] = useState<IUserDTO>({} as IUserDTO);
+  const [cardOwner, setCardOwner] = useState<ICompanyContactDTO>(
+    {} as ICompanyContactDTO,
+  );
   const [cardCustomers, setCardCustomers] = useState<ICardCustomer[]>([]);
-
-  const getCardOwner = useCallback(() => {
+  const [contactWindow, setContactWindow] = useState(false);
+  const getCardOwner = useCallback(async () => {
     try {
-      api.get<IUserDTO>(`users/${selectedCard.card_owner}`).then(response => {
-        setCardOwner(response.data);
-      });
+      const findEmployee = companyEmployees.filter(
+        thisEmployee =>
+          thisEmployee.employeeUser.id === selectedCard.card_owner,
+      );
+      const findCardOwner = await getEmployeeContact(findEmployee[0].id);
+      findCardOwner && setCardOwner(findCardOwner);
     } catch (err) {
       throw new Error(err);
     }
-  }, [selectedCard]);
+  }, [selectedCard, getEmployeeContact, companyEmployees]);
 
   useEffect(() => {
     if (selectedCard.id !== undefined) {
@@ -55,6 +68,18 @@ const ComercialCardInfoContainer: React.FC = () => {
       throw new Error(err);
     }
   }, [selectedCard]);
+
+  const handleOpenContactWindow = useCallback(
+    (e: ICompanyContactDTO) => {
+      selectContact(e);
+      setContactWindow(true);
+    },
+    [selectContact],
+  );
+  const handleCloseContactWindow = useCallback(() => {
+    selectContact({} as ICompanyContactDTO);
+    setContactWindow(false);
+  }, [selectContact]);
 
   useEffect(() => {
     getCardCustomer();
@@ -78,58 +103,71 @@ const ComercialCardInfoContainer: React.FC = () => {
   }, [cardNotes]);
 
   return (
-    <Main>
-      <h2>Informações do Card</h2>
-      <Container>
-        <LastUpdate>
-          <strong>Última alteração</strong>
-          <p>{lastNoteDate}</p>
-        </LastUpdate>
-        <div>
-          <p>Nome</p>
-          <p>{selectedCard && selectedCard.name}</p>
-        </div>
+    <>
+      {contactWindow && selectedContact && selectedContact.id && (
+        <ContactWindow closeWindow={() => handleCloseContactWindow()} />
+      )}
+      <Main>
+        <h2>Informações do Card</h2>
+        <Container>
+          <LastUpdate>
+            <strong>Última alteração</strong>
+            <p>{lastNoteDate}</p>
+          </LastUpdate>
+          <div>
+            <p>Nome</p>
+            <p>{selectedCard && selectedCard.name}</p>
+          </div>
 
-        <div>
-          <p>Responsável</p>
-          <p>{cardOwner.name}</p>
-        </div>
-        <CardCustomersSection>
-          <strong>Clientes</strong>
-          <span>
-            {cardCustomers.map(customer => {
-              return (
-                <button type="button" key={customer.id}>
-                  {customer.customer.name}
-                </button>
-              );
-            })}
-          </span>
-        </CardCustomersSection>
-
-        <AditionalInfoSection>
-          <h3>Informações adicionais</h3>
-
-          <span>
-            {selectedFunnelCardInfoFields.map(field => {
-              const funnelCardInfo = funnelCardInfos.find(
-                info => info.funnel_card_field_id === field.id,
-              );
-
-              if (funnelCardInfo) {
+          <div>
+            <p>Responsável</p>
+            <p>
+              {cardOwner &&
+                cardOwner.name &&
+                `${cardOwner.name} ${cardOwner.family_name}`}
+            </p>
+          </div>
+          <CardCustomersSection>
+            <strong>Clientes</strong>
+            <span>
+              {cardCustomers.map(customer => {
                 return (
-                  <CardInfoButton
-                    cardInfo={funnelCardInfo}
-                    funnelCardInfoField={field}
-                  />
+                  <button
+                    onClick={() => handleOpenContactWindow(customer.customer)}
+                    type="button"
+                    key={customer.id}
+                  >
+                    {customer.customer.name}
+                  </button>
                 );
-              }
-              return '';
-            })}
-          </span>
-        </AditionalInfoSection>
-      </Container>
-    </Main>
+              })}
+            </span>
+          </CardCustomersSection>
+
+          <AditionalInfoSection>
+            <h3>Informações adicionais</h3>
+
+            <span>
+              {selectedFunnelCardInfoFields.map(field => {
+                const funnelCardInfo = funnelCardInfos.find(
+                  info => info.funnel_card_field_id === field.id,
+                );
+
+                if (funnelCardInfo) {
+                  return (
+                    <CardInfoButton
+                      cardInfo={funnelCardInfo}
+                      funnelCardInfoField={field}
+                    />
+                  );
+                }
+                return '';
+              })}
+            </span>
+          </AditionalInfoSection>
+        </Container>
+      </Main>
+    </>
   );
 };
 
