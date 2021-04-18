@@ -52,73 +52,6 @@ export const ButtonContainer = styled.strong`
   width: 100%;
 
   > button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    margin: 0.5rem;
-    border-radius: 5px;
-    border: none;
-    transition: 0.3s;
-  }
-`;
-
-export const Status = styled.button`
-  margin: 0 auto;
-  padding: 0;
-  background: transparent;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-
-  &:hover {
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
-  }
-
-  > img,
-  svg {
-    height: 2rem;
-    width: 50px;
-    &:hover {
-      border: 1px solid var(--title-color);
-    }
-  }
-`;
-
-export const Priority = styled.button`
-  margin: 0 auto;
-  padding: 0;
-  background: var(--letter-color-4);
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-
-  &:hover {
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
-  }
-  > svg,
-  img {
-    height: 2rem;
-    width: 2rem;
-    &:hover {
-      border: 1px solid var(--title-color);
-    }
-  }
-`;
-
-export const DeleteButton = styled.button`
-  margin: 0 auto;
-  background: var(--letter-color-4);
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-  height: 2rem;
-  width: 2rem;
-  &:hover {
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
-  }
-  > svg,
-  img {
-    height: 2rem;
-    width: 2rem;
-    &:hover {
-      border: 1px solid var(--title-color);
-    }
   }
 `;
 
@@ -128,7 +61,12 @@ export const SettingsButton = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 5px;
+  border: none;
+  transition: 0.3s;
+  /* margin: 0.5rem; */
 
   > div {
     width: 0.3rem;

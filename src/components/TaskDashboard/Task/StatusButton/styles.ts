@@ -50,6 +50,6 @@ export const SelectStatusContainer = styled.div`
     border-top: 0.7rem solid var(--letter-color-2);
     border-right: 0.7rem solid transparent;
     border-left: 0.7rem solid transparent;
-    z-index: 3;
+    opacity: 0.8;
   }
 `;

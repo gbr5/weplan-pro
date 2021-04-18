@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Main, Notes } from './styles';
 import CardNote from './CardNote';
 import ICardNotesDTO from '../../../../../dtos/ICardNotesDTO';
-import CreateNoteForm from './CreateNoteForm';
+import CreateCardNoteForm from './CreateCardNoteForm';
 import { useStageCard } from '../../../../../hooks/stageCard';
 
 const CardNotesDashboard: React.FC = () => {
@@ -22,7 +22,7 @@ const CardNotesDashboard: React.FC = () => {
 
   return (
     <Main>
-      <CreateNoteForm />
+      <CreateCardNoteForm />
       <Notes>
         {cardNotes.length > 0 &&
           cardNotes.map(xCard => (
