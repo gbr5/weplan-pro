@@ -61,7 +61,6 @@ const CardCheckListContainer: React.FC = () => {
                     <Task
                       update={getCardCheckLists}
                       key={task.id}
-                      backgroundColor="#ebf8ff"
                       task={task}
                     />
                   );
@@ -78,7 +77,6 @@ const CardCheckListContainer: React.FC = () => {
                     <Task
                       update={getCardCheckLists}
                       key={task.id}
-                      backgroundColor="#fddede"
                       task={task}
                     />
                   );
@@ -95,7 +93,6 @@ const CardCheckListContainer: React.FC = () => {
                     <Task
                       update={getCardCheckLists}
                       key={task.id}
-                      backgroundColor="#e6fffa"
                       task={task}
                     />
                   );

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 
 import { Main, Notes } from './styles';
-import NotesContainer from './NotesContainer';
+import CardNote from './CardNote';
 import ICardNotesDTO from '../../../../../dtos/ICardNotesDTO';
 import CreateNoteForm from './CreateNoteForm';
 import { useStageCard } from '../../../../../hooks/stageCard';
@@ -26,7 +26,7 @@ const CardNotesDashboard: React.FC = () => {
       <Notes>
         {cardNotes.length > 0 &&
           cardNotes.map(xCard => (
-            <NotesContainer
+            <CardNote
               key={xCard.id}
               handleSetSelectedNote={handleSetSelectedNote}
               cardNote={xCard}

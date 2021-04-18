@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-// import { htmlToDOM } from 'html-react-parser';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { MdClose, MdEdit } from 'react-icons/md';
 import ICompanyContactNoteDTO from '../../../../dtos/ICompanyContactNoteDTO';
 import { useCompanyContact } from '../../../../hooks/companyContacts';
 import Button from '../../../Button';
-// import Input from '../../../Input';
 
 import { Container, FieldContainer, EditFieldContainer } from './styles';
 import formatStringToDate from '../../../../utils/formatDateToString';

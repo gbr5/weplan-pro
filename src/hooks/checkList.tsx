@@ -17,7 +17,13 @@ import { useEmployeeAuth } from './employeeAuth';
 import { useStageCard } from './stageCard';
 import { useToast } from './toast';
 
+interface IPriorityColors {
+  priority: string;
+  color: string;
+}
+
 interface ICheckListContextData {
+  priorityColors: IPriorityColors[];
   selectedDate: Date;
   dayTasks: ITaskDTO[];
   taskName: string;
@@ -189,7 +195,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         getEmployeeTasks();
         addToast({
           type: 'success',
-          title: 'Tarefa adicionada com sucesso!',
+          title: 'Tarefa editada com sucesso!',
         });
         return response.data;
       } catch (err) {
@@ -271,6 +277,11 @@ const CheckListProvider: React.FC = ({ children }) => {
     { id: '2', value: '2', label: 'runningTask' },
     { id: '3', value: '3', label: 'doneTask' },
   ];
+  const priorityColors: IPriorityColors[] = [
+    { priority: 'low', color: 'rgba(161, 255, 92, 0.7)' },
+    { priority: 'neutral', color: 'rgba(255, 220, 92, 0.7)' },
+    { priority: 'high', color: 'rgba(255, 124, 92, 0.7)' },
+  ];
 
   useEffect(() => {
     if (employee && employee.id) {
@@ -294,6 +305,7 @@ const CheckListProvider: React.FC = ({ children }) => {
   return (
     <CheckListContext.Provider
       value={{
+        priorityColors,
         dayTasks,
         getEmployeeTasksByDate,
         employeeFinishedTasks,

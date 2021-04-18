@@ -29,59 +29,18 @@ const AllTasksSection: React.FC = () => {
         currentSection={statusSection}
         handleSection={(e: string) => handleTaskStatusSection(e)}
       />
-      {/*
-      <StatusMenuButtonContainer>
-        <StatusMenuButton
-          isActive={statusSection === '1'}
-          type="button"
-          onClick={handleNotStartedTasksSection}
-        >
-          Início
-        </StatusMenuButton>
-        <StatusMenuButton
-          isActive={statusSection === '2'}
-          type="button"
-          onClick={handleInProgressTasksSection}
-        >
-          Andamento
-        </StatusMenuButton>
-        <StatusMenuButton
-          isActive={statusSection === '3'}
-          type="button"
-          onClick={handleFinishedTasksSection}
-        >
-          Realizadas
-        </StatusMenuButton>
-      </StatusMenuButtonContainer> */}
       <Container>
         {statusSection === '1' &&
           employeeNotStartedTasks.map(task => {
-            return (
-              <Task
-                update={getEmployeeTasks}
-                key={task.id}
-                backgroundColor="#ebf8ff"
-                task={task}
-              />
-            );
+            return <Task update={getEmployeeTasks} key={task.id} task={task} />;
           })}
         {statusSection === '2' &&
           employeeInProgressTasks.map(task => (
-            <Task
-              update={getEmployeeTasks}
-              key={task.id}
-              backgroundColor="#fddede"
-              task={task}
-            />
+            <Task update={getEmployeeTasks} key={task.id} task={task} />
           ))}
         {statusSection === '3' &&
           employeeFinishedTasks.map(task => (
-            <Task
-              update={getEmployeeTasks}
-              key={task.id}
-              backgroundColor="#e6fffa"
-              task={task}
-            />
+            <Task update={getEmployeeTasks} key={task.id} task={task} />
           ))}
       </Container>
     </Main>

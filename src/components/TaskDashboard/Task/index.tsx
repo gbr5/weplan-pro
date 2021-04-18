@@ -1,71 +1,46 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { MdFlag, MdSchedule } from 'react-icons/md';
-import { FiRefreshCcw } from 'react-icons/fi';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FiFileText, FiRefreshCcw } from 'react-icons/fi';
+import { MdSchedule } from 'react-icons/md';
 import ITaskDTO from '../../../dtos/ITaskDTO';
-import sleepyTask from '../../../assets/sleepyTask1.svg';
-import runningTask from '../../../assets/runningTask1.svg';
-import doneTask from '../../../assets/doneTask1.svg';
 import {
   Container,
   SettingsButton,
   ButtonContainer,
-  Priority,
-  Status,
+  DeleteButton,
 } from './styles';
 import { useCheckList } from '../../../hooks/checkList';
 
-import TaskStatusContainer from '../TaskStatusContainer';
-import TaskPriorityContainer from '../TaskPriorityContainer';
 import formatHourDateShort from '../../../utils/formatHourDateShort';
 import TaskSettings from '../../CardPage/CardBody/CardAditionalInfoSection/CardTaskDashboard/CardCheckListContainer/TaskSettings';
+import PriorityButton from './PriorityButton';
+import StatusButton from './StatusButton';
 
 interface IProps {
-  backgroundColor: string;
   task: ITaskDTO;
   update: Function;
 }
 
-const Task: React.FC<IProps> = ({ task, backgroundColor, update }) => {
+const Task: React.FC<IProps> = ({ task, update }) => {
   const iconsize = 40;
-  const { selectTask, selectedTask } = useCheckList();
-  const [statusIcon, setStatusIcon] = useState(sleepyTask);
-  const [priorityWindow, setPriorityWindow] = useState(false);
-  const [statusWindow, setStatusWindow] = useState(false);
+  const { selectTask, selectedTask, priorityColors } = useCheckList();
   const [settingsWindow, setSettingsWindow] = useState(false);
 
   const handleCloseWindows = useCallback(() => {
     selectTask({} as ITaskDTO);
-    setPriorityWindow(false);
-    setStatusWindow(false);
     setSettingsWindow(false);
   }, [selectTask]);
-
-  const handlePriorityWindow = useCallback(() => {
-    selectTask(task);
-    setPriorityWindow(true);
-  }, [selectTask, task]);
-
-  const handleStatusWindow = useCallback(() => {
-    selectTask(task);
-    setStatusWindow(true);
-  }, [selectTask, task]);
 
   const handleTaskSettings = useCallback(() => {
     selectTask(task);
     setSettingsWindow(true);
   }, [task, selectTask]);
 
-  useEffect(() => {
-    if (task.status === '1') {
-      setStatusIcon(sleepyTask);
-    }
-    if (task.status === '2') {
-      setStatusIcon(runningTask);
-    }
-    if (task.status === '3') {
-      setStatusIcon(doneTask);
-    }
-  }, [task]);
+  const backgroundColor = useMemo(() => {
+    const color = priorityColors.filter(
+      pcolor => pcolor.priority === task.priority,
+    )[0];
+    return color.color;
+  }, [priorityColors, task]);
 
   return (
     <>
@@ -75,60 +50,42 @@ const Task: React.FC<IProps> = ({ task, backgroundColor, update }) => {
           closeWindow={() => handleCloseWindows()}
         />
       )}
-      {priorityWindow && selectedTask && (
-        <TaskPriorityContainer
-          update={update}
-          closeWindow={() => handleCloseWindows()}
-        />
-      )}
-      {statusWindow && selectedTask && (
-        <TaskStatusContainer
-          update={update}
-          closeWindow={() => handleCloseWindows()}
-        />
-      )}
       <Container style={{ background: backgroundColor }}>
         <h3>{task.task}</h3>
         <div>
-          <span>
-            <p>
-              <MdSchedule size={20} />{' '}
-              {formatHourDateShort(String(task.due_date))}
-            </p>
-            {task.created_at === task.updated_at ? (
-              <p>
-                <FiRefreshCcw size={20} />{' '}
-                {formatHourDateShort(String(task.created_at))}
-              </p>
-            ) : (
-              <p>
-                <FiRefreshCcw size={20} />{' '}
-                {formatHourDateShort(String(task.updated_at))}
-              </p>
-            )}
-          </span>
-
           <ButtonContainer>
-            <Priority type="button" onClick={() => handlePriorityWindow()}>
-              {task.priority === 'low' && (
-                <MdFlag size={iconsize} style={{ color: 'green' }} />
-              )}
-              {task.priority === 'neutral' && (
-                <MdFlag size={iconsize} style={{ color: 'yellow' }} />
-              )}
-              {task.priority === 'high' && (
-                <MdFlag size={iconsize} style={{ color: 'red' }} />
-              )}
-            </Priority>
-            <Status type="button" onClick={() => handleStatusWindow()}>
-              <img src={statusIcon} alt="Task Status Icon - We Plan" />
-            </Status>
+            {/* <DeleteButton type="button" onClick={handleTaskSettings}>
+              <FiTrash2 color="red" size={iconsize} />
+            </DeleteButton> */}
+            <PriorityButton update={update} task={task} />
+            <StatusButton task={task} update={update} />
+            <DeleteButton type="button" onClick={handleTaskSettings}>
+              <FiFileText color="rgba(100, 222, 255)" size={iconsize} />
+            </DeleteButton>
+
             <SettingsButton type="button" onClick={handleTaskSettings}>
               <div />
               <div />
               <div />
             </SettingsButton>
           </ButtonContainer>
+          <span>
+            <p>
+              <MdSchedule size={16} />{' '}
+              {formatHourDateShort(String(task.due_date))}
+            </p>
+            {task.created_at === task.updated_at ? (
+              <p>
+                <FiRefreshCcw size={16} />{' '}
+                {formatHourDateShort(String(task.created_at))}
+              </p>
+            ) : (
+              <p>
+                <FiRefreshCcw size={16} />{' '}
+                {formatHourDateShort(String(task.updated_at))}
+              </p>
+            )}
+          </span>
         </div>
       </Container>
     </>

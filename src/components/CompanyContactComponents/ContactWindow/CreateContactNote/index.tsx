@@ -19,7 +19,8 @@ const CreateContactNote: React.FC = () => {
   const [rows, setRows] = useState(1);
 
   const handleSubmit = useCallback(() => {
-    const text = textAreaRef.current?.innerHTML;
+    const text = textAreaRef.current?.value;
+
     createCompanyContactNote(text !== undefined ? text : '');
     setAddContactField(false);
   }, [createCompanyContactNote]);

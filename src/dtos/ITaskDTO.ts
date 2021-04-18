@@ -1,3 +1,6 @@
+import ITaskNoteDTO from './ITaskNoteDTO';
+import IUserDTO from './IUserDTO';
+
 export default interface ITaskDTO {
   id: string;
   check_list_id: string;
@@ -9,4 +12,6 @@ export default interface ITaskDTO {
   due_date: string;
   created_at: Date;
   updated_at: Date;
+  owner: IUserDTO;
+  notes: ITaskNoteDTO[];
 }

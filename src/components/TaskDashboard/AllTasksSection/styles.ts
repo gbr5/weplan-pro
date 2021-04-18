@@ -11,8 +11,11 @@ export const Main = styled.div`
   margin: 1rem 0 2rem;
 
   > h2 {
-    width: 100%;
-    margin: 0 auto;
+    width: 90%;
+    margin: 1.5rem auto 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--secondary-color);
+    text-align: center;
   }
 `;
 
@@ -68,7 +71,7 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
 
 export const Container = styled.div`
   width: 95%;
-  height: 35rem;
+  height: 24rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;

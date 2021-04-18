@@ -2,51 +2,55 @@ import styled from 'styled-components';
 import '../../../styles/global';
 
 export const Container = styled.div`
-  width: 100%;
-  height: 80%;
-
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 10rem;
+  height: 3.2rem;
+  display: block;
   justify-content: center;
-  background: var(--background-color);
+  background: var(--letter-color-2);
   border-radius: 8px;
-  padding: 8px;
-  margin-top: 3rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.25);
 
-  > h2 {
-    width: 100%;
+  > p {
+    font-size: 0.8rem;
+    width: 90%;
     color: var(--letter-color);
-    margin: 1rem auto;
+    margin: 0.2rem auto;
     border-bottom: 1px solid var(--secondary-color);
+    text-align: center;
   }
 
   > span {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
   }
 `;
 
 export const StatusButton = styled.button`
-  background: transparent;
-  border: none;
   display: flex;
   align-items: center;
-  justify-content: stretch;
-  width: 100%;
-  font-size: 1.3rem;
-
+  justify-content: center;
+  max-width: 1.5rem;
+  max-height: 1.5rem;
   margin: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  transition: 0.3s;
+  margin: 0 auto;
+  padding: 0;
+  background: var(--letter-color-4);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15);
 
-  > img {
-    margin-left: auto;
-    height: 64px;
-    width: 64px;
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-
+  &:hover {
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  > svg,
+  img {
+    max-height: 1.5rem;
+    max-width: 1.5rem;
     &:hover {
-      box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--title-color);
     }
   }
 `;
