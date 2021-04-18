@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Container, Note, HistoryNote } from './styles';
 
 import ICardNotesDTO from '../../../../../../dtos/ICardNotesDTO';
-import IUserDTO from '../../../../../../dtos/IUserDTO';
 import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 import formatHourDateShort from '../../../../../../utils/formatHourDateShort';
-import { useSignUp } from '../../../../../../hooks/signUp';
+import { useCompanyContact } from '../../../../../../hooks/companyContacts';
+import { useCompanyEmployee } from '../../../../../../hooks/companyEmployee';
 
 interface IProps {
   cardNote: ICardNotesDTO;
@@ -20,26 +20,22 @@ const CardNote: React.FC<IProps> = ({
   handleSetSelectedNote,
 }: IProps) => {
   const { employee } = useEmployeeAuth();
-  const { getUserProfile } = useSignUp();
+  const { getEmployeeContact } = useCompanyContact();
+  const { companyEmployees } = useCompanyEmployee();
 
-  const [author, setAuthor] = useState<IUserDTO>({} as IUserDTO);
   const [noteTitle, setNoteTitle] = useState('');
   const [note, setNote] = useState(cardNote.note);
 
-  const getAuthor = useCallback(async () => {
-    try {
-      const userAuthor = await getUserProfile(cardNote.user_id);
-      userAuthor && setAuthor(userAuthor);
-    } catch (err) {
-      throw new Error(err);
+  const author = useMemo(async () => {
+    if (cardNote.user_id === employee.company.id) {
+      return 'WePlan';
     }
-  }, [cardNote, getUserProfile]);
-
-  useEffect(() => {
-    if (cardNote.user_id !== employee.employeeUser.id) {
-      getAuthor();
-    }
-  }, [getAuthor, cardNote, employee]);
+    const findEmployee = companyEmployees.filter(
+      thisemployee => thisemployee.employeeUser.id === cardNote.user_id,
+    )[0];
+    const findAuthor = await getEmployeeContact(findEmployee.id);
+    return findAuthor ? `${findAuthor.name} ${findAuthor.family_name}` : '';
+  }, [companyEmployees, getEmployeeContact, cardNote, employee]);
 
   useEffect(() => {
     if (cardNote.user_id === employee.company.id) {
@@ -76,7 +72,7 @@ const CardNote: React.FC<IProps> = ({
             <strong>{formatHourDateShort(String(cardNote.created_at))}</strong>
             {cardNote.user_id !== employee.company.id &&
               (cardNote.user_id !== employee.employeeUser.id ? (
-                <strong>{author.name}</strong>
+                <strong>{author}</strong>
               ) : (
                 <strong>Você enviou</strong>
               ))}

@@ -4,9 +4,10 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  /* margin: 0.5rem; */
   width: 2rem;
   height: 2rem;
+
   > button {
     transition: 0.3s;
     width: 2rem;
@@ -16,43 +17,38 @@ export const Container = styled.div`
     width: 100%;
     height: 100%;
     margin: 0 auto;
-    padding: 0.1rem 0.2rem;
-    background: var(--letter-color-4);
+    padding: 0;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+    background-color: var(--letter-color-4);
 
     &:hover {
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
     }
-    > svg,
-    img {
+    > svg {
       max-height: 2rem;
       max-width: 2rem;
-      &:hover {
-        border: 1px solid var(--title-color);
-      }
     }
   }
+  position: relative;
 `;
 
-export const SelectPriorityContainer = styled.div`
+export const NewTaskNotesContainer = styled.aside`
   position: absolute;
   z-index: 2;
-  top: -3.5rem;
+  top: -1.1rem;
+  right: -1.1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  > span {
-    /* border-radius: 0 0 50% 50%; */
-    /* background: var(--letter-color-4); */
-    /* height: 1.5rem;
-    width: 6rem; */
-    /* background: red; */
+  height: 1.7rem;
+  width: 1.7rem;
+  background: var(--red-color);
+  border-radius: 50%;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
-    border-top: 0.7rem solid var(--letter-color-2);
-    border-right: 0.7rem solid transparent;
-    border-left: 0.7rem solid transparent;
-    opacity: 0.8;
+  > p {
+    font-size: 0.9rem;
   }
 `;

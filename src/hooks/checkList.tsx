@@ -8,6 +8,7 @@ import React, {
 import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 import ICheckListDTO from '../dtos/ICheckListDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
+import ICreateTaskNoteDTO from '../dtos/ICreateTaskNote';
 
 // import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ITaskDTO from '../dtos/ITaskDTO';
@@ -46,11 +47,13 @@ interface ICheckListContextData {
   selectTaskStatus(data: string): void;
   selectTaskDueDate(data: string): void;
   createTask(data: ICreateTaskDTO): void;
+  createTaskNote(data: ICreateTaskNoteDTO): void;
   updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
   selectTask(data: ITaskDTO): void;
   deleteTask(id: string): Promise<void>;
   getEmployeeTasks(): void;
+  getTask(id: string): Promise<void>;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -180,6 +183,19 @@ const CheckListProvider: React.FC = ({ children }) => {
     setSelectedCheckList(data);
     localStorage.setItem('@WP-PRO:selected-check-list', JSON.stringify(data));
   }, []);
+  const getTask = useCallback(
+    async (id: string) => {
+      try {
+        const response = await api.get<ITaskDTO>(
+          `/check-lists/tasks/show/${id}`,
+        );
+        selectTask(response.data);
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [selectTask],
+  );
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
       try {
@@ -228,6 +244,34 @@ const CheckListProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, getEmployeeTasks],
+  );
+  const createTaskNote = useCallback(
+    async (data: ICreateTaskNoteDTO) => {
+      try {
+        await api.post(`/check-list-task-notes`, {
+          task_id: data.task_id,
+          note: {
+            author_id: employee.employeeUser.id,
+            isNew: true,
+            note: data.note,
+          },
+        });
+        getTask(data.task_id);
+        getEmployeeTasks();
+        addToast({
+          type: 'success',
+          title: 'Tarefa criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar tarefa!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [employee, getTask, getEmployeeTasks, addToast],
   );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
@@ -306,6 +350,8 @@ const CheckListProvider: React.FC = ({ children }) => {
     <CheckListContext.Provider
       value={{
         priorityColors,
+        getTask,
+        createTaskNote,
         dayTasks,
         getEmployeeTasksByDate,
         employeeFinishedTasks,

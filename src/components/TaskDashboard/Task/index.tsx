@@ -1,19 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { FiFileText, FiRefreshCcw } from 'react-icons/fi';
+import { FiRefreshCcw } from 'react-icons/fi';
 import { MdSchedule } from 'react-icons/md';
 import ITaskDTO from '../../../dtos/ITaskDTO';
-import {
-  Container,
-  SettingsButton,
-  ButtonContainer,
-  DeleteButton,
-} from './styles';
+import { Container, SettingsButton, ButtonContainer } from './styles';
 import { useCheckList } from '../../../hooks/checkList';
 
 import formatHourDateShort from '../../../utils/formatHourDateShort';
 import TaskSettings from '../../CardPage/CardBody/CardAditionalInfoSection/CardTaskDashboard/CardCheckListContainer/TaskSettings';
 import PriorityButton from './PriorityButton';
 import StatusButton from './StatusButton';
+import TaskNotesButton from './TaskNotesButton';
 
 interface IProps {
   task: ITaskDTO;
@@ -21,7 +17,6 @@ interface IProps {
 }
 
 const Task: React.FC<IProps> = ({ task, update }) => {
-  const iconsize = 40;
   const { selectTask, selectedTask, priorityColors } = useCheckList();
   const [settingsWindow, setSettingsWindow] = useState(false);
 
@@ -59,9 +54,7 @@ const Task: React.FC<IProps> = ({ task, update }) => {
             </DeleteButton> */}
             <PriorityButton update={update} task={task} />
             <StatusButton task={task} update={update} />
-            <DeleteButton type="button" onClick={handleTaskSettings}>
-              <FiFileText color="rgba(100, 222, 255)" size={iconsize} />
-            </DeleteButton>
+            <TaskNotesButton task={task} />
 
             <SettingsButton type="button" onClick={handleTaskSettings}>
               <div />

@@ -11,7 +11,7 @@ interface IFormParams {
   note: string;
 }
 
-const CreateNoteForm: React.FC = () => {
+const CreateCardNoteForm: React.FC = () => {
   const { createCardNote } = useStageCard();
   const formRef = useRef<FormHandles>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -58,4 +58,4 @@ const CreateNoteForm: React.FC = () => {
   );
 };
 
-export default CreateNoteForm;
+export default CreateCardNoteForm;
