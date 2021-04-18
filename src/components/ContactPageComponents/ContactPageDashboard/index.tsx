@@ -63,7 +63,7 @@ const ContactPageDashboard: React.FC = () => {
           />
         )}
         <span>
-          <h1>Páginas de Contato</h1>
+          <h1>e-Links</h1>
           <button
             type="button"
             onClick={() => handleAddContactPageWindow(true)}

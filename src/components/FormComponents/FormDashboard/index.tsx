@@ -6,7 +6,7 @@ import Header from '../../Header';
 import AddCompanyForm from '../AddCompanyForm';
 import FormWindow from '../FormWindow';
 
-import { Container, ListContainer, FormSection, ButtonForm } from './styles';
+import { Container, ListContainer, ButtonForm } from './styles';
 
 const FormDashboard: React.FC = () => {
   const [addCompanyForm, setAddCompanyForm] = useState(false);
@@ -58,10 +58,10 @@ const FormDashboard: React.FC = () => {
       {addCompanyForm && (
         <AddCompanyForm handleCloseWindow={() => handleAddForm(false)} />
       )}
+      <Header />
       <Container>
-        <Header />
         <span>
-          <h2>Formulários de contato</h2>
+          <h1>Formulários</h1>
           <button type="button" onClick={() => handleAddForm(true)}>
             <MdAdd size={28} />
           </button>
@@ -70,16 +70,15 @@ const FormDashboard: React.FC = () => {
         <ListContainer>
           {forms.map(form => {
             return (
-              <FormSection key={form.id}>
-                <ButtonForm
-                  backgroundColor="#555"
-                  textColor="#000"
-                  type="button"
-                  onClick={() => navigateToFormPage(form)}
-                >
-                  {form.name}
-                </ButtonForm>
-              </FormSection>
+              <ButtonForm
+                key={form.id}
+                backgroundColor="#555"
+                textColor="#000"
+                type="button"
+                onClick={() => navigateToFormPage(form)}
+              >
+                {form.name}
+              </ButtonForm>
             );
           })}
         </ListContainer>

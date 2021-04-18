@@ -38,6 +38,7 @@ const HomeControllerProvider: React.FC = ({ children }) => {
     async (page: string) => {
       setSelectedPage(page);
       localStorage.setItem('@WP-PRO:current-page', page);
+      page === 'E-Links' && history.push(`/e-links`);
       selectedCard &&
         selectedCard.id &&
         page === 'Card' &&

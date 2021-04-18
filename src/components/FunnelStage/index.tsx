@@ -9,33 +9,19 @@ import { useHomeController } from '../../hooks/homeController';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
 import { trimCardName } from '../../utils/trimCardName';
+import ButtonCard from './ButtonCard';
 
-import { Container, Card, CardContainer } from './styles';
+import { Container, CardContainer } from './styles';
 
 interface IProps {
   stage: IFunnelStageDTO;
 }
 
 const FunnelStage: React.FC<IProps> = ({ stage }) => {
-  const history = useHistory();
   const { selectedCard, selectCard, getCards } = useStageCard();
-  const { selectPage } = useHomeController();
   const { employeeModules } = useManagementModule();
   const { selectedFunnel } = useFunnel();
   const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
-
-  const handleSelectPage = useCallback(() => {
-    selectPage('Card');
-  }, [selectPage]);
-
-  const handleSelectCard = useCallback(
-    (e: IStageCardDTO) => {
-      selectCard(e);
-      setTimeout(handleSelectPage(), 10000);
-      history.push(`/card/${trimCardName(e.name)}`);
-    },
-    [selectCard, history, handleSelectPage],
-  );
 
   useEffect(() => {
     const moduleAccessLevel = employeeModules.find(
@@ -65,17 +51,7 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
       </h1>
       <CardContainer>
         {stageCards &&
-          stageCards.map(card => (
-            <Card isActive={selectedCard.id === card.id} key={card.id}>
-              <button type="button" onClick={() => selectCard(card)}>
-                <h3>{card.name}</h3>
-                <strong>{card.weplanEvent ? 'WP' : ''}</strong>
-              </button>
-              <button type="button" onClick={() => handleSelectCard(card)}>
-                <FiChevronRight size={28} />
-              </button>
-            </Card>
-          ))}
+          stageCards.map(card => <ButtonCard key={card.id} card={card} />)}
       </CardContainer>
     </Container>
   );
