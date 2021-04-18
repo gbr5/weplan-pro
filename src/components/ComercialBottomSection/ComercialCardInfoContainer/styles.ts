@@ -17,7 +17,7 @@ export const Main = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 100%;
+  width: 95%;
   height: 20rem;
   display: flex;
   flex-direction: column;
@@ -30,6 +30,8 @@ export const Container = styled.div`
   overflow-y: scroll;
   position: relative;
   padding-top: 2.4rem;
+  margin: 0rem auto;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
 
   > div {
     display: flex;
@@ -41,7 +43,7 @@ export const Container = styled.div`
     min-height: 2rem;
 
     > p {
-      color: var(--letter-color-2);
+      color: var(--letter-color-1);
       width: 150px;
 
       &:first-child {
