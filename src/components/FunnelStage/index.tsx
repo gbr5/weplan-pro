@@ -1,14 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FiAlertTriangle, FiChevronRight } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react';
+import { FiAlertTriangle } from 'react-icons/fi';
 import { MdFunctions } from 'react-icons/md';
-import { useHistory } from 'react-router-dom';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useFunnel } from '../../hooks/funnel';
-import { useHomeController } from '../../hooks/homeController';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
-import { trimCardName } from '../../utils/trimCardName';
 import ButtonCard from './ButtonCard';
 
 import { Container, CardContainer } from './styles';
@@ -18,7 +15,7 @@ interface IProps {
 }
 
 const FunnelStage: React.FC<IProps> = ({ stage }) => {
-  const { selectedCard, selectCard, getCards } = useStageCard();
+  const { getCards } = useStageCard();
   const { employeeModules } = useManagementModule();
   const { selectedFunnel } = useFunnel();
   const [stageCards, setStageCards] = useState<IStageCardDTO[]>([]);
