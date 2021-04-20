@@ -23,20 +23,17 @@ export const Container = styled.div`
     margin: 0.5rem 0;
   }
 
-  > div {
-    display: block;
-    width: 100%;
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    > span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    > div {
+      display: block;
+      width: 100%;
 
       > p {
         font-size: 0.95rem;
-        &:first-child {
-          margin-right: 0.5rem;
-        }
         &:last-child {
           margin-left: 0.5rem;
         }

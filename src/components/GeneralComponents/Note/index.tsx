@@ -18,8 +18,16 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
 
   const [noteTitle, setNoteTitle] = useState('');
   const [note, setNote] = useState(selectedNote.note);
+  const historyNote = useMemo(() => {
+    console.log(selectedNote.note.includes('|||'));
+    console.log(selectedNote.note.includes('|||') || false);
+    return selectedNote.note.includes('|||') || false;
+  }, [selectedNote]);
 
   const author = useMemo(async () => {
+    if (selectedNote.author_id === employee.employeeUser.id) {
+      return 'Você enviou';
+    }
     if (selectedNote.author_id === employee.company.id) {
       return 'WePlan';
     }
@@ -31,25 +39,20 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
   }, [companyEmployees, getEmployeeContact, selectedNote, employee]);
 
   useEffect(() => {
-    if (selectedNote.author_id === employee.company.id) {
-      const noteSplit =
-        selectedNote.note.includes('|||') && selectedNote.note.split('|||');
-      const oldNoteSplit =
-        !selectedNote.note.includes('|||') &&
-        selectedNote.note.includes('|') &&
-        selectedNote.note.split('|');
-      noteSplit && setNoteTitle(noteSplit[0]);
-      noteSplit && setNote(noteSplit[1]);
-      oldNoteSplit && setNoteTitle(oldNoteSplit[0]);
-      oldNoteSplit && setNote(oldNoteSplit[1]);
-    }
+    // if (selectedNote.author_id === employee.company.id) {
+    console.log(selectedNote.note.includes('|||'));
+    console.log(selectedNote.note.split('|||'));
+    const noteSplit =
+      selectedNote.note.includes('|||') && selectedNote.note.split('|||');
+    noteSplit && setNoteTitle(noteSplit[0]);
+    noteSplit && setNote(noteSplit[1]);
   }, [selectedNote, employee]);
 
   let phraseIndex = 0;
 
   return (
     <Container isActive type="button">
-      {selectedNote.author_id !== employee.company.id ? (
+      {!historyNote ? (
         <>
           <NoteContainer>
             {selectedNote.note.split('\n').map(phrase => {
@@ -57,7 +60,7 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
               return <p key={phraseIndex}>{phrase}</p>;
             })}
           </NoteContainer>
-
+          {/*
           <footer>
             <strong>
               {formatHourDateShort(String(selectedNote.created_at))}
@@ -68,13 +71,7 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
               ) : (
                 <strong>Você enviou</strong>
               ))}
-            {selectedNote.created_at !== selectedNote.updated_at && (
-              <strong>
-                Atualizado:{' '}
-                {formatHourDateShort(String(selectedNote.updated_at))}
-              </strong>
-            )}
-          </footer>
+          </footer> */}
         </>
       ) : (
         <HistoryNote>
@@ -91,6 +88,15 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
           </NoteContainer>
         </HistoryNote>
       )}
+      <footer>
+        <strong>{formatHourDateShort(String(selectedNote.created_at))}</strong>
+        {selectedNote.author_id !== employee.company.id &&
+          (selectedNote.author_id !== employee.employeeUser.id ? (
+            <strong>{author}</strong>
+          ) : (
+            <strong>Você enviou</strong>
+          ))}
+      </footer>
     </Container>
   );
 };

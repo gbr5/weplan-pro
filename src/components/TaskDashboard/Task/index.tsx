@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { FiRefreshCcw } from 'react-icons/fi';
-import { MdSchedule } from 'react-icons/md';
 import ITaskDTO from '../../../dtos/ITaskDTO';
 import { Container, SettingsButton, ButtonContainer } from './styles';
 import { useCheckList } from '../../../hooks/checkList';
@@ -10,6 +9,9 @@ import TaskSettings from '../../CardPage/CardBody/CardAditionalInfoSection/CardT
 import PriorityButton from './PriorityButton';
 import StatusButton from './StatusButton';
 import TaskNotesButton from './TaskNotesButton';
+import TaskHourButton from './TaskHourButton';
+import TaskDateButton from './TaskDateButton';
+import TaskNameButton from './TaskNameButton';
 
 interface IProps {
   task: ITaskDTO;
@@ -46,40 +48,30 @@ const Task: React.FC<IProps> = ({ task, update }) => {
         />
       )}
       <Container style={{ background: backgroundColor }}>
-        <h3>{task.task}</h3>
-        <div>
-          <ButtonContainer>
-            {/* <DeleteButton type="button" onClick={handleTaskSettings}>
-              <FiTrash2 color="red" size={iconsize} />
-            </DeleteButton> */}
-            <PriorityButton update={update} task={task} />
-            <StatusButton task={task} update={update} />
-            <TaskNotesButton task={task} />
+        <TaskNameButton task={task} update={update} />
+        <span>
+          <aside>
+            <TaskHourButton task={task} update={update} />
+            <TaskDateButton task={task} update={update} />
+          </aside>
+          <div>
+            <ButtonContainer>
+              <PriorityButton update={update} task={task} />
+              <StatusButton task={task} update={update} />
+              <TaskNotesButton task={task} />
 
-            <SettingsButton type="button" onClick={handleTaskSettings}>
-              <div />
-              <div />
-              <div />
-            </SettingsButton>
-          </ButtonContainer>
-          <span>
+              <SettingsButton type="button" onClick={handleTaskSettings}>
+                <div />
+                <div />
+                <div />
+              </SettingsButton>
+            </ButtonContainer>
             <p>
-              <MdSchedule size={16} />{' '}
-              {formatHourDateShort(String(task.due_date))}
+              <FiRefreshCcw size={16} />{' '}
+              {formatHourDateShort(String(task.updated_at))}
             </p>
-            {task.created_at === task.updated_at ? (
-              <p>
-                <FiRefreshCcw size={16} />{' '}
-                {formatHourDateShort(String(task.created_at))}
-              </p>
-            ) : (
-              <p>
-                <FiRefreshCcw size={16} />{' '}
-                {formatHourDateShort(String(task.updated_at))}
-              </p>
-            )}
-          </span>
-        </div>
+          </div>
+        </span>
       </Container>
     </>
   );

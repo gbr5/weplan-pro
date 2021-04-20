@@ -134,15 +134,42 @@ export function minute(
 export function time(
   e: React.FormEvent<HTMLInputElement>,
 ): React.FormEvent<HTMLInputElement> {
-  e.currentTarget.maxLength = 2;
+  e.currentTarget.maxLength = 4;
   let { value } = e.currentTarget;
   value = value.replace(/\D/g, '');
-  value = value.replace(
-    /^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9][0-9])$/,
-    '',
-  );
-  value = value.replace(/^(\d{2})(\d{2})(\d{2})/, '$1/$2/$3');
+  if (value.length === 0) value = '';
+  if (value.length === 1 && Number(value) <= 2) value = `${value}`;
+  if (value.length === 1 && Number(value) > 2) value = `0${value}`;
+  if (value.length === 2 && Number(value) < 24) value = `${value}`;
+  if (value.length === 2 && Number(value) > 23)
+    value = `0${value[0]}${value[1]}`;
+  if (value.length === 3 && Number(`${value[2]}`) > 5)
+    value = `${value[0]}${value[1]}0${value[2]}`;
+  if (value.length === 3 && Number(`${value[0]}${value[1]}`) < 24)
+    value = `${value[0]}${value[1]}${value[2]}`;
+  if (value.length === 3 && Number(`${value[0]}${value[1]}`) > 23)
+    value = `0${value[0]}${value[1]}${value[2]}`;
+  if (
+    value.length === 4 &&
+    Number(`${value[0]}${value[1]}`) > 23 &&
+    Number(`${value[2]}${value[3]}`) < 60
+  )
+    value = `00${value[2]}${value[3]}`;
+  if (
+    value.length === 4 &&
+    Number(`${value[0]}${value[1]}`) > 23 &&
+    Number(`${value[2]}${value[3]}`) > 59
+  )
+    value = `0`;
+
+  const thishour = Number(`${value[0]}${value[1]}`);
+  const thisminute = Number(`${value[2]}${value[3]}`);
+  if (thishour > 23 && thisminute <= 59) value = `23:${thisminute}`;
+  if (thishour <= 23 && thisminute > 59) value = `${thishour}:59`;
+  value = value.replace(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, '');
+  value = value.replace(/^(\d{2}):(\d{2})/, '$1:$2');
   e.currentTarget.value = value;
+  console.log(value);
 
   return e;
 }

@@ -208,7 +208,6 @@ const CheckListProvider: React.FC = ({ children }) => {
           due_date: data.due_date,
         });
         setSelectedTask(response.data);
-        getEmployeeTasks();
         addToast({
           type: 'success',
           title: 'Tarefa editada com sucesso!',
@@ -223,7 +222,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getEmployeeTasks],
+    [addToast],
   );
   const deleteTask = useCallback(
     async (id: string) => {
@@ -256,6 +255,7 @@ const CheckListProvider: React.FC = ({ children }) => {
             note: data.note,
           },
         });
+        getEmployeeTasksByDate();
         getTask(data.task_id);
         getEmployeeTasks();
         addToast({
@@ -271,7 +271,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [employee, getTask, getEmployeeTasks, addToast],
+    [employee, getTask, getEmployeeTasks, getEmployeeTasksByDate, addToast],
   );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
@@ -290,6 +290,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         );
         getEmployeeTasks();
         setSelectedTask(response.data);
+        getEmployeeTasksByDate();
         addToast({
           type: 'success',
           title: 'Tarefa criada com sucesso',
@@ -303,7 +304,15 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [employee, getEmployeeTasks, addToast, taskName, taskPriority, taskStatus],
+    [
+      employee,
+      getEmployeeTasks,
+      addToast,
+      taskName,
+      taskPriority,
+      getEmployeeTasksByDate,
+      taskStatus,
+    ],
   );
 
   const taskPriorityTypes: ICheckBoxOptionDTO[] = [
