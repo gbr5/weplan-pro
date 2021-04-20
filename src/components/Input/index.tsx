@@ -17,6 +17,7 @@ import {
   hour,
   minute,
   slug,
+  time,
 } from '../../utils/mask';
 
 import { Container, Error, Prefix } from './styles';
@@ -32,6 +33,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     | 'brlDateFormat'
     | 'hour'
     | 'minute'
+    | 'time'
     | 'slug';
   prefix?: string;
 }
@@ -71,6 +73,7 @@ const Input: React.FC<InputProps> = ({
         mask === 'hour' && hour(e);
         mask === 'minute' && minute(e);
         mask === 'slug' && slug(e);
+        mask === 'time' && time(e);
       }
     },
     [mask],

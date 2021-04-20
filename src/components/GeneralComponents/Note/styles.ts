@@ -92,4 +92,18 @@ export const HistoryNote = styled.div`
     padding: 0.4rem;
     text-align: center;
   }
+
+  > footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    width: 100%;
+
+    > strong {
+      width: 100%;
+      min-height: 22px;
+      margin: 0 auto;
+      font-size: 0.85rem;
+    }
+  }
 `;

@@ -19,18 +19,29 @@ const TaskStatusContainer: React.FC<IProps> = ({
   update,
   task,
 }: IProps) => {
-  const { updateTask } = useCheckList();
+  const { updateTask, createTaskNote } = useCheckList();
 
   const updateEmployeeTaskStatus = useCallback(
     async status => {
+      let oldStatus = 'Início';
+      if (task.status === '2') oldStatus = 'Execução';
+      if (task.status === '3') oldStatus = 'Finalidada';
+      let newStatus = 'Início';
+      if (status === '2') newStatus = 'Execução';
+      if (status === '3') newStatus = 'Finalidada';
       await updateTask({
         ...task,
         status,
       });
+
+      createTaskNote({
+        note: `Tarefa Editada|||\n\nAntigo Status: ${oldStatus}\n.\nNovo Status: ${newStatus}\n. . . . .`,
+        task_id: task.id,
+      });
       update();
       closeWindow();
     },
-    [task, update, updateTask, closeWindow],
+    [task, update, updateTask, closeWindow, createTaskNote],
   );
 
   return (
