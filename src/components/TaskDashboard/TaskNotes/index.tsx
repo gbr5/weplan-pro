@@ -19,6 +19,7 @@ const TaskNotes: React.FC<IProps> = ({ closeWindow }) => {
       createTaskNote({
         note,
         task_id: selectedTask.id,
+        check_list_id: selectedTask.check_list_id,
       });
     },
     [createTaskNote, selectedTask],
