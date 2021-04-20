@@ -54,6 +54,7 @@ const TaskHourButton: React.FC<IProps> = ({ task, update }) => {
           String(due_date),
         )}\n. . . . .`,
         task_id: task.id,
+        check_list_id: task.check_list_id,
       });
       setEditField(false);
       update();

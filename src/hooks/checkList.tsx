@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
 import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 import ICheckListDTO from '../dtos/ICheckListDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
@@ -54,6 +55,7 @@ interface ICheckListContextData {
   deleteTask(id: string): Promise<void>;
   getEmployeeTasks(): void;
   getTask(id: string): Promise<void>;
+  getCheckListCards(id: string): Promise<ICardCheckListDTO[]>;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -62,7 +64,7 @@ const CheckListContext = createContext<ICheckListContextData>(
 
 const CheckListProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
-  const { selectedCardCheckList } = useStageCard();
+  const { selectedCardCheckList, createCardHistoryNote } = useStageCard();
   const { addToast } = useToast();
   const [selectedCheckList, setSelectedCheckList] = useState(() => {
     const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
@@ -87,6 +89,17 @@ const CheckListProvider: React.FC = ({ children }) => {
     ITaskDTO[]
   >([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const getCheckListCards = useCallback(async (id: string) => {
+    try {
+      const response = await api.get<ICardCheckListDTO[]>(
+        `check-list-cards/${id}`,
+      );
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
 
   const getEmployeeTasks = useCallback(() => {
     try {
@@ -255,6 +268,21 @@ const CheckListProvider: React.FC = ({ children }) => {
             note: data.note,
           },
         });
+        const checkLists = await getCheckListCards(data.check_list_id);
+        console.log(checkLists);
+        if (checkLists.length > 0) {
+          const ids = checkLists.map(checkList => {
+            console.log(checkLists);
+            return checkList.card_unique_name;
+          });
+          console.log({ ids });
+
+          Promise.all([
+            ids.map(id => {
+              return createCardHistoryNote(data.note, id);
+            }),
+          ]);
+        }
         getEmployeeTasksByDate();
         getTask(data.task_id);
         getEmployeeTasks();
@@ -271,7 +299,15 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [employee, getTask, getEmployeeTasks, getEmployeeTasksByDate, addToast],
+    [
+      employee,
+      getTask,
+      getEmployeeTasks,
+      getEmployeeTasksByDate,
+      addToast,
+      createCardHistoryNote,
+      getCheckListCards,
+    ],
   );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
@@ -364,6 +400,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         dayTasks,
         getEmployeeTasksByDate,
         employeeFinishedTasks,
+        getCheckListCards,
         employeeInProgressTasks,
         employeeNotStartedTasks,
         selectTaskDate,

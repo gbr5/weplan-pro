@@ -207,6 +207,7 @@ const StageCardProvider: React.FC = ({ children }) => {
   const createCardHistoryNote = useCallback(
     async (note: string, card_unique_name: string) => {
       try {
+        console.log(card_unique_name);
         await api.post(`cards/notes`, {
           user_id: employee.company.id,
           card_unique_name,

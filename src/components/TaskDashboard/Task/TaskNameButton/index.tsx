@@ -25,6 +25,7 @@ const TaskNameButton: React.FC<IProps> = ({ task, update }) => {
       createTaskNote({
         note: `Tarefa Editada|||\n\nTarefa Antiga: ${oldName}\n.\nTarefa Nova: ${e}\n. . . . .`,
         task_id: task.id,
+        check_list_id: task.check_list_id,
       });
       update();
     },
