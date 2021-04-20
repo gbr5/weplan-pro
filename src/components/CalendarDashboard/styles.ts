@@ -29,7 +29,12 @@ export const Calendar = styled.aside`
   .DayPicker-Day--available:not(.DayPicker-Day--outside) {
     background: var(--letter-color-4);
     border-radius: 10px;
-    color: var(--letter-color-5);
+    color: var(--letter-color-1);
+    /* box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.15); */
+
+    &:hover {
+      box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.25);
+    }
   }
   .DayPicker:not(.DayPicker--interactionDisabled)
     .DayPicker-Day:not(.DayPicker-Day--disabled):not(.DayPicker-Day--selected):not(.DayPicker-Day--outside):hover {
@@ -43,8 +48,11 @@ export const Calendar = styled.aside`
     background: transparent !important;
   }
   .DayPicker-Day--selected {
-    background: var(--primary-color) !important;
+    background: var(--secondary-color) !important;
     border-radius: 10px;
-    color: #232129 !important;
+    color: var(--letter-color-5) !important;
+    font-weight: 500;
+    border-bottom: 1px solid var(--letter-color-4);
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.3);
   }
 `;

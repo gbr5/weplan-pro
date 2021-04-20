@@ -15,7 +15,7 @@ export const Container = styled.div`
     border: none;
     width: 100%;
     height: 100%;
-    margin: 0 auto;
+    margin: auto 0.5rem;
     padding: 0.1rem 0.2rem;
     background: var(--letter-color-4);
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);

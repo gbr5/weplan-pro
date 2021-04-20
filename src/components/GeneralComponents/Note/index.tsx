@@ -19,8 +19,6 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
   const [noteTitle, setNoteTitle] = useState('');
   const [note, setNote] = useState(selectedNote.note);
   const historyNote = useMemo(() => {
-    console.log(selectedNote.note.includes('|||'));
-    console.log(selectedNote.note.includes('|||') || false);
     return selectedNote.note.includes('|||') || false;
   }, [selectedNote]);
 
@@ -39,9 +37,6 @@ const Note: React.FC<IProps> = ({ selectedNote }) => {
   }, [companyEmployees, getEmployeeContact, selectedNote, employee]);
 
   useEffect(() => {
-    // if (selectedNote.author_id === employee.company.id) {
-    console.log(selectedNote.note.includes('|||'));
-    console.log(selectedNote.note.split('|||'));
     const noteSplit =
       selectedNote.note.includes('|||') && selectedNote.note.split('|||');
     noteSplit && setNoteTitle(noteSplit[0]);

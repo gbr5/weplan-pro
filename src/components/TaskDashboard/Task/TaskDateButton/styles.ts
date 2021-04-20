@@ -6,7 +6,7 @@ export const Container = styled.div`
   justify-content: center;
   position: relative;
   margin: 0.5rem;
-  width: 6rem;
+  width: 9rem;
   height: 2rem;
 
   > button {
@@ -59,7 +59,6 @@ export const HourInputContainer = styled.div`
   align-items: center;
 
   > button {
-    background: var(--secondary-color);
     border-radius: 5px;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
     width: 2rem;
@@ -69,5 +68,9 @@ export const HourInputContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--secondary-color);
+    &:first-child() {
+      background: var(--red-color);
+    }
   }
 `;
