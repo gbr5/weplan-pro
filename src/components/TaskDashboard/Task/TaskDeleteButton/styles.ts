@@ -5,7 +5,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  margin: auto 0.5rem;
+  margin: 0.5rem;
   width: 2rem;
   height: 2rem;
 
@@ -15,16 +15,15 @@ export const Container = styled.div`
     height: 2rem;
     border-radius: 5px;
     border: none;
-    width: 100%;
-    height: 100%;
     margin: 0 auto;
     padding: 0;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+    background: rgba(250, 50, 10);
 
     &:hover {
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
     }
-    > img {
+    > svg {
       max-height: 2rem;
       max-width: 2rem;
     }
@@ -51,5 +50,23 @@ export const SelectStatusContainer = styled.div`
     border-right: 0.7rem solid transparent;
     border-left: 0.7rem solid transparent;
     opacity: 0.8;
+  }
+`;
+
+export const HourInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  > button {
+    border-radius: 5px;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+    width: 2rem;
+    width: 2rem;
+    border: none;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--secondary-color);
   }
 `;

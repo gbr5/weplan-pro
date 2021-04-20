@@ -6,7 +6,7 @@ export const Container = styled.div`
   justify-content: center;
   position: relative;
   margin: 0.5rem;
-  width: 6rem;
+  width: 9rem;
   height: 2rem;
 
   > button {
@@ -69,5 +69,8 @@ export const HourInputContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    &:first-child() {
+      background: rgba(250, 50, 10);
+    }
   }
 `;
