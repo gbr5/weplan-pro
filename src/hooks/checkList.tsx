@@ -323,7 +323,7 @@ const CheckListProvider: React.FC = ({ children }) => {
             due_date: data.due_date,
           },
         );
-        const note = `Tarefa criada no card ${data.card.name}|||\n\n. . . . .\n`;
+        const note = `${taskName}|||\nTarefa criada no card ${data.card.name}\n. . . . .\n`;
         createTaskNote({
           check_list_id: data.check_list_id,
           note,
