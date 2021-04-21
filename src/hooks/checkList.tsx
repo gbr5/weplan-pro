@@ -57,6 +57,7 @@ interface ICheckListContextData {
   getEmployeeTasks(): void;
   getTask(id: string): Promise<void>;
   getCheckListCards(id: string): Promise<ICardCheckListDTO[]>;
+  getCheckList(): Promise<ICheckListDTO | undefined>;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -194,9 +195,28 @@ const CheckListProvider: React.FC = ({ children }) => {
     setTaskDueDate(data);
   }, []);
   const selectCheckList = useCallback((data: ICheckListDTO) => {
-    setSelectedCheckList(data);
     localStorage.setItem('@WP-PRO:selected-check-list', JSON.stringify(data));
+    setSelectedCheckList(data);
   }, []);
+  const getCheckList = useCallback(async () => {
+    try {
+      const response = await api.get(
+        `/check-lists/show/${selectedCheckList.id}`,
+      );
+      console.log(response.data);
+      response &&
+        response.data &&
+        response.data.id &&
+        console.log('cheguei aqui');
+      response &&
+        response.data &&
+        response.data.id &&
+        selectCheckList(response.data);
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [selectCheckList, selectedCheckList]);
   const getTask = useCallback(
     async (id: string) => {
       try {
@@ -443,6 +463,7 @@ const CheckListProvider: React.FC = ({ children }) => {
       value={{
         priorityColors,
         getTask,
+        getCheckList,
         createTaskNote,
         createCardTask,
         dayTasks,
