@@ -91,7 +91,6 @@ const CheckListProvider: React.FC = ({ children }) => {
     ITaskDTO[]
   >([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   const getCheckListCards = useCallback(async (id: string) => {
     try {
       const response = await api.get<ICardCheckListDTO[]>(
@@ -102,7 +101,6 @@ const CheckListProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, []);
-
   const getEmployeeTasks = useCallback(() => {
     try {
       employee &&
@@ -128,7 +126,6 @@ const CheckListProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, [employee]);
-
   const getEmployeeTasksByDate = useCallback(() => {
     employee &&
       employee.company &&
@@ -148,11 +145,9 @@ const CheckListProvider: React.FC = ({ children }) => {
           setDayTasks(response.data);
         });
   }, [selectedDate, employee]);
-
   const selectTaskDate = useCallback((date: Date) => {
     setSelectedDate(date);
   }, []);
-
   const updateEmployeeTaskIsActive = useCallback(
     async (task: ITaskDTO) => {
       try {
@@ -178,7 +173,6 @@ const CheckListProvider: React.FC = ({ children }) => {
     },
     [getEmployeeTasksByDate, getEmployeeTasks, addToast],
   );
-
   const selectTask = useCallback((data: ITaskDTO) => {
     setSelectedTask(data);
   }, []);
@@ -374,6 +368,21 @@ const CheckListProvider: React.FC = ({ children }) => {
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
       try {
+        console.log({ data });
+        console.log({
+          owner_id: employee.employeeUser.id,
+          task: taskName,
+          color: '#555',
+          isActive: true,
+          priority: taskPriority,
+          status: taskStatus,
+          due_date: data.due_date,
+        });
+        // Para utilizar o createtask fora do card, tem que selecionar a
+        // checkList à qual a task será associada
+        // Estou pensando em criar uma check list dp colaborador
+        // Então antes de criar a task, o colaborador terá de selecionar entre
+        // a sua check list ou a de algum card que ele tenha acesso
         const response = await api.post(
           `/check-lists/tasks/${data.check_list_id}`,
           {
@@ -386,6 +395,7 @@ const CheckListProvider: React.FC = ({ children }) => {
             due_date: data.due_date,
           },
         );
+        console.log(response.data);
         getEmployeeTasks();
         setSelectedTask(response.data);
         getEmployeeTasksByDate();
@@ -412,7 +422,6 @@ const CheckListProvider: React.FC = ({ children }) => {
       taskStatus,
     ],
   );
-
   const taskPriorityTypes: ICheckBoxOptionDTO[] = [
     { id: 'low', value: 'low', label: 'Baixa' },
     { id: 'neutral', value: 'neutral', label: 'Neutra' },

@@ -14,6 +14,8 @@ import { useCompanyEmployee } from '../../hooks/companyEmployee';
 import { useCompanyContact } from '../../hooks/companyContacts';
 import IEmployeeDTO from '../../dtos/IEmployeeDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
+import CreateTask from '../TaskDashboard/CreateTask';
+import CreateCompanyContactForm from '../CompanyContactComponents/CreateCompanyContactForm';
 
 const Header: React.FC = () => {
   const history = useHistory();
@@ -33,10 +35,32 @@ const Header: React.FC = () => {
   const [createComercialCardWindow, setCreateComercialCardWindow] = useState(
     false,
   );
+  const [createTaskWindow, setCreateTaskWindow] = useState(false);
+  const [createCompanyContactWindow, setCreateCompanyContactWindow] = useState(
+    false,
+  );
   const closeAllWindows = useCallback(() => {
     setHelpWindow(false);
     setSettingsWindow(false);
+    setCreateTaskWindow(false);
+    setCreateCompanyContactWindow(false);
   }, []);
+
+  const handleCreateTaskWindow = useCallback(
+    (e: boolean) => {
+      closeAllWindows();
+      setCreateTaskWindow(e);
+    },
+    [closeAllWindows],
+  );
+
+  const handleCreateCompanyContactWindow = useCallback(
+    (e: boolean) => {
+      closeAllWindows();
+      setCreateCompanyContactWindow(e);
+    },
+    [closeAllWindows],
+  );
 
   const handleAppointmentsWindow = useCallback(() => {
     closeAllWindows();
@@ -98,6 +122,10 @@ const Header: React.FC = () => {
           handleCloseWindow={handleSettingsWindow}
           handleContactPageDashboard={handleOpenContactPageDashboard}
           handleOpenFormDashboard={handleOpenFormDashboard}
+          handleCreateTask={() => handleCreateTaskWindow(!createTaskWindow)}
+          handleCreateCompanyContactWindow={() =>
+            handleCreateCompanyContactWindow(!createCompanyContactWindow)
+          }
         />
       )}
       {createComercialCardWindow &&
@@ -113,6 +141,14 @@ const Header: React.FC = () => {
             closeWindow={() => handleCreateComercialCard(false)}
           />
         ))}
+      {createTaskWindow && (
+        <CreateTask closeWindow={() => handleCreateTaskWindow(false)} />
+      )}
+      {createCompanyContactWindow && (
+        <CreateCompanyContactForm
+          handleCloseWindow={() => handleCreateCompanyContactWindow(false)}
+        />
+      )}
     </>
   );
 };
