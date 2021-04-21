@@ -7,7 +7,12 @@ export const Container = styled.div`
   display: block;
   padding: 5rem 0.5rem 2rem;
   align-items: center;
-  /* box-sizing: border-box; */
+
+  > section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
 
   > input {
     padding: 0.5rem;
@@ -32,9 +37,14 @@ export const ContactMenuButton = styled.button<IButtonProps>`
   height: 2.5rem;
   min-width: 8rem;
   margin: 0.5rem;
-  background: rgba(150, 150, 150);
+  background: var(--letter-color-3);
   border: none;
   border-radius: 5px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.35);
+  }
 
   ${props =>
     props.isActive &&

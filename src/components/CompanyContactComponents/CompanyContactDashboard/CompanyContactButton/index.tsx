@@ -30,7 +30,9 @@ const CompanyContactButton: React.FC<IProps> = ({
       key={contact.id}
     >
       <button type="button" onClick={() => handleContactWindow(contact)}>
-        <p>{contact.name}</p>
+        <p>
+          {contact.name} {contact.family_name}
+        </p>
       </button>
       {newNotes > 0 && <span>{newNotes}</span>}
     </Container>
