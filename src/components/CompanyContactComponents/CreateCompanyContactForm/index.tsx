@@ -25,7 +25,6 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
   const [contactName, setContactName] = useState('');
   const [contactFamilyName, setContactFamilyName] = useState('');
   const [contactDescription, setContactDescription] = useState('');
-  const [companyContactType, setCompanyContactType] = useState('');
   const [currentField, setCurrentField] = useState('name');
 
   const handleContactName = useCallback((e: string) => {
@@ -47,60 +46,61 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
     setCurrentField(e);
   }, []);
 
-  const handleSubmit = useCallback(async () => {
-    try {
-      const findByNameAndFamilyName = companyContacts.find(
-        contact =>
-          contact.name === contactName &&
-          contact.family_name === contactFamilyName,
-      );
-      if (findByNameAndFamilyName) {
-        setCurrentField('name');
-        return addToast({
-          type: 'error',
-          title: 'Já existe um contato com o mesmo nome e sobrenome',
-          description:
-            'Altere o nome ou o sobrenome para adicionar um novo contato',
+  const handleSubmit = useCallback(
+    async (selectedContactType: string) => {
+      try {
+        const findByNameAndFamilyName = companyContacts.find(
+          contact =>
+            contact.name === contactName &&
+            contact.family_name === contactFamilyName,
+        );
+        if (findByNameAndFamilyName) {
+          setCurrentField('name');
+          return addToast({
+            type: 'error',
+            title: 'Já existe um contato com o mesmo nome e sobrenome',
+            description:
+              'Altere o nome ou o sobrenome para adicionar um novo contato',
+          });
+        }
+        createCompanyContact({
+          name: contactName,
+          family_name: contactFamilyName,
+          description: contactDescription,
+          company_contact_type: selectedContactType,
+          weplanUser: false,
+          isCompany: false,
         });
-      }
-      createCompanyContact({
-        name: contactName,
-        family_name: contactFamilyName,
-        description: contactDescription,
-        company_contact_type: companyContactType,
-        weplanUser: false,
-        isCompany: false,
-      });
-      addToast({
-        type: 'success',
-        title: 'Contato criado com sucesso',
-        description: 'As Alterações já foram propagadas.',
-      });
-      return handleCloseWindow();
-    } catch (err) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao adicionar o contato.',
-        description: 'Erro ao adicionar o contato, tente novamente.',
-      });
+        addToast({
+          type: 'success',
+          title: 'Contato criado com sucesso',
+          description: 'As Alterações já foram propagadas.',
+        });
+        return handleCloseWindow();
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar o contato.',
+          description: 'Erro ao adicionar o contato, tente novamente.',
+        });
 
-      throw new Error(err);
-    }
-  }, [
-    companyContacts,
-    addToast,
-    contactName,
-    contactFamilyName,
-    contactDescription,
-    createCompanyContact,
-    handleCloseWindow,
-    companyContactType,
-  ]);
+        throw new Error(err);
+      }
+    },
+    [
+      companyContacts,
+      addToast,
+      contactName,
+      contactFamilyName,
+      contactDescription,
+      createCompanyContact,
+      handleCloseWindow,
+    ],
+  );
 
   const handleCompanyContactType = useCallback(
     (e: string) => {
-      setCompanyContactType(e);
-      handleSubmit();
+      handleSubmit(e);
     },
     [handleSubmit],
   );
@@ -109,7 +109,7 @@ const CreateCompanyContactForm: React.FC<IProps> = ({
     <WindowContainer
       onHandleCloseWindow={() => handleCloseWindow()}
       containerStyle={{
-        zIndex: 100,
+        zIndex: 30,
         top: '28%',
         left: '5%',
         height: '54%',

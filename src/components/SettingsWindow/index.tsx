@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { MdHelp, MdSchedule } from 'react-icons/md';
 import { FiPower } from 'react-icons/fi';
@@ -16,6 +16,8 @@ interface IProps {
   handleHelpWindow: Function;
   handleOpenFormDashboard: Function;
   handleCreateComercialCard: () => void;
+  handleCreateTask: () => void;
+  handleCreateCompanyContactWindow: () => void;
 }
 
 const SettingsWindow: React.FC<IProps> = ({
@@ -25,17 +27,24 @@ const SettingsWindow: React.FC<IProps> = ({
   handleHelpWindow,
   handleOpenFormDashboard,
   handleCreateComercialCard,
+  handleCreateTask,
+  handleCreateCompanyContactWindow,
 }) => {
   const history = useHistory();
-  const { signOut } = useEmployeeAuth();
-  // const { themeBoolean, toggleTheme } = useToggleTheme();
-  // const { colors } = useContext(ThemeContext);
+  const { signOut, employee } = useEmployeeAuth();
 
   const handleSignout = useCallback(() => {
     localStorage.clear();
     signOut();
     history.push('/');
   }, [signOut, history]);
+
+  useEffect(() => {
+    // Quando finalizar o processo para adicionar task, remover esse useEffect
+    if (!employee) {
+      console.log(handleCreateTask);
+    }
+  }, [employee, handleCreateTask]);
 
   return (
     <WindowContainer
@@ -49,22 +58,20 @@ const SettingsWindow: React.FC<IProps> = ({
       }}
     >
       <Container>
-        {/* <ToggleButton>
-            <h3>Tema {themeBoolean ? 'Escuro' : 'Claro'}</h3>
-            <Swicth
-              onChange={toggleTheme}
-              checked={themeBoolean}
-              checkedIcon={false}
-              uncheckedIcon={false}
-              height={10}
-              width={40}
-              handleDiameter={20}
-              offColor={colors.secondary}
-              onColor={colors.primary}
-            />
-          </ToggleButton> */}
         <button type="button" onClick={() => handleCreateComercialCard()}>
           Novo Negócio
+        </button>
+        {/* <button type="button" onClick={() => handleCreateTask()}>
+          Nova Tarefa
+        </button> */}
+        {/*                 // Para utilizar o createtask fora do card, tem que selecionar a
+        // checkList à qual a task será associada
+        // Estou pensando em criar uma check list dp colaborador
+        // Então antes de criar a task, o colaborador terá de selecionar entre
+        // a sua check list ou a de algum card que ele tenha acesso
+ */}
+        <button type="button" onClick={handleCreateCompanyContactWindow}>
+          Criar Contato
         </button>
         <button type="button" onClick={() => handleContactPageDashboard()}>
           e-Links
