@@ -5,13 +5,11 @@ import { Container, Main, CheckListContainer, CheckListHeader } from './styles';
 import AddCardTaskForm from '../AddCardTaskForm';
 import Task from '../../../../../TaskDashboard/Task';
 import TaskStatusMenu from '../../../../../TaskDashboard/TaskStatusMenu';
-import { useStageCard } from '../../../../../../hooks/stageCard';
 import { useCheckList } from '../../../../../../hooks/checkList';
 import { sortActiveTasks } from '../../../../../../utils/sortActiveTasks';
 
 const CardCheckListContainer: React.FC = () => {
-  const { getCardCheckLists } = useStageCard();
-  const { selectedCheckList } = useCheckList();
+  const { selectedCheckList, getCheckList } = useCheckList();
 
   const iconsize = 40;
   const [createCheckListTaskForm, setCreateCheckListTaskForm] = useState(false);
@@ -59,11 +57,7 @@ const CardCheckListContainer: React.FC = () => {
                 .filter(task => task.isActive)
                 .map(task => {
                   return (
-                    <Task
-                      update={getCardCheckLists}
-                      key={task.id}
-                      task={task}
-                    />
+                    <Task update={getCheckList} key={task.id} task={task} />
                   );
                 })}
             {statusSection === '2' &&
@@ -75,11 +69,7 @@ const CardCheckListContainer: React.FC = () => {
                 .filter(task => task.isActive)
                 .map(task => {
                   return (
-                    <Task
-                      update={getCardCheckLists}
-                      key={task.id}
-                      task={task}
-                    />
+                    <Task update={getCheckList} key={task.id} task={task} />
                   );
                 })}
             {statusSection === '3' &&
@@ -91,11 +81,7 @@ const CardCheckListContainer: React.FC = () => {
                 .filter(task => task.isActive)
                 .map(task => {
                   return (
-                    <Task
-                      update={getCardCheckLists}
-                      key={task.id}
-                      task={task}
-                    />
+                    <Task update={getCheckList} key={task.id} task={task} />
                   );
                 })}
           </Container>
