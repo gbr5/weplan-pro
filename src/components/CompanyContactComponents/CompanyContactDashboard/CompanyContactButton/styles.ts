@@ -14,6 +14,7 @@ export const Container = styled.div<IBooleanProps>`
   margin-top: 1rem;
   border-radius: 4px;
   position: relative;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   > button {
     background: transparent;
