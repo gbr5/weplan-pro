@@ -1,3 +1,4 @@
+import { differenceInMilliseconds } from 'date-fns';
 import React, { useCallback, useEffect } from 'react';
 import ICardNotesDTO from '../../../dtos/ICardNotesDTO';
 import { useStageCard } from '../../../hooks/stageCard';
@@ -31,14 +32,34 @@ const ComercialActivityContainer: React.FC = () => {
         {selectedCard &&
           selectedCard.id &&
           cardNotes.length > 0 &&
-          cardNotes.map(xCard => (
-            <CardNote
-              key={xCard.id}
-              handleSetSelectedNote={handleSetSelectedNote}
-              cardNote={xCard}
-              isSelected={xCard.id === selectedNote.id}
-            />
-          ))}
+          cardNotes
+            .sort((a, b) => {
+              if (
+                differenceInMilliseconds(
+                  new Date(a.created_at),
+                  new Date(b.created_at),
+                ) < 0
+              ) {
+                return 1;
+              }
+              if (
+                differenceInMilliseconds(
+                  new Date(a.created_at),
+                  new Date(b.created_at),
+                ) > 0
+              ) {
+                return -1;
+              }
+              return 0;
+            })
+            .map(xCard => (
+              <CardNote
+                key={xCard.id}
+                handleSetSelectedNote={handleSetSelectedNote}
+                cardNote={xCard}
+                isSelected={xCard.id === selectedNote.id}
+              />
+            ))}
       </Notes>
     </Main>
   );
