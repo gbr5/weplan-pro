@@ -1,4 +1,4 @@
-import { differenceInDays } from 'date-fns';
+import { differenceInMilliseconds } from 'date-fns';
 import ITaskDTO from '../dtos/ITaskDTO';
 
 export const sortActiveTasks = (tasks: ITaskDTO[]): ITaskDTO[] => {
@@ -22,11 +22,15 @@ export const sortActiveTasks = (tasks: ITaskDTO[]): ITaskDTO[] => {
       return 0;
     })
     .sort((a, b) => {
-      if (differenceInDays(new Date(a.due_date), new Date(b.due_date)) > 1) {
+      if (
+        differenceInMilliseconds(new Date(a.due_date), new Date(b.due_date)) > 1
+      ) {
         return 1;
       }
 
-      if (differenceInDays(new Date(a.due_date), new Date(b.due_date)) > 1) {
+      if (
+        differenceInMilliseconds(new Date(a.due_date), new Date(b.due_date)) < 1
+      ) {
         return -1;
       }
       return 0;

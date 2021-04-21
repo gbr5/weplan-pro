@@ -241,6 +241,7 @@ const CheckListProvider: React.FC = ({ children }) => {
       try {
         await api.put(`/check-lists/tasks/edit/is-active/${id}`);
         getEmployeeTasks();
+        getEmployeeTasksByDate();
         addToast({
           type: 'success',
           title: 'Tarefa deletada com sucesso!',
@@ -254,7 +255,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         throw new Error(err);
       }
     },
-    [addToast, getEmployeeTasks],
+    [addToast, getEmployeeTasksByDate, getEmployeeTasks],
   );
   const createTaskNote = useCallback(
     async (data: ICreateTaskNoteDTO) => {
