@@ -40,9 +40,9 @@ const Task: React.FC<IProps> = ({ task, update }) => {
           <div>
             <ButtonContainer>
               <TaskNotesButton task={task} />
-              <TaskDeleteButton update={update} />
               <PriorityButton update={update} task={task} />
               <StatusButton task={task} update={update} />
+              <TaskDeleteButton update={update} />
             </ButtonContainer>
             <p>
               <FiRefreshCcw size={16} />{' '}

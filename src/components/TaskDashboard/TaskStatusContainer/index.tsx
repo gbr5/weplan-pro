@@ -35,7 +35,7 @@ const TaskStatusContainer: React.FC<IProps> = ({
       });
 
       createTaskNote({
-        note: `Tarefa Editada|||\n\nAntigo Status: ${oldStatus}\n.\nNovo Status: ${newStatus}\n. . . . .`,
+        note: `Tarefa Editada|||\nTarefa: ${task.task}\nAntigo Status: ${oldStatus}\n.\nNovo Status: ${newStatus}\n. . . . .`,
         task_id: task.id,
         check_list_id: task.check_list_id,
       });

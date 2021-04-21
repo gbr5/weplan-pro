@@ -4,6 +4,7 @@ import Task from '../Task';
 import { Container, Main } from './styles';
 import TaskStatusMenu from '../TaskStatusMenu';
 import { useCheckList } from '../../../hooks/checkList';
+import { sortActiveTasks } from '../../../utils/sortActiveTasks';
 
 const AllTasksSection: React.FC = () => {
   const {
@@ -31,15 +32,15 @@ const AllTasksSection: React.FC = () => {
       />
       <Container>
         {statusSection === '1' &&
-          employeeNotStartedTasks.map(task => {
+          sortActiveTasks(employeeNotStartedTasks).map(task => {
             return <Task update={getEmployeeTasks} key={task.id} task={task} />;
           })}
         {statusSection === '2' &&
-          employeeInProgressTasks.map(task => (
+          sortActiveTasks(employeeInProgressTasks).map(task => (
             <Task update={getEmployeeTasks} key={task.id} task={task} />
           ))}
         {statusSection === '3' &&
-          employeeFinishedTasks.map(task => (
+          sortActiveTasks(employeeFinishedTasks).map(task => (
             <Task update={getEmployeeTasks} key={task.id} task={task} />
           ))}
       </Container>

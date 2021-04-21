@@ -24,6 +24,7 @@ const TaskStatusMenu: React.FC<IProps> = ({
         onClick={() => handleSection('1')}
       >
         <img src={sleepyTask} alt="Not started tasks" />
+        <p>Início</p>
       </StatusMenuButton>
       <StatusMenuButton
         isActive={currentSection === '2'}
@@ -31,6 +32,7 @@ const TaskStatusMenu: React.FC<IProps> = ({
         onClick={() => handleSection('2')}
       >
         <img src={runningTask} alt="Running tasks" />
+        <p>Execução</p>
       </StatusMenuButton>
       <StatusMenuButton
         isActive={currentSection === '3'}
@@ -38,6 +40,7 @@ const TaskStatusMenu: React.FC<IProps> = ({
         onClick={() => handleSection('3')}
       >
         <img src={doneTask} alt="Done tasks" />
+        <p>Sucesso</p>
       </StatusMenuButton>
     </Container>
   );

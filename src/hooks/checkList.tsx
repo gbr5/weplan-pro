@@ -11,7 +11,6 @@ import ICheckListDTO from '../dtos/ICheckListDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ICreateTaskNoteDTO from '../dtos/ICreateTaskNote';
 
-// import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ITaskDTO from '../dtos/ITaskDTO';
 import api from '../services/api';
 import formatHourDateShort from '../utils/formatHourDateShort';
@@ -269,13 +268,10 @@ const CheckListProvider: React.FC = ({ children }) => {
           },
         });
         const checkLists = await getCheckListCards(data.check_list_id);
-        console.log(checkLists);
         if (checkLists.length > 0) {
           const ids = checkLists.map(checkList => {
-            console.log(checkLists);
             return checkList.card_unique_name;
           });
-          console.log({ ids });
 
           Promise.all([
             ids.map(id => {
