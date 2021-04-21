@@ -4,6 +4,7 @@ import { useCheckList } from '../../../hooks/checkList';
 import CreateNoteForm from '../../GeneralComponents/CreateNoteForm';
 import Note from '../../GeneralComponents/Note';
 import WindowContainer from '../../WindowContainer';
+import { sortTaskNotes } from '../../../utils/sortTaskNotes';
 
 import { Container, TaskNotesContainer } from './styles';
 
@@ -46,7 +47,7 @@ const TaskNotes: React.FC<IProps> = ({ closeWindow }) => {
           createNote={(note: string) => handleCreateTaskNote(note)}
         />
         <TaskNotesContainer>
-          {selectedTask.notes.map(note => {
+          {sortTaskNotes(selectedTask.notes).map(note => {
             return <Note key={note.id} selectedNote={note.note} />;
           })}
         </TaskNotesContainer>

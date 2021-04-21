@@ -59,7 +59,7 @@ const TaskDateButton: React.FC<IProps> = ({ task, update }) => {
       createTaskNote({
         note: `Tarefa Editada|||\nTarefa: ${
           task.task
-        }\nAntiga Data de Entrega: ${formatOnlyDate(
+        }\n.\nAntiga Data de Entrega: ${formatOnlyDate(
           oldDueDate,
         )}\n.\nNova Data de Entrega: ${formatOnlyDate(
           String(due_date),
