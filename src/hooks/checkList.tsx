@@ -203,11 +203,6 @@ const CheckListProvider: React.FC = ({ children }) => {
       const response = await api.get(
         `/check-lists/show/${selectedCheckList.id}`,
       );
-      console.log(response.data);
-      response &&
-        response.data &&
-        response.data.id &&
-        console.log('cheguei aqui');
       response &&
         response.data &&
         response.data.id &&
