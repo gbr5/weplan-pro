@@ -16,8 +16,8 @@ interface IProps {
 
 const AddCardTaskForm: React.FC<IProps> = ({ closeWindow }: IProps) => {
   const { addToast } = useToast();
-  const { createTask, selectedCheckList } = useCheckList();
-  const { getCardCheckLists } = useStageCard();
+  const { createCardTask, selectedCheckList } = useCheckList();
+  const { getCardCheckLists, selectedCard } = useStageCard();
 
   const [taskNameField, setTaskNameField] = useState(true);
   const [taskPriorityField, setTaskPriorityField] = useState(false);
@@ -53,9 +53,10 @@ const AddCardTaskForm: React.FC<IProps> = ({ closeWindow }: IProps) => {
   const handleSubmit = useCallback(
     async (due_date: string) => {
       try {
-        createTask({
+        createCardTask({
           check_list_id: selectedCheckList.id,
           due_date,
+          card: selectedCard,
         });
         getCardCheckLists();
         closeWindow();
@@ -73,7 +74,14 @@ const AddCardTaskForm: React.FC<IProps> = ({ closeWindow }: IProps) => {
         throw new Error(err);
       }
     },
-    [addToast, getCardCheckLists, closeWindow, createTask, selectedCheckList],
+    [
+      addToast,
+      getCardCheckLists,
+      closeWindow,
+      createCardTask,
+      selectedCard,
+      selectedCheckList,
+    ],
   );
 
   return (

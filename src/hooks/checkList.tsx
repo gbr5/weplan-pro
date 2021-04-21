@@ -8,6 +8,7 @@ import React, {
 import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
 import ICheckBoxOptionDTO from '../dtos/ICheckBoxOptionDTO';
 import ICheckListDTO from '../dtos/ICheckListDTO';
+import ICreateCardTaskDTO from '../dtos/ICreateCardTaskDTO';
 import ICreateTaskDTO from '../dtos/ICreateTaskDTO ';
 import ICreateTaskNoteDTO from '../dtos/ICreateTaskNote';
 
@@ -47,6 +48,7 @@ interface ICheckListContextData {
   selectTaskStatus(data: string): void;
   selectTaskDueDate(data: string): void;
   createTask(data: ICreateTaskDTO): void;
+  createCardTask(data: ICreateCardTaskDTO): void;
   createTaskNote(data: ICreateTaskNoteDTO): void;
   updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
@@ -306,6 +308,54 @@ const CheckListProvider: React.FC = ({ children }) => {
       getCheckListCards,
     ],
   );
+  const createCardTask = useCallback(
+    async (data: ICreateCardTaskDTO) => {
+      try {
+        const response = await api.post(
+          `/check-lists/tasks/${data.check_list_id}`,
+          {
+            owner_id: employee.employeeUser.id,
+            task: taskName,
+            color: '#555',
+            isActive: true,
+            priority: taskPriority,
+            status: taskStatus,
+            due_date: data.due_date,
+          },
+        );
+        const note = `${taskName}|||\nTarefa criada no card ${data.card.name}\n. . . . .\n`;
+        createTaskNote({
+          check_list_id: data.check_list_id,
+          note,
+          task_id: response.data.id,
+        });
+        getEmployeeTasks();
+        setSelectedTask(response.data);
+        getEmployeeTasksByDate();
+        addToast({
+          type: 'success',
+          title: 'Tarefa criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar tarefa!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [
+      employee,
+      getEmployeeTasks,
+      addToast,
+      taskName,
+      taskPriority,
+      getEmployeeTasksByDate,
+      taskStatus,
+      createTaskNote,
+    ],
+  );
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
       try {
@@ -394,6 +444,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         priorityColors,
         getTask,
         createTaskNote,
+        createCardTask,
         dayTasks,
         getEmployeeTasksByDate,
         employeeFinishedTasks,
