@@ -7,6 +7,7 @@ import Task from '../../../../../TaskDashboard/Task';
 import TaskStatusMenu from '../../../../../TaskDashboard/TaskStatusMenu';
 import { useStageCard } from '../../../../../../hooks/stageCard';
 import { useCheckList } from '../../../../../../hooks/checkList';
+import { sortActiveTasks } from '../../../../../../utils/sortActiveTasks';
 
 const CardCheckListContainer: React.FC = () => {
   const { getCardCheckLists } = useStageCard();
@@ -53,7 +54,7 @@ const CardCheckListContainer: React.FC = () => {
               selectedCheckList &&
               selectedCheckList.id &&
               selectedCheckList.tasks &&
-              selectedCheckList.tasks
+              sortActiveTasks(selectedCheckList.tasks)
                 .filter(task => task.status === '1')
                 .filter(task => task.isActive)
                 .map(task => {
@@ -69,7 +70,7 @@ const CardCheckListContainer: React.FC = () => {
               selectedCheckList &&
               selectedCheckList.id &&
               selectedCheckList.tasks &&
-              selectedCheckList.tasks
+              sortActiveTasks(selectedCheckList.tasks)
                 .filter(task => task.status === '2')
                 .filter(task => task.isActive)
                 .map(task => {
@@ -85,7 +86,7 @@ const CardCheckListContainer: React.FC = () => {
               selectedCheckList &&
               selectedCheckList.id &&
               selectedCheckList.tasks &&
-              selectedCheckList.tasks
+              sortActiveTasks(selectedCheckList.tasks)
                 .filter(task => task.status === '3')
                 .filter(task => task.isActive)
                 .map(task => {

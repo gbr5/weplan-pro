@@ -49,7 +49,7 @@ const TaskDateButton: React.FC<IProps> = ({ task, update }) => {
       due_date.setMonth(newMonth - 1);
       due_date.setFullYear(newYear);
       due_date.setHours(hour);
-      due_date.setMinutes(minutes - 6);
+      due_date.setMinutes(minutes);
 
       updateTask({
         ...task,
@@ -57,7 +57,9 @@ const TaskDateButton: React.FC<IProps> = ({ task, update }) => {
       });
 
       createTaskNote({
-        note: `Tarefa Editada|||\n\nAntiga Data de Entrega: ${formatOnlyDate(
+        note: `Tarefa Editada|||\nTarefa: ${
+          task.task
+        }\nAntiga Data de Entrega: ${formatOnlyDate(
           oldDueDate,
         )}\n.\nNova Data de Entrega: ${formatOnlyDate(
           String(due_date),
@@ -88,7 +90,6 @@ const TaskDateButton: React.FC<IProps> = ({ task, update }) => {
               mask="brlDateFormat"
               pattern="\d*"
               placeholder={formatOnlyDate(task.due_date)}
-              // defaultValue={formatOnlyTime(task.due_date)}
             />
             <button
               style={{ background: 'rgba(250, 50, 10)' }}

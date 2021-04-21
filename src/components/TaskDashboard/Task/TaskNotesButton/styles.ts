@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* margin: 0.5rem; */
+  margin: auto 0.5rem;
   width: 2rem;
   height: 2rem;
 
@@ -36,7 +36,7 @@ export const NewTaskNotesContainer = styled.aside`
   position: absolute;
   z-index: 2;
   top: -1.1rem;
-  right: -1.1rem;
+  left: -1.1rem;
   display: flex;
   flex-direction: column;
   align-items: center;

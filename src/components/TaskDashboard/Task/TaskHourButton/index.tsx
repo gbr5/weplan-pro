@@ -48,7 +48,9 @@ const TaskHourButton: React.FC<IProps> = ({ task, update }) => {
       });
 
       createTaskNote({
-        note: `Tarefa Editada|||\n\nAntiga Horário de Entrega: ${formatOnlyTime(
+        note: `Tarefa Editada|||\nTarefa: ${
+          task.task
+        }\nAntiga Horário de Entrega: ${formatOnlyTime(
           oldDueDate,
         )}\n.\nNova Horário de Entrega: ${formatOnlyTime(
           String(due_date),
