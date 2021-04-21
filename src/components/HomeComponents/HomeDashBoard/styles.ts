@@ -36,16 +36,16 @@ export const Icon = styled.div`
   width: 8rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(100, 100, 100, 0.8);
+  border: 1px solid rgba(100, 100, 100, 1);
   border-radius: 8px;
   margin-bottom: 1rem;
   background: var(--letter-color-4);
   color: var(--letter-color-1);
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
   transition: 0.3s;
 
   &:hover {
-    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.5);
   }
   /* > svg {
     border: 1px solid rgba(155, 155, 155, 0.8);
