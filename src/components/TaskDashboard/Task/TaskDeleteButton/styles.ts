@@ -18,7 +18,8 @@ export const Container = styled.div`
     margin: 0 auto;
     padding: 0;
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
-    background: rgba(250, 50, 10);
+    color: rgba(250, 5, 3);
+    background: var(--letter-color-4);
 
     &:hover {
       box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);

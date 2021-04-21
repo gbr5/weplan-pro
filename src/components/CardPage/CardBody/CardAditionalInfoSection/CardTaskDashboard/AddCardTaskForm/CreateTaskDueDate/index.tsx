@@ -37,6 +37,7 @@ const CreateTaskDueDate: React.FC<IProps> = ({ nextStep }: IProps) => {
       <strong>Data de entrega</strong>
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Input
+          required
           name="due_date"
           mask="brlDateFormat"
           defaultValue={defaultDate}
