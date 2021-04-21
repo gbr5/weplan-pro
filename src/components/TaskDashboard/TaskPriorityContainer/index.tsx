@@ -34,7 +34,7 @@ const TaskPriorityContainer: React.FC<IProps> = ({
       });
 
       createTaskNote({
-        note: `Tarefa Editada|||\nTarefa: ${task.task}\nAntiga Prioridade: ${oldPriority}\n.\nNova Prioridade: ${newPriority}\n. . . . .`,
+        note: `Tarefa Editada|||\nTarefa: ${task.task}\n.\nAntiga Prioridade: ${oldPriority}\n.\nNova Prioridade: ${newPriority}\n. . . . .`,
         task_id: task.id,
         check_list_id: task.check_list_id,
       });
