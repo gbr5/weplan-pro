@@ -17,8 +17,6 @@ export const LogoContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  gap: 32px;
-
   img {
     height: 80px;
   }
@@ -50,7 +48,6 @@ export const AnimationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
 
   place-content: center;
 
@@ -86,7 +83,6 @@ export const AnimationContainer = styled.div`
     display: flex;
     flex-direction: column;
 
-    gap: 32px;
     align-items: center;
     justify-content: center;
 

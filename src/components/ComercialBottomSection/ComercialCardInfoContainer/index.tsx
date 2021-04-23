@@ -1,21 +1,23 @@
 import { differenceInMilliseconds } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import ICompanyContactDTO from '../../../dtos/ICompanyContactDTO';
 import { useCompanyContact } from '../../../hooks/companyContacts';
 import { useCompanyEmployee } from '../../../hooks/companyEmployee';
-import { useFunnel } from '../../../hooks/funnel';
+import { useHomeController } from '../../../hooks/homeController';
 import { useStageCard } from '../../../hooks/stageCard';
 import api from '../../../services/api';
 import formatHourDateShort from '../../../utils/formatHourDateShort';
-import CardInfoButton from '../../CardPage/CardBody/CardInfoSection/CardInfoButton';
+import { trimCardName } from '../../../utils/trimCardName';
+import CardAditionalInfoSection from '../../CardComponents/CardAditionalInfoSection';
 import ContactWindow from '../../CompanyContactComponents/ContactWindow';
 
 import {
   Container,
   Main,
   CardCustomersSection,
-  AditionalInfoSection,
   LastUpdate,
+  GoToCardButton,
 } from './styles';
 
 interface ICardCustomer {
@@ -25,14 +27,16 @@ interface ICardCustomer {
 }
 
 const ComercialCardInfoContainer: React.FC = () => {
-  const { selectedFunnelCardInfoFields } = useFunnel();
+  const history = useHistory();
   const { companyEmployees } = useCompanyEmployee();
   const {
     getEmployeeContact,
     selectContact,
     selectedContact,
   } = useCompanyContact();
-  const { selectedCard, cardNotes, funnelCardInfos } = useStageCard();
+  const { selectedCard, cardNotes } = useStageCard();
+  const { selectPage } = useHomeController();
+
   const [cardOwner, setCardOwner] = useState<ICompanyContactDTO>(
     {} as ICompanyContactDTO,
   );
@@ -81,6 +85,13 @@ const ComercialCardInfoContainer: React.FC = () => {
     setContactWindow(false);
   }, [selectContact]);
 
+  const handleGoToCard = useCallback(() => {
+    if (selectedCard && selectedCard.id) {
+      selectPage('Card');
+      history.push(`/card/${trimCardName(selectedCard.name)}`);
+    }
+  }, [history, selectedCard, selectPage]);
+
   useEffect(() => {
     getCardCustomer();
   }, [getCardCustomer]);
@@ -120,23 +131,23 @@ const ComercialCardInfoContainer: React.FC = () => {
       <Main>
         <h2>Informações do Card</h2>
         <Container>
-          <LastUpdate>
+          <LastUpdate type="button" onClick={handleGoToCard}>
             <strong>Última alteração</strong>
             <p>{lastNoteDate}</p>
           </LastUpdate>
-          <div>
+          <GoToCardButton type="button" onClick={handleGoToCard}>
             <p>Nome</p>
             <p>{selectedCard && selectedCard.name}</p>
-          </div>
+          </GoToCardButton>
 
-          <div>
+          <GoToCardButton type="button" onClick={handleGoToCard}>
             <p>Responsável</p>
             <p>
               {cardOwner &&
                 cardOwner.name &&
                 `${cardOwner.name} ${cardOwner.family_name}`}
             </p>
-          </div>
+          </GoToCardButton>
           <CardCustomersSection>
             <strong>Clientes</strong>
             <span>
@@ -154,27 +165,7 @@ const ComercialCardInfoContainer: React.FC = () => {
             </span>
           </CardCustomersSection>
 
-          <AditionalInfoSection>
-            <h3>Informações adicionais</h3>
-
-            <span>
-              {selectedFunnelCardInfoFields.map(field => {
-                const funnelCardInfo = funnelCardInfos.find(
-                  info => info.funnel_card_field_id === field.id,
-                );
-
-                if (funnelCardInfo) {
-                  return (
-                    <CardInfoButton
-                      cardInfo={funnelCardInfo}
-                      funnelCardInfoField={field}
-                    />
-                  );
-                }
-                return '';
-              })}
-            </span>
-          </AditionalInfoSection>
+          <CardAditionalInfoSection />
         </Container>
       </Main>
     </>

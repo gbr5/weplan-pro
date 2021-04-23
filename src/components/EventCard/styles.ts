@@ -27,13 +27,11 @@ export const Container = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 8px;
 
   animation: ${appearFromTop} 1s;
 
   > div {
     display: flex;
-    gap: 16px;
     margin-right: auto;
 
     > h2 {
@@ -47,7 +45,6 @@ export const Container = styled.div`
 
 export const EventDate = styled(Tooltip)`
   display: flex;
-  gap: 16px;
   align-items: right;
   justify-content: right;
   margin-left: auto;
@@ -67,7 +64,6 @@ export const EventDate = styled(Tooltip)`
     border: none;
 
     display: flex;
-    gap: 8px;
     align-items: center;
     justify-content: center;
 

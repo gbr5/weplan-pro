@@ -10,7 +10,6 @@ export const List = styled.div`
   height: 100%;
   border-radius: 4px;
   padding: 4px;
-  gap: 8px;
 
   background: var(--background-color);
   box-shadow: var(--box-shadow);

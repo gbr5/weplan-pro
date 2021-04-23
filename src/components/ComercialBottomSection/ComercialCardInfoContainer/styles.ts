@@ -25,33 +25,12 @@ export const Container = styled.div`
   justify-content: stretch;
   background: var(--letter-color-4);
   border-radius: 8px;
-  gap: 16px;
   padding: 1rem;
   overflow-y: scroll;
   position: relative;
   padding-top: 2.4rem;
   margin: 0rem auto;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
-
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: stretch;
-
-    width: 100%;
-    padding: 0.5rem auto;
-    min-height: 2rem;
-
-    > p {
-      color: var(--letter-color-1);
-      width: 150px;
-
-      &:first-child {
-        color: var(--header-primary);
-        font-size: 1.2rem;
-      }
-    }
-  }
 `;
 
 export const CardCustomersSection = styled.span`
@@ -72,7 +51,7 @@ export const CardCustomersSection = styled.span`
     align-items: center;
     justify-content: stretch;
     width: 90vw;
-    margin: 0.8rem auto;
+    margin: 0.4rem auto;
     overflow-x: scroll;
 
     > button {
@@ -93,7 +72,9 @@ export const CardCustomersSection = styled.span`
   }
 `;
 
-export const LastUpdate = styled.span`
+export const LastUpdate = styled.button`
+  background: transparent;
+  border: none;
   position: absolute;
   display: flex;
   align-items: center;
@@ -101,6 +82,7 @@ export const LastUpdate = styled.span`
   right: 0.5rem;
   border-bottom: 1px solid var(--background-color);
   padding: 0 0.5rem 0.2rem;
+  z-index: 2;
 
   > strong {
     color: var(--secondary-color);
@@ -115,15 +97,25 @@ export const LastUpdate = styled.span`
   }
 `;
 
-export const AditionalInfoSection = styled.span`
-  display: block;
-  height: 100%;
-  width: 100%;
+export const GoToCardButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  background: transparent;
+  border: none;
 
-  > h3 {
-    margin: 0.4rem auto;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--background-color);
-    color: var(--secondary-color);
+  width: 100%;
+  padding: 0.5rem auto;
+  min-height: 2rem;
+  text-align: left;
+
+  > p {
+    color: var(--letter-color-1);
+    width: 150px;
+
+    &:first-child {
+      color: var(--header-primary);
+      font-size: 1.2rem;
+    }
   }
 `;

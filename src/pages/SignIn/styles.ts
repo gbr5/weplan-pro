@@ -38,7 +38,6 @@ export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
   > img {
     height: 3rem;
   }
@@ -55,7 +54,6 @@ export const ToggleButton = styled.span<IToggleProps>`
   position: fixed;
   top: 8px;
   left: 8px;
-  gap: 16px;
 
   > button {
     background: transparent;

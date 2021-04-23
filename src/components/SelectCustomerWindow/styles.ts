@@ -9,7 +9,6 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 8px;
-  gap: 8px;
   overflow-y: scroll;
 
   background: var(--card-color);

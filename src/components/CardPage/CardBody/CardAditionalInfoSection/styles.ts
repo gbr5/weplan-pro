@@ -54,6 +54,5 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--background-color);
-  gap: 5px;
   padding: 5px;
 `;

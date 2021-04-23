@@ -45,7 +45,6 @@ export const ToggleButton = styled.span`
   position: fixed;
   top: 8px;
   left: 8px;
-  gap: 16px;
 
   h3 {
     font-size: 20px;
@@ -78,12 +77,10 @@ export const AnimationContainer = styled.div`
   height: 100%;
   width: 100%;
   place-content: center;
-  gap: 16px;
 
   div {
     display: flex;
     justify-content: center;
-    gap: 3vh;
     width: 100%;
 
     h1 {
@@ -111,7 +108,6 @@ export const AnimationContainer = styled.div`
   form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
     width: 100%;
     text-align: center;
     animation: ${appearFromLeft} 0.8s;
@@ -232,7 +228,6 @@ export const QuestionTitle = styled.h2`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
 
   > strong {
     font-size: 40px;

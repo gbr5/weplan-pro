@@ -8,7 +8,7 @@ import { useSignUp } from '../../../../hooks/signUp';
 import { useStageCard } from '../../../../hooks/stageCard';
 import formatHourDateShort from '../../../../utils/formatHourDateShort';
 import CardBudgetsWindow from './CardBudgetsWindow';
-import CardInfoButton from './CardInfoButton';
+import CardInfoButton from '../../../CardComponents/CardInfoButton';
 import CardParticipantsWindow from './CardParticipantsWindow';
 
 import {

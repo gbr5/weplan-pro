@@ -5,7 +5,6 @@ export const Participant = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
 `;
 
 interface IStatusButtonProps {
@@ -106,7 +105,5 @@ export const Container = styled.div`
   background: var(--header-background-color);
   border-radius: 8px;
   padding: 8px;
-  /* margin-left: 80px; */
-  gap: 5px;
   overflow-y: scroll;
 `;

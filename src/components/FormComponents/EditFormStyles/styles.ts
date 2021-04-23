@@ -7,16 +7,12 @@ export const Container = styled.div`
   justify-content: center;
   width: 100%;
 
-  gap: 2rem;
-
   section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-
-    gap: 1rem;
   }
 `;
 

@@ -59,7 +59,6 @@ export const ContainerMenu = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
 
       background: var(--header-primary);
       color: var(--header-background-color);

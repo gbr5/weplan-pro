@@ -28,7 +28,6 @@ export const Container = styled.div`
   justify-content: center;
   background: var(--header-background-color);
   border-radius: 8px;
-  gap: 16px;
   box-shadow: 2px 2px 15px 8px rgba(255, 150, 10, 0.3);
   padding: 32px;
 

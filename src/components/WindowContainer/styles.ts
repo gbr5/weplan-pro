@@ -22,7 +22,6 @@ export const Container = styled.div`
   padding: 1rem;
   background: var(--header-background-color);
   border-radius: 8px;
-  gap: 16px;
   box-shadow: var(--window-box-shadow);
   width: 100%;
   animation: ${appearFromTop} 0.5s;

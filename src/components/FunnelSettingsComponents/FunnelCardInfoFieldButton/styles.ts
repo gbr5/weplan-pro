@@ -4,7 +4,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  gap: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   width: 90%;
@@ -30,7 +29,6 @@ export const Container = styled.div`
   section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
   }
 
   span {
