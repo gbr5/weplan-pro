@@ -49,7 +49,6 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   background: var(--header-background-color);
-  gap: 5px;
   padding: 5px;
 
   animation: ${appearFromTop} 1s;

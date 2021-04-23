@@ -15,7 +15,6 @@ const TaskStatusMenu: React.FC<IProps> = ({
   currentSection,
   handleSection,
 }) => {
-  // const iconsize = 40;
   return (
     <Container>
       <StatusMenuButton

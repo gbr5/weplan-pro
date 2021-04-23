@@ -18,7 +18,6 @@ export const Container = styled.aside`
   align-items: center;
   justify-content: center;
   background: var(--header-background-color);
-  gap: 16px;
   box-shadow: var(--window-box-shadow);
 
   top: 44px;
@@ -33,8 +32,6 @@ export const Container = styled.aside`
     flex-direction: column;
     width: 100%;
     height: 100%;
-
-    gap: 32px;
 
     button {
       background: transparent;
@@ -82,22 +79,4 @@ export const ArrowButton = styled.button`
   svg {
     color: var(--background-color);
   }
-
-
-  /* position: fixed;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--header-background-color);
-  gap: 16px;
-  box-shadow: var(--window-box-shadow);
-  padding: 32px;
-
-  top: 60px;
-  left: 0;
-
-  animation: ${appearFromLeft} 1s; */
-
 `;

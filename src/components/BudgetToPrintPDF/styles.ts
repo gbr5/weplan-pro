@@ -7,8 +7,6 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  gap: 16px;
-
   width: 100%;
   height: 100%;
 
@@ -19,8 +17,6 @@ export const PageHeader = styled.div`
   display: flex;
   align-items: stretch;
   justify-content: center;
-
-  gap: 16px;
 
   width: 100%;
   padding: 16px;
@@ -68,8 +64,6 @@ export const Body = styled.div`
   justify-content: center;
   width: 100%;
 
-  gap: 16px;
-
   width: 100%;
   height: 100%;
 
@@ -79,7 +73,6 @@ export const Body = styled.div`
     justify-content: center;
     width: 100%;
     height: 104px;
-    gap: 16px;
   }
 `;
 
@@ -87,8 +80,6 @@ export const Footer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  gap: 16px;
 
   width: 100%;
   padding: 16px;

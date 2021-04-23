@@ -58,7 +58,6 @@ export const Container = styled.header`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
     background: transparent;
     border: none;
 
@@ -82,7 +81,6 @@ export const Container = styled.header`
       align-items: flex-start;
       justify-content: left;
       position: relative;
-      gap: 16px;
       > h5 {
         font-size: 20px;
         color: var(--title-color);
@@ -94,7 +92,6 @@ export const Container = styled.header`
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 16px;
         > svg {
           color: var(--title-color);
           opacity: 0.5;

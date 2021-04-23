@@ -9,8 +9,6 @@ export const Main = styled.div`
   height: 216px;
   margin: 1.5rem 0 2rem;
 
-  gap: 5px;
-
   @media (max-width: 1100px) {
     flex-direction: column;
     height: 100%;

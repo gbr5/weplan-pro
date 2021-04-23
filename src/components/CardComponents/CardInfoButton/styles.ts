@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: block;
   margin: 1rem 0 0.2rem;
   position: relative;
-  height: 100%;
+  width: 100%;
 
   > button {
     background: transparent;

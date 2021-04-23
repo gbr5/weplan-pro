@@ -26,7 +26,6 @@ export const Container = styled.div`
 
 export const ToggleButton = styled.div`
   display: flex;
-  gap: 16px;
   align-items: center;
   justify-content: center;
   margin: 1rem 0 1rem;

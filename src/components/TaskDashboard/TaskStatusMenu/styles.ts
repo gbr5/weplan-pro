@@ -19,7 +19,7 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
   border: none;
   height: 4rem;
   width: 4rem;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto 1.5rem;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.35);
 
   > img {

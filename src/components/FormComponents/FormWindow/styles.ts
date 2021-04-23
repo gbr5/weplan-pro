@@ -84,7 +84,6 @@ export const FormContainer = styled.div<IFormProps>`
   text-align: center;
   justify-content: flex-start;
 
-  gap: 1rem;
   padding: 2rem 0;
 
   background: ${props => props.formStyles.background_color};
@@ -158,7 +157,6 @@ export const FakeField = styled.div<IFormProps>`
 
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   align-items: stretch;
   justify-content: center;
   margin: 1rem auto;

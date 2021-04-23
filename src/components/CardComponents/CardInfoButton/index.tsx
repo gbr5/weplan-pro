@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { MdEdit } from 'react-icons/md';
-import IFunnelCardInfoDTO from '../../../../../dtos/IFunnelCardInfoDTO';
-import IFunnelCardInfoFieldDTO from '../../../../../dtos/IFunnelCardInfoFieldDTO';
-import { useStageCard } from '../../../../../hooks/stageCard';
-import InlineFormField from '../../../../GeneralComponents/InlineFormField';
+import IFunnelCardInfoDTO from '../../../dtos/IFunnelCardInfoDTO';
+import IFunnelCardInfoFieldDTO from '../../../dtos/IFunnelCardInfoFieldDTO';
+import { useStageCard } from '../../../hooks/stageCard';
+import InlineFormField from '../../GeneralComponents/InlineFormField';
 
 import { Container, CardInfoField, EditField } from './styles';
 

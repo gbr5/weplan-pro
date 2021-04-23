@@ -46,7 +46,6 @@ export const Modules = styled.section`
 
   @media (max-width: 1000px) {
     overflow-x: scroll;
-    gap: 1rem;
     padding-left: 3rem;
   }
 `;

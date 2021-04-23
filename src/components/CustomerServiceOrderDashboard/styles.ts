@@ -75,7 +75,6 @@ export const ServiceOrder = styled.span<IBooleanProps>`
     display: flex;
     align-items: stretch;
     justify-content: center;
-    gap: 16px;
   }
 
   ${props =>

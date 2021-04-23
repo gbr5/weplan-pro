@@ -36,7 +36,6 @@ export const Container = styled.div`
   justify-content: stretch;
   background: var(--header-background-color);
   border-radius: 8px;
-  gap: 5px;
   padding: 8px;
   overflow-y: scroll;
 `;
@@ -70,7 +69,6 @@ export const Task = styled.div`
 
   > div {
     display: flex;
-    gap: 5px;
     color: var(--header-primary);
 
     width: 100%;

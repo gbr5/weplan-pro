@@ -27,7 +27,6 @@ export const Container = styled.div`
   align-items: stretch;
   justify-content: stretch;
 
-  gap: 16px;
   margin: 0 auto;
   padding: 1rem;
 

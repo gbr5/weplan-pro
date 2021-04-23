@@ -100,7 +100,6 @@ export const ButtonContainer = styled.strong`
   }
   button {
     display: flex;
-    gap: 8px;
     align-items: center;
     justify-content: center;
     width: 350px;

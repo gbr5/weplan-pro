@@ -54,7 +54,6 @@ export const Container = styled.div`
     justify-content: center;
     width: 100%;
     height: 100%;
-    gap: 5px;
 
     > div {
       display: flex;
@@ -62,13 +61,11 @@ export const Container = styled.div`
       align-items: stretch;
       justify-content: stretch;
       width: 100%;
-      gap: 5px;
 
       > span {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
         width: 100%;
         height: 32px;
 

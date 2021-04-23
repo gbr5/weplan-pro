@@ -77,7 +77,6 @@ export const Task = styled.div`
   > div {
     display: flex;
     flex-direction: column;
-    gap: 5px;
     color: var(--header-primary);
 
     width: 100%;
