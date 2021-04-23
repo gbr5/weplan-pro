@@ -1,5 +1,11 @@
 import { differenceInMilliseconds } from 'date-fns';
-import React, { createContext, useCallback, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
 import ICardCheckListDTO from '../dtos/ICardCheckListDTO';
 import ICardCustomerDTO from '../dtos/ICardCustomerDTO';
 import ICardNotesDTO from '../dtos/ICardNotesDTO';
@@ -195,13 +201,13 @@ const StageCardProvider: React.FC = ({ children }) => {
 
   const selectCard = useCallback(
     (data: IStageCardDTO) => {
+      setSelectedCard(data);
+      localStorage.setItem('@WP-PRO:selected-card', JSON.stringify(data));
       getFunnelCardInfos();
       getCardNotes();
       getCardCustomers();
-      setSelectedCard(data);
-      localStorage.setItem('@WP-PRO:selected-card', JSON.stringify(data));
     },
-    [getCardCustomers, getCardNotes, getFunnelCardInfos],
+    [getFunnelCardInfos, getCardNotes, getCardCustomers],
   );
 
   const createCardHistoryNote = useCallback(
@@ -459,6 +465,28 @@ ${now}  |  WePlan
     },
     [addToast, getFunnelCardInfos, selectedCard],
   );
+
+  const unSetCard = useCallback(() => {
+    setFunnelCardInfos([]);
+    setCardNotes([]);
+    setCardCustomers([]);
+  }, []);
+
+  useEffect(() => {
+    if (selectedCard && selectedCard.id) {
+      getFunnelCardInfos();
+      getCardNotes();
+      getCardCustomers();
+    } else {
+      unSetCard();
+    }
+  }, [
+    getCardCustomers,
+    unSetCard,
+    selectedCard,
+    getCardNotes,
+    getFunnelCardInfos,
+  ]);
 
   return (
     <StageCardContext.Provider
