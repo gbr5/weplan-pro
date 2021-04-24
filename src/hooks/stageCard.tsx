@@ -70,7 +70,7 @@ const StageCardProvider: React.FC = ({ children }) => {
   const { addToast } = useToast();
   const { myEmployeeContact } = useCompanyContact();
 
-  const [selectedCard, setSelectedCard] = useState(() => {
+  const [selectedCard, setSelectedCard] = useState<IStageCardDTO>(() => {
     const findCard = localStorage.getItem('@WP-PRO:selected-card');
     if (findCard) {
       return JSON.parse(findCard);
@@ -126,7 +126,9 @@ const StageCardProvider: React.FC = ({ children }) => {
   const getCardCheckLists = useCallback(() => {
     try {
       api
-        .get<ICardCheckListDTO[]>(`card/check-lists/${selectedCard.id}`)
+        .get<ICardCheckListDTO[]>(
+          `/card/check-lists/${selectedCard.unique_name}`,
+        )
         .then(response => {
           setCardCheckLists(response.data);
           setSelectedCardCheckList(response.data[0]);
