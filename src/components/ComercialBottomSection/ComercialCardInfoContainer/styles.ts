@@ -37,11 +37,14 @@ export const CardCustomersSection = styled.span`
   display: block;
   flex: 1;
   width: 100%;
+  margin-top: 0.5rem;
 
   > strong {
     width: 100%;
     margin: 0.5rem auto;
     padding: 0.5rem;
+    font-size: 1.2rem;
+    /* font-weight: 500; */
     border-bottom: 1px solid var(--title-color);
     color: var(--secondary-color);
   }
@@ -103,6 +106,7 @@ export const GoToCardButton = styled.button`
   justify-content: stretch;
   background: transparent;
   border: none;
+  margin-top: 0.4rem;
 
   width: 100%;
   padding: 0.5rem auto;

@@ -57,7 +57,7 @@ const FunnelProvider: React.FC = ({ children }) => {
     }
     return [];
   });
-  const [selectedFunnel, setSelectedFunnel] = useState(() => {
+  const [selectedFunnel, setSelectedFunnel] = useState<IFunnelDTO>(() => {
     const findFunnel = localStorage.getItem('@WP-PRO:selected-funnel');
     if (findFunnel) {
       return JSON.parse(findFunnel);

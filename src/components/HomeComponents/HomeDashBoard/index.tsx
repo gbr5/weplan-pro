@@ -37,7 +37,7 @@ const HomeDashboard: React.FC = () => {
         <Icon>
           <FiUserCheck size={iconsize} />
         </Icon>
-        <h2>Clientes</h2>
+        <h2>Comercial</h2>
       </IconContainer>
       <IconContainer type="button" onClick={() => selectPage('Tasks')}>
         <Icon>
