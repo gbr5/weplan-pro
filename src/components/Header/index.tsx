@@ -16,9 +16,12 @@ import IEmployeeDTO from '../../dtos/IEmployeeDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import CreateTask from '../TaskDashboard/CreateTask';
 import CreateCompanyContactForm from '../CompanyContactComponents/CreateCompanyContactForm';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
+import { useStageCard } from '../../hooks/stageCard';
 
 const Header: React.FC = () => {
   const history = useHistory();
+  const { selectCard } = useStageCard();
   const {
     getCompanyContacts,
     selectContact,
@@ -85,7 +88,8 @@ const Header: React.FC = () => {
   const navigateHome = useCallback(() => {
     selectPage('Home');
     history.push('/dashboard');
-  }, [history, selectPage]);
+    selectCard({} as IStageCardDTO);
+  }, [history, selectCard, selectPage]);
 
   const handleCreateComercialCard = useCallback(
     (e: boolean) => {

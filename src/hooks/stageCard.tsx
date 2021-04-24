@@ -11,6 +11,7 @@ import ICardCustomerDTO from '../dtos/ICardCustomerDTO';
 import ICardNotesDTO from '../dtos/ICardNotesDTO';
 import ICompanyContactDTO from '../dtos/ICompanyContactDTO';
 import ICreateCardDTO from '../dtos/ICreateCardDTO';
+import ICreateComercialCardResultsDTO from '../dtos/ICreateComercialCardResultsDTO';
 import ICreateFunnelCardInfoDTO from '../dtos/ICreateFunnelCardInfoDTO';
 import IFunnelCardInfoDTO from '../dtos/IFunnelCardInfoDTO';
 import IFunnelStageDTO from '../dtos/IFunnelStageDTO';
@@ -30,6 +31,7 @@ interface ICardFilterParams {
 
 interface IStageCardContextData {
   selectedCard: IStageCardDTO;
+  inactiveCards: IStageCardDTO[];
   selectedNote: ICardNotesDTO;
   selectedCardCheckList: ICardCheckListDTO;
   cardCheckLists: ICardCheckListDTO[];
@@ -43,11 +45,15 @@ interface IStageCardContextData {
   getCardCheckLists(): void;
   getFunnelCardInfos(): void;
   getCardCustomers(): void;
+  getInactiveCards(): void;
   getCardNotes(): void;
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCardName(card: IStageCardDTO): void;
   createCard(data: ICreateCardDTO): Promise<IStageCardDTO>;
   createCardCustomer(customer: ICompanyContactDTO): Promise<void>;
+  createComercialCardResults(
+    data: ICreateComercialCardResultsDTO,
+  ): Promise<void>;
   createCardNote(note: string): Promise<void>;
   createCardHistoryNote(note: string, card_unique_name: string): Promise<void>;
   createFunnelCardInfo(data: ICreateFunnelCardInfoDTO): Promise<void>;
@@ -70,6 +76,13 @@ const StageCardProvider: React.FC = ({ children }) => {
       return JSON.parse(findCard);
     }
     return {} as IStageCardDTO;
+  });
+  const [inactiveCards, setInactiveCards] = useState<IStageCardDTO[]>(() => {
+    const findInactiveCards = localStorage.getItem('@WP-PRO:inactive-cards');
+    if (findInactiveCards) {
+      return JSON.parse(findInactiveCards);
+    }
+    return [];
   });
   const [cardCheckLists, setCardCheckLists] = useState<ICardCheckListDTO[]>([]);
   const [selectedCardCheckList, setSelectedCardCheckList] = useState<
@@ -198,6 +211,21 @@ const StageCardProvider: React.FC = ({ children }) => {
       throw new Error(err);
     }
   }, [selectedCard]);
+
+  const getInactiveCards = useCallback(async () => {
+    try {
+      const response = await api.get<IStageCardDTO[]>(
+        `/inactive-cards/${selectedFunnel.id}`,
+      );
+      setInactiveCards(response.data);
+      localStorage.setItem(
+        '@WP-PRO:inactive-cards',
+        JSON.stringify(response.data),
+      );
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [selectedFunnel]);
 
   const selectCard = useCallback(
     (data: IStageCardDTO) => {
@@ -466,6 +494,27 @@ ${now}  |  WePlan
     [addToast, getFunnelCardInfos, selectedCard],
   );
 
+  const createComercialCardResults = useCallback(
+    async (data: ICreateComercialCardResultsDTO) => {
+      // Verificar se a rota está funcionando, se sim,
+      // pensar em como fazer a regra de negócio de cards ativos e inativos,
+      // Tentando pensar em quando o card passar para outro módulo de gestão!
+      // As pessoas do outro módulo poderão ter acesso a todos os dados? Quais?
+      try {
+        await api.post(`/comercial-card-results`, {
+          card_id: data.card_id,
+          note: data.note,
+          contract_value: data.contract_value,
+          isSuccessful: data.isSuccessful,
+        });
+        await getInactiveCards();
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getInactiveCards],
+  );
+
   const unSetCard = useCallback(() => {
     setFunnelCardInfos([]);
     setCardNotes([]);
@@ -488,12 +537,24 @@ ${now}  |  WePlan
     getFunnelCardInfos,
   ]);
 
+  useEffect(() => {
+    if (
+      selectedFunnel &&
+      selectedFunnel.id &&
+      selectedFunnel.name === 'Comercial'
+    ) {
+      getInactiveCards();
+    }
+  }, [getInactiveCards, selectedFunnel]);
+
   return (
     <StageCardContext.Provider
       value={{
         createCardCustomer,
         createCard,
+        inactiveCards,
         createCardNote,
+        createComercialCardResults,
         selectedCard,
         selectedCardCheckList,
         selectedNote,
@@ -510,6 +571,7 @@ ${now}  |  WePlan
         getFunnelCardInfos,
         funnelCardInfos,
         getCardCustomers,
+        getInactiveCards,
         cardCustomers,
         createFunnelCardInfo,
         updateFunnelCardInfo,

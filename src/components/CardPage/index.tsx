@@ -9,16 +9,21 @@ import { useHomeController } from '../../hooks/homeController';
 import { useFunnel } from '../../hooks/funnel';
 
 import { Container, BackButton } from './styles';
+import ComercialCardResultsButton from '../CardComponents/ComercialCardResultsButton';
+import { useStageCard } from '../../hooks/stageCard';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
 
 const CardPage: React.FC = () => {
   const history = useHistory();
   const { selectPage } = useHomeController();
   const { selectedFunnel } = useFunnel();
+  const { selectCard } = useStageCard();
 
   const navigateBack = useCallback(() => {
     selectedFunnel.name === 'Comercial' && selectPage('Comercial');
     selectedFunnel.name === 'Comercial' && history.push('/funnel/comercial');
-  }, [history, selectedFunnel, selectPage]);
+    selectCard({} as IStageCardDTO);
+  }, [history, selectedFunnel, selectPage, selectCard]);
 
   return (
     <>
@@ -27,6 +32,7 @@ const CardPage: React.FC = () => {
         <BackButton type="button" onClick={navigateBack}>
           <FiChevronLeft size={55} /> Voltar
         </BackButton>
+        <ComercialCardResultsButton />
         <CardHeader />
         <CardBody />
       </Container>

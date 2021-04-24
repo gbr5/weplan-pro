@@ -15,7 +15,7 @@ import { useStageCard } from '../hooks/stageCard';
 import CardPage from '../components/CardPage';
 import { useEmployeeAuth } from '../hooks/employeeAuth';
 import { useFunnel } from '../hooks/funnel';
-import KanbanDashboard from '../components/KabanDashboard';
+import ComercialKanbanDashboard from '../components/ComercialKabanDashboard';
 import SettingsPage from '../pages/SettingsPage';
 import ComercialFunnelSettings from '../components/FunnelSettingsComponents/ComercialFunnelSettings';
 import EmployeesSection from '../components/EmployeesSection';
@@ -48,7 +48,7 @@ const Routes: React.FC = () => {
         <Route
           path="/funnel/:funnel_name"
           exact
-          component={KanbanDashboard}
+          component={ComercialKanbanDashboard}
           isPrivate
         />
       )}

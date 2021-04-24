@@ -1,3 +1,5 @@
+import IComercialCardResultsDTO from './IComercialCardResultsDTO';
+
 export default interface IStageCardDTO {
   id: string;
   stage_id: string;
@@ -8,4 +10,5 @@ export default interface IStageCardDTO {
   weplanEvent: boolean;
   updated_at: Date;
   created_at: Date;
+  result: IComercialCardResultsDTO;
 }

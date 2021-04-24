@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container } from './styles';
 
-import KanbanDashboard from '../../components/KabanDashboard';
+import ComercialKanbanDashboard from '../../components/ComercialKabanDashboard';
 import TaskDashboard from '../../components/TaskDashboard';
 import CardPage from '../../components/CardPage';
 import ContactPageDashboard from '../../components/ContactPageComponents/ContactPageDashboard';
@@ -31,7 +31,7 @@ const SupplierDashboard: React.FC = () => {
       {funnels.length > 0 &&
         selectedFunnel &&
         selectedFunnel.id &&
-        selectedPage === 'Comercial' && <KanbanDashboard />}
+        selectedPage === 'Comercial' && <ComercialKanbanDashboard />}
       {selectedPage === 'Card' && selectedCard && selectedCard.id && (
         <CardPage />
       )}
