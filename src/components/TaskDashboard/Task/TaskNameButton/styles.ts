@@ -13,11 +13,19 @@ export const TaskNameContainer = styled.div`
   width: 100%;
 
   > button {
+    position: relative;
     background: transparent;
     border: none;
     font-size: 1.2rem;
     width: 100%;
+    padding: 0.5rem auto 0.8rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
+    > svg {
+      position: absolute;
+      top: -0.8rem;
+      right: 0.5rem;
+      color: var(--red-color);
+    }
   }
 `;
