@@ -240,6 +240,55 @@ const CheckListProvider: React.FC = ({ children }) => {
     },
     [selectTask],
   );
+  const createTaskNote = useCallback(
+    async (data: ICreateTaskNoteDTO) => {
+      try {
+        await api.post(`/check-list-task-notes`, {
+          task_id: data.task_id,
+          note: {
+            author_id: employee.employeeUser.id,
+            isNew: true,
+            note: data.note,
+          },
+        });
+        const checkLists = await getCheckListCards(data.check_list_id);
+        if (checkLists.length > 0) {
+          const ids = checkLists.map(checkList => {
+            return checkList.card_unique_name;
+          });
+
+          Promise.all([
+            ids.map(id => {
+              return createCardHistoryNote(data.note, id);
+            }),
+          ]);
+        }
+        getEmployeeTasksByDate();
+        getTask(data.task_id);
+        getEmployeeTasks();
+        addToast({
+          type: 'success',
+          title: 'Tarefa criada com sucesso',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Erro ao adicionar tarefa!',
+          description: 'Tente novamente',
+        });
+        throw new Error(err);
+      }
+    },
+    [
+      employee,
+      getTask,
+      getEmployeeTasks,
+      getEmployeeTasksByDate,
+      addToast,
+      createCardHistoryNote,
+      getCheckListCards,
+    ],
+  );
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
       try {
@@ -296,55 +345,6 @@ const CheckListProvider: React.FC = ({ children }) => {
       }
     },
     [addToast, getEmployeeTasksByDate, getEmployeeTasks],
-  );
-  const createTaskNote = useCallback(
-    async (data: ICreateTaskNoteDTO) => {
-      try {
-        await api.post(`/check-list-task-notes`, {
-          task_id: data.task_id,
-          note: {
-            author_id: employee.employeeUser.id,
-            isNew: true,
-            note: data.note,
-          },
-        });
-        const checkLists = await getCheckListCards(data.check_list_id);
-        if (checkLists.length > 0) {
-          const ids = checkLists.map(checkList => {
-            return checkList.card_unique_name;
-          });
-
-          Promise.all([
-            ids.map(id => {
-              return createCardHistoryNote(data.note, id);
-            }),
-          ]);
-        }
-        getEmployeeTasksByDate();
-        getTask(data.task_id);
-        getEmployeeTasks();
-        addToast({
-          type: 'success',
-          title: 'Tarefa criada com sucesso',
-        });
-      } catch (err) {
-        addToast({
-          type: 'error',
-          title: 'Erro ao adicionar tarefa!',
-          description: 'Tente novamente',
-        });
-        throw new Error(err);
-      }
-    },
-    [
-      employee,
-      getTask,
-      getEmployeeTasks,
-      getEmployeeTasksByDate,
-      addToast,
-      createCardHistoryNote,
-      getCheckListCards,
-    ],
   );
   const createCardTask = useCallback(
     async (data: ICreateCardTaskDTO) => {
