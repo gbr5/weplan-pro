@@ -68,14 +68,16 @@ const CheckListProvider: React.FC = ({ children }) => {
   const { employee } = useEmployeeAuth();
   const { selectedCardCheckList, createCardHistoryNote } = useStageCard();
   const { addToast } = useToast();
-  const [selectedCheckList, setSelectedCheckList] = useState(() => {
-    const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
-    if (findCheckList) {
-      return JSON.parse(findCheckList);
-    }
-    return {} as ICheckListDTO;
-  });
-  const [selectedTask, setSelectedTask] = useState({} as ITaskDTO);
+  const [selectedCheckList, setSelectedCheckList] = useState<ICheckListDTO>(
+    () => {
+      const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
+      console.log({ findCheckList });
+      if (findCheckList !== undefined && findCheckList !== null)
+        return JSON.parse(findCheckList);
+      return {} as ICheckListDTO;
+    },
+  );
+  const [selectedTask, setSelectedTask] = useState<ITaskDTO>({} as ITaskDTO);
   const [taskName, setTaskName] = useState('');
   const [taskPriority, setTaskPriority] = useState('');
   const [taskStatus, setTaskStatus] = useState('');
@@ -189,12 +191,14 @@ const CheckListProvider: React.FC = ({ children }) => {
     setTaskDueDate(data);
   }, []);
   const selectCheckList = useCallback((data: ICheckListDTO) => {
-    localStorage.setItem('@WP-PRO:selected-check-list', JSON.stringify(data));
-    setSelectedCheckList(data);
+    if (data && data.id) {
+      localStorage.setItem('@WP-PRO:selected-check-list', JSON.stringify(data));
+      setSelectedCheckList(data);
+    }
   }, []);
   const getCheckList = useCallback(async () => {
     try {
-      const response = await api.get(
+      const response = await api.get<ICheckListDTO>(
         `/check-lists/show/${selectedCheckList.id}`,
       );
       response &&
@@ -457,10 +461,15 @@ const CheckListProvider: React.FC = ({ children }) => {
   }, [getEmployeeTasksByDate, employee, selectedDate]);
 
   useEffect(() => {
-    if (selectedCardCheckList && selectedCardCheckList.id) {
-      setSelectedCheckList(selectedCardCheckList.check_list);
+    if (
+      selectedCardCheckList &&
+      selectedCardCheckList.id &&
+      selectedCardCheckList.check_list !== undefined &&
+      selectedCardCheckList.check_list !== null
+    ) {
+      selectCheckList(selectedCardCheckList.check_list);
     }
-  }, [selectedCardCheckList]);
+  }, [selectedCardCheckList, selectCheckList]);
 
   return (
     <CheckListContext.Provider
