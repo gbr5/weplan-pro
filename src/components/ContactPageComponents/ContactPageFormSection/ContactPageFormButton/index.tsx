@@ -40,7 +40,9 @@ const ContactPageFormButton: React.FC<IProps> = ({ contactPageForm }) => {
           type="button"
           onClick={() => handleDeleteFormConfirmation(true)}
         >
-          {contactPageForm.form.name}
+          {!!contactPageForm.form.external_name === true
+            ? contactPageForm.form.external_name
+            : contactPageForm.form.name}
         </Button>
       </Container>
     </>

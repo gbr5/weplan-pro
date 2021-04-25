@@ -25,6 +25,7 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
         createForm({
           slug: textToSlug(e.name),
           name: e.name,
+          external_name: e.external_name,
           title: e.title,
           message: e.message,
           isActive: false,
@@ -49,9 +50,14 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
         <Container>
           <h2>Novo Formulário</h2>
           <section>
-            <strong>Dê um nome ao formulário</strong>
-            <p>O nome do formulário é visível apenas para a empresa</p>
+            <strong>Nome interno do formulário</strong>
+            <p>Este nome é visível apenas para a empresa</p>
             <Input name="name" />
+          </section>
+          <section>
+            <strong>Nome externo do formulário</strong>
+            <p>Este nome é visível apenas para a empresa</p>
+            <Input name="external_name" />
           </section>
           <section>
             <strong>Insira o título do formulário</strong>
