@@ -467,7 +467,7 @@ const CheckListProvider: React.FC = ({ children }) => {
     { id: '3', value: '3', label: 'doneTask' },
   ];
   const priorityColors: IPriorityColors[] = [
-    { priority: 'low', color: 'rgba(161, 255, 92, 0.7)' },
+    { priority: 'low', color: 'rgba(50, 205, 10, 0.3)' },
     { priority: 'neutral', color: 'rgba(255, 220, 92, 0.7)' },
     { priority: 'high', color: 'rgba(255, 124, 92, 0.7)' },
   ];
