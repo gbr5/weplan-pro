@@ -118,6 +118,7 @@ const CardInfoSection: React.FC = () => {
                 if (funnelCardInfo) {
                   return (
                     <CardInfoButton
+                      key={field.id}
                       cardInfo={funnelCardInfo}
                       funnelCardInfoField={field}
                     />

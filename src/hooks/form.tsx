@@ -91,6 +91,7 @@ const FormProvider: React.FC = ({ children }) => {
         const thisForm = await api.post<IFormDTO>('user-form', {
           slug: data.slug,
           name: data.name,
+          external_name: data.external_name,
           title: data.title,
           message: data.message,
           isActive: data.isActive,

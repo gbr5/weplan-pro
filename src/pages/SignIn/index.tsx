@@ -127,10 +127,6 @@ const SignIn: React.FC = () => {
                 <Button type="submit">Entrar</Button>
                 <Link to="/forgot-password">Esqueci minha senha</Link>
               </Form>
-              <Link to="/signup">
-                <FiLogIn />
-                <p>Cadastrar como empresa de evento</p>
-              </Link>
               <a href="https://www.weplan.party" target="blank">
                 <FiLogIn />
                 <p>Cadastrar como usuário final</p>

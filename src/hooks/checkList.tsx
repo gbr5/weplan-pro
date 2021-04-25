@@ -73,7 +73,6 @@ const CheckListProvider: React.FC = ({ children }) => {
   const [selectedCheckList, setSelectedCheckList] = useState<ICheckListDTO>(
     () => {
       const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
-      console.log({ findCheckList });
       if (findCheckList !== undefined && findCheckList !== null)
         return JSON.parse(findCheckList);
       return {} as ICheckListDTO;
