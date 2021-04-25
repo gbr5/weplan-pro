@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns';
 import React, {
   createContext,
   useCallback,
@@ -58,6 +59,7 @@ interface ICheckListContextData {
   getTask(id: string): Promise<void>;
   getCheckListCards(id: string): Promise<ICardCheckListDTO[]>;
   getCheckList(): Promise<ICheckListDTO | undefined>;
+  unSelectAllCheckLists(): void;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -196,6 +198,21 @@ const CheckListProvider: React.FC = ({ children }) => {
       setSelectedCheckList(data);
     }
   }, []);
+  const unSelectAllCheckLists = useCallback(() => {
+    selectTask({} as ITaskDTO);
+    selectTaskName('');
+    selectTaskPriority('');
+    selectTaskStatus('');
+    selectTaskDueDate('');
+    selectCheckList({} as ICheckListDTO);
+  }, [
+    selectTask,
+    selectTaskName,
+    selectTaskPriority,
+    selectTaskStatus,
+    selectTaskDueDate,
+    selectCheckList,
+  ]);
   const getCheckList = useCallback(async () => {
     try {
       const response = await api.get<ICheckListDTO>(
@@ -226,15 +243,23 @@ const CheckListProvider: React.FC = ({ children }) => {
   const updateTask = useCallback(
     async (data: ITaskDTO) => {
       try {
+        let { isActive } = data;
+        if (
+          isActive &&
+          data.status === '3' &&
+          differenceInDays(new Date(), new Date(data.due_date)) > 0
+        ) {
+          isActive = false;
+        }
         const response = await api.put(`/check-lists/tasks/edit/${data.id}`, {
           task: data.task,
           status: data.status,
           color: data.color,
-          isActive: data.isActive,
+          isActive,
           priority: data.priority,
           due_date: data.due_date,
         });
-        setSelectedTask(response.data);
+        isActive && setSelectedTask(response.data);
         addToast({
           type: 'success',
           title: 'Tarefa editada com sucesso!',
@@ -475,6 +500,7 @@ const CheckListProvider: React.FC = ({ children }) => {
     <CheckListContext.Provider
       value={{
         priorityColors,
+        unSelectAllCheckLists,
         getTask,
         getCheckList,
         createTaskNote,

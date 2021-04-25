@@ -16,12 +16,16 @@ import IEmployeeDTO from '../../dtos/IEmployeeDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
 import CreateTask from '../TaskDashboard/CreateTask';
 import CreateCompanyContactForm from '../CompanyContactComponents/CreateCompanyContactForm';
-import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useStageCard } from '../../hooks/stageCard';
+import { useCheckList } from '../../hooks/checkList';
+import ICardCheckListDTO from '../../dtos/ICardCheckListDTO';
+import IStageCardDTO from '../../dtos/IStageCardDTO';
+import ICardNotesDTO from '../../dtos/ICardNotesDTO';
 
 const Header: React.FC = () => {
   const history = useHistory();
-  const { selectCard } = useStageCard();
+  const { selectCard, selectCardCheckList, selectNote } = useStageCard();
+  const { unSelectAllCheckLists } = useCheckList();
   const {
     getCompanyContacts,
     selectContact,
@@ -89,7 +93,17 @@ const Header: React.FC = () => {
     selectPage('Home');
     history.push('/dashboard');
     selectCard({} as IStageCardDTO);
-  }, [history, selectCard, selectPage]);
+    selectCardCheckList({} as ICardCheckListDTO);
+    selectNote({} as ICardNotesDTO);
+    unSelectAllCheckLists();
+  }, [
+    history,
+    selectCard,
+    selectCardCheckList,
+    selectNote,
+    unSelectAllCheckLists,
+    selectPage,
+  ]);
 
   const handleCreateComercialCard = useCallback(
     (e: boolean) => {

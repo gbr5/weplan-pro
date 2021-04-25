@@ -15,7 +15,6 @@ const CompanyContactButton: React.FC<IProps> = ({
 }) => {
   const { selectedContact } = useCompanyContact();
   const [newNotes, setNewNotes] = useState(0);
-  // console.log(contact.notes);
 
   useEffect(() => {
     if (contact.notes.length > 0) {

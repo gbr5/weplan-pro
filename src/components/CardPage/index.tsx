@@ -12,18 +12,29 @@ import { Container, BackButton } from './styles';
 import ComercialCardResultsButton from '../CardComponents/ComercialCardResultsButton';
 import { useStageCard } from '../../hooks/stageCard';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
+import ICardCheckListDTO from '../../dtos/ICardCheckListDTO';
+import ICardNotesDTO from '../../dtos/ICardNotesDTO';
 
 const CardPage: React.FC = () => {
   const history = useHistory();
   const { selectPage } = useHomeController();
   const { selectedFunnel } = useFunnel();
-  const { selectCard } = useStageCard();
+  const { selectCard, selectCardCheckList, selectNote } = useStageCard();
 
   const navigateBack = useCallback(() => {
     selectedFunnel.name === 'Comercial' && selectPage('Comercial');
     selectedFunnel.name === 'Comercial' && history.push('/funnel/comercial');
     selectCard({} as IStageCardDTO);
-  }, [history, selectedFunnel, selectPage, selectCard]);
+    selectCardCheckList({} as ICardCheckListDTO);
+    selectNote({} as ICardNotesDTO);
+  }, [
+    history,
+    selectedFunnel,
+    selectCardCheckList,
+    selectNote,
+    selectPage,
+    selectCard,
+  ]);
 
   return (
     <>
