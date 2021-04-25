@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { FiRefreshCcw } from 'react-icons/fi';
+import { FiAlertCircle, FiRefreshCcw } from 'react-icons/fi';
+import { differenceInDays } from 'date-fns/esm';
 import ITaskDTO from '../../../dtos/ITaskDTO';
-import { Container, ButtonContainer } from './styles';
 import { useCheckList } from '../../../hooks/checkList';
 
 import formatHourDateShort from '../../../utils/formatHourDateShort';
@@ -12,6 +12,8 @@ import TaskHourButton from './TaskHourButton';
 import TaskDateButton from './TaskDateButton';
 import TaskNameButton from './TaskNameButton';
 import TaskDeleteButton from './TaskDeleteButton';
+
+import { Container, ButtonContainer, LateTask } from './styles';
 
 interface IProps {
   task: ITaskDTO;
@@ -28,9 +30,27 @@ const Task: React.FC<IProps> = ({ task, update }) => {
     return color.color;
   }, [priorityColors, task]);
 
+  const daysLate = useMemo(() => {
+    const now = new Date();
+    const taskDueDate = new Date(task.due_date);
+    if (taskDueDate !== undefined)
+      return differenceInDays(now, taskDueDate) > 0
+        ? differenceInDays(now, taskDueDate)
+        : false;
+    return false;
+  }, [task]);
+
   return (
     <>
       <Container style={{ background: backgroundColor }}>
+        {daysLate && (
+          <LateTask>
+            <FiAlertCircle size={24} />
+            <strong>
+              Tarefa atrasada há <p>{daysLate}</p> dias!
+            </strong>
+          </LateTask>
+        )}
         <TaskNameButton task={task} update={update} />
         <span>
           <aside>

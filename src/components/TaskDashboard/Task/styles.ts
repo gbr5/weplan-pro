@@ -47,8 +47,36 @@ export const ButtonContainer = styled.strong`
   align-items: center;
   justify-content: flex-end;
   width: 100%;
+`;
 
-  > button {
+export const LateTask = styled.section`
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  background: rgba(255, 50, 10, 0.8);
+  border-radius: 4px;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  margin: 0.5rem auto;
+
+  > svg {
+    margin-right: 0.5rem;
+  }
+
+  > strong {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+
+    > p {
+      color: var(--letter-color-1);
+      padding-bottom: 0.2rem;
+      margin-bottom: 0.2rem;
+      border-bottom: 1px solid var(--title-color);
+      margin: auto 0.5rem;
+    }
   }
 `;
 
