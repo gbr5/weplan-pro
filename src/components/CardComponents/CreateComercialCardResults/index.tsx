@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import WindowContainer from '../../WindowContainer';
 import { useStageCard } from '../../../hooks/stageCard';
 
@@ -7,19 +6,22 @@ import { Container, SubContainer } from './styles';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import CardResultContractValueForm from '../CardResultContractValueForm';
 import CreateInlineFormField from '../../GeneralComponents/CreateInlineFormField';
-import { useHomeController } from '../../../hooks/homeController';
 
 interface IProps {
   closeWindow: () => void;
+  startSection: number;
 }
 
-const CreateComercialCardResults: React.FC<IProps> = ({ closeWindow }) => {
-  const history = useHistory();
+const CreateComercialCardResults: React.FC<IProps> = ({
+  closeWindow,
+  startSection,
+}) => {
   const { createComercialCardResults, selectedCard } = useStageCard();
-  const { selectPage } = useHomeController();
-  const [isSuccessful, setIsSuccessful] = useState(true);
+  const [isSuccessful, setIsSuccessful] = useState(startSection === 2);
   const [contract_value, setContractValue] = useState(0);
-  const [createResultsSection, setCreateResultsSection] = useState(1);
+  const [createResultsSection, setCreateResultsSection] = useState(
+    startSection,
+  );
 
   const handleIsSuccessful = useCallback((e: boolean) => {
     setIsSuccessful(e);
@@ -42,8 +44,6 @@ const CreateComercialCardResults: React.FC<IProps> = ({ closeWindow }) => {
         isSuccessful,
         note,
       });
-      selectPage('Comercial');
-      history.push('/funnel/comercial');
       closeWindow();
     },
     [
@@ -52,8 +52,6 @@ const CreateComercialCardResults: React.FC<IProps> = ({ closeWindow }) => {
       isSuccessful,
       createComercialCardResults,
       selectedCard,
-      history,
-      selectPage,
     ],
   );
 

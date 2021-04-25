@@ -20,7 +20,7 @@ export const CardTitle = styled.div`
   max-width: 400px;
   align-items: center;
   justify-content: center;
-  margin: 1rem 1rem 2rem;
+  margin: 1rem 1rem 3rem;
 
   > h2 {
     margin: 2rem 1rem 1rem;

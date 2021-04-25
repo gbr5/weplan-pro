@@ -17,7 +17,7 @@ export const BackButton = styled.button`
   background: transparent;
   border: none;
   position: absolute;
-  top: 5.7rem;
+  top: 6rem;
   left: 0;
   z-index: 2;
   font-size: 1.5rem;

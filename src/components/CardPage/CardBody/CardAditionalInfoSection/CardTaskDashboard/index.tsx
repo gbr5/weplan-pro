@@ -18,7 +18,9 @@ const CardTaskDashboard: React.FC = () => {
     (props: ICardCheckListDTO) => {
       setSelectCheckListWindow(false);
       selectCardCheckList(props);
-      selectCheckList(props.check_list);
+      props.check_list !== undefined &&
+        props.check_list !== null &&
+        selectCheckList(props.check_list);
     },
     [selectCardCheckList, selectCheckList],
   );

@@ -41,6 +41,7 @@ interface IStageCardContextData {
   selectCard(data: IStageCardDTO): void;
   selectNote(data: ICardNotesDTO): void;
   selectCardCheckList(data: ICardCheckListDTO): void;
+  getCard(id: string): Promise<void>;
   getCards(data: ICardFilterParams): Promise<IStageCardDTO[] | undefined>;
   getCardCheckLists(): void;
   getFunnelCardInfos(): void;
@@ -54,6 +55,7 @@ interface IStageCardContextData {
   createComercialCardResults(
     data: ICreateComercialCardResultsDTO,
   ): Promise<void>;
+  deleteComercialCardResults(id: string): Promise<void>;
   createCardNote(note: string): Promise<void>;
   createCardHistoryNote(note: string, card_unique_name: string): Promise<void>;
   createFunnelCardInfo(data: ICreateFunnelCardInfoDTO): Promise<void>;
@@ -132,10 +134,6 @@ const StageCardProvider: React.FC = ({ children }) => {
         .then(response => {
           setCardCheckLists(response.data);
           setSelectedCardCheckList(response.data[0]);
-          localStorage.setItem(
-            '@WP-PRO:selected-check-list',
-            JSON.stringify(response.data[0]),
-          );
         });
     } catch (err) {
       throw new Error(err);
@@ -240,6 +238,20 @@ const StageCardProvider: React.FC = ({ children }) => {
     [getFunnelCardInfos, getCardNotes, getCardCustomers],
   );
 
+  const getCard = useCallback(
+    async (id: string) => {
+      try {
+        const response = await api.get<IStageCardDTO | undefined>(
+          `/cards/show/${id}`,
+        );
+        response.data && selectCard(response.data);
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [selectCard],
+  );
+
   const createCardHistoryNote = useCallback(
     async (note: string, card_unique_name: string) => {
       try {
@@ -249,11 +261,12 @@ const StageCardProvider: React.FC = ({ children }) => {
           note,
         });
         getCardNotes();
+        selectedCard && selectedCard.id && getCard(selectedCard.id);
       } catch (err) {
         throw new Error(err);
       }
     },
-    [employee, getCardNotes],
+    [employee, selectedCard, getCard, getCardNotes],
   );
 
   const updateCardStage = useCallback(
@@ -496,6 +509,27 @@ ${now}  |  WePlan
     [addToast, getFunnelCardInfos, selectedCard],
   );
 
+  const deleteComercialCardResults = useCallback(
+    async (id: string) => {
+      // Verificar se a rota está funcionando, se sim,
+      // pensar em como fazer a regra de negócio de cards ativos e inativos,
+      // Tentando pensar em quando o card passar para outro módulo de gestão!
+      // As pessoas do outro módulo poderão ter acesso a todos os dados? Quais?
+      try {
+        await api.delete(`/comercial-card-results/${id}`);
+        getCard(selectedCard.id);
+        getInactiveCards();
+        addToast({
+          type: 'success',
+          title: 'Card reaberto com sucesso',
+        });
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    [getInactiveCards, addToast, getCard, selectedCard],
+  );
+
   const createComercialCardResults = useCallback(
     async (data: ICreateComercialCardResultsDTO) => {
       // Verificar se a rota está funcionando, se sim,
@@ -509,12 +543,13 @@ ${now}  |  WePlan
           contract_value: data.contract_value,
           isSuccessful: data.isSuccessful,
         });
-        await getInactiveCards();
+        getCard(selectedCard.id);
+        getInactiveCards();
       } catch (err) {
         throw new Error(err);
       }
     },
-    [getInactiveCards],
+    [getInactiveCards, getCard, selectedCard],
   );
 
   const unSetCard = useCallback(() => {
@@ -552,6 +587,7 @@ ${now}  |  WePlan
   return (
     <StageCardContext.Provider
       value={{
+        getCard,
         createCardCustomer,
         createCard,
         inactiveCards,
@@ -564,6 +600,7 @@ ${now}  |  WePlan
         selectCardCheckList,
         selectNote,
         cardCheckLists,
+        deleteComercialCardResults,
         cardNotes,
         getCards,
         getCardCheckLists,
