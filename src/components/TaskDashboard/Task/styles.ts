@@ -8,8 +8,7 @@ export const Container = styled.div`
   padding: 5px;
   border-radius: 5px;
   margin: 0.5rem auto;
-  width: 100%;
-  width: 95vw;
+  width: 99%;
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.2);
 
   &:hover {
@@ -33,10 +32,11 @@ export const Container = styled.div`
       width: 100%;
 
       > p {
-        font-size: 0.95rem;
-        &:last-child {
-          margin-left: 0.5rem;
-        }
+        width: 100%;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin: 1rem auto 0;
       }
     }
   }
@@ -72,7 +72,7 @@ export const LateTask = styled.section`
 
     > p {
       color: var(--letter-color-1);
-      padding-bottom: 0.2rem;
+      padding-bottom: 0.1rem;
       margin-bottom: 0.2rem;
       border-bottom: 1px solid var(--title-color);
       margin: auto 0.5rem;
