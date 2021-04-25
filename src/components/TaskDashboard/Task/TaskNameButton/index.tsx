@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { MdEdit } from 'react-icons/md';
 import ITaskDTO from '../../../../dtos/ITaskDTO';
 import { useCheckList } from '../../../../hooks/checkList';
 import InlineFormField from '../../../GeneralComponents/InlineFormField';
@@ -47,6 +48,7 @@ const TaskNameButton: React.FC<IProps> = ({ task, update }) => {
       ) : (
         <TaskNameContainer>
           <button type="button" onClick={() => handleEditField(true)}>
+            <MdEdit size={16} />
             {task.task}
           </button>
         </TaskNameContainer>
