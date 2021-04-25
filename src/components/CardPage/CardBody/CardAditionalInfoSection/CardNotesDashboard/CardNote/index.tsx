@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Container, Note, HistoryNote } from './styles';
 
 import ICardNotesDTO from '../../../../../../dtos/ICardNotesDTO';
 import { useEmployeeAuth } from '../../../../../../hooks/employeeAuth';
 import formatHourDateShort from '../../../../../../utils/formatHourDateShort';
-import { useCompanyContact } from '../../../../../../hooks/companyContacts';
-import { useCompanyEmployee } from '../../../../../../hooks/companyEmployee';
+// import { useCompanyContact } from '../../../../../../hooks/companyContacts';
+// import { useCompanyEmployee } from '../../../../../../hooks/companyEmployee';
 
 interface IProps {
   cardNote: ICardNotesDTO;
@@ -20,22 +20,22 @@ const CardNote: React.FC<IProps> = ({
   handleSetSelectedNote,
 }: IProps) => {
   const { employee } = useEmployeeAuth();
-  const { getEmployeeContact } = useCompanyContact();
-  const { companyEmployees } = useCompanyEmployee();
+  // const { getEmployeeContact } = useCompanyContact();
+  // const { companyEmployees } = useCompanyEmployee();
 
   const [noteTitle, setNoteTitle] = useState('');
   const [note, setNote] = useState(cardNote.note);
 
-  const author = useMemo(async () => {
-    if (cardNote.user_id === employee.company.id) {
-      return 'WePlan';
-    }
-    const findEmployee = companyEmployees.filter(
-      thisemployee => thisemployee.employeeUser.id === cardNote.user_id,
-    )[0];
-    const findAuthor = await getEmployeeContact(findEmployee.id);
-    return findAuthor ? `${findAuthor.name} ${findAuthor.family_name}` : '';
-  }, [companyEmployees, getEmployeeContact, cardNote, employee]);
+  // const author = useMemo(async () => {
+  //   if (cardNote.user_id === employee.company.id) {
+  //     return 'WePlan';
+  //   }
+  //   const findEmployee = companyEmployees.filter(
+  //     thisemployee => thisemployee.employeeUser.id === cardNote.user_id,
+  //   )[0];
+  //   const findAuthor = await getEmployeeContact(findEmployee.id);
+  //   return findAuthor ? `${findAuthor.name} ${findAuthor.family_name}` : '';
+  // }, [companyEmployees, getEmployeeContact, cardNote, employee]);
 
   useEffect(() => {
     if (cardNote.user_id === employee.company.id) {
@@ -72,7 +72,7 @@ const CardNote: React.FC<IProps> = ({
             <strong>{formatHourDateShort(String(cardNote.created_at))}</strong>
             {cardNote.user_id !== employee.company.id &&
               (cardNote.user_id !== employee.employeeUser.id ? (
-                <strong>{author}</strong>
+                <strong>{employee.email}</strong>
               ) : (
                 <strong>Você enviou</strong>
               ))}
