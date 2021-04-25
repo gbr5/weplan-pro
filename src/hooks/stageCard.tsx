@@ -543,13 +543,14 @@ ${now}  |  WePlan
           contract_value: data.contract_value,
           isSuccessful: data.isSuccessful,
         });
+        getCardCheckLists();
         getCard(selectedCard.id);
         getInactiveCards();
       } catch (err) {
         throw new Error(err);
       }
     },
-    [getInactiveCards, getCard, selectedCard],
+    [getInactiveCards, getCardCheckLists, getCard, selectedCard],
   );
 
   const unSetCard = useCallback(() => {

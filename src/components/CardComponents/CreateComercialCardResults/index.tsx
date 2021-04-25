@@ -6,6 +6,7 @@ import { Container, SubContainer } from './styles';
 import ConfirmationWindow from '../../GeneralComponents/ConfirmationWindow';
 import CardResultContractValueForm from '../CardResultContractValueForm';
 import CreateInlineFormField from '../../GeneralComponents/CreateInlineFormField';
+import { useCheckList } from '../../../hooks/checkList';
 
 interface IProps {
   closeWindow: () => void;
@@ -16,6 +17,7 @@ const CreateComercialCardResults: React.FC<IProps> = ({
   closeWindow,
   startSection,
 }) => {
+  const { getEmployeeTasks, getCheckList } = useCheckList();
   const { createComercialCardResults, selectedCard } = useStageCard();
   const [isSuccessful, setIsSuccessful] = useState(startSection === 2);
   const [contract_value, setContractValue] = useState(0);
@@ -44,10 +46,14 @@ const CreateComercialCardResults: React.FC<IProps> = ({
         isSuccessful,
         note,
       });
+      getEmployeeTasks();
+      getCheckList();
       closeWindow();
     },
     [
       closeWindow,
+      getEmployeeTasks,
+      getCheckList,
       contract_value,
       isSuccessful,
       createComercialCardResults,
