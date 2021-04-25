@@ -20,7 +20,7 @@ const CardInfoButton: React.FC<IProps> = ({
   cardInfo,
   funnelCardInfoField,
 }) => {
-  const { updateFunnelCardInfo } = useStageCard();
+  const { updateFunnelCardInfo, selectedCard } = useStageCard();
   const [editField, setEditField] = useState(false);
 
   const handleEditField = useCallback((e: boolean) => {
@@ -39,9 +39,12 @@ const CardInfoButton: React.FC<IProps> = ({
 
   return (
     <Container>
-      <button onClick={() => handleEditField(!editField)} type="button">
-        <MdEdit size={20} />
-      </button>
+      {selectedCard.isActive && (
+        <button onClick={() => handleEditField(!editField)} type="button">
+          <MdEdit size={20} />
+        </button>
+      )}
+
       {editField ? (
         <EditField>
           <strong>{funnelCardInfoField.name}</strong>
