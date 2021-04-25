@@ -50,12 +50,14 @@ const CardHeader: React.FC = () => {
     <Container>
       <CardTitle>
         <span>Nome do Card</span>
-        <button
-          type="button"
-          onClick={() => handleUpdateCardNameField(!updateCardNameField)}
-        >
-          <MdEdit size={iconsize} />
-        </button>
+        {selectedCard.isActive && (
+          <button
+            type="button"
+            onClick={() => handleUpdateCardNameField(!updateCardNameField)}
+          >
+            <MdEdit size={iconsize} />
+          </button>
+        )}
         {updateCardNameField ? (
           // <EditCardTitle closeComponent={() => handleUpdateCardNameField(false)} />
           <h2>
@@ -71,11 +73,21 @@ const CardHeader: React.FC = () => {
         )}
       </CardTitle>
       {!updateStage ? (
-        <StageButton type="button" onClick={() => handleUpdateStage(true)}>
-          <FiChevronLeft size={iconsize} />
-          <h3>{stageName}</h3>
-          <FiChevronRight size={iconsize} />
-        </StageButton>
+        <>
+          {selectedCard.isActive ? (
+            <StageButton type="button" onClick={() => handleUpdateStage(true)}>
+              <FiChevronLeft size={iconsize} />
+              <h3>{stageName}</h3>
+              <FiChevronRight size={iconsize} />
+            </StageButton>
+          ) : (
+            <StageButton type="button">
+              <FiChevronLeft size={iconsize} />
+              <h3>{stageName}</h3>
+              <FiChevronRight size={iconsize} />
+            </StageButton>
+          )}
+        </>
       ) : (
         <CardFunnelStageMenu closeComponent={() => handleUpdateStage(false)} />
       )}

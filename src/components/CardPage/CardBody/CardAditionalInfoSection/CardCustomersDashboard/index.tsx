@@ -25,9 +25,11 @@ const CardCustomersDashboard: React.FC<IProps> = ({ openNotesSection }) => {
   const history = useHistory();
   const location = useLocation();
 
-  const iconsize = 40;
   const { cardCustomers, selectedCard, getCardCustomers } = useStageCard();
   const { selectContact, selectedContact } = useCompanyContact();
+
+  const iconsize = 40;
+
   const [contactWindow, setContactWindow] = useState(false);
   const [addCustomerToCardWindow, setAddCustomerToCardWindow] = useState(false);
 
@@ -90,9 +92,11 @@ const CardCustomersDashboard: React.FC<IProps> = ({ openNotesSection }) => {
       <Container>
         <ContainerHeader>
           <h2>Clientes</h2>
-          <button type="button" onClick={handleOpenAddCustomerToCardWindow}>
-            <MdAdd size={iconsize} />
-          </button>
+          {selectedCard.isActive && (
+            <button type="button" onClick={handleOpenAddCustomerToCardWindow}>
+              <MdAdd size={iconsize} />
+            </button>
+          )}
         </ContainerHeader>
         <CustomerContainer>
           {cardCustomers.length > 0 &&

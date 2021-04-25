@@ -7,8 +7,10 @@ import Task from '../../../../../TaskDashboard/Task';
 import TaskStatusMenu from '../../../../../TaskDashboard/TaskStatusMenu';
 import { useCheckList } from '../../../../../../hooks/checkList';
 import { sortActiveTasks } from '../../../../../../utils/sortActiveTasks';
+import { useStageCard } from '../../../../../../hooks/stageCard';
 
 const CardCheckListContainer: React.FC = () => {
+  const { selectedCard } = useStageCard();
   const { selectedCheckList, getCheckList } = useCheckList();
 
   const iconsize = 40;
@@ -36,12 +38,14 @@ const CardCheckListContainer: React.FC = () => {
                 selectedCheckList.id &&
                 selectedCheckList.name}
             </h2>
-            <button
-              type="button"
-              onClick={() => setCreateCheckListTaskForm(true)}
-            >
-              <MdAdd size={iconsize} />
-            </button>
+            {selectedCard.isActive && (
+              <button
+                type="button"
+                onClick={() => setCreateCheckListTaskForm(true)}
+              >
+                <MdAdd size={iconsize} />
+              </button>
+            )}
           </CheckListHeader>
           <TaskStatusMenu
             currentSection={statusSection}
