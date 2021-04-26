@@ -19,7 +19,10 @@ const SEOSection: React.FC = () => {
     updateContactPageSEO,
     deleteContactPageSEO,
   } = useContactPage();
+
   const [editSEO, setEditSEO] = useState(false);
+  const [titleLength, setTitleLength] = useState(0);
+  const [descriptionLength, setDescriptionLength] = useState(0);
 
   const handleEditSEOWindow = useCallback((e: boolean) => {
     setEditSEO(e);
@@ -32,6 +35,7 @@ const SEOSection: React.FC = () => {
         description: e.description,
         title: e.title,
       });
+      setEditSEO(false);
     },
     [currentContactPage, createContactPageSEO],
   );
@@ -43,6 +47,7 @@ const SEOSection: React.FC = () => {
         description: e.description,
         title: e.title,
       });
+      setEditSEO(false);
     },
     [currentContactPage, updateContactPageSEO],
   );
@@ -50,6 +55,13 @@ const SEOSection: React.FC = () => {
   const handleDeleteSEO = useCallback(() => {
     deleteContactPageSEO(currentContactPage.seo.id);
   }, [currentContactPage, deleteContactPageSEO]);
+
+  const handleTitleLength = useCallback((e: string) => {
+    setTitleLength(e.length);
+  }, []);
+  const handleDescriptionLength = useCallback((e: string) => {
+    setDescriptionLength(e.length);
+  }, []);
 
   return (
     <Container>
@@ -67,7 +79,12 @@ const SEOSection: React.FC = () => {
                 Este título aparece na aba superior da página, e no topo de um
                 resultado do Google
               </p>
-              <Input defaultValue={currentContactPage.seo.title} name="title" />
+              <Input
+                onChange={e => handleTitleLength(e.currentTarget.value)}
+                defaultValue={currentContactPage.seo.title}
+                name="title"
+              />
+              <strong>{titleLength} caractéres</strong>
             </section>
             <section>
               <strong>Agora a melhor descrição de até 130 caractéres</strong>
@@ -76,9 +93,11 @@ const SEOSection: React.FC = () => {
                 resultado do Google, porém abaixo do título.
               </p>
               <Input
+                onChange={e => handleDescriptionLength(e.currentTarget.value)}
                 defaultValue={currentContactPage.seo.description}
                 name="description"
               />
+              <strong>{descriptionLength} caractéres</strong>
             </section>
             <Button type="submit">Salvar</Button>
             <Button type="button" onClick={handleDeleteSEO}>
@@ -107,11 +126,7 @@ const SEOSection: React.FC = () => {
           </section>
           <section>
             <strong>Descrição</strong>
-            <p>{currentContactPage.seo.title}</p>
-          </section>
-          <section>
-            <strong>Título</strong>
-            <p>{currentContactPage.seo.title}</p>
+            <p>{currentContactPage.seo.description}</p>
           </section>
         </SEOContainer>
       )}
@@ -126,10 +141,12 @@ const SEOSection: React.FC = () => {
                 resultado do Google
               </p>
               <Input
+                onChange={e => handleTitleLength(e.currentTarget.value)}
                 defaultValue={`${currentContactPage.title} | ${employee.company.name}`}
                 placeholder={`${currentContactPage.title} | ${employee.company.name}`}
                 name="title"
               />
+              <strong>{titleLength} caractéres</strong>
             </section>
             <section>
               <strong>Agora a melhor descrição de até 130 caractéres</strong>
@@ -137,7 +154,11 @@ const SEOSection: React.FC = () => {
                 Assim como o título, a descição também aparece no snippet,
                 resultado do Google, porém abaixo do título.
               </p>
-              <Input name="description" />
+              <Input
+                onChange={e => handleDescriptionLength(e.currentTarget.value)}
+                name="description"
+              />
+              <strong>{descriptionLength} caractéres</strong>
             </section>
             <Button type="submit">Criar</Button>
           </FormContainer>

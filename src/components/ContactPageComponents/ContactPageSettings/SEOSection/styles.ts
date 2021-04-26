@@ -8,6 +8,7 @@ export const Container = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   > span {
     position: absolute;
@@ -18,6 +19,30 @@ export const FormContainer = styled.div`
       background: transparent;
       border: none;
       color: var(--red-color);
+    }
+  }
+  > section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+    margin: 1rem auto;
+    > strong {
+      margin: 1rem auto;
+      width: 100%;
+      text-align: center;
+    }
+
+    > p {
+      width: 100%;
+      margin: 0.5rem auto;
+      border-radius: 4px;
+      text-align: center;
+      padding: 0.5rem;
+      border: 1px solid var(--letter-color-4);
     }
   }
 `;
@@ -41,9 +66,15 @@ export const SEOContainer = styled.div`
 
   > section {
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+    margin: 1rem auto;
 
+    &:first-child {
+      min-height: 12rem;
+    }
     > strong {
       margin: 1rem auto;
       text-align: left;

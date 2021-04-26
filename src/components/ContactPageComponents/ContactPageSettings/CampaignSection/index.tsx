@@ -151,7 +151,7 @@ const CampaignSection: React.FC = () => {
               .filter(campaign => !campaign.isActive)
               .map(campaign => {
                 return (
-                  <Campaign>
+                  <Campaign key={campaign.id}>
                     <CampaignButton type="button">
                       <h3>{campaign.name}</h3>
                     </CampaignButton>
