@@ -56,7 +56,10 @@ const AddCompanyForm: React.FC<IProps> = ({ handleCloseWindow }) => {
           </section>
           <section>
             <strong>Nome externo do formulário</strong>
-            <p>Este nome é visível apenas para a empresa</p>
+            <p>
+              Este nome aparece para o público no url do formulário e na página
+              e-link da empresa, caso esteja disponível na seção de formulários!
+            </p>
             <Input name="external_name" />
           </section>
           <section>

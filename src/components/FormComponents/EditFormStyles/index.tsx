@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { FiEdit } from 'react-icons/fi';
+import { MdEdit } from 'react-icons/md';
 import IFormDTO from '../../../dtos/IFormDTO';
 import { useForm } from '../../../hooks/form';
 import Button from '../../Button';
@@ -15,8 +15,12 @@ interface IProps {
 
 const EditFormStyles: React.FC<IProps> = ({ handleCloseWindow, form }) => {
   const { defaultFormStyles, updateFormStyles } = useForm();
+
+  const iconsize = 24;
+
   const [colorPicker, setColorPicker] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('');
+  const [defaultColor, setDefaultColor] = useState('');
   const [backgroundColor, setBackgroundColor] = useState(
     (form && form.styles && form.styles.background_color) ||
       defaultFormStyles.background_color,
@@ -43,10 +47,17 @@ const EditFormStyles: React.FC<IProps> = ({ handleCloseWindow, form }) => {
     [selectedComponent],
   );
 
-  const handleOpenColorPicker = useCallback((component: string) => {
-    setSelectedComponent(component);
-    setColorPicker(true);
-  }, []);
+  const handleOpenColorPicker = useCallback(
+    (component: string) => {
+      setSelectedComponent(component);
+      component === 'background' && setDefaultColor(backgroundColor);
+      component === 'text' && setDefaultColor(textColor);
+      component === 'button' && setDefaultColor(buttonColor);
+      component === 'buttonText' && setDefaultColor(buttonTextColor);
+      setColorPicker(true);
+    },
+    [buttonTextColor, buttonColor, backgroundColor, textColor],
+  );
   const handleCloseColorPicker = useCallback(() => {
     setSelectedComponent('');
     setColorPicker(false);
@@ -78,6 +89,7 @@ const EditFormStyles: React.FC<IProps> = ({ handleCloseWindow, form }) => {
     <>
       {colorPicker && (
         <CustomColorPicker
+          defaultColor={defaultColor}
           closeWindow={handleCloseColorPicker}
           handleChangeColor={handleChangeColor}
         />
@@ -93,48 +105,57 @@ const EditFormStyles: React.FC<IProps> = ({ handleCloseWindow, form }) => {
         }}
       >
         <Container>
+          <h2>Estilização do Formulário</h2>
           <section>
-            <strong>Cor de fundo</strong>
+            <strong>Fundo do Formulário</strong>
             <ButtonExample
               color={backgroundColor}
               type="button"
               onClick={() => handleOpenColorPicker('background')}
             >
-              <FiEdit />
+              <MdEdit size={iconsize} />
+              <p>{backgroundColor}</p>
             </ButtonExample>
           </section>
           <section>
-            <strong>Cor de texto</strong>
+            <strong>Texto</strong>
             <ButtonExample
               color={textColor}
               type="button"
               onClick={() => handleOpenColorPicker('text')}
             >
-              <FiEdit />
+              <MdEdit size={iconsize} />
+              <p>{textColor}</p>
             </ButtonExample>
           </section>
           <section>
-            <strong>Cor de fundo do botão</strong>
+            <strong>Fundo do Botão</strong>
             <ButtonExample
               color={buttonColor}
               type="button"
               onClick={() => handleOpenColorPicker('button')}
             >
-              <FiEdit />
+              <MdEdit size={iconsize} />
+              <p>{buttonColor}</p>
             </ButtonExample>
           </section>
           <section>
-            <strong>Cor de texto do botão</strong>
+            <strong>Texto do Botão</strong>
             <ButtonExample
               color={buttonTextColor}
               type="button"
               onClick={() => handleOpenColorPicker('buttonText')}
             >
-              <FiEdit />
+              <MdEdit size={iconsize} />
+              <p>{buttonTextColor}</p>
             </ButtonExample>
           </section>
 
-          <Button type="button" onClick={handleUpdateFormStyles}>
+          <Button
+            style={{ height: '3rem' }}
+            type="button"
+            onClick={handleUpdateFormStyles}
+          >
             Salvar alterações
           </Button>
         </Container>

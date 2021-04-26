@@ -187,6 +187,8 @@ const FormWindow: React.FC<IProps> = ({ handleCloseWindow }) => {
                   background: 'red',
                   paddingTop: '1rem',
                   paddingBottom: '1rem',
+                  margin: '0 auto',
+                  width: '95%',
                 }}
                 onClick={() => handleDeleteFormConfirmation(true)}
               >

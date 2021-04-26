@@ -44,10 +44,10 @@ const ContactPageSettings: React.FC<IProps> = ({ closeWindow }) => {
       onHandleCloseWindow={() => closeWindow()}
       containerStyle={{
         zIndex: 16,
-        top: '5%',
-        left: '5%',
-        height: '90%',
-        width: '90%',
+        top: '2.5%',
+        left: '2.5%',
+        height: '95%',
+        width: '95%',
       }}
     >
       {deletePageConfirmation && (

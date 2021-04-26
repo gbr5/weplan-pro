@@ -6,7 +6,12 @@ import { useForm } from '../../../../hooks/form';
 import Button from '../../../Button';
 import Input from '../../../Input';
 
-import { Container, SubContainer, BooleanButton } from './styles';
+import {
+  Container,
+  SubContainer,
+  BooleanButton,
+  ButtonContainer,
+} from './styles';
 
 const LandingPageContainer: React.FC = () => {
   const {
@@ -96,14 +101,16 @@ const LandingPageContainer: React.FC = () => {
           <>
             <Form ref={formRef} onSubmit={handleSubmit}>
               <Input name="url" defaultValue={url} placeholder={url} />
-              <Button type="submit">Salvar</Button>
+              <ButtonContainer>
+                <Button type="submit">Salvar</Button>
+                <Button
+                  type="button"
+                  onClick={() => handleEditLandingPageField(false)}
+                >
+                  Cancelar
+                </Button>
+              </ButtonContainer>
             </Form>
-            <Button
-              type="button"
-              onClick={() => handleEditLandingPageField(false)}
-            >
-              Cancelar
-            </Button>
           </>
         ) : (
           <>

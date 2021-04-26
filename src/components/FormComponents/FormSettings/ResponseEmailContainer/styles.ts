@@ -16,7 +16,7 @@ export const Container = styled.div`
   > p {
     margin-top: 0.5rem;
     line-height: 1.6rem;
-    color: var(--letter-color-1);
+    color: var(--letter-color-4);
     font-size: 1rem;
   }
 

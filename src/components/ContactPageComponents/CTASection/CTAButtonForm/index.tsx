@@ -35,6 +35,7 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
     (buttonLink && buttonLink.text_color) || '#000111',
   );
   const [selectedComponent, setSelectedComponent] = useState('');
+  const [defaultColor, setDefaultColor] = useState('');
   const [colorPicker, setColorPicker] = useState(false);
   const handleChangeColor = useCallback(
     (color: string) => {
@@ -43,10 +44,15 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
     },
     [selectedComponent],
   );
-  const handleOpenColorPicker = useCallback((component: string) => {
-    setSelectedComponent(component);
-    setColorPicker(true);
-  }, []);
+  const handleOpenColorPicker = useCallback(
+    (component: string) => {
+      setSelectedComponent(component);
+      component === 'background' && setDefaultColor(backgroundColor);
+      component === 'text' && setDefaultColor(textColor);
+      setColorPicker(true);
+    },
+    [backgroundColor, textColor],
+  );
   const handleCloseColorPicker = useCallback(() => {
     setSelectedComponent('');
     setColorPicker(false);
@@ -99,6 +105,7 @@ const CTAButtonForm: React.FC<IProps> = ({ buttonLink, closeComponent }) => {
       {colorPicker && (
         <CustomColorPicker
           closeWindow={handleCloseColorPicker}
+          defaultColor={defaultColor}
           handleChangeColor={handleChangeColor}
         />
       )}

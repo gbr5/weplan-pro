@@ -9,13 +9,15 @@ import { Container } from './styles';
 interface IProps {
   handleChangeColor: Function;
   closeWindow: Function;
+  defaultColor: string;
 }
 
 const CustomColorPicker: React.FC<IProps> = ({
   handleChangeColor,
   closeWindow,
+  defaultColor,
 }) => {
-  const [color, setColor] = useState<Color>('#000');
+  const [color, setColor] = useState<Color>(defaultColor);
 
   const handleColorChange = useCallback((newColor: Color) => {
     setColor(newColor);
@@ -37,6 +39,7 @@ const CustomColorPicker: React.FC<IProps> = ({
     >
       <Container>
         <SketchPicker
+          width="100%"
           color={color}
           onChange={(e: ColorResult) => handleColorChange(e.hex)}
         />
