@@ -50,6 +50,7 @@ interface IStageCardContextData {
   getCardNotes(): void;
   updateCardStage(stage: IFunnelStageDTO): void;
   updateCardName(card: IStageCardDTO): void;
+  updateCard(card: IStageCardDTO): void;
   createCard(data: ICreateCardDTO): Promise<IStageCardDTO>;
   createCardCustomer(customer: ICompanyContactDTO): Promise<void>;
   createComercialCardResults(
@@ -153,9 +154,7 @@ const StageCardProvider: React.FC = ({ children }) => {
       access_level,
       stage_id,
     }: ICardFilterParams): Promise<IStageCardDTO[] | undefined> => {
-      const response = await api.get<IStageCardDTO[]>(
-        `/funnels/${stage_id}/cards`,
-      );
+      const response = await api.get<IStageCardDTO[]>(`/cards/${stage_id}/`);
       localStorage.setItem(
         `@WP-PRO:stage=${stage_id}`,
         JSON.stringify(response.data),
@@ -255,7 +254,7 @@ const StageCardProvider: React.FC = ({ children }) => {
   const createCardHistoryNote = useCallback(
     async (note: string, card_unique_name: string) => {
       try {
-        await api.post(`cards/notes`, {
+        await api.post(`cards/create/notes`, {
           user_id: employee.company.id,
           card_unique_name,
           note,
@@ -277,16 +276,14 @@ const StageCardProvider: React.FC = ({ children }) => {
           stage => stage.id === selectedCard.stage_id,
         )[0];
 
-        const response = await api.put(
-          `/funnels/${selectedCard.stage_id}/cards/${selectedCard.id}`,
-          {
-            weplanEvent: selectedCard.weplanEvent,
-            name: selectedCard.name,
-            isActive: true,
-            new_stage_id: xStage.id,
-            new_card_owner: selectedCard.card_owner,
-          },
-        );
+        const response = await api.put(`/cards/${selectedCard.id}`, {
+          weplanEvent: selectedCard.weplanEvent,
+          name: selectedCard.name,
+          value: selectedCard.value,
+          isActive: true,
+          new_stage_id: xStage.id,
+          new_card_owner: selectedCard.card_owner,
+        });
 
         const name =
           myEmployeeContact && myEmployeeContact.id
@@ -324,21 +321,50 @@ const StageCardProvider: React.FC = ({ children }) => {
     ],
   );
 
+  const updateCard = useCallback(
+    async (card: IStageCardDTO) => {
+      try {
+        const response = await api.put(`/cards/${card.id}`, {
+          weplanEvent: card.weplanEvent,
+          name: card.name,
+          value: card.value,
+          isActive: card.isActive,
+          new_stage_id: card.stage_id,
+          new_card_owner: card.card_owner,
+        });
+
+        selectCard(response.data);
+        getFunnels();
+        addToast({
+          type: 'success',
+          title: 'Card alterado com sucesso',
+          description:
+            'Você já pode visualizar as alterações no seu dashboard.',
+        });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Não foi possível editar o card',
+          description: 'Tente novamente',
+        });
+      }
+    },
+    [addToast, selectCard, getFunnels],
+  );
+
   const updateCardName = useCallback(
     async (card: IStageCardDTO) => {
       try {
         const now = formatHourDateShort(String(new Date()));
         const previousName = selectedCard.name;
-        const response = await api.put(
-          `/funnels/${card.stage_id}/cards/${card.id}`,
-          {
-            weplanEvent: card.weplanEvent,
-            name: card.name,
-            isActive: card.isActive,
-            new_stage_id: card.stage_id,
-            new_card_owner: card.card_owner,
-          },
-        );
+        const response = await api.put(`/cards/${card.id}`, {
+          weplanEvent: card.weplanEvent,
+          name: card.name,
+          value: card.value,
+          isActive: card.isActive,
+          new_stage_id: card.stage_id,
+          new_card_owner: card.card_owner,
+        });
 
         const name =
           myEmployeeContact && myEmployeeContact.id
@@ -377,7 +403,7 @@ const StageCardProvider: React.FC = ({ children }) => {
     async (data: ICreateCardDTO) => {
       try {
         const now = formatHourDateShort(String(new Date()));
-        const response = await api.post(`funnels/${data.stage_id}/cards`, {
+        const response = await api.post(`cards/${data.stage_id}`, {
           weplanEvent: data.weplanEvent,
           name: data.name,
           card_owner: data.card_owner,
@@ -438,7 +464,7 @@ ${now}  |  WePlan
   const createCardNote = useCallback(
     async (note: string) => {
       try {
-        await api.post(`cards/notes`, {
+        await api.post(`cards/create/notes`, {
           user_id: employee.employeeUser.id,
           card_unique_name: selectedCard.unique_name,
           note,
@@ -590,6 +616,7 @@ ${now}  |  WePlan
       value={{
         getCard,
         createCardCustomer,
+        updateCard,
         createCard,
         inactiveCards,
         createCardNote,

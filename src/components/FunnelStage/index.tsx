@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { FiAlertTriangle } from 'react-icons/fi';
-import { MdFunctions } from 'react-icons/md';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MdAdd, MdFunctions } from 'react-icons/md';
 import IFunnelStageDTO from '../../dtos/IFunnelStageDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 import { useFunnel } from '../../hooks/funnel';
 import { useManagementModule } from '../../hooks/managementModules';
 import { useStageCard } from '../../hooks/stageCard';
+import { formatCurrencyBRL } from '../../utils/formatCurrencyBRL';
 import ButtonCard from './ButtonCard';
 
 import { Container, CardContainer } from './styles';
@@ -35,15 +35,26 @@ const FunnelStage: React.FC<IProps> = ({ stage }) => {
     });
   }, [getCards, stage, selectedFunnel, employeeModules]);
 
+  const totalStageValue = useMemo(() => {
+    const total = stageCards.map(card => card.value);
+    return total.length > 0 ? total.reduce((acc, value) => acc + value) : 0;
+  }, [stageCards]);
+
+  const totalCards = useMemo(() => {
+    return stageCards.length || 0;
+  }, [stageCards]);
+
   return (
     <Container>
       <h1>
         <strong>
-          <FiAlertTriangle size={14} />
+          <MdAdd size={14} />
+          {totalCards} Cards
         </strong>
         {stage.name}
         <strong>
-          <MdFunctions size={14} />
+          <MdFunctions color="green" size={14} />
+          {formatCurrencyBRL(totalStageValue)}
         </strong>
       </h1>
       <CardContainer>
