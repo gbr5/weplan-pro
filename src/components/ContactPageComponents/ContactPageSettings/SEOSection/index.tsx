@@ -142,8 +142,8 @@ const SEOSection: React.FC = () => {
               </p>
               <Input
                 onChange={e => handleTitleLength(e.currentTarget.value)}
-                defaultValue={`${currentContactPage.title} | ${employee.company.name}`}
-                placeholder={`${currentContactPage.title} | ${employee.company.name}`}
+                defaultValue={`${currentContactPage.title} - ${employee.company.name}`}
+                placeholder={`${currentContactPage.title} - ${employee.company.name}`}
                 name="title"
               />
               <strong>{titleLength} caractéres</strong>
