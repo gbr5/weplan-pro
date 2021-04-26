@@ -3,6 +3,7 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { MdEdit } from 'react-icons/md';
 import { useFunnel } from '../../../hooks/funnel';
 import { useStageCard } from '../../../hooks/stageCard';
+import CardValue from '../../CardComponents/CardValue';
 import InlineFormField from '../../GeneralComponents/InlineFormField';
 import CardFunnelStageMenu from './CardFunnelStageMenu';
 
@@ -91,6 +92,7 @@ const CardHeader: React.FC = () => {
       ) : (
         <CardFunnelStageMenu closeComponent={() => handleUpdateStage(false)} />
       )}
+      <CardValue />
     </Container>
   );
 };

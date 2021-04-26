@@ -279,6 +279,7 @@ const StageCardProvider: React.FC = ({ children }) => {
         const response = await api.put(`/cards/${selectedCard.id}`, {
           weplanEvent: selectedCard.weplanEvent,
           name: selectedCard.name,
+          value: selectedCard.value,
           isActive: true,
           new_stage_id: xStage.id,
           new_card_owner: selectedCard.card_owner,
@@ -323,8 +324,6 @@ const StageCardProvider: React.FC = ({ children }) => {
   const updateCard = useCallback(
     async (card: IStageCardDTO) => {
       try {
-        const now = formatHourDateShort(String(new Date()));
-        const previousName = selectedCard.name;
         const response = await api.put(`/cards/${card.id}`, {
           weplanEvent: card.weplanEvent,
           name: card.name,
@@ -334,12 +333,6 @@ const StageCardProvider: React.FC = ({ children }) => {
           new_card_owner: card.card_owner,
         });
 
-        const name =
-          myEmployeeContact && myEmployeeContact.id
-            ? `${myEmployeeContact.name} ${myEmployeeContact.family_name}`
-            : employee.employeeUser.name;
-        const historyNote = `Nome do Card Alterado|||Nome antigo: ${previousName}\nNome novo: ${card.name}\n. . . . .\n${now} | ${name}`;
-        await createCardHistoryNote(historyNote, selectedCard.unique_name);
         selectCard(response.data);
         getFunnels();
         addToast({
@@ -356,15 +349,7 @@ const StageCardProvider: React.FC = ({ children }) => {
         });
       }
     },
-    [
-      addToast,
-      selectCard,
-      getFunnels,
-      employee,
-      createCardHistoryNote,
-      myEmployeeContact,
-      selectedCard,
-    ],
+    [addToast, selectCard, getFunnels],
   );
 
   const updateCardName = useCallback(
