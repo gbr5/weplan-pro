@@ -2,33 +2,34 @@ import { shade } from 'polished';
 import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: block;
+  margin: 3rem auto 1rem;
 
   border-radius: 8px;
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   width: 100%;
-  height: 100%;
+  height: 90vh;
   padding: 1rem;
-  max-width: 900px;
-  margin: 0 auto;
-
+  max-width: 700px;
+  background: var(--background-color);
   overflow-y: scroll;
 
   > aside {
     display: flex;
     flex-direction: column;
     position: relative;
-    margin-bottom: 1rem;
+    margin: 0.5rem auto;
+    width: 96%;
     flex: 1;
-
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--secondary-color);
     > h3 {
-      color: var(--title-color);
+      color: var(--letter-color-4);
       margin-bottom: 1rem;
     }
     > h2 {
       /* font-size:  */
-      border-bottom: 1px solid var(--title-color);
+      border-bottom: 1px solid var(--secondary-color);
       text-transform: capitalize;
       text-align: center;
       padding-bottom: 0.5rem;
@@ -51,16 +52,19 @@ export const Container = styled.div`
     padding: 1rem 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5);
     text-align: center;
-    margin: 1rem 0 1rem;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 600px;
 
     > h2 {
       width: 100%;
       text-align: center;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--secondary-color);
+      margin: 0.5rem auto;
     }
     > strong {
-      color: var(--letter-color-1);
+      color: var(--letter-color-4);
       font-size: 1.1rem;
     }
   }
@@ -131,7 +135,7 @@ export const BooleanButton = styled.button<IButtonProps>`
   height: 3rem;
   border-radius: 4px;
 
-  margin-top: 1rem;
+  margin: 2rem auto;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
 
   ${props =>

@@ -8,7 +8,7 @@ export const Container = styled.div`
   > p {
     margin-top: 0.5rem;
     line-height: 1.6rem;
-    color: var(--letter-color-1);
+    color: var(--letter-color-4);
     font-size: 1rem;
   }
 `;
@@ -16,12 +16,12 @@ export const Container = styled.div`
 export const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
+  background: var(--letter-color-1);
 
   border-radius: 8px;
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  padding: 1rem 0;
+  padding: 1rem;
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   h3 {
     display: flex;
@@ -30,14 +30,28 @@ export const SubContainer = styled.div`
     width: 100%;
     background: var(--background-color);
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--letter-color-2);
+    border: 1px solid var(--letter-color-4);
     height: 3rem;
     border-radius: 4px;
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   }
 
   button {
     font-size: 1.5rem;
+  }
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  width: 100%;
+  margin: 0.5rem auto;
+
+  > button:first-child {
+    margin-right: 0.5rem;
+  }
+  > button:last-child {
+    background: var(--red-color);
+    margin-left: 0.5rem;
   }
 `;
 
@@ -55,7 +69,7 @@ export const BooleanButton = styled.button<IButtonProps>`
 
   width: 100%;
   height: 3rem;
-  border-radius: 4px;
+  border-radius: 8px;
 
   margin: 1rem 0 1rem;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.2);

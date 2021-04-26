@@ -7,7 +7,11 @@ export const Container = styled.div`
   height: 100%;
   padding: 1rem;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 2rem auto 1rem;
+
+  border-radius: 8px;
+  background: var(--background-color);
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
 
   overflow-y: scroll;
 
@@ -17,11 +21,12 @@ export const Container = styled.div`
     position: relative;
 
     > h3 {
-      color: var(--title-color);
+      color: var(--letter-color-5);
+      font-weight: 400;
       margin-bottom: 1rem;
     }
     > h2 {
-      border-bottom: 1px solid var(--title-color);
+      border-bottom: 1px solid var(--secondary-color);
       text-transform: capitalize;
       text-align: center;
       padding-bottom: 0.5rem;

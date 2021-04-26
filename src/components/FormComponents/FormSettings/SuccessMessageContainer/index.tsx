@@ -74,11 +74,11 @@ const SuccessMessageContainer: React.FC = () => {
             <MdEdit color="red" size={24} />
           </EditButton>
           <span>
-            <h3>Título:</h3>
+            <h3>Título</h3>
             <p>{title}</p>
           </span>
           <span>
-            <h3>Mensagem:</h3>
+            <h3>Mensagem</h3>
             <p>{message}</p>
           </span>
         </SubContainer>

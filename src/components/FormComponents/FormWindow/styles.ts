@@ -10,10 +10,12 @@ export const Container = styled.div`
   display: block;
   align-items: center;
   justify-content: stretch;
-  margin-top: 2rem;
+  margin: 3rem auto 1rem;
+
   padding-bottom: 1rem;
 
   width: 100%;
+  max-width: 700px;
   /* height: 100%; */
 
   /* overflow-y: scroll; */
@@ -83,7 +85,7 @@ export const FormContainer = styled.div<IFormProps>`
   display: block;
   text-align: center;
   justify-content: flex-start;
-
+  margin: 1rem auto;
   padding: 2rem 0;
 
   background: ${props => props.formStyles.background_color};

@@ -6,6 +6,7 @@ import { useForm } from '../../../hooks/form';
 import EmailInput from '../../GeneralComponents/EmailInput';
 import WindowContainer from '../../WindowContainer';
 import EmailInputButton from './EmailInputButton';
+import FormNameButton from './FormNameButton';
 import LandingPageContainer from './LandingPageContainer';
 import ResponseEmailContainer from './ResponseEmailContainer';
 
@@ -80,6 +81,24 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
     setLandingPage(e);
   }, []);
 
+  const handleEditInternalName = useCallback(
+    (e: string) => {
+      updateForm({
+        ...currentForm,
+        name: e,
+      });
+    },
+    [currentForm, updateForm],
+  );
+  const handleEditExternalName = useCallback(
+    (e: string) => {
+      updateForm({
+        ...currentForm,
+        external_name: e,
+      });
+    },
+    [currentForm, updateForm],
+  );
   return (
     <WindowContainer
       onHandleCloseWindow={() => closeWindow()}
@@ -94,16 +113,24 @@ const FormSettings: React.FC<IProps> = ({ closeWindow }) => {
       <Container>
         <aside>
           <h3>Configurações</h3>
-          <h2>{currentForm && currentForm.name}</h2>
+          <FormNameButton
+            name={currentForm.name}
+            editName={(e: string) => handleEditInternalName(e)}
+          />
         </aside>
 
+        <strong>Nome Externo</strong>
+        <FormNameButton
+          name={currentForm.external_name}
+          editName={(e: string) => handleEditExternalName(e)}
+        />
+        <BooleanButton
+          onClick={handleIsFormActive}
+          isActive={currentForm.isActive}
+        >
+          {currentForm.isActive ? 'Formulário Ativo' : 'Ativar Formulário'}
+        </BooleanButton>
         <section>
-          <BooleanButton
-            onClick={handleIsFormActive}
-            isActive={currentForm.isActive}
-          >
-            {currentForm.isActive ? 'Formulário Ativo' : 'Ativar Formulário'}
-          </BooleanButton>
           <h2>E-mail de notificação interna</h2>
           {internalEmailNotification &&
             internalEmailNotification.recipients &&
