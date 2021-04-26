@@ -9,7 +9,7 @@ export const Container = styled.div`
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
   padding: 1rem;
   width: 100%;
-  height: 70vh;
+  height: 80vh;
   max-width: 700px;
   overflow-y: scroll;
 
