@@ -1,3 +1,4 @@
+import IEmployeeCheckListDTO from './IEmployeeCheckListDTO';
 import { IEmployeeFileDTO } from './IEmployeeFileDTO';
 import IUserConfirmationDTO from './IUserConfirmationDTO';
 import IUserDTO from './IUserDTO';
@@ -11,4 +12,5 @@ export default interface IEmployeeDTO {
   files: IEmployeeFileDTO[];
   confirmations: IUserConfirmationDTO[];
   isActive: boolean;
+  checkList: IEmployeeCheckListDTO;
 }

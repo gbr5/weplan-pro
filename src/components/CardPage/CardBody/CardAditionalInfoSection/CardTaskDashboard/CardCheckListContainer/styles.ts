@@ -115,10 +115,10 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  background: var(--background-color);
+  /* background: var(--background-color); */
   border-radius: 8px;
-  padding: 0.2rem;
+  /* padding: 0.2rem; */
   overflow-y: scroll;
 
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3); */
 `;

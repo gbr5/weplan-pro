@@ -42,8 +42,9 @@ interface IStageCardContextData {
   selectNote(data: ICardNotesDTO): void;
   selectCardCheckList(data: ICardCheckListDTO): void;
   getCard(id: string): Promise<void>;
+  getOwnerCards(id: string): Promise<IStageCardDTO[]>;
   getCards(data: ICardFilterParams): Promise<IStageCardDTO[] | undefined>;
-  getCardCheckLists(): void;
+  getCardCheckLists(): Promise<ICardCheckListDTO[]>;
   getFunnelCardInfos(): void;
   getCardCustomers(): void;
   getInactiveCards(): void;
@@ -100,6 +101,17 @@ const StageCardProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const getOwnerCards = useCallback(async (id: string) => {
+    try {
+      const response = await api.get<IStageCardDTO[]>(
+        `/list-owner-cards/${id}`,
+      );
+      return response.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
   const getFunnelCardInfos = useCallback(async () => {
     try {
       await api
@@ -126,16 +138,14 @@ const StageCardProvider: React.FC = ({ children }) => {
     }
   }, [selectedCard]);
 
-  const getCardCheckLists = useCallback(() => {
+  const getCardCheckLists = useCallback(async () => {
     try {
-      api
-        .get<ICardCheckListDTO[]>(
-          `/card/check-lists/${selectedCard.unique_name}`,
-        )
-        .then(response => {
-          setCardCheckLists(response.data);
-          setSelectedCardCheckList(response.data[0]);
-        });
+      const response = await api.get<ICardCheckListDTO[]>(
+        `/card/check-lists/${selectedCard.unique_name}`,
+      );
+      setCardCheckLists(response.data);
+      setSelectedCardCheckList(response.data[0]);
+      return response.data;
     } catch (err) {
       throw new Error(err);
     }
@@ -624,6 +634,7 @@ ${now}  |  WePlan
         selectedCard,
         selectedCardCheckList,
         selectedNote,
+        getOwnerCards,
         selectCard,
         selectCardCheckList,
         selectNote,

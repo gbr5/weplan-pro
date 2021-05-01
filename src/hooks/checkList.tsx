@@ -37,6 +37,7 @@ interface ICheckListContextData {
   taskStatusTypes: ICheckBoxOptionDTO[];
   taskStatusIconTypes: ICheckBoxOptionDTO[];
   selectedCheckList: ICheckListDTO;
+  newTaskCheckList: ICheckListDTO;
   selectedTask: ITaskDTO;
   employeeNotStartedTasks: ITaskDTO[];
   employeeInProgressTasks: ITaskDTO[];
@@ -46,6 +47,7 @@ interface ICheckListContextData {
   getEmployeeTasksByDate(): void;
   selectTaskName(task: string): void;
   selectTaskPriority(data: string): void;
+  getCardCheckList(card_unique_name: string): Promise<ICheckListDTO>;
   selectTaskStatus(data: string): void;
   selectTaskDueDate(data: string): void;
   createTask(data: ICreateTaskDTO): void;
@@ -53,6 +55,7 @@ interface ICheckListContextData {
   createTaskNote(data: ICreateTaskNoteDTO): void;
   updateTask(data: ITaskDTO): Promise<ITaskDTO>;
   selectCheckList(data: ICheckListDTO): void;
+  selectNewTaskCheckList(data: ICheckListDTO): void;
   selectTask(data: ITaskDTO): void;
   deleteTask(id: string): Promise<void>;
   getEmployeeTasks(): void;
@@ -67,9 +70,10 @@ const CheckListContext = createContext<ICheckListContextData>(
 );
 
 const CheckListProvider: React.FC = ({ children }) => {
-  const { employee } = useEmployeeAuth();
+  const { employee, updateEmployee } = useEmployeeAuth();
   const { selectedCardCheckList, createCardHistoryNote } = useStageCard();
   const { addToast } = useToast();
+  const [newTaskCheckList, setNewTaskCheckList] = useState({} as ICheckListDTO);
   const [selectedCheckList, setSelectedCheckList] = useState<ICheckListDTO>(
     () => {
       const findCheckList = localStorage.getItem('@WP-PRO:selected-check-list');
@@ -103,6 +107,9 @@ const CheckListProvider: React.FC = ({ children }) => {
     } catch (err) {
       throw new Error(err);
     }
+  }, []);
+  const selectNewTaskCheckList = useCallback((check_list: ICheckListDTO) => {
+    setNewTaskCheckList(check_list);
   }, []);
   const getEmployeeTasks = useCallback(() => {
     try {
@@ -212,6 +219,19 @@ const CheckListProvider: React.FC = ({ children }) => {
     selectTaskDueDate,
     selectCheckList,
   ]);
+
+  const getCardCheckList = useCallback(async (card_unique_name: string) => {
+    try {
+      const response = await api.get<ICardCheckListDTO[]>(
+        `/card/check-lists/${card_unique_name}`,
+      );
+
+      return response.data[0].check_list;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, []);
+
   const getCheckList = useCallback(async () => {
     try {
       const response = await api.get<ICheckListDTO>(
@@ -396,21 +416,6 @@ const CheckListProvider: React.FC = ({ children }) => {
   const createTask = useCallback(
     async (data: ICreateTaskDTO) => {
       try {
-        console.log({ data });
-        console.log({
-          owner_id: employee.employeeUser.id,
-          task: taskName,
-          color: '#555',
-          isActive: true,
-          priority: taskPriority,
-          status: taskStatus,
-          due_date: data.due_date,
-        });
-        // Para utilizar o createtask fora do card, tem que selecionar a
-        // checkList à qual a task será associada
-        // Estou pensando em criar uma check list dp colaborador
-        // Então antes de criar a task, o colaborador terá de selecionar entre
-        // a sua check list ou a de algum card que ele tenha acesso
         const response = await api.post(
           `/check-lists/tasks/${data.check_list_id}`,
           {
@@ -423,7 +428,6 @@ const CheckListProvider: React.FC = ({ children }) => {
             due_date: data.due_date,
           },
         );
-        console.log(response.data);
         getEmployeeTasks();
         setSelectedTask(response.data);
         getEmployeeTasksByDate();
@@ -471,6 +475,20 @@ const CheckListProvider: React.FC = ({ children }) => {
     { priority: 'high', color: 'rgba(255, 124, 92, 0.7)' },
   ];
 
+  const handleCreateEmployeeCheckList = useCallback(async () => {
+    try {
+      const response = await api.post(`/employee-check-list`, {
+        employee_id: employee.id,
+      });
+      updateEmployee({
+        ...employee,
+        checkList: response.data,
+      });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }, [employee, updateEmployee]);
+
   useEffect(() => {
     if (employee && employee.id) {
       const findTaskByDate = localStorage.getItem(
@@ -495,6 +513,12 @@ const CheckListProvider: React.FC = ({ children }) => {
     }
   }, [selectedCardCheckList, selectCheckList]);
 
+  useEffect(() => {
+    if (employee && !employee.checkList) {
+      handleCreateEmployeeCheckList();
+    }
+  }, [employee, handleCreateEmployeeCheckList]);
+
   return (
     <CheckListContext.Provider
       value={{
@@ -503,6 +527,8 @@ const CheckListProvider: React.FC = ({ children }) => {
         getTask,
         getCheckList,
         createTaskNote,
+        selectNewTaskCheckList,
+        newTaskCheckList,
         createCardTask,
         dayTasks,
         getEmployeeTasksByDate,
@@ -532,6 +558,7 @@ const CheckListProvider: React.FC = ({ children }) => {
         updateTask,
         taskPriorityTypes,
         taskStatusTypes,
+        getCardCheckList,
       }}
     >
       {children}

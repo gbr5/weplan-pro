@@ -47,7 +47,7 @@ const Task: React.FC<IProps> = ({ task, update }) => {
           <LateTask>
             <FiAlertCircle size={24} />
             <strong>
-              Tarefa atrasada há <p>{daysLate}</p> dias!
+              Tarefa atrasada <p>{daysLate}</p> dias!
             </strong>
           </LateTask>
         )}
