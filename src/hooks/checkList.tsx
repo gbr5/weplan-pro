@@ -63,6 +63,7 @@ interface ICheckListContextData {
   getCheckListCards(id: string): Promise<ICardCheckListDTO[]>;
   getCheckList(): Promise<ICheckListDTO | undefined>;
   unSelectAllCheckLists(): void;
+  handleCreateEmployeeCheckList(): void;
 }
 
 const CheckListContext = createContext<ICheckListContextData>(
@@ -513,16 +514,11 @@ const CheckListProvider: React.FC = ({ children }) => {
     }
   }, [selectedCardCheckList, selectCheckList]);
 
-  useEffect(() => {
-    if (employee && !employee.checkList) {
-      handleCreateEmployeeCheckList();
-    }
-  }, [employee, handleCreateEmployeeCheckList]);
-
   return (
     <CheckListContext.Provider
       value={{
         priorityColors,
+        handleCreateEmployeeCheckList,
         unSelectAllCheckLists,
         getTask,
         getCheckList,
