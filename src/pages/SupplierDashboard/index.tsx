@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Container } from './styles';
 
@@ -16,12 +16,22 @@ import SettingsPage from '../SettingsPage';
 import ComercialFunnelSettings from '../../components/FunnelSettingsComponents/ComercialFunnelSettings';
 import EmployeesSection from '../../components/EmployeesSection';
 import { useStageCard } from '../../hooks/stageCard';
+import { useEmployeeAuth } from '../../hooks/employeeAuth';
+import { useCheckList } from '../../hooks/checkList';
 
 const SupplierDashboard: React.FC = () => {
+  const { employee } = useEmployeeAuth();
+  const { handleCreateEmployeeCheckList } = useCheckList();
   const { selectedPage } = useHomeController();
   const { selectedFunnel, funnels } = useFunnel();
   const { selectedCard } = useStageCard();
   // const
+
+  useEffect(() => {
+    if (employee && !employee.checkList) {
+      handleCreateEmployeeCheckList();
+    }
+  }, [employee, handleCreateEmployeeCheckList]);
 
   return (
     <Container>
