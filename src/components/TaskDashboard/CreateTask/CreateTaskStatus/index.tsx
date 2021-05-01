@@ -1,12 +1,11 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback } from 'react';
 
-import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
+import sleepyTask from '../../../../assets/sleepyTask1.svg';
+import runningTask from '../../../../assets/runningTask1.svg';
+import doneTask from '../../../../assets/doneTask1.svg';
 import { Container } from './styles';
 import { useCheckList } from '../../../../hooks/checkList';
-import SelectField from '../../../FormComponents/SelectField';
 import { useToast } from '../../../../hooks/toast';
-import Button from '../../../Button';
 
 interface IFormParams {
   status: string;
@@ -18,19 +17,9 @@ interface IProps {
 
 const CreateTaskStatus: React.FC<IProps> = ({ nextStep }: IProps) => {
   const { addToast } = useToast();
-  const formRef = useRef<FormHandles>(null);
-  const { selectTaskStatus, taskStatus, taskStatusTypes } = useCheckList();
-  const defaultType = useMemo(() => {
-    const findDefaultType = taskStatusTypes.find(
-      type => type.value === taskStatus,
-    );
-    if (findDefaultType) {
-      return findDefaultType;
-    }
-    return taskStatusTypes[0];
-  }, [taskStatusTypes, taskStatus]);
+  const { selectTaskStatus } = useCheckList();
   const handleSubmit = useCallback(
-    ({ status }: IFormParams) => {
+    (status: string) => {
       if (status === '') {
         return addToast({
           type: 'error',
@@ -45,16 +34,19 @@ const CreateTaskStatus: React.FC<IProps> = ({ nextStep }: IProps) => {
 
   return (
     <Container>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <strong>Status da tarefa</strong>
-        <SelectField
-          name="status"
-          defaultValue={defaultType}
-          isSearchable={false}
-          options={taskStatusTypes}
-        />
-        <Button type="submit">Pŕoximo</Button>
-      </Form>
+      <h2>Status da tarefa</h2>
+
+      <span>
+        <button type="button" onClick={() => handleSubmit('1')}>
+          <img src={sleepyTask} alt="" />
+        </button>
+        <button type="button" onClick={() => handleSubmit('2')}>
+          <img src={runningTask} alt="" />
+        </button>
+        <button type="button" onClick={() => handleSubmit('3')}>
+          <img src={doneTask} alt="" />
+        </button>
+      </span>
     </Container>
   );
 };

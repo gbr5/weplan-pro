@@ -1,12 +1,9 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback } from 'react';
+import { MdFlag } from 'react-icons/md';
 
-import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
 import { Container } from './styles';
 import { useCheckList } from '../../../../hooks/checkList';
-import SelectField from '../../../FormComponents/SelectField';
 import { useToast } from '../../../../hooks/toast';
-import Button from '../../../Button';
 
 interface IFormParams {
   priority: string;
@@ -18,23 +15,12 @@ interface IProps {
 
 const CreateTaskPriority: React.FC<IProps> = ({ nextStep }: IProps) => {
   const { addToast } = useToast();
-  const formRef = useRef<FormHandles>(null);
-  const {
-    selectTaskPriority,
-    taskPriority,
-    taskPriorityTypes,
-  } = useCheckList();
-  const defaultType = useMemo(() => {
-    const findDefaultType = taskPriorityTypes.find(
-      type => type.value === taskPriority,
-    );
-    if (findDefaultType) {
-      return findDefaultType;
-    }
-    return taskPriorityTypes[0];
-  }, [taskPriorityTypes, taskPriority]);
+  const { selectTaskPriority } = useCheckList();
+
+  const iconSize = 42;
+
   const handleSubmit = useCallback(
-    ({ priority }: IFormParams) => {
+    (priority: string) => {
       if (priority === '') {
         return addToast({
           type: 'error',
@@ -49,16 +35,19 @@ const CreateTaskPriority: React.FC<IProps> = ({ nextStep }: IProps) => {
 
   return (
     <Container>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <strong>Prioridade da tarefa</strong>
-        <SelectField
-          name="priority"
-          defaultValue={defaultType}
-          isSearchable={false}
-          options={taskPriorityTypes}
-        />
-        <Button type="submit">Pŕoximo</Button>
-      </Form>
+      <h2>Prioridade da tarefa</h2>
+
+      <span>
+        <button type="button" onClick={() => handleSubmit('low')}>
+          <MdFlag color="green" size={iconSize} />
+        </button>
+        <button type="button" onClick={() => handleSubmit('neutral')}>
+          <MdFlag color="yellow" size={iconSize} />
+        </button>
+        <button type="button" onClick={() => handleSubmit('high')}>
+          <MdFlag color="red" size={iconSize} />
+        </button>
+      </span>
     </Container>
   );
 };
