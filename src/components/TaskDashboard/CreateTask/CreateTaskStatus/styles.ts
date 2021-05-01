@@ -13,4 +13,40 @@ export const Container = styled.div`
   padding: 1rem 0.8rem;
 
   min-height: 11rem;
+
+  > h2 {
+    width: 90%;
+    margin: 1rem auto 2rem;
+    border-bottom: 1px solid var(--secondary-color);
+    padding-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    width: 100%;
+    height: 100%;
+
+    > button {
+      background: transparent;
+      border: 1px solid var(--letter-color-4);
+      padding: 1rem;
+      margin: auto 1rem;
+      transition: 0.3s;
+      border-radius: 8px;
+      background: var(--letter-color-3);
+
+      > img {
+        max-width: 3rem;
+      }
+
+      &:hover {
+        border: 2px solid var(--secondary-color);
+        border-radius: 4px;
+      }
+    }
+  }
 `;
