@@ -8,7 +8,7 @@ export const Main = styled.div`
   box-sizing: border-box;
   width: 100%;
   text-align: center;
-  margin: 1rem 0 2rem;
+  margin: 0 0 2rem;
 
   > h2 {
     width: 90%;
@@ -16,6 +16,11 @@ export const Main = styled.div`
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--secondary-color);
     text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    height: 40rem;
+    padding-bottom: 0;
   }
 `;
 
@@ -71,16 +76,16 @@ export const StatusMenuButton = styled.button<IStatusButtonProps>`
 
 export const Container = styled.div`
   width: 95%;
-  height: 24rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
-  background: var(--background-color);
+  /* background: var(--background-color); */
   border-radius: 8px;
-  padding: 0.2rem;
+  padding: 0.2rem auto;
   overflow-y: scroll;
-  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3); */
   margin: 0.5rem auto;
 `;
 

@@ -7,11 +7,13 @@ export const Container = styled.div`
   border-radius: 8px;
   box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.3);
   width: 100%;
-  height: 80%;
+  height: 75vh;
 `;
 
 export const TaskNotesContainer = styled.div`
   display: block;
   width: 100%;
-  height: 100%;
+  height: 62vh;
+  margin-top: 0.2rem;
+  overflow-y: scroll;
 `;

@@ -14,13 +14,13 @@ import { useCompanyEmployee } from '../../hooks/companyEmployee';
 import { useCompanyContact } from '../../hooks/companyContacts';
 import IEmployeeDTO from '../../dtos/IEmployeeDTO';
 import ICompanyContactDTO from '../../dtos/ICompanyContactDTO';
-import CreateTask from '../TaskDashboard/CreateTask';
 import CreateCompanyContactForm from '../CompanyContactComponents/CreateCompanyContactForm';
 import { useStageCard } from '../../hooks/stageCard';
 import { useCheckList } from '../../hooks/checkList';
 import ICardCheckListDTO from '../../dtos/ICardCheckListDTO';
 import IStageCardDTO from '../../dtos/IStageCardDTO';
 import ICardNotesDTO from '../../dtos/ICardNotesDTO';
+import SelectNewTaskCheckList from '../TaskDashboard/AllTasksSection/SelectNewTaskCheckList';
 
 const Header: React.FC = () => {
   const history = useHistory();
@@ -120,6 +120,11 @@ const Header: React.FC = () => {
   );
   return (
     <>
+      {createTaskWindow && (
+        <SelectNewTaskCheckList
+          closeWindow={() => handleCreateTaskWindow(false)}
+        />
+      )}
       <Container>
         <button type="button" onClick={navigateHome}>
           <img src={logo} alt="WePlan" />
@@ -159,9 +164,6 @@ const Header: React.FC = () => {
             closeWindow={() => handleCreateComercialCard(false)}
           />
         ))}
-      {createTaskWindow && (
-        <CreateTask closeWindow={() => handleCreateTaskWindow(false)} />
-      )}
       {createCompanyContactWindow && (
         <CreateCompanyContactForm
           handleCloseWindow={() => handleCreateCompanyContactWindow(false)}

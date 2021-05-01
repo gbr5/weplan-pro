@@ -8,14 +8,16 @@ import CreateTaskPriority from './CreateTaskPriority';
 import CreateTaskStatus from './CreateTaskStatus';
 import CreateTaskDueDate from './CreateTaskDueDate';
 import CreateTaskDueTime from './CreateTaskDueTime';
+import ICheckListDTO from '../../../dtos/ICheckListDTO';
 
 interface IProps {
   closeWindow: Function;
+  checkList: ICheckListDTO;
 }
 
-const CreateTask: React.FC<IProps> = ({ closeWindow }: IProps) => {
+const CreateTask: React.FC<IProps> = ({ closeWindow, checkList }: IProps) => {
   const { addToast } = useToast();
-  const { createTask, selectedCheckList } = useCheckList();
+  const { createTask } = useCheckList();
 
   const [taskNameField, setTaskNameField] = useState(true);
   const [taskPriorityField, setTaskPriorityField] = useState(false);
@@ -52,7 +54,7 @@ const CreateTask: React.FC<IProps> = ({ closeWindow }: IProps) => {
     async (due_date: string) => {
       try {
         createTask({
-          check_list_id: selectedCheckList.id,
+          check_list_id: checkList.id,
           due_date,
         });
         closeWindow();
@@ -70,7 +72,7 @@ const CreateTask: React.FC<IProps> = ({ closeWindow }: IProps) => {
         throw new Error(err);
       }
     },
-    [addToast, closeWindow, createTask, selectedCheckList],
+    [addToast, closeWindow, createTask, checkList],
   );
 
   return (

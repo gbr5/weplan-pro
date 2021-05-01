@@ -40,11 +40,10 @@ const SettingsWindow: React.FC<IProps> = ({
   }, [signOut, history]);
 
   useEffect(() => {
-    // Quando finalizar o processo para adicionar task, remover esse useEffect
-    if (!employee) {
-      console.log(handleCreateTask);
-    }
-  }, [employee, handleCreateTask]);
+    !employee ||
+      (employee && !employee.id) ||
+      (employee && !employee.company && signOut());
+  }, [employee, signOut]);
 
   return (
     <WindowContainer
@@ -61,9 +60,9 @@ const SettingsWindow: React.FC<IProps> = ({
         <button type="button" onClick={() => handleCreateComercialCard()}>
           Novo Negócio
         </button>
-        {/* <button type="button" onClick={() => handleCreateTask()}>
+        <button type="button" onClick={() => handleCreateTask()}>
           Nova Tarefa
-        </button> */}
+        </button>
         {/*                 // Para utilizar o createtask fora do card, tem que selecionar a
         // checkList à qual a task será associada
         // Estou pensando em criar uma check list dp colaborador
