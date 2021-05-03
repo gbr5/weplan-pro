@@ -29,6 +29,7 @@ const Routes: React.FC = () => {
     <Switch>
       <Route path="/" exact component={SignIn} />
       <Route path="/form/:id" exact component={UserForm} />
+      <Route path="/form/:id" isPrivate exact component={UserForm} />
       <Route path="/success-message/:id" exact component={SuccessPage} />
       <Route path="/welcome" exact component={WelcomePage} />
       <Route path="/forgot-password" exact component={ForgotPassword} />
