@@ -20,7 +20,7 @@ import {
   Background,
   LogoContainer,
 } from './styles';
-import GoogleLoginComponent from '../../components/AuthComponents/GoogleLoginComponent';
+// import GoogleLoginComponent from '../../components/AuthComponents/GoogleLoginComponent';
 import { useEmployeeAuth } from '../../hooks/employeeAuth';
 import SignUpContainer from '../../components/SignUpComponents/SignUpContainer';
 
@@ -109,7 +109,7 @@ const SignIn: React.FC = () => {
             <>
               <Form ref={formRef} onSubmit={handleSubmit}>
                 <h1>Faça seu login</h1>
-                <GoogleLoginComponent buttonText="Entre com o Google" />
+                {/* <GoogleLoginComponent buttonText="Entre com o Google" /> */}
                 <Input
                   name="email"
                   icon={FiMail}
